@@ -1,0 +1,146 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nuevo Empleado{% endblock %}
+{% block page_title %}Registrar Empleado{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('employee_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Volver
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="max-w-lg">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+
+            {% if errors is not empty %}
+                <div class="mb-5 bg-red-50 border border-red-200 rounded-lg p-4 space-y-1">
+                    {% for error in errors %}
+                        <p class="text-sm text-red-700">• {{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{{ path('employee_create') }}" novalidate>
+
+                <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Datos del empleado</p>
+                <div class="space-y-5">
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="first_name" class="block text-sm font-medium text-gray-700 mb-1">
+                                Nombre <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="first_name" name="first_name"
+                                   value="{{ input.firstName ?? '' }}"
+                                   class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                                   onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                   style="transition: border-color .15s;"
+                                   required>
+                        </div>
+                        <div>
+                            <label for="last_name" class="block text-sm font-medium text-gray-700 mb-1">
+                                Apellido <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="last_name" name="last_name"
+                                   value="{{ input.lastName ?? '' }}"
+                                   class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                                   onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                   style="transition: border-color .15s;"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="identification_number" class="block text-sm font-medium text-gray-700 mb-1">
+                            Cédula RUC <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="identification_number" name="identification_number"
+                               value="{{ input.identificationNumber ?? '' }}"
+                               maxlength="13"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none font-mono"
+                               onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                               style="transition: border-color .15s;"
+                               placeholder="0000000000"
+                               required>
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+                            Email <span class="text-red-500">*</span>
+                        </label>
+                        <input type="email" id="email" name="email"
+                               value="{{ input.email ?? '' }}"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                               onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                               style="transition: border-color .15s;"
+                               required>
+                    </div>
+
+                    <div>
+                        <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-1">
+                            Teléfono <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="phone_number" name="phone_number"
+                               value="{{ input.phoneNumber ?? '' }}"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                               onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                               style="transition: border-color .15s;"
+                               placeholder="0999999999"
+                               required>
+                    </div>
+
+                    <div>
+                        <label for="hired_at" class="block text-sm font-medium text-gray-700 mb-1">
+                            Fecha de contratación <span class="text-red-500">*</span>
+                        </label>
+                        <input type="date" id="hired_at" name="hired_at"
+                               value="{{ input.hiredAt ?? 'now'|date('Y-m-d') }}"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                               onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                               style="transition: border-color .15s;"
+                               required>
+                    </div>
+
+                    <div>
+                        <label for="profile" class="block text-sm font-medium text-gray-700 mb-1">
+                            Perfil <span class="text-red-500">*</span>
+                        </label>
+                        <select id="profile" name="profile"
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                                onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                style="transition: border-color .15s;">
+                            <option value="administrative" {{ (input.profile ?? 'administrative') == 'administrative' ? 'selected' }}>Administrativo</option>
+                            <option value="coordinator"   {{ (input.profile ?? '') == 'coordinator'   ? 'selected' }}>Coordinador</option>
+                            <option value="technician"    {{ (input.profile ?? '') == 'technician'    ? 'selected' }}>Técnico</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                {# Nota informativa: el acceso al sistema es opcional y se asigna después #}
+                <div class="mt-5 rounded-lg p-3 text-xs text-gray-500 flex items-start gap-2" style="background: #f8f9fc; border: 1px dashed #c5cde8;">
+                    <svg class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="#1e3585" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>El acceso al sistema (usuario y contraseña) se puede asignar después desde el detalle del empleado.</span>
+                </div>
+
+                <div class="mt-6 flex items-center gap-3">
+                    <button type="submit"
+                            class="text-white text-sm font-medium px-5 py-2.5 rounded-lg shadow-sm transition-all hover:shadow-md"
+                            style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+                        Registrar empleado
+                    </button>
+                    <a href="{{ path('employee_list') }}" class="text-sm text-gray-500 hover:text-gray-700">
+                        Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+{% endblock %}

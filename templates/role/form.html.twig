@@ -1,0 +1,185 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nuevo Rol{% endblock %}
+{% block page_title %}Crear Rol{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('role_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Volver
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="max-w-xl">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+
+            {% if errors is not empty %}
+                <div class="mb-5 bg-red-50 border border-red-200 rounded-lg p-4 space-y-1">
+                    {% for error in errors %}
+                        <p class="text-sm text-red-700">• {{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{{ path('role_create') }}" novalidate>
+
+                <div class="space-y-5">
+
+                    {# Nombre del rol #}
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
+                            Nombre del rol <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="name" name="name"
+                               value="{{ input.name ?? '' }}"
+                               maxlength="60"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                               onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                               style="transition: border-color .15s;"
+                               placeholder="ej: Administrador, Técnico, Supervisor…"
+                               required autocomplete="off">
+                        <p class="mt-1 text-xs text-gray-400">Máximo 60 caracteres.</p>
+                    </div>
+
+                    {# Permisos agrupados por recurso #}
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-sm font-medium text-gray-700">Permisos</label>
+                            {% if permissions is not empty %}
+                                <div class="flex gap-3 text-xs">
+                                    <button type="button" onclick="toggleAll(true)"
+                                            class="text-blue-600 hover:underline">Seleccionar todos</button>
+                                    <span class="text-gray-300">|</span>
+                                    <button type="button" onclick="toggleAll(false)"
+                                            class="text-gray-400 hover:underline">Limpiar</button>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {% if permissions is not empty %}
+                            {# Agrupar permisos por recurso (parte antes del punto) #}
+                            {% set groups = {} %}
+                            {% for permission in permissions %}
+                                {% set parts = permission.key | split('.') %}
+                                {% set resource = parts[0] %}
+                                {% set groups = groups | merge({ (resource): (groups[resource] ?? []) | merge([permission]) }) %}
+                            {% endfor %}
+
+                            {# Etiquetas legibles por recurso #}
+                            {% set resourceLabels = {
+                                'user':           'Usuarios',
+                                'role':           'Roles',
+                                'permission':     'Permisos',
+                                'employee':       'Empleados',
+                                'client':         'Clientes',
+                                'contact':        'Contactos',
+                                'ticket':         'Tickets de servicio',
+                                'expense':        'Gastos operativos',
+                                'spare_part':     'Repuestos',
+                                'warehouse':      'Almacenes y laboratorios',
+                                'repair':         'Reparaciones',
+                                'purchase_order': 'Órdenes de compra'
+                            } %}
+
+                            <div class="space-y-3">
+                                {% for resource, group in groups %}
+                                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                                        {# Cabecera del grupo con checkbox "seleccionar grupo" #}
+                                        <div class="flex items-center gap-2 px-4 py-2 bg-slate-50 border-b border-gray-200">
+                                            <input type="checkbox"
+                                                   id="group_{{ resource }}"
+                                                   class="rounded group-toggle"
+                                                   data-group="{{ resource }}"
+                                                   style="accent-color: #1e3585;"
+                                                   onchange="toggleGroup('{{ resource }}', this.checked)">
+                                            <label for="group_{{ resource }}"
+                                                   class="text-xs font-semibold text-gray-600 uppercase tracking-wide cursor-pointer select-none">
+                                                {{ resourceLabels[resource] ?? resource }}
+                                            </label>
+                                            <span class="ml-auto text-xs text-gray-400">{{ group | length }} permisos</span>
+                                        </div>
+
+                                        {# Permisos del grupo #}
+                                        <div class="divide-y divide-gray-100">
+                                            {% for permission in group %}
+                                                {% set isChecked = (input.permissionIds ?? []) | filter(pid => pid == permission.id) | length > 0 %}
+                                                <label class="flex items-start gap-3 px-4 py-2.5 hover:bg-slate-50 cursor-pointer">
+                                                    <input type="checkbox"
+                                                           name="permission_ids[]"
+                                                           value="{{ permission.id }}"
+                                                           class="mt-0.5 rounded perm-checkbox"
+                                                           data-group="{{ resource }}"
+                                                           style="accent-color: #1e3585;"
+                                                           {{ isChecked ? 'checked' : '' }}
+                                                           onchange="syncGroupToggle('{{ resource }}')">
+                                                    <div class="min-w-0">
+                                                        <p class="text-xs font-mono text-gray-500">{{ permission.key }}</p>
+                                                        {% if permission.description %}
+                                                            <p class="text-xs text-gray-700 mt-0.5">{{ permission.description }}</p>
+                                                        {% endif %}
+                                                    </div>
+                                                </label>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="rounded-lg p-4 text-sm" style="background: #f8f9fc; border: 1px dashed #c5cde8;">
+                                <p class="font-medium" style="color: #1e3585;">No hay permisos definidos.</p>
+                                <p class="text-xs mt-1 text-gray-400">
+                                    Ejecuta <code class="bg-gray-100 px-1 rounded">symfony console app:permissions:seed</code> para crear el catálogo.
+                                </p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <div class="mt-6 flex items-center gap-3">
+                    <button type="submit"
+                            class="text-white text-sm font-medium px-5 py-2.5 rounded-lg shadow-sm transition-all hover:shadow-md"
+                            style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+                        Crear rol
+                    </button>
+                    <a href="{{ path('role_list') }}" class="text-sm text-gray-500 hover:text-gray-700">
+                        Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+    function toggleGroup(resource, checked) {
+        document.querySelectorAll(`.perm-checkbox[data-group="${resource}"]`)
+            .forEach(cb => cb.checked = checked);
+    }
+
+    function syncGroupToggle(resource) {
+        const checkboxes = document.querySelectorAll(`.perm-checkbox[data-group="${resource}"]`);
+        const allChecked = [...checkboxes].every(cb => cb.checked);
+        const toggle = document.querySelector(`#group_${resource}`);
+        if (toggle) toggle.checked = allChecked;
+    }
+
+    function toggleAll(checked) {
+        document.querySelectorAll('.perm-checkbox').forEach(cb => cb.checked = checked);
+        document.querySelectorAll('.group-toggle').forEach(cb => cb.checked = checked);
+    }
+
+    // Sincronizar estado inicial de los toggles de grupo al cargar
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.group-toggle').forEach(toggle => {
+            syncGroupToggle(toggle.dataset.group);
+        });
+    });
+    </script>
+{% endblock %}

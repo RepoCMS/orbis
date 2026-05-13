@@ -1,0 +1,522 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ employee.fullName }}{% endblock %}
+{% block page_title %}Empleado: {{ employee.fullName }}{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('employee_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Volver
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="w-full max-w-4xl space-y-6">
+
+        {# Errores #}
+        {% if errors is defined and errors|length > 0 %}
+            <div class="bg-red-50 border border-red-200 rounded-xl px-5 py-4">
+                {% for error in errors %}
+                    <p class="text-sm text-red-700">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {# Datos del empleado #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
+                <h2 class="text-sm font-semibold text-gray-700">Datos del empleado</h2>
+                <button type="button" id="toggle-edit-employee"
+                        class="text-xs text-blue-600 hover:underline font-medium">Editar</button>
+            </div>
+
+            <div class="px-6 py-3 border-b border-gray-100 bg-slate-50 flex items-center gap-3 flex-wrap">
+                {% if employee.status == 'active' and is_granted('employee.update') %}
+                    <form method="POST" action="{{ path('employee_deactivate', {id: employee.id}) }}">
+                        <button type="submit"
+                                class="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-amber-700 bg-amber-50 border-amber-200 hover:bg-amber-100"
+                                onclick="return confirm('¿Desactivar al empleado {{ employee.fullName|e('js') }}?')">
+                            Desactivar
+                        </button>
+                    </form>
+                    <button type="button"
+                            onclick="document.getElementById('modal-vacation').classList.remove('hidden')"
+                            class="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-sky-700 bg-sky-50 border-sky-200 hover:bg-sky-100">
+                        Programar vacaciones
+                    </button>
+                    <button type="button"
+                            onclick="document.getElementById('modal-standby').classList.remove('hidden')"
+                            class="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-violet-700 bg-violet-50 border-violet-200 hover:bg-violet-100">
+                        Programar standby
+                    </button>
+                {% elseif employee.status == 'on_vacation' and is_granted('employee.update') %}
+                    {% if activeVacationPeriod %}
+                        <form method="POST" action="{{ path('employee_period_cancel', {id: employee.id, periodId: activeVacationPeriod.id}) }}">
+                            <button type="submit"
+                                    class="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-amber-700 bg-amber-50 border-amber-200 hover:bg-amber-100"
+                                    onclick="return confirm('¿Cancelar el período de vacaciones en curso?')">
+                                Cancelar vacaciones
+                            </button>
+                        </form>
+                    {% endif %}
+                    <form method="POST" action="{{ path('employee_deactivate', {id: employee.id}) }}">
+                        <button type="submit"
+                                class="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-red-700 bg-red-50 border-red-200 hover:bg-red-100"
+                                onclick="return confirm('¿Desactivar al empleado {{ employee.fullName|e('js') }}?')">
+                            Desactivar
+                        </button>
+                    </form>
+                {% elseif is_granted('employee.update') %}
+                    <form method="POST" action="{{ path('employee_reactivate', {id: employee.id}) }}">
+                        <button type="submit"
+                                class="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-emerald-700 bg-emerald-50 border-emerald-200 hover:bg-emerald-100">
+                            Reactivar
+                        </button>
+                    </form>
+                {% endif %}
+                {% if is_granted('employee.delete') %}
+                <form method="POST" action="{{ path('employee_delete', {id: employee.id}) }}">
+                    <button type="submit"
+                            class="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-red-700 bg-red-50 border-red-200 hover:bg-red-100"
+                            onclick="return confirm('¿Eliminar lógicamente al empleado {{ employee.fullName|e('js') }}?')">
+                        Eliminar
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+
+            {# Vista normal #}
+            <div id="view-employee">
+                <dl class="divide-y divide-gray-100">
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">ID</dt>
+                        <dd class="text-gray-800 font-mono text-xs">{{ employee.id }}</dd>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Cédula</dt>
+                        <dd class="text-gray-900 font-mono">{{ employee.identificationNumber }}</dd>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Nombre completo</dt>
+                        <dd class="text-gray-900 font-medium">{{ employee.fullName }}</dd>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Email</dt>
+                        <dd class="text-gray-800">{{ employee.email }}</dd>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Teléfono</dt>
+                        <dd class="text-gray-800">{{ employee.phoneNumber }}</dd>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Fecha de ingreso</dt>
+                        <dd class="text-gray-800">{{ employee.hiredAt }}</dd>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Estado</dt>
+                        <dd>
+                            {% if employee.status == 'active' %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" style="background: #e6f7f1; color: #00a86b;">Activo</span>
+                            {% elseif employee.status == 'on_vacation' %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-sky-100 text-sky-700">Vacaciones</span>
+                            {% else %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">Inactivo</span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            {# Formulario de edición #}
+            <form id="form-edit-employee" method="POST" action="{{ path('employee_edit', {id: employee.id}) }}"
+                  class="{{ editMode is defined and editMode ? '' : 'hidden' }} px-6 py-5 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Nombre</label>
+                        <input type="text" name="first_name"
+                               value="{{ (editInput.first_name is defined) ? editInput.first_name : employee.firstName }}"
+                               class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Apellido</label>
+                        <input type="text" name="last_name"
+                               value="{{ (editInput.last_name is defined) ? editInput.last_name : employee.lastName }}"
+                               class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" name="email"
+                           value="{{ (editInput.email is defined) ? editInput.email : employee.email }}"
+                           class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Teléfono</label>
+                    <input type="text" name="phone_number"
+                           value="{{ (editInput.phone_number is defined) ? editInput.phone_number : employee.phoneNumber }}"
+                           class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="submit"
+                            class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm"
+                            style="background: #1e3585;"
+                            onmouseover="this.style.background='#152970'"
+                            onmouseout="this.style.background='#1e3585'">
+                        Guardar cambios
+                    </button>
+                    <button type="button" id="cancel-edit-employee" class="text-sm text-gray-500 hover:text-gray-700">Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+        {# Acceso al sistema #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
+                <h2 class="text-sm font-semibold text-gray-700">Acceso al sistema</h2>
+                {% if linkedUser %}
+                    <a href="{{ path('user_show', {id: linkedUser.id}) }}"
+                       class="text-xs text-blue-600 hover:underline">Ver usuario</a>
+                {% endif %}
+            </div>
+
+            {% if linkedUser %}
+                <dl class="divide-y divide-gray-100">
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Usuario</dt>
+                        <dd class="text-gray-900 font-medium">{{ linkedUser.username }}</dd>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Rol</dt>
+                        <dd class="text-gray-800">{{ rolesById[linkedUser.roleId] ?? linkedUser.roleId }}</dd>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Estado de cuenta</dt>
+                        <dd>
+                            {% if linkedUser.status == 'active' %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Activo</span>
+                            {% elseif linkedUser.status == 'unverified' %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Sin verificar</span>
+                            {% elseif linkedUser.status == 'inactive' %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">Inactivo</span>
+                            {% else %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ linkedUser.status }}</span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                </dl>
+            {% else %}
+                {# ── Crear nuevo acceso (primario) ─────────────────────────────── #}
+                <div class="px-6 py-5 border-b border-gray-100">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-700">Crear acceso al sistema</p>
+                            <p class="text-xs text-gray-400 mt-0.5">El correo del empleado ({{ employee.email }}) se usará para notificaciones de cuenta.</p>
+                        </div>
+                        <button type="button" id="toggle-create-user"
+                                class="text-xs font-medium px-3 py-1.5 rounded-lg border border-blue-300 text-blue-700 hover:bg-blue-50">
+                            {{ createUserMode is defined and createUserMode ? 'Ocultar' : 'Crear acceso' }}
+                        </button>
+                    </div>
+
+                    <form id="form-create-user" method="POST" action="{{ path('employee_create_user', {id: employee.id}) }}"
+                          class="{{ createUserMode is defined and createUserMode ? '' : 'hidden' }} space-y-4">
+
+                        {# Errores de creación de usuario #}
+                        {% if errors is defined and errors|length > 0 and createUserMode is defined and createUserMode %}
+                            <div class="bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                                {% for error in errors %}
+                                    <p class="text-sm text-red-700">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Username</label>
+                                <input type="text" name="username"
+                                       value="{{ createUserInput.username ?? '' }}"
+                                       maxlength="15" autocomplete="off"
+                                       placeholder="ej: jperez"
+                                       class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <p class="mt-1 text-xs text-gray-400">3–15 caracteres, letras, números y _</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Rol</label>
+                                <select name="role_id" class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">— Seleccione —</option>
+                                    {% for roleId, roleName in rolesById %}
+                                        <option value="{{ roleId }}"
+                                            {{ (createUserInput.roleId ?? '') == roleId ? 'selected' : '' }}>
+                                            {{ roleName }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Contraseña</label>
+                                <input type="password" name="password" autocomplete="new-password"
+                                       class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Confirmar contraseña</label>
+                                <input type="password" name="password_confirm" autocomplete="new-password"
+                                       class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 pt-1">
+                            <button type="submit"
+                                    class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm"
+                                    style="background: #1e3585;"
+                                    onmouseover="this.style.background='#152970'"
+                                    onmouseout="this.style.background='#1e3585'">
+                                Crear acceso
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                {# ── Vincular usuario existente (secundario / admin) ───────────── #}
+                {% if availableUsers is not empty %}
+                    <div class="px-6 py-4">
+                        <button type="button" id="toggle-link-user"
+                                class="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                            </svg>
+                            Vincular usuario existente
+                        </button>
+                        <form id="form-link-user" method="POST" action="{{ path('employee_link_user', {id: employee.id}) }}"
+                              class="hidden mt-3 flex items-end gap-3">
+                            <div class="flex-1">
+                                <select name="user_id" required
+                                        class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">— Selecciona un usuario —</option>
+                                    {% for user in availableUsers %}
+                                        <option value="{{ user.id }}">
+                                            {{ user.username }}{% if rolesById[user.roleId] is defined %} ({{ rolesById[user.roleId] }}){% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit"
+                                    class="inline-flex items-center text-white text-sm font-medium px-4 py-2 rounded-lg"
+                                    style="background: #6b7280;"
+                                    onmouseover="this.style.background='#4b5563'"
+                                    onmouseout="this.style.background='#6b7280'">
+                                Vincular
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+
+    </div>
+
+    <script>
+        function initEmployeeShow() {
+            // Toggle edición de datos del empleado
+            var toggle = document.getElementById('toggle-edit-employee');
+            var view   = document.getElementById('view-employee');
+            var form   = document.getElementById('form-edit-employee');
+            var cancel = document.getElementById('cancel-edit-employee');
+            if (form && !form.classList.contains('hidden')) {
+                toggle && toggle.classList.add('hidden');
+            }
+            toggle && toggle.addEventListener('click', function() {
+                view.classList.add('hidden');
+                form.classList.remove('hidden');
+                toggle.classList.add('hidden');
+            });
+            cancel && cancel.addEventListener('click', function() {
+                view.classList.remove('hidden');
+                form.classList.add('hidden');
+                toggle.classList.remove('hidden');
+            });
+
+            // Toggle form "Crear acceso al sistema"
+            var btnCreate = document.getElementById('toggle-create-user');
+            var formCreate = document.getElementById('form-create-user');
+            // Auto-open when redirected from employee creation (?setup=1)
+            var autoSetup = new URLSearchParams(window.location.search).get('setup') === '1';
+            if (autoSetup && formCreate) {
+                formCreate.classList.remove('hidden');
+                btnCreate && (btnCreate.textContent = 'Ocultar');
+            }
+            btnCreate && btnCreate.addEventListener('click', function() {
+                if (formCreate.classList.contains('hidden')) {
+                    formCreate.classList.remove('hidden');
+                    btnCreate.textContent = 'Ocultar';
+                } else {
+                    formCreate.classList.add('hidden');
+                    btnCreate.textContent = 'Crear acceso';
+                }
+            });
+
+            // Toggle form "Vincular usuario existente"
+            var btnLink = document.getElementById('toggle-link-user');
+            var formLink = document.getElementById('form-link-user');
+            btnLink && btnLink.addEventListener('click', function() {
+                formLink.classList.toggle('hidden');
+            });
+        }
+
+        document.addEventListener('turbo:load', initEmployeeShow);
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initEmployeeShow);
+        } else {
+            initEmployeeShow();
+        }
+    </script>
+
+    {# ── Historial de períodos especiales ──────────────────────────────── #}
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+            <h2 class="text-sm font-semibold text-gray-700">Períodos especiales</h2>
+            <p class="text-xs text-gray-400 mt-0.5">Vacaciones y standby registrados (más recientes primero).</p>
+        </div>
+
+        {% if specialPeriods is empty %}
+            <p class="px-6 py-8 text-sm text-center text-gray-400">Sin períodos registrados.</p>
+        {% else %}
+            <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="text-xs uppercase tracking-wide text-white" style="background: #1e3585;">
+                    <tr>
+                        <th class="px-5 py-3 text-left font-semibold">Tipo</th>
+                        <th class="px-5 py-3 text-left font-semibold">Estado</th>
+                        <th class="px-5 py-3 text-left font-semibold">Inicio</th>
+                        <th class="px-5 py-3 text-left font-semibold">Fin</th>
+                        <th class="px-5 py-3 text-center font-semibold">Días</th>
+                        <th class="px-5 py-3 text-left font-semibold">Notas</th>
+                        <th class="px-5 py-3 text-center font-semibold">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for period in specialPeriods %}
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="px-5 py-3">
+                                {% if period.type == 'vacation' %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-sky-100 text-sky-700">Vacaciones</span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-700">Standby</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-5 py-3">
+                                {% if period.status == 'scheduled' %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">Programado</span>
+                                {% elseif period.status == 'in_progress' %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">En curso</span>
+                                {% elseif period.status == 'completed' %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">Completado</span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">Cancelado</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-5 py-3 text-gray-700">{{ period.startedAt }}</td>
+                            <td class="px-5 py-3 text-gray-700">{{ period.endedAt }}</td>
+                            <td class="px-5 py-3 text-center text-gray-600">{{ period.days }}</td>
+                            <td class="px-5 py-3 text-gray-500 text-xs">{{ period.notes ?? '—' }}</td>
+                            <td class="px-5 py-3 text-center">
+                                {% if period.isActive and is_granted('employee.update') %}
+                                    <form method="POST"
+                                          action="{{ path('employee_period_cancel', {id: employee.id, periodId: period.id}) }}">
+                                        <button type="submit"
+                                                class="text-xs text-red-600 hover:text-red-800 font-medium"
+                                                onclick="return confirm('¿Cancelar este período?')">
+                                            Cancelar
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <span class="text-gray-300">—</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        {% endif %}
+    </div>
+
+    {# ── Modal: programar vacaciones ───────────────────────────────────── #}
+    <div id="modal-vacation" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40" onclick="if(event.target===this)this.classList.add('hidden')">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6 space-y-4">
+            <h3 class="text-base font-semibold text-gray-800">Programar período de vacaciones</h3>
+            <p class="text-sm text-gray-500">El estado del empleado cambiará a "En vacaciones" automáticamente cuando comience el período.</p>
+            <form method="POST" action="{{ path('employee_vacation_schedule', {id: employee.id}) }}" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Fecha inicio</label>
+                        <input type="date" name="started_at" required
+                               class="w-full text-sm rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400/40 focus:border-sky-400 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Fecha fin</label>
+                        <input type="date" name="ended_at" required
+                               class="w-full text-sm rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400/40 focus:border-sky-400 transition-colors">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-1">
+                    <button type="button"
+                            onclick="document.getElementById('modal-vacation').classList.add('hidden')"
+                            class="text-sm px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                            class="text-sm px-4 py-2 rounded-lg text-white font-medium transition-colors"
+                            style="background:#0369a1;" onmouseover="this.style.background='#0c4a6e'" onmouseout="this.style.background='#0369a1'">
+                        Programar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# ── Modal: programar standby ──────────────────────────────────────── #}
+    <div id="modal-standby" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40" onclick="if(event.target===this)this.classList.add('hidden')">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6 space-y-4">
+            <h3 class="text-base font-semibold text-gray-800">Programar período de standby</h3>
+            <p class="text-sm text-gray-500">El empleado trabajará este período fuera de su horario habitual (pago extra). El estado del empleado no cambia.</p>
+            <form method="POST" action="{{ path('employee_standby_schedule', {id: employee.id}) }}" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Fecha inicio</label>
+                        <input type="date" name="started_at" required
+                               class="w-full text-sm rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:border-violet-400 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Fecha fin</label>
+                        <input type="date" name="ended_at" required
+                               class="w-full text-sm rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:border-violet-400 transition-colors">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Notas (opcional)</label>
+                    <textarea name="notes" rows="2"
+                              class="w-full text-sm rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:border-violet-400 transition-colors resize-none"
+                              placeholder="Ej: Mantenimiento preventivo cajeros zona norte..."></textarea>
+                </div>
+                <div class="flex justify-end gap-3 pt-1">
+                    <button type="button"
+                            onclick="document.getElementById('modal-standby').classList.add('hidden')"
+                            class="text-sm px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                            class="text-sm px-4 py-2 rounded-lg text-white font-medium transition-colors"
+                            style="background:#6d28d9;" onmouseover="this.style.background='#5b21b6'" onmouseout="this.style.background='#6d28d9'">
+                        Programar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+{% endblock %}

@@ -1,0 +1,191 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block page_title %}Usuario: {{ user.username }}{% endblock %}
+
+{% block header_actions %}
+    <div class="flex items-center gap-3">
+        {% if user.status == 'unverified' %}
+            <form method="POST" action="{{ path('user_verify', {id: user.id}) }}">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm"
+                        style="background: #00a86b;"
+                        onmouseover="this.style.background='#008a56'"
+                        onmouseout="this.style.background='#00a86b'">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Verificar
+                </button>
+            </form>
+                        <form method="POST" action="{{ path('user_resend_verification', {id: user.id}) }}">
+                    <button type="submit"
+                            class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-blue-300 text-blue-700 hover:bg-blue-50">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        Reenviar email
+                    </button>
+                </form>
+        {% endif %}
+        {% if user.status == 'active' and is_granted('user.deactivate') %}
+            <form method="POST" action="{{ path('user_deactivate', {id: user.id}) }}">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-amber-300 text-amber-700 hover:bg-amber-50">
+                    Desactivar
+                </button>
+            </form>
+        {% elseif user.status == 'inactive' and is_granted('user.activate') %}
+            <form method="POST" action="{{ path('user_reactivate', {id: user.id}) }}">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-emerald-300 text-emerald-700 hover:bg-emerald-50">
+                    Reactivar
+                </button>
+            </form>
+        {% endif %}
+        {% if is_granted('user.delete') %}
+        <form method="POST" action="{{ path('user_delete', {id: user.id}) }}">
+            <button type="submit"
+                    class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-red-300 text-red-700 hover:bg-red-50"
+                    onclick="return confirm('¿Eliminar lógicamente este usuario?')">
+                Eliminar
+            </button>
+        </form>
+        {% endif %}
+        <a href="{{ path('user_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Volver
+        </a>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="max-w-2xl space-y-6">
+
+        {# Errores #}
+        {% if errors is defined and errors|length > 0 %}
+            <div class="bg-red-50 border border-red-200 rounded-xl px-5 py-4">
+                {% for error in errors %}
+                    <p class="text-sm text-red-700">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {# Info card / form de edición #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
+                <h2 class="text-sm font-semibold text-gray-700">Información del usuario</h2>
+                <button type="button" id="toggle-edit-user"
+                        class="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 shadow-sm transition-colors">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 012.828 2.828L11.828 15.828a4 4 0 01-1.414.828l-3 1 1-3a4 4 0 01.828-1.414z"/>
+                    </svg>
+                    Editar
+                </button>
+            </div>
+
+            {# Vista normal #}
+            <div id="view-user">
+                <dl class="divide-y divide-gray-100">
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">ID</dt>
+                        <dd class="text-gray-800 font-mono text-xs">{{ user.id }}</dd>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Username</dt>
+                        <dd class="text-gray-900 font-medium">{{ user.username }}</dd>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Email</dt>
+                        <dd class="text-gray-800">—</dd>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Rol</dt>
+                        <dd class="text-gray-800">{{ roleName }}</dd>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Estado</dt>
+                        <dd>
+                            {% if user.status == 'active' %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Activo</span>
+                            {% elseif user.status == 'unverified' %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Sin verificar</span>
+                            {% elseif user.status == 'inactive' %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">Inactivo</span>
+                            {% else %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ user.status }}</span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Intentos fallidos</dt>
+                        <dd class="{{ user.failedLoginAttempts > 0 ? 'text-red-600 font-medium' : 'text-gray-400' }}">
+                            {{ user.failedLoginAttempts }}
+                        </dd>
+                    </div>
+                    {% if user.isLocked %}
+                        <div class="px-6 py-4 flex justify-between text-sm">
+                            <dt class="text-gray-500">Bloqueado hasta</dt>
+                            <dd class="text-red-600">{{ user.lockedUntil|date('d/m/Y H:i') }}</dd>
+                        </div>
+                    {% endif %}
+                </dl>
+            </div>
+
+            {# Formulario de edición (oculto por defecto) #}
+            <form id="form-edit-user" method="POST" action="{{ path('user_edit', {id: user.id}) }}"
+                  class="hidden px-6 py-5 space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Username</label>
+                    <input type="text" name="username" value="{{ user.username }}"
+                           class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Rol</label>
+                    <select name="role_id" class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        {% for role in roles %}
+                            <option value="{{ role.id }}" {{ role.id == user.roleId ? 'selected' : '' }}>{{ role.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Nueva contraseña <span class="text-gray-400">(dejar vacío para no cambiar)</span></label>
+                    <input type="password" name="password" autocomplete="new-password"
+                           class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Confirmar nueva contraseña</label>
+                    <input type="password" name="password_confirm" autocomplete="new-password"
+                           class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="submit"
+                            class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm"
+                            style="background: #1e3585;"
+                            onmouseover="this.style.background='#152970'"
+                            onmouseout="this.style.background='#1e3585'">
+                        Guardar cambios
+                    </button>
+                    <button type="button" id="cancel-edit-user" class="text-sm text-gray-500 hover:text-gray-700">Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        document.getElementById('toggle-edit-user').addEventListener('click', function() {
+            document.getElementById('view-user').classList.add('hidden');
+            document.getElementById('form-edit-user').classList.remove('hidden');
+            this.classList.add('hidden');
+        });
+        document.getElementById('cancel-edit-user').addEventListener('click', function() {
+            document.getElementById('view-user').classList.remove('hidden');
+            document.getElementById('form-edit-user').classList.add('hidden');
+            document.getElementById('toggle-edit-user').classList.remove('hidden');
+        });
+    </script>
+{% endblock %}

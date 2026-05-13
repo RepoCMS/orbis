@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <!--
+        Ítem de una entrada de inventario.
+        serial_number = NULL → stock no serializado (quantity > 1 posible).
+        serial_number != NULL → stock serializado (quantity = 1).
+        purchase_order_item_id puede ser NULL si la entrada es libre (sin PO).
+    -->
+    <entity name="App\Inventory\Domain\Entities\EntryItem" table="inventory_entry_items">
+
+        <id name="id" type="entry_item_id" column="id" length="26" />
+
+        <field name="entryId"             type="entry_id"              column="entry_id"              length="26" />
+        <field name="productId"           type="product_id"            column="product_id"            length="26" />
+        <field name="locationId"          type="location_id"           column="location_id"           length="26" />
+        <field name="purchaseOrderItemId" type="purchase_order_item_id" column="purchase_order_item_id" length="26" nullable="true" />
+        <field name="serialNumber"        type="stock_serial_number"   column="serial_number"         length="100" nullable="true" />
+        <field name="quantity"            type="integer"               column="quantity" />
+
+        <indexes>
+            <index name="idx_inventory_entry_items_entry_id"              columns="entry_id" />
+            <index name="idx_inventory_entry_items_product_id"            columns="product_id" />
+            <index name="idx_inventory_entry_items_purchase_order_item_id" columns="purchase_order_item_id" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

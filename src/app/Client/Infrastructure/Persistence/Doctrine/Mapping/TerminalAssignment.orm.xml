@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Client\Domain\Entities\TerminalAssignment" table="terminal_assignments">
+
+        <id name="id" type="terminal_assignment_id" column="id" length="26" />
+
+        <field name="terminalId"           type="terminal_id"                      column="terminal_id"           length="26" />
+        <field name="name"                 type="terminal_name"                    column="name"                  length="100" />
+        <field name="idAssingedByClient"   type="terminal_id_assigned_by_client"   column="id_assigned_by_client" length="25" />
+        <field name="siteId"               type="site_id"                          column="site_id"               length="26" />
+        <field name="status"               type="string"                           column="status"                length="20"
+               enumType="App\Client\Domain\Enums\TerminalAssignmentStatus" />
+        <field name="deletedAt"            type="datetime_immutable"               column="deleted_at"            nullable="true" />
+
+        <indexes>
+            <index name="idx_terminal_assignments_terminal_id" columns="terminal_id" />
+            <index name="idx_terminal_assignments_site_id"     columns="site_id" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

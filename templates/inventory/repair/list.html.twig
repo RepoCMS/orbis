@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reparaciones{% endblock %}
+{% block page_title %}Reparaciones{% endblock %}
+
+{% block header_actions %}
+    {% if is_granted('inventory.create') %}
+    <a href="{{ path('inventory_repair_new') }}"
+       class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm"
+       style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+        </svg>
+        Asignar reparación
+    </a>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    {# Filtros de estado #}
+    <div class="flex gap-2 mb-4 flex-wrap">
+        <a href="{{ path('inventory_repair_list') }}"
+           class="text-sm px-4 py-1.5 rounded-full border transition-colors
+               {% if app.request.query.get('status') is null %}
+                   border-transparent text-white
+               {% else %}
+                   border-slate-200 text-gray-600 hover:bg-slate-50
+               {% endif %}"
+           {% if app.request.query.get('status') is null %}style="background: #1e3585;"{% endif %}>
+            Activas
+        </a>
+        <a href="{{ path('inventory_repair_list', {status: 'pending'}) }}"
+           class="text-sm px-4 py-1.5 rounded-full border transition-colors
+               {% if app.request.query.get('status') == 'pending' %}
+                   border-transparent text-white
+               {% else %}
+                   border-slate-200 text-gray-600 hover:bg-slate-50
+               {% endif %}"
+           {% if app.request.query.get('status') == 'pending' %}style="background: #1e3585;"{% endif %}>
+            Pendientes
+        </a>
+        <a href="{{ path('inventory_repair_list', {status: 'in_progress'}) }}"
+           class="text-sm px-4 py-1.5 rounded-full border transition-colors
+               {% if app.request.query.get('status') == 'in_progress' %}
+                   border-transparent text-white
+               {% else %}
+                   border-slate-200 text-gray-600 hover:bg-slate-50
+               {% endif %}"
+           {% if app.request.query.get('status') == 'in_progress' %}style="background: #1e3585;"{% endif %}>
+            En progreso
+        </a>
+    </div>
+
+    {% if repairs is empty %}
+        <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+            <svg class="w-12 h-12 mb-3 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"/>
+            </svg>
+            <p class="text-sm font-medium text-gray-600">No hay reparaciones en este estado.</p>
+        </div>
+    {% else %}
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-100 text-left">
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Stock (N.º Serie)</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Estado</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden md:table-cell">Laboratorio</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden lg:table-cell">Iniciado</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        {% for repair in repairs %}
+                        <tr class="hover:bg-slate-50/60 transition-colors">
+                            <td class="px-4 py-3 font-mono text-xs text-gray-700">{{ repair.serializedStockId }}</td>
+                            <td class="px-4 py-3">
+                                <span class="text-xs font-medium px-2.5 py-1 rounded-full
+                                    {% if repair.status == 'pending' %}bg-yellow-100 text-yellow-700
+                                    {% elseif repair.status == 'in_progress' %}bg-blue-100 text-blue-700
+                                    {% elseif repair.status == 'completed' %}bg-green-100 text-green-700
+                                    {% else %}bg-red-100 text-red-600{% endif %}">
+                                    {{ repair.statusLabel }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-gray-500 text-xs font-mono hidden md:table-cell">{{ repair.laboratoryId }}</td>
+                            <td class="px-4 py-3 text-gray-500 text-xs hidden lg:table-cell">{{ repair.startedAt ?: '—' }}</td>
+                            <td class="px-4 py-3 text-right">
+                                <a href="{{ path('inventory_repair_show', {id: repair.id}) }}"
+                                   class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 text-gray-600 hover:bg-slate-50">
+                                    Ver
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

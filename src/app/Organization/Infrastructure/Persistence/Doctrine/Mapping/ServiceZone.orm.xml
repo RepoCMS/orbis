@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Organization\Domain\Entities\ServiceZone" table="service_zones">
+
+        <id name="id" type="service_zone_id" column="id" length="26" />
+
+        <field name="name"      type="string"               column="name"       length="100" unique="true" />
+        <field name="status"    type="service_zone_status"  column="status"     length="10" />
+        <field name="cityIds"   type="json"                 column="city_ids"   nullable="true" />
+        <field name="createdAt" type="datetime_immutable"   column="created_at" nullable="true" />
+        <field name="updatedAt" type="datetime_immutable"   column="updated_at" nullable="true" />
+        <field name="deletedAt" type="datetime_immutable"   column="deleted_at" nullable="true" />
+
+        <indexes>
+            <index name="idx_service_zones_status" columns="status" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

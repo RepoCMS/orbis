@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activar 2FA — CMS Orbis</title>
+    <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+    {% block javascripts %}{% block importmap %}{{ importmap('app') }}{% endblock %}{% endblock %}
+</head>
+<body class="bg-slate-100 text-gray-900 antialiased min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md">
+
+        {# Marca #}
+        <div class="flex flex-col items-center mb-8">
+            <div class="flex items-center gap-2 mb-2">
+                <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+                    <path d="M4 24 C8 14, 20 8, 30 10" stroke="#00a86b" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+                    <path d="M4 24 C10 20, 22 20, 30 10" stroke="#00c882" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+                </svg>
+                <span class="text-2xl font-bold tracking-tight" style="color: #1e3585;">Orbis</span>
+            </div>
+            <p class="text-sm text-gray-500">Autenticación en dos pasos</p>
+        </div>
+
+        {# Mensajes flash #}
+        {% for message in app.flashes('error') %}
+            <div class="mb-4 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                <p class="text-sm text-red-700">{{ message }}</p>
+            </div>
+        {% endfor %}
+
+        {# Card #}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 px-8 py-8">
+
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style="background: #eef1f9;">
+                    <svg class="w-5 h-5" fill="none" stroke="#1e3585" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-base font-semibold text-gray-800">Configurar autenticador</h1>
+                    <p class="text-xs text-gray-500">Escanea el código QR con tu aplicación (Authenticator, Aegis, Authy…)</p>
+                </div>
+            </div>
+
+            <div class="flex justify-center mb-5">
+                <img src="{{ qr_data_uri }}" alt="QR Code 2FA" class="rounded-xl border border-slate-200 p-2" style="width:200px;height:200px;">
+            </div>
+
+            {# Código manual #}
+            <details class="mb-5">
+                <summary class="text-xs text-gray-400 cursor-pointer hover:text-gray-600">¿No puedes escanear? Ingresa el código manualmente</summary>
+                <div class="mt-2 bg-slate-50 rounded-lg px-3 py-2 font-mono text-sm text-center tracking-widest text-gray-700 select-all">
+                    {{ secret }}
+                </div>
+            </details>
+
+            <p class="text-xs text-gray-500 mb-4">Ingresa el código de 6 dígitos que muestra tu aplicación para confirmar la configuración.</p>
+
+            <form method="POST" action="{{ path('mfa_setup_confirm') }}" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Código de verificación</label>
+                    <input type="text" name="code"
+                           inputmode="numeric" pattern="[0-9]{6}" maxlength="6"
+                           autocomplete="one-time-code" autofocus required
+                           placeholder="000000"
+                           class="w-full rounded-lg border border-gray-300 text-center text-2xl tracking-[0.5em] font-mono py-3 px-3 focus:outline-none"
+                           onfocus="this.style.boxShadow='0 0 0 3px rgba(30,53,133,0.15)'; this.style.borderColor='#1e3585';"
+                           onblur="this.style.boxShadow=''; this.style.borderColor='';">
+                </div>
+                <button type="submit"
+                        class="w-full text-white text-sm font-semibold py-2.5 rounded-lg shadow-sm"
+                        style="background: #1e3585;"
+                        onmouseover="this.style.background='#152970'"
+                        onmouseout="this.style.background='#1e3585'">
+                    Activar y continuar
+                </button>
+            </form>
+        </div>
+
+        <form method="POST" action="{{ path('app_logout') }}" class="text-center mt-4">
+            <button type="submit" class="text-xs text-gray-400 hover:text-gray-600">Cerrar sesión</button>
+        </form>
+
+    </div>
+
+</body>
+</html>

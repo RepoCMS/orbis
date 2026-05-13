@@ -1,0 +1,225 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+{% block page_title %}{{ product.name }}{% endblock %}
+
+{% block header_actions %}
+    <div class="flex items-center gap-2">
+        {% if is_granted('inventory.update') %}
+        <a href="{{ path('inventory_product_edit', {id: product.id}) }}"
+           class="inline-flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-lg border border-slate-200 text-gray-600 hover:bg-slate-50 transition-colors">
+            Editar
+        </a>
+        {% endif %}
+        <a href="{{ path('inventory_product_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Volver
+        </a>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="space-y-6">
+        {# Datos del producto #}
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Código</dt>
+                    <dd class="text-sm font-mono text-gray-900">{{ product.code }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Nombre</dt>
+                    <dd class="text-sm font-medium text-gray-900">{{ product.name }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Descripción</dt>
+                    <dd class="text-sm text-gray-600">{{ product.description ?: '—' }}</dd>
+                </div>
+            </dl>
+        </div>
+
+        {# Badge de tipo #}
+        <div class="flex items-center gap-2">
+            <span class="text-xs font-medium px-2.5 py-1 rounded-full
+                {% if product.trackingType == 'serialized' %}bg-blue-100 text-blue-700{% else %}bg-teal-100 text-teal-700{% endif %}">
+                {% if product.trackingType == 'serialized' %}
+                    Serializado (por N.º serie)
+                {% else %}
+                    No serializado (por cantidad)
+                {% endif %}
+            </span>
+        </div>
+
+        {# Stock serializado — solo si el producto es de tipo serializado #}
+        {% if product.trackingType == 'serialized' %}
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                <h2 class="text-sm font-semibold text-gray-700">Stock serializado</h2>
+                <span class="text-xs text-gray-400">{{ serializedStock | length }} unidades</span>
+            </div>
+            {% if serializedStock is empty %}
+                <p class="px-6 py-8 text-sm text-gray-400 text-center">Sin stock serializado.</p>
+            {% else %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-100 text-left">
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">N.º Serie</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Ubicación</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        {% for s in serializedStock %}
+                        <tr class="hover:bg-slate-50/60">
+                            <td class="px-4 py-2.5 font-mono text-xs">{{ s.serialNumber }}</td>
+                            <td class="px-4 py-2.5 text-gray-600 text-xs">{{ s.locationName }}</td>
+                            <td class="px-4 py-2.5">
+                                <span class="text-xs font-medium px-2 py-0.5 rounded-full
+                                    {% if s.status == 'disponible' %}bg-green-100 text-green-700
+                                    {% elseif s.status == 'reservado' %}bg-yellow-100 text-yellow-700
+                                    {% elseif s.status == 'dañado' %}bg-orange-100 text-orange-700
+                                    {% else %}bg-gray-100 text-gray-600{% endif %}">
+                                    {{ s.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}{# end serialized #}
+
+        {# Stock no serializado — solo si el producto es de tipo no serializado #}
+        {% if product.trackingType == 'non_serialized' %}
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                <h2 class="text-sm font-semibold text-gray-700">Stock</h2>
+                <span class="text-xs text-gray-400">{{ nonserializedStock | length }} lotes</span>
+            </div>
+            {% if nonserializedStock is empty %}
+                <p class="px-6 py-8 text-sm text-gray-400 text-center">Sin stock no serializado.</p>
+            {% else %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-100 text-left">
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Ubicación</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Cantidad</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Estado</th>
+                            {% if is_granted('inventory.update') %}
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide text-right">Baja</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        {% for s in nonserializedStock %}
+                        <tr class="hover:bg-slate-50/60">
+                            <td class="px-4 py-2.5 text-gray-600 text-xs">{{ s.locationName }}</td>
+                            <td class="px-4 py-2.5 font-semibold">{{ s.quantity }}</td>
+                            <td class="px-4 py-2.5">
+                                <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                                    {{ s.status }}
+                                </span>
+                            </td>
+                            {% if is_granted('inventory.update') and s.status == 'AVAILABLE' %}
+                            <td class="px-4 py-2.5 text-right">
+                                <div class="flex justify-end gap-2">
+                                    <form method="POST"
+                                          action="{{ path('inventory_stock_write_off', {productId: product.id, stockId: s.id}) }}"
+                                          onsubmit="return confirm('¿Marcar este lote como DAÑADO?')">
+                                        <input type="hidden" name="action" value="damage">
+                                        <button type="submit"
+                                                class="text-xs font-medium px-2.5 py-1 rounded-full bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition-colors">
+                                            Dañado
+                                        </button>
+                                    </form>
+                                    <form method="POST"
+                                          action="{{ path('inventory_stock_write_off', {productId: product.id, stockId: s.id}) }}"
+                                          onsubmit="return confirm('¿Dar de baja este lote como DESCARTADO?')">
+                                        <input type="hidden" name="action" value="decommission">
+                                        <button type="submit"
+                                                class="text-xs font-medium px-2.5 py-1 rounded-full bg-red-100 text-red-700 hover:bg-red-200 transition-colors">
+                                            Dar de baja
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                            {% elseif is_granted('inventory.update') %}
+                            <td class="px-4 py-2.5"></td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}{# end non_serialized #}
+
+        {# ── Cargar stock directamente ──────────────────────────────────────── #}
+        {% if is_granted('inventory.create') %}
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+            <div class="px-6 py-4 border-b border-slate-100">
+                <h2 class="text-sm font-semibold text-gray-700">Cargar stock</h2>
+                <p class="text-xs text-gray-400 mt-0.5">Registra unidades directamente sin crear una Entrada formal.</p>
+            </div>
+            <div class="px-6 py-5">
+                <form method="POST"
+                      action="{{ path('inventory_product_register_stock', {id: product.id}) }}"
+                      class="flex flex-wrap items-end gap-4">
+
+                    {# Ubicación — siempre visible #}
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1">
+                            Ubicación destino <span class="text-red-500">*</span>
+                        </label>
+                        <select name="location_id" required
+                                class="text-sm rounded-lg border border-slate-200 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30 min-w-[180px]">
+                            <option value="">— Seleccionar —</option>
+                            {% for loc in locations %}
+                            <option value="{{ loc.id }}">{{ loc.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    {% if product.trackingType == 'serialized' %}
+                    {# N.º Serie — solo para productos serializados #}
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1">
+                            Número de serie <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="serial_number" required
+                               class="text-sm rounded-lg border border-slate-200 px-3 py-2 font-mono w-48 focus:outline-none focus:ring-2 focus:ring-blue-400/30"
+                               placeholder="SN-XXXXXXXX"
+                               autocomplete="off">
+                    </div>
+                    {% else %}
+                    {# Cantidad — solo para productos no serializados #}
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1">
+                            Cantidad <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" name="quantity" required
+                               min="1" value="1"
+                               class="text-sm rounded-lg border border-slate-200 px-3 py-2 w-24 focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                    </div>
+                    {% endif %}
+
+                    <button type="submit"
+                            class="px-5 py-2 text-sm font-medium text-white rounded-lg shadow-sm self-end"
+                            style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+                        Registrar stock
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
+

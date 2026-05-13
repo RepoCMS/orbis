@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Location\Domain\Entities\City" table="cities">
+
+        <id name="id" type="geo_city_id" column="id" length="26" />
+
+        <field name="provinceId" type="geo_province_id" column="province_id" length="26" />
+        <field name="name"       type="string"          column="name"        length="150" />
+
+        <indexes>
+            <index name="idx_cities_province_id" columns="province_id" />
+            <index name="idx_cities_name"        columns="name" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

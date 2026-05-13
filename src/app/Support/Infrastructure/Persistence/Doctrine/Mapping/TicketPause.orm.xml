@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Support\Domain\Entities\TicketPause" table="ticket_pauses">
+
+        <id name="id" type="ticket_pause_id" column="id" length="26" />
+
+        <field name="ticketId"    type="ticket_id" column="ticket_id"   length="26" />
+        <field name="pauseReason" type="text"      column="pause_reason" />
+        <field name="pausedAt"    type="datetime_immutable" column="paused_at" />
+        <field name="resumedAt"   type="datetime_immutable" column="resumed_at" nullable="true" />
+
+        <indexes>
+            <index name="idx_ticket_pauses_ticket_id" columns="ticket_id" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

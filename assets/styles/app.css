@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@source "../../templates/**/*.twig";
+@source "../../src/**/*.php";
+
+@theme {
+    /* CMS Business Solutions brand colors */
+    --color-cms-blue:        #1e3585;
+    --color-cms-blue-dark:   #152970;
+    --color-cms-blue-light:  #2a4db5;
+    --color-cms-green:       #00a86b;
+    --color-cms-green-dark:  #007a4f;
+    --color-cms-green-light: #00c882;
+}
+

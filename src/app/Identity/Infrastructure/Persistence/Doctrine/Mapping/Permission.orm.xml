@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Identity\Domain\Entities\Permission" table="permissions">
+
+        <id name="id" type="permission_id" column="id" length="26" />
+
+        <field name="key"         type="permission_key" column="permission_key" length="100" unique="true" />
+        <field name="description" type="string"         column="description"   length="255" />
+
+    </entity>
+
+</doctrine-mapping>

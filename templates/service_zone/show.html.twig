@@ -1,0 +1,242 @@
+{% extends 'base.html.twig' %}
+{% import 'components/_macros.html.twig' as ui %}
+
+{% block title %}{{ zone.name }}{% endblock %}
+{% block page_title %}Zona de Servicio{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('service_zone_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Zonas
+    </a>
+{% endblock %}
+
+{% block body %}
+
+{% if app.flashes('error') is not empty %}
+<div class="mb-4 bg-red-50 border border-red-200 rounded-lg p-4 space-y-1">
+    {% for msg in app.flashes('error') %}
+        <p class="text-sm text-red-700">• {{ msg }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    {# ── Columna izquierda — Info de la zona ── #}
+    <div class="lg:col-span-1 space-y-5">
+
+        {# Card: Detalles #}
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+            <div class="flex items-start justify-between mb-4">
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-900">{{ zone.name }}</h2>
+                    <div class="mt-1">{{ ui.status_badge(zone.status) }}</div>
+                </div>
+                <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style="background: #eef1f9;">
+                    <svg class="w-5 h-5" fill="none" stroke="#1e3585" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <dl class="space-y-2 text-sm">
+                <div class="flex justify-between">
+                    <dt class="text-gray-500">Ciudades</dt>
+                    <dd class="font-medium text-gray-800">{{ zone.cityIds|length }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-gray-500">Creada</dt>
+                    <dd class="text-gray-800">{{ zone.createdAt|date('d/m/Y') }}</dd>
+                </div>
+                {% if zone.updatedAt %}
+                <div class="flex justify-between">
+                    <dt class="text-gray-500">Actualizada</dt>
+                    <dd class="text-gray-800">{{ zone.updatedAt|date('d/m/Y H:i') }}</dd>
+                </div>
+                {% endif %}
+            </dl>
+        </div>
+
+        {# Card: Editar nombre #}
+        {% if is_granted('service_zone.update') %}
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Editar nombre</p>
+
+            {% if errors is defined and errors is not empty and editMode is defined %}
+                <div class="mb-3 bg-red-50 border border-red-200 rounded-lg p-3 space-y-1">
+                    {% for error in errors %}
+                        <p class="text-xs text-red-700">• {{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{{ path('service_zone_edit', {id: zone.id}) }}" novalidate>
+                <div class="space-y-3">
+                    <div>
+                        <label for="edit_name" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                        <input type="text" id="edit_name" name="name"
+                               value="{{ (editMode is defined and editInput is defined) ? editInput.name : zone.name }}"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                               onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                               style="transition: border-color .15s;"
+                               required>
+                    </div>
+                    <button type="submit"
+                            class="w-full text-white text-sm font-medium px-4 py-2 rounded-lg transition-all"
+                            style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+                        Guardar cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        {# Card: Cambiar estado #}
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Estado</p>
+            {% if zone.status == 'active' %}
+                <form method="POST" action="{{ path('service_zone_deactivate', {id: zone.id}) }}">
+                    <button type="submit"
+                            class="w-full text-sm font-medium px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-all">
+                        Desactivar zona
+                    </button>
+                </form>
+            {% else %}
+                <form method="POST" action="{{ path('service_zone_reactivate', {id: zone.id}) }}">
+                    <button type="submit"
+                            class="w-full text-sm font-medium px-4 py-2 rounded-lg transition-all text-white"
+                            style="background: #00a86b;" onmouseover="this.style.background='#008f5a'" onmouseout="this.style.background='#00a86b'">
+                        Reactivar zona
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    </div>
+
+    {# ── Columna derecha — Técnicos + Ciudades ── #}
+    <div class="lg:col-span-2 space-y-5">
+
+        {# Técnicos asignados #}
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm">
+            <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+                <h3 class="font-semibold text-gray-800 text-sm">Técnicos asignados</h3>
+                <span class="text-xs font-medium px-2 py-0.5 rounded-full" style="background: #eef1f9; color: #1e3585;">
+                    {{ assignedTechnicians|length }}
+                </span>
+            </div>
+
+            {% if assignedTechnicians is empty %}
+                <p class="px-5 py-8 text-sm text-gray-400 text-center">No hay técnicos asignados a esta zona.</p>
+            {% else %}
+                <ul class="divide-y divide-gray-100">
+                    {% for tech in assignedTechnicians %}
+                        <li class="flex items-center justify-between px-5 py-3">
+                            <div class="flex items-center gap-3">
+                                {{ ui.avatar_initials(tech.firstName, tech.lastName) }}
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">{{ tech.fullName }}</p>
+                                    <p class="text-xs text-gray-400">{{ tech.identificationNumber }}</p>
+                                </div>
+                            </div>
+                            {% if is_granted('service_zone.assign_technician') %}
+                            <form method="POST" action="{{ path('service_zone_remove_technician', {id: zone.id, technicianId: tech.id}) }}">
+                                <button type="submit"
+                                        class="text-xs font-medium px-3 py-1.5 rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">
+                                    Remover
+                                </button>
+                            </form>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        {# Asignar técnico #}
+        {% if is_granted('service_zone.assign_technician') and availableTechnicians is not empty %}
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Asignar técnico</p>
+            <form method="POST" action="{{ path('service_zone_assign_technician', {id: zone.id}) }}" class="flex gap-3">
+                <select name="technician_id"
+                        class="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                        onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                        style="transition: border-color .15s;">
+                    <option value="">Seleccionar técnico...</option>
+                    {% for tech in availableTechnicians %}
+                        <option value="{{ tech.id }}">{{ tech.fullName }} — {{ tech.identificationNumber }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit"
+                        class="text-white text-sm font-medium px-4 py-2 rounded-lg shrink-0"
+                        style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+                    Asignar
+                </button>
+            </form>
+        </div>
+        {% endif %}
+
+        {# Ciudades asignadas #}
+        {% set zoneCityIds = zone.cityIds %}
+        {% set assignedCities = allCities|filter(c => c.id in zoneCityIds) %}
+        {% set availableCities = allCities|filter(c => c.id not in zoneCityIds) %}
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm">
+            <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+                <h3 class="font-semibold text-gray-800 text-sm">Ciudades asignadas</h3>
+                <span class="text-xs font-medium px-2 py-0.5 rounded-full" style="background: #eef1f9; color: #1e3585;">
+                    {{ assignedCities|length }}
+                </span>
+            </div>
+
+            {% if assignedCities is empty %}
+                <p class="px-5 py-8 text-sm text-gray-400 text-center">No hay ciudades asignadas a esta zona.</p>
+            {% else %}
+                <ul class="divide-y divide-gray-100">
+                    {% for city in assignedCities %}
+                        <li class="flex items-center justify-between px-5 py-3">
+                            <span class="text-sm text-gray-800">{{ city.name }}</span>
+                            {% if is_granted('service_zone.update') %}
+                            <form method="POST" action="{{ path('service_zone_remove_city', {id: zone.id, cityId: city.id}) }}">
+                                <button type="submit"
+                                        class="text-xs font-medium px-3 py-1.5 rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">
+                                    Remover
+                                </button>
+                            </form>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        {# Asignar ciudad #}
+        {% if is_granted('service_zone.update') and availableCities|length > 0 %}
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Asignar ciudad</p>
+            <form method="POST" action="{{ path('service_zone_add_city', {id: zone.id}) }}" class="flex gap-3">
+                <select name="city_id"
+                        class="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                        onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                        style="transition: border-color .15s;">
+                    <option value="">Seleccionar ciudad...</option>
+                    {% for city in availableCities %}
+                        <option value="{{ city.id }}">{{ city.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit"
+                        class="text-white text-sm font-medium px-4 py-2 rounded-lg shrink-0"
+                        style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+                    Asignar
+                </button>
+            </form>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

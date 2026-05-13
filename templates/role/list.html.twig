@@ -1,0 +1,93 @@
+﻿{% extends 'base.html.twig' %}
+{% import 'components/_macros.html.twig' as ui %}
+
+{% block title %}Roles{% endblock %}
+{% block page_title %}Gestión de Roles{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('role_new') }}"
+       class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-all hover:shadow-md"
+       style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+        </svg>
+        Nuevo rol
+    </a>
+{% endblock %}
+
+{% block body %}
+    {% if roles is empty %}
+        <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+            <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4" style="background: #eef1f9;">
+                <svg class="w-8 h-8" fill="none" stroke="#1e3585" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+            </div>
+            <p class="text-sm font-medium text-gray-600">No hay roles definidos aún.</p>
+            <p class="text-xs text-gray-400 mt-1">Los roles son necesarios para poder crear usuarios.</p>
+            <a href="{{ path('role_new') }}"
+               class="mt-4 inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg"
+               style="background: #1e3585;">Crear primer rol</a>
+        </div>
+    {% else %}
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200"
+             data-controller="table-filter">
+
+            {# -- Toolbar --------------------------------------- #}
+            {{ include('components/_table_toolbar.html.twig', {placeholder: 'Buscar rol...'}) }}
+
+            {# -- Panel de filtros (client-side) --------------- #}
+            <div data-table-filter-target="panel"
+                 class="hidden bg-slate-50/60 border-b border-slate-100 px-4 py-3">
+                <div class="flex flex-wrap items-end gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1">Estado</label>
+                        <select data-table-filter-target="filterSelect"
+                                data-col="1"
+                                data-match="exact"
+                                data-action="change->table-filter#filterRows"
+                                class="text-sm rounded-lg border border-slate-200 px-3 py-1.5 bg-white w-36 focus:outline-none focus:ring-2 focus:ring-blue-400/30 focus:border-blue-400 transition-colors">
+                            <option value="">Todos</option>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            {# -- Tabla ----------------------------------------- #}
+            <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="text-xs uppercase tracking-wide text-white" style="background: #1e3585;">
+                    <tr>
+                        <th class="px-6 py-3.5 text-left font-semibold">Nombre</th>
+                        <th class="px-6 py-3.5 text-left font-semibold">Estado</th>
+                        <th class="px-6 py-3.5 text-left font-semibold">Permisos</th>
+                        <th class="px-6 py-3.5 text-right font-semibold">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for role in roles %}
+                        <tr class="hover:bg-slate-50 transition-colors"
+                            data-table-filter-target="row">
+                            <td class="px-6 py-4 font-medium text-gray-900">{{ role.name }}</td>
+                            <td class="px-6 py-4">{{ ui.status_badge(role.status) }}</td>
+                            <td class="px-6 py-4 text-gray-500">
+                                {{ role.permissionIds|length }} permiso{{ role.permissionIds|length != 1 ? 's' : '' }}
+                            </td>
+                            <td class="px-6 py-4 text-right">{{ ui.btn_view(path('role_show', {id: role.id})) }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr data-table-filter-target="noResults" class="hidden">
+                        <td colspan="4" class="px-6 py-12 text-center text-sm text-gray-400">
+                            No se encontraron roles con los filtros aplicados.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+        </div>
+    {% endif %}
+{% endblock %}

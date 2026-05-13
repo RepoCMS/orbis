@@ -1,0 +1,521 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ client.name }}{% endblock %}
+{% block page_title %}Detalle de Cliente{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('client_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Volver
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="max-w-2xl space-y-4">
+
+        {# Errores #}
+        {% if errors is defined and errors|length > 0 %}
+            <div class="bg-red-50 border border-red-200 rounded-xl px-5 py-4">
+                {% for error in errors %}
+                    <p class="text-sm text-red-700">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {# Card cliente #}
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 flex items-center justify-between" style="background: linear-gradient(135deg, #1e3585 0%, #2a4db5 100%);">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-white/20">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-white">{{ client.name }}</h2>
+                        <p class="text-xs font-mono mt-0.5" style="color: rgba(255,255,255,0.6);">RUC: {{ client.ruc }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    {% if client.status == 'active' %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold" style="background: rgba(0,168,107,0.25); color: #00c882; border: 1px solid rgba(0,168,107,0.4);">Activo</span>
+                    {% else %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-white/60">Inactivo</span>
+                    {% endif %}
+                    <button type="button" id="toggle-edit-client"
+                            class="text-xs font-medium px-3 py-1 rounded-lg border border-white/40 text-white/80 hover:bg-white/10">Editar</button>
+                </div>
+            </div>
+
+            <div class="px-6 py-3 border-b border-slate-100 bg-slate-50 flex items-center gap-3">
+                {% if client.status == 'active' %}
+                    <form method="POST" action="{{ path('client_deactivate', {id: client.id}) }}">
+                        <button type="submit"
+                                class="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-amber-700 bg-amber-50 border-amber-200 hover:bg-amber-100"
+                                onclick="return confirm('¿Desactivar el cliente {{ client.name|e('js') }}?')">
+                            Desactivar
+                        </button>
+                    </form>
+                {% else %}
+                    <form method="POST" action="{{ path('client_activate', {id: client.id}) }}">
+                        <button type="submit"
+                                class="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-emerald-700 bg-emerald-50 border-emerald-200 hover:bg-emerald-100">
+                            Activar
+                        </button>
+                    </form>
+                {% endif %}
+
+                <form method="POST" action="{{ path('client_delete', {id: client.id}) }}">
+                    <button type="submit"
+                            class="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-red-700 bg-red-50 border-red-200 hover:bg-red-100"
+                            onclick="return confirm('¿Eliminar lógicamente el cliente {{ client.name|e('js') }}?')">
+                        Eliminar
+                    </button>
+                </form>
+            </div>
+
+            {# Vista normal #}
+            <div id="view-client" class="px-6 py-5 grid grid-cols-2 gap-4 text-sm">
+                <div>
+                    <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">ID</p>
+                    <p class="font-mono text-xs text-gray-600 break-all">{{ client.id }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Dirección</p>
+                    <p class="text-gray-700">{{ client.address ?? '—' }}</p>
+                </div>
+            </div>
+
+            {# Formulario de edición #}
+            <form id="form-edit-client" method="POST" action="{{ path('client_edit', {id: client.id}) }}"
+                  class="{{ editMode is defined and editMode ? '' : 'hidden' }} px-6 py-5 space-y-4 border-t border-slate-100">
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Nombre</label>
+                    <input type="text" name="name"
+                           value="{{ (editInput.name is defined) ? editInput.name : client.name }}"
+                           class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Dirección <span class="text-gray-400">(opcional)</span></label>
+                    <input type="text" name="address"
+                           value="{{ (editInput.address is defined) ? editInput.address : client.address }}"
+                           class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="submit"
+                            class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm"
+                            style="background: #1e3585;"
+                            onmouseover="this.style.background='#152970'"
+                            onmouseout="this.style.background='#1e3585'">
+                        Guardar cambios
+                    </button>
+                    <button type="button" id="cancel-edit-client" class="text-sm text-gray-500 hover:text-gray-700">Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+        {# Contactos #}
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 flex items-center justify-between border-b border-slate-100">
+                <h3 class="text-sm font-semibold" style="color: #1e3585;">
+                    Contactos
+                    <span class="ml-2 text-xs font-normal text-gray-400">{{ contacts|length }} registrado{{ contacts|length != 1 ? 's' : '' }}</span>
+                </h3>
+            </div>
+
+            {# Formulario nuevo contacto #}
+            <div class="px-6 py-4 border-b border-slate-100" style="background: #f8f9fc;">
+                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Agregar contacto</p>
+                <form method="POST" action="{{ path('contact_create', {clientId: client.id}) }}" novalidate>
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <input type="text" name="first_name" placeholder="Nombre *"
+                                   class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none"
+                                   onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                   style="transition: border-color .15s;" required>
+                        </div>
+                        <div>
+                            <input type="text" name="last_name" placeholder="Apellido *"
+                                   class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none"
+                                   onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                   style="transition: border-color .15s;" required>
+                        </div>
+                        <div>
+                            <input type="email" name="email" placeholder="Email *"
+                                   class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none"
+                                   onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                   style="transition: border-color .15s;" required>
+                        </div>
+                        <div>
+                            <input type="text" name="phone_number" placeholder="Teléfono *"
+                                   class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none"
+                                   onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                   style="transition: border-color .15s;" required>
+                        </div>
+                        <div class="col-span-2">
+                            <input type="text" name="role" placeholder="Cargo / Rol en la empresa *"
+                                   class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none"
+                                   onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                   style="transition: border-color .15s;" required>
+                        </div>
+                    </div>
+                    <button type="submit"
+                            class="text-white text-xs font-medium px-4 py-2 rounded-lg"
+                            style="background: #00a86b;" onmouseover="this.style.background='#007a4f'" onmouseout="this.style.background='#00a86b'">
+                        Agregar contacto
+                    </button>
+                </form>
+            </div>
+
+            {# Lista de contactos #}
+            {% if contacts is empty %}
+                <div class="px-6 py-8 text-center text-sm text-gray-400">
+                    No hay contactos registrados para este cliente.
+                </div>
+            {% else %}
+                <div class="divide-y divide-gray-100">
+                    {% for contact in contacts %}
+                        {% set linkedUser = linkedUsersByContactId[contact.id] ?? null %}
+                        {% set autoOpenAccess = app.request.query.get('contactAccess') == contact.id %}
+                        {% set autoOpenMode = app.request.query.get('contactMode') %}
+                        <div class="px-6 py-4 space-y-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
+                                     style="background: #1e3585;">
+                                    {{ contact.firstName|slice(0,1) }}{{ contact.lastName|slice(0,1) }}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-gray-900">{{ contact.firstName }} {{ contact.lastName }}</p>
+                                    <p class="text-xs text-gray-500">{{ contact.role }}</p>
+                                </div>
+                                <div class="text-right text-xs text-gray-400 shrink-0">
+                                    <p>{{ contact.email }}</p>
+                                    <p>{{ contact.phoneNumber }}</p>
+                                </div>
+                                <div class="flex items-center gap-2 shrink-0">
+                                    {% if contact.status == 'active' %}
+                                        <span class="text-xs px-2 py-0.5 rounded-full font-medium shrink-0" style="background: #e6f7f1; color: #00a86b;">Activo</span>
+                                        {% if is_granted('contact.update') %}
+                                        <form method="POST" action="{{ path('contact_deactivate', {clientId: client.id, contactId: contact.id}) }}">
+                                            <button type="submit" class="text-xs px-2.5 py-1 rounded-md border border-amber-200 text-amber-700 bg-amber-50 hover:bg-amber-100">
+                                                Desactivar
+                                            </button>
+                                        </form>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-xs px-2 py-0.5 rounded-full font-medium bg-gray-100 text-gray-500 shrink-0">Inactivo</span>
+                                        {% if is_granted('contact.update') %}
+                                        <form method="POST" action="{{ path('contact_reactivate', {clientId: client.id, contactId: contact.id}) }}">
+                                            <button type="submit" class="text-xs px-2.5 py-1 rounded-md border border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100">
+                                                Reactivar
+                                            </button>
+                                        </form>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if is_granted('contact.delete') %}
+                                    <form method="POST" action="{{ path('contact_delete', {clientId: client.id, contactId: contact.id}) }}">
+                                        <button type="submit"
+                                                class="text-xs px-2.5 py-1 rounded-md border border-red-200 text-red-700 bg-red-50 hover:bg-red-100"
+                                                onclick="return confirm('¿Eliminar lógicamente a {{ (contact.firstName ~ ' ' ~ contact.lastName)|e('js') }}?')">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="rounded-xl border border-slate-200 bg-slate-50/70 overflow-hidden">
+                                <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-700">Acceso al sistema</p>
+                                        <p class="text-xs text-slate-500">Gestiona el usuario del portal para este contacto.</p>
+                                    </div>
+                                    {% if linkedUser and is_granted('user.view') %}
+                                        <a href="{{ path('user_show', {id: linkedUser.id}) }}" class="text-xs text-blue-600 hover:underline">Ver usuario</a>
+                                    {% endif %}
+                                </div>
+
+                                {% if linkedUser %}
+                                    <dl class="divide-y divide-slate-200 bg-white">
+                                        <div class="px-4 py-3 flex justify-between text-sm gap-4">
+                                            <dt class="text-slate-500">Usuario</dt>
+                                            <dd class="text-slate-900 font-medium text-right">{{ linkedUser.username }}</dd>
+                                        </div>
+                                        <div class="px-4 py-3 flex justify-between text-sm gap-4">
+                                            <dt class="text-slate-500">Rol</dt>
+                                            <dd class="text-slate-800 text-right">{{ rolesById[linkedUser.roleId] ?? linkedUser.roleId }}</dd>
+                                        </div>
+                                        <div class="px-4 py-3 flex justify-between text-sm gap-4">
+                                            <dt class="text-slate-500">Estado de cuenta</dt>
+                                            <dd class="text-right">
+                                                {% if linkedUser.status == 'active' %}
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Activo</span>
+                                                {% elseif linkedUser.status == 'unverified' %}
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Sin verificar</span>
+                                                {% elseif linkedUser.status == 'inactive' %}
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">Inactivo</span>
+                                                {% else %}
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ linkedUser.status }}</span>
+                                                {% endif %}
+                                            </dd>
+                                        </div>
+                                    </dl>
+                                {% else %}
+                                    <div class="bg-white divide-y divide-slate-200">
+                                        {% if is_granted('user.create') %}
+                                            <div class="px-4 py-4">
+                                                <div class="flex items-center justify-between gap-3 mb-3">
+                                                    <div>
+                                                        <p class="text-sm font-medium text-slate-700">Crear acceso nuevo</p>
+                                                        <p class="text-xs text-slate-500">Se usará {{ contact.email }} como correo de la cuenta.</p>
+                                                    </div>
+                                                    <button type="button"
+                                                            data-toggle-target="contact-create-user-{{ contact.id }}"
+                                                            data-open-label="Crear acceso"
+                                                            data-close-label="Ocultar"
+                                                            class="text-xs font-medium px-3 py-1.5 rounded-lg border border-blue-300 text-blue-700 hover:bg-blue-50">
+                                                        {{ autoOpenAccess and autoOpenMode == 'create' ? 'Ocultar' : 'Crear acceso' }}
+                                                    </button>
+                                                </div>
+
+                                                <form id="contact-create-user-{{ contact.id }}"
+                                                      method="POST"
+                                                      action="{{ path('contact_create_user', {clientId: client.id, contactId: contact.id}) }}"
+                                                      class="{{ autoOpenAccess and autoOpenMode == 'create' ? '' : 'hidden' }} space-y-3">
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-slate-700 mb-1">Username</label>
+                                                            <input type="text" name="username" maxlength="15" autocomplete="off"
+                                                                   placeholder="ej: contacto.portal"
+                                                                   class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                        </div>
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-slate-700 mb-1">Rol</label>
+                                                            <select name="role_id" class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                <option value="">— Seleccione —</option>
+                                                                {% for roleId, roleName in rolesById %}
+                                                                    <option value="{{ roleId }}">{{ roleName }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-slate-700 mb-1">Contraseña</label>
+                                                            <input type="password" name="password" autocomplete="new-password"
+                                                                   class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                        </div>
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-slate-700 mb-1">Confirmar contraseña</label>
+                                                            <input type="password" name="password_confirm" autocomplete="new-password"
+                                                                   class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                        </div>
+                                                    </div>
+                                                    <button type="submit"
+                                                            class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm"
+                                                            style="background: #1e3585;"
+                                                            onmouseover="this.style.background='#152970'"
+                                                            onmouseout="this.style.background='#1e3585'">
+                                                        Crear acceso
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if is_granted('contact.update') and availableUsers is not empty %}
+                                            <div class="px-4 py-4">
+                                                <button type="button"
+                                                        data-toggle-target="contact-link-user-{{ contact.id }}"
+                                                        data-open-label="Vincular usuario existente"
+                                                        data-close-label="Ocultar vinculación"
+                                                        class="text-xs text-slate-500 hover:text-slate-700 flex items-center gap-1">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                                                    </svg>
+                                                    {{ autoOpenAccess and autoOpenMode == 'link' ? 'Ocultar vinculación' : 'Vincular usuario existente' }}
+                                                </button>
+                                                <form id="contact-link-user-{{ contact.id }}"
+                                                      method="POST"
+                                                      action="{{ path('contact_link_user', {clientId: client.id, contactId: contact.id}) }}"
+                                                      class="{{ autoOpenAccess and autoOpenMode == 'link' ? '' : 'hidden' }} mt-3 flex flex-col md:flex-row md:items-end gap-3">
+                                                    <div class="flex-1">
+                                                        <select name="user_id" required
+                                                                class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                            <option value="">— Selecciona un usuario —</option>
+                                                            {% for user in availableUsers %}
+                                                                <option value="{{ user.id }}">
+                                                                    {{ user.username }}{% if rolesById[user.roleId] is defined %} ({{ rolesById[user.roleId] }}){% endif %}
+                                                                </option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <button type="submit"
+                                                            class="inline-flex items-center text-white text-sm font-medium px-4 py-2 rounded-lg"
+                                                            style="background: #6b7280;"
+                                                            onmouseover="this.style.background='#4b5563'"
+                                                            onmouseout="this.style.background='#6b7280'">
+                                                        Vincular
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if not is_granted('user.create') and not is_granted('contact.update') %}
+                                            <div class="px-4 py-4 text-sm text-slate-500">
+                                                No tienes permisos para gestionar el acceso al sistema de este contacto.
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        {# Sucursales #}
+        {% if is_granted('site.view') %}
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 flex items-center justify-between border-b border-slate-100">
+                <h3 class="text-sm font-semibold" style="color: #1e3585;">
+                    Sucursales
+                    <span class="ml-2 text-xs font-normal text-gray-400">{{ sites|length }} registrada{{ sites|length != 1 ? 's' : '' }}</span>
+                </h3>
+            </div>
+
+            {# Formulario nueva sucursal #}
+            {% if is_granted('site.create') %}
+            <div class="px-6 py-4 border-b border-slate-100" style="background: #f8f9fc;">
+                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Agregar sucursal</p>
+                <form method="POST" action="{{ path('site_add', {clientId: client.id}) }}" novalidate>
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div class="col-span-2">
+                            <input type="text" name="name" placeholder="Nombre de la sucursal *"
+                                   class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none"
+                                   onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                   style="transition: border-color .15s;" required>
+                        </div>
+                        <div>
+                            <input type="text" name="terminal_id" placeholder="Terminal ID (ULID) *"
+                                   class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none font-mono"
+                                   onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                   style="transition: border-color .15s;" required>
+                        </div>
+                        <div>
+                            <input type="text" name="city_id" placeholder="Ciudad ID (ULID) *"
+                                   class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none font-mono"
+                                   onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                   style="transition: border-color .15s;" required>
+                        </div>
+                        <div class="col-span-2">
+                            <select name="service_zone_id"
+                                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none"
+                                    onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''">
+                                <option value="">— Sin zona de servicio —</option>
+                                {% for zone in serviceZones %}
+                                    <option value="{{ zone.id }}">{{ zone.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit"
+                            class="text-white text-xs font-medium px-4 py-2 rounded-lg"
+                            style="background: #00a86b;" onmouseover="this.style.background='#007a4f'" onmouseout="this.style.background='#00a86b'">
+                        Agregar sucursal
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+
+            {# Lista de sucursales #}
+            {% if sites is empty %}
+                <div class="px-6 py-8 text-center text-sm text-gray-400">
+                    No hay sucursales registradas para este cliente.
+                </div>
+            {% else %}
+                <div class="divide-y divide-gray-100">
+                    {% for site in sites %}
+                        <div class="px-6 py-4 flex items-center gap-4">
+                            <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
+                                 style="background: #1e3585;">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                </svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900">{{ site.name }}</p>
+                                <p class="text-xs font-mono text-gray-400">Terminal: {{ site.terminalId }}</p>
+                            </div>
+                            <div class="text-right text-xs text-gray-400 shrink-0">
+                                {% if site.serviceZoneId %}
+                                    {% set sz = serviceZones|filter(z => z.id == site.serviceZoneId)|first %}
+                                    <p>{{ sz is not null ? sz.name : '—' }}</p>
+                                {% else %}
+                                    <p>Sin zona</p>
+                                {% endif %}
+                            </div>
+                            <div class="flex items-center gap-2 shrink-0">
+                                {% if site.status == 'active' %}
+                                    <span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background: #e6f7f1; color: #00a86b;">Activa</span>
+                                {% else %}
+                                    <span class="text-xs px-2 py-0.5 rounded-full font-medium bg-gray-100 text-gray-500">Inactiva</span>
+                                {% endif %}
+                                <a href="{{ path('site_show', {clientId: client.id, siteId: site.id}) }}"
+                                   class="text-xs px-2.5 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 font-medium">
+                                    Ver
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    </div>
+
+    <script>
+        (function() {
+            var toggle = document.getElementById('toggle-edit-client');
+            var view   = document.getElementById('view-client');
+            var form   = document.getElementById('form-edit-client');
+            var cancel = document.getElementById('cancel-edit-client');
+            if (form && !form.classList.contains('hidden')) {
+                toggle && toggle.classList.add('hidden');
+            }
+            toggle && toggle.addEventListener('click', function() {
+                view.classList.add('hidden');
+                form.classList.remove('hidden');
+                toggle.classList.add('hidden');
+            });
+            cancel && cancel.addEventListener('click', function() {
+                view.classList.remove('hidden');
+                form.classList.add('hidden');
+                toggle.classList.remove('hidden');
+            });
+
+            document.querySelectorAll('[data-toggle-target]').forEach(function(button) {
+                var targetId = button.getAttribute('data-toggle-target');
+                var target = document.getElementById(targetId);
+                var openLabel = button.getAttribute('data-open-label') || 'Mostrar';
+                var closeLabel = button.getAttribute('data-close-label') || 'Ocultar';
+
+                if (!target) {
+                    return;
+                }
+
+                if (!target.classList.contains('hidden')) {
+                    button.textContent = closeLabel;
+                }
+
+                button.addEventListener('click', function() {
+                    target.classList.toggle('hidden');
+                    button.textContent = target.classList.contains('hidden') ? openLabel : closeLabel;
+                });
+            });
+        })();
+    </script>
+{% endblock %}

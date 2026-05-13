@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <!--
+        Registro de un movimiento de stock.
+        source_location_id = NULL  â†’ tipo ENTRY (ingreso externo).
+        destination_location_id = NULL â†’ tipo EXIT (salida externa).
+        serialized_stock_id = NULL â†’ movimiento de stock no serializado.
+    -->
+    <entity name="App\Inventory\Domain\Entities\Movement" table="stock_movements">
+
+        <id name="id" type="movement_id" column="id" length="26" />
+
+        <field name="productId"             type="product_id"          column="product_id"              length="26" />
+        <field name="type"                  type="inventory_movement_type" column="type" length="20" />
+        <field name="sourceLocationId"      type="location_id"         column="source_location_id"      length="26"  nullable="true" />
+        <field name="destinationLocationId" type="location_id"         column="destination_location_id" length="26"  nullable="true" />
+        <field name="serializedStockId"     type="serialized_stock_id" column="serialized_stock_id"     length="26"  nullable="true" />
+        <field name="quantity"              type="integer"             column="quantity" />
+        <field name="status"                type="inventory_movement_status" column="status" length="20" />
+        <field name="notes"                 type="text"                column="notes"                   nullable="true" />
+        <field name="createdAt"             type="datetime_immutable"  column="created_at" />
+        <field name="completedAt"           type="datetime_immutable"  column="completed_at"            nullable="true" />
+
+        <indexes>
+            <index name="idx_stock_movements_product_id"             columns="product_id" />
+            <index name="idx_stock_movements_status"                 columns="status" />
+            <index name="idx_stock_movements_source_location_id"     columns="source_location_id" />
+            <index name="idx_stock_movements_destination_location_id" columns="destination_location_id" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

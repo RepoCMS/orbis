@@ -1,0 +1,53 @@
+{#
+ # UI Macros — componentes reutilizables de interfaz
+ # Uso: {% import 'components/_macros.html.twig' as ui %}
+ #}
+
+{#
+ # Badge de estado.
+ # @param string status  active | inactive | pending | unverified | (any)
+ #}
+{% macro status_badge(status) %}
+    {% if status == 'active' %}
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" style="background: #e6f7f1; color: #00a86b;">Activo</span>
+    {% elseif status == 'inactive' %}
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">Inactivo</span>
+    {% elseif status == 'on_vacation' %}
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-sky-100 text-sky-700">Vacaciones</span>
+    {% elseif status == 'pending' %}
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Pendiente</span>
+    {% elseif status == 'unverified' %}
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-700">Sin verificar</span>
+    {% else %}
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ status }}</span>
+    {% endif %}
+{% endmacro %}
+
+{#
+ # Botón "Ver" de acción.
+ # @param string url  URL destino
+ #}
+{% macro btn_view(url) %}
+    <a href="{{ url }}"
+       class="inline-flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-md transition-colors"
+       style="color: #1e3585; background: #eef1f9;"
+       onmouseover="this.style.background='#d8dff0'" onmouseout="this.style.background='#eef1f9'">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+        </svg>
+        Ver
+    </a>
+{% endmacro %}
+
+{#
+ # Avatar circular con iniciales.
+ # @param string firstName
+ # @param string lastName
+ #}
+{% macro avatar_initials(firstName, lastName) %}
+    <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
+         style="background: #1e3585;">
+        {{ firstName|slice(0,1) }}{{ lastName|slice(0,1) }}
+    </div>
+{% endmacro %}

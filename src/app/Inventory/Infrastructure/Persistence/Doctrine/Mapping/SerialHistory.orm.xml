@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <!--
+        Trazabilidad de cambios de nÃºmero de serie de un repuesto serializado.
+        Registra cada vez que un serial cambia por reparaciÃ³n o transformaciÃ³n.
+    -->
+    <entity name="App\Inventory\Domain\Entities\SerialHistory" table="serial_history">
+
+        <id name="id" type="serial_history_id" column="id" length="26" />
+
+        <field name="serializedStockId"    type="serialized_stock_id" column="serialized_stock_id"    length="26" />
+        <field name="previousSerialNumber" type="stock_serial_number" column="previous_serial_number" length="100" />
+        <field name="newSerialNumber"      type="stock_serial_number" column="new_serial_number"      length="100" />
+        <field name="reason"               type="inventory_serial_history_reason" column="reason" length="20" />
+        <field name="changedAt"            type="datetime_immutable"  column="changed_at" />
+
+        <indexes>
+            <index name="idx_serial_history_serialized_stock_id" columns="serialized_stock_id" />
+            <index name="idx_serial_history_changed_at"          columns="changed_at" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Support\Domain\Entities\Journey" table="ticket_journeys">
+
+        <id name="id" type="journey_id" column="id" length="26" />
+
+        <field name="ticketId"      type="ticket_id" column="ticket_id"     length="26" />
+        <field name="type"          type="support_journey_type" column="type" length="20" />
+        <field name="startedAt"     type="datetime_immutable" column="started_at" />
+        <field name="arrivedAt"     type="datetime_immutable" column="arrived_at"    nullable="true" />
+        <field name="isPartOfRoute" type="boolean"   column="is_part_of_route" />
+        <field name="notes"         type="text"      column="notes"         nullable="true" />
+
+        <indexes>
+            <index name="idx_ticket_journeys_ticket_id" columns="ticket_id" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Client\Domain\Entities\Terminal" table="terminals">
+
+        <id name="id" type="terminal_id" column="id" length="26" />
+
+        <field name="clientId"      type="client_id"        column="client_id"    length="26" />
+        <field name="serial"        type="terminal_serial"  column="serial"       length="100" />
+        <field name="vendor"        type="string"           column="vendor"       length="100"
+               enumType="App\Client\Domain\Enums\TerminalVendor" />
+        <field name="funcionality"  type="string"           column="funcionality" length="100"
+               enumType="App\Client\Domain\Enums\TerminalFunctionality" />
+        <field name="type"          type="string"           column="type"         length="100"
+               enumType="App\Client\Domain\Enums\TerminalType" />
+        <field name="status"        type="string"           column="status"       length="20"
+               enumType="App\Client\Domain\Enums\TerminalStatus" />
+        <field name="deletedAt"     type="datetime_immutable" column="deleted_at" nullable="true" />
+
+        <indexes>
+            <index name="idx_terminals_client_id" columns="client_id" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

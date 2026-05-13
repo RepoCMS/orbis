@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nuevo Ticket{% endblock %}
+
+{% block body %}
+<div class="p-6 max-w-2xl mx-auto space-y-4">
+
+    {# Header #}
+    <div class="flex items-center gap-3">
+        <a href="{{ path('support_ticket_list') }}" class="text-gray-400 hover:text-gray-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </a>
+        <h1 class="text-2xl font-bold text-gray-800">Nuevo Ticket</h1>
+    </div>
+
+    {# Flash messages #}
+    {% for msg in app.flashes('error') %}
+        <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg px-4 py-3 text-sm">{{ msg }}</div>
+    {% endfor %}
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <form method="post" action="{{ path('support_ticket_create') }}" class="space-y-5">
+
+            {# Client #}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Cliente <span class="text-red-500">*</span></label>
+                <select name="clientId" id="clientId" required
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2"
+                        onchange="reloadTerminals(this.value)">
+                    <option value="">Seleccione un cliente…</option>
+                    {% for client in clients %}
+                        <option value="{{ client.id }}" {% if selectedClient == client.id %}selected{% endif %}>
+                            {{ client.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {# Terminal assignment #}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Terminal / Equipo <span class="text-red-500">*</span></label>
+                <select name="terminalAssignmentId" id="terminalAssignmentId" required
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2">
+                    {% if terminals is empty %}
+                        <option value="">Seleccione primero un cliente…</option>
+                    {% else %}
+                        <option value="">Seleccione un terminal…</option>
+                        {% for t in terminals %}
+                            <option value="{{ t.id }}">
+                                [{{ t.id_assigned_by_client }}] {{ t.assignment_name }} — {{ t.site_name }}
+                            </option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+
+            {# Service type #}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de servicio <span class="text-red-500">*</span></label>
+                <select name="serviceType" required
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2">
+                    <option value="">Seleccione…</option>
+                    {% for st in serviceTypes %}
+                        <option value="{{ st.value }}">{{ st.label() }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {# Description #}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Descripción <span class="text-red-500">*</span></label>
+                <textarea name="description" rows="4" required
+                          placeholder="Describa el servicio solicitado…"
+                          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 resize-none"></textarea>
+            </div>
+
+            {# Actions #}
+            <div class="flex items-center justify-end gap-3 pt-2 border-t border-gray-100">
+                <a href="{{ path('support_ticket_list') }}"
+                   class="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="px-5 py-2 text-sm text-white rounded-lg font-medium shadow"
+                        style="background:#1e3585">
+                    Crear Ticket
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function reloadTerminals(clientId) {
+    if (!clientId) {
+        document.getElementById('terminalAssignmentId').innerHTML =
+            '<option value="">Seleccione primero un cliente…</option>';
+        return;
+    }
+    const url = new URL(window.location.href.split('?')[0].replace('/support/tickets/new', '/support/tickets/new'));
+    window.location.href = '{{ path('support_ticket_new') }}?clientId=' + clientId;
+}
+</script>
+{% endblock %}

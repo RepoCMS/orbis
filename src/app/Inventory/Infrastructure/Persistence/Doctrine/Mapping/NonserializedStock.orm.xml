@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <!--
+        Lote de un producto fungible en una ubicacion con un estado concreto.
+        Unicidad: (product_id, location_id, status).
+        El mismo producto puede tener registros con distinto estado en la misma
+        ubicacion: AVAILABLE qty=7, DAMAGED qty=3, RESERVED qty=2, etc.
+        La capa de Aplicacion divide registros al reservar parcialmente.
+    -->
+    <entity name="App\Inventory\Domain\Entities\NonserializedStock" table="nonserialized_stock">
+
+        <id name="id" type="nonserialized_stock_id" column="id" length="26" />
+
+        <field name="productId"  type="product_id"                 column="product_id"  length="26" />
+        <field name="locationId" type="location_id"                column="location_id" length="26" />
+        <field name="quantity"   type="integer"                    column="quantity" />
+        <field name="status"     type="inventory_nonserialized_stock_status" column="status" length="20" />
+        <field name="deletedAt"  type="datetime_immutable"         column="deleted_at"  nullable="true" />
+
+        <unique-constraints>
+            <unique-constraint name="uq_nonserialized_stock_product_location_status" columns="product_id,location_id,status" />
+        </unique-constraints>
+
+        <indexes>
+            <index name="idx_nonserialized_stock_product_id"  columns="product_id" />
+            <index name="idx_nonserialized_stock_location_id" columns="location_id" />
+            <index name="idx_nonserialized_stock_status"      columns="status" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

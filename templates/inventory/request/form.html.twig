@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nueva Solicitud de Stock{% endblock %}
+{% block page_title %}Nueva Solicitud de Stock{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('inventory_request_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Volver
+    </a>
+{% endblock %}
+
+{% block body %}
+    {% if errors is not empty %}
+    <div class="mb-4 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+        {% for error in errors %}
+        <p class="text-sm text-red-700">{{ error }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 max-w-2xl">
+        <form method="POST" action="{{ path('inventory_request_create') }}" class="space-y-5">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                    <label for="product_id" class="block text-xs font-medium text-gray-500 mb-1">
+                        Producto <span class="text-red-500">*</span>
+                    </label>
+                    <select id="product_id" name="product_id" required
+                            class="w-full text-sm rounded-lg border border-slate-200 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                        <option value="">— Seleccionar —</option>
+                        {% for product in products %}
+                        <option value="{{ product.id }}"
+                            {% if input.productId is defined and input.productId == product.id %}selected{% endif %}>
+                            {{ product.name }} ({{ product.code }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="quantity" class="block text-xs font-medium text-gray-500 mb-1">
+                        Cantidad <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" id="quantity" name="quantity" min="1" value="{{ input.quantity ?? 1 }}" required
+                           class="w-full text-sm rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                </div>
+            </div>
+
+            <div>
+                <label for="serialized_stock_id" class="block text-xs font-medium text-gray-500 mb-1">
+                    ID de stock serializado <span class="text-gray-400 font-normal">(opcional, si solicita unidad específica)</span>
+                </label>
+                <input type="text" id="serialized_stock_id" name="serialized_stock_id"
+                       value="{{ input.serializedStockId ?? '' }}"
+                       class="w-full text-sm rounded-lg border border-slate-200 px-3 py-2 font-mono focus:outline-none focus:ring-2 focus:ring-blue-400/30"
+                       placeholder="ULID del stock serializado">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                    <label for="source_location_id" class="block text-xs font-medium text-gray-500 mb-1">
+                        Ubicación de origen <span class="text-red-500">*</span>
+                    </label>
+                    <select id="source_location_id" name="source_location_id" required
+                            class="w-full text-sm rounded-lg border border-slate-200 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                        <option value="">— Seleccionar —</option>
+                        {% for loc in locations %}
+                        <option value="{{ loc.id }}"
+                            {% if input.sourceLocationId is defined and input.sourceLocationId == loc.id %}selected{% endif %}>
+                            {{ loc.name }} ({{ loc.typeLabel }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="destination_location_id" class="block text-xs font-medium text-gray-500 mb-1">
+                        Ubicación de destino <span class="text-red-500">*</span>
+                    </label>
+                    <select id="destination_location_id" name="destination_location_id" required
+                            class="w-full text-sm rounded-lg border border-slate-200 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                        <option value="">— Seleccionar —</option>
+                        {% for loc in locations %}
+                        <option value="{{ loc.id }}"
+                            {% if input.destinationLocationId is defined and input.destinationLocationId == loc.id %}selected{% endif %}>
+                            {{ loc.name }} ({{ loc.typeLabel }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label for="notes" class="block text-xs font-medium text-gray-500 mb-1">Notas</label>
+                <textarea id="notes" name="notes" rows="3"
+                          class="w-full text-sm rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400/30 resize-none"
+                          placeholder="Motivo de la solicitud...">{{ input.notes ?? '' }}</textarea>
+            </div>
+
+            <div class="pt-2">
+                <button type="submit"
+                        class="px-6 py-2 text-sm font-medium text-white rounded-lg shadow-sm"
+                        style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+                    Enviar solicitud
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,164 @@
+doctrine:
+    dbal:
+        url: '%env(resolve:DATABASE_URL)%'
+        schema_filter: ~^(?!role_permissions)~
+        profiling_collect_backtrace: '%kernel.debug%'
+        types:
+            # Identity
+            user_id:         App\Identity\Infrastructure\Doctrine\Types\UserIdType
+            role_id:         App\Identity\Infrastructure\Doctrine\Types\RoleIdType
+            permission_id:   App\Identity\Infrastructure\Doctrine\Types\PermissionIdType
+            user_token_id:   App\Identity\Infrastructure\Doctrine\Types\UserTokenIdType
+            auth_log_id:     App\Identity\Infrastructure\Doctrine\Types\AuthLogIdType
+            user_mfa_config_id: App\Identity\Infrastructure\Doctrine\Types\UserMfaConfigIdType
+            username:        App\Identity\Infrastructure\Doctrine\Types\UsernameType
+            hashed_password: App\Identity\Infrastructure\Doctrine\Types\HashedPasswordType
+            token_hash:      App\Identity\Infrastructure\Doctrine\Types\TokenHashType
+            role_name:       App\Identity\Infrastructure\Doctrine\Types\RoleNameType
+            permission_key:  App\Identity\Infrastructure\Doctrine\Types\PermissionKeyType
+            role_status:     App\Identity\Infrastructure\Doctrine\Types\RoleStatusType
+            user_status:     App\Identity\Infrastructure\Doctrine\Types\UserStatusType
+            # Client
+            client_id:          App\Client\Infrastructure\Doctrine\Types\ClientIdType
+            contact_id:         App\Client\Infrastructure\Doctrine\Types\ContactIdType
+            client_name:        App\Client\Infrastructure\Doctrine\Types\ClientNameType
+            client_ruc:         App\Client\Infrastructure\Doctrine\Types\ClientRucType
+            contact_email:      App\Client\Infrastructure\Doctrine\Types\ContactEmailType
+            contact_phone_number: App\Client\Infrastructure\Doctrine\Types\ContactPhoneNumberType
+            contact_role:       App\Client\Infrastructure\Doctrine\Types\ContactRoleType
+            client_status:      App\Client\Infrastructure\Doctrine\Types\ClientStatusType
+            terminal_id:        App\Client\Infrastructure\Doctrine\Types\TerminalIdType
+            terminal_serial:    App\Client\Infrastructure\Doctrine\Types\TerminalSerialNumberType
+            terminal_assignment_id: App\Client\Infrastructure\Doctrine\Types\TerminalAssignmentIdType
+            site_id:            App\Client\Infrastructure\Doctrine\Types\SiteIdType
+            terminal_name:      App\Client\Infrastructure\Doctrine\Types\TerminalNameType
+            terminal_id_assigned_by_client: App\Client\Infrastructure\Doctrine\Types\TerminalIdAssignedByClientType
+            # Contact
+            contact_status: App\Client\Infrastructure\Doctrine\Types\ContactStatusType
+            site_status:    App\Client\Infrastructure\Doctrine\Types\SiteStatusType
+            # Organization
+            employee_id:                    App\Organization\Infrastructure\Doctrine\Types\EmployeeIdType
+            employee_email:                 App\Organization\Infrastructure\Doctrine\Types\EmployeeEmailType
+            employee_identification_number: App\Organization\Infrastructure\Doctrine\Types\EmployeeIdentificationNumberType
+            employee_status:                App\Organization\Infrastructure\Doctrine\Types\EmployeeStatusType
+            employee_special_period_id:     App\Organization\Infrastructure\Doctrine\Types\EmployeeSpecialPeriodIdType
+            employee_special_period_type:   App\Organization\Infrastructure\Doctrine\Types\EmployeeSpecialPeriodTypeEnumType
+            employee_special_period_status: App\Organization\Infrastructure\Doctrine\Types\EmployeeSpecialPeriodStatusEnumType
+            employee_profile:               App\Organization\Infrastructure\Doctrine\Types\EmployeeProfileEnumType
+            service_zone_id:                App\Organization\Infrastructure\Doctrine\Types\ServiceZoneIdType
+            service_zone_status:            App\Organization\Infrastructure\Doctrine\Types\ServiceZoneStatusEnumType
+            # Inventory
+            product_id:             App\Inventory\Infrastructure\Doctrine\Types\ProductIdType
+            product_code:           App\Inventory\Infrastructure\Doctrine\Types\ProductCodeType
+            product_name:           App\Inventory\Infrastructure\Doctrine\Types\ProductNameType
+            product_tracking_type:  App\Inventory\Infrastructure\Doctrine\Types\DoctrineProductTrackingType
+            location_id:            App\Inventory\Infrastructure\Doctrine\Types\LocationIdType
+            location_name:          App\Inventory\Infrastructure\Doctrine\Types\LocationNameType
+            serialized_stock_id:    App\Inventory\Infrastructure\Doctrine\Types\SerializedStockIdType
+            stock_serial_number:    App\Inventory\Infrastructure\Doctrine\Types\StockSerialNumberType
+            nonserialized_stock_id: App\Inventory\Infrastructure\Doctrine\Types\NonserializedStockIdType
+            movement_id:            App\Inventory\Infrastructure\Doctrine\Types\MovementIdType
+            purchase_order_id:      App\Inventory\Infrastructure\Doctrine\Types\PurchaseOrderIdType
+            purchase_order_item_id: App\Inventory\Infrastructure\Doctrine\Types\PurchaseOrderItemIdType
+            entry_id:               App\Inventory\Infrastructure\Doctrine\Types\EntryIdType
+            entry_item_id:          App\Inventory\Infrastructure\Doctrine\Types\EntryItemIdType
+            repair_id:              App\Inventory\Infrastructure\Doctrine\Types\RepairIdType
+            transformation_id:      App\Inventory\Infrastructure\Doctrine\Types\TransformationIdType
+            request_id:             App\Inventory\Infrastructure\Doctrine\Types\RequestIdType
+            stock_minimum_id:       App\Inventory\Infrastructure\Doctrine\Types\StockMinimumIdType
+            serial_history_id:      App\Inventory\Infrastructure\Doctrine\Types\SerialHistoryIdType
+            # Inventory Enum Types
+            inventory_location_type:             App\Inventory\Infrastructure\Doctrine\Types\LocationTypeEnumType
+            inventory_movement_type:             App\Inventory\Infrastructure\Doctrine\Types\MovementTypeEnumType
+            inventory_movement_status:           App\Inventory\Infrastructure\Doctrine\Types\MovementStatusEnumType
+            inventory_entry_status:              App\Inventory\Infrastructure\Doctrine\Types\EntryStatusEnumType
+            inventory_request_status:            App\Inventory\Infrastructure\Doctrine\Types\RequestStatusEnumType
+            inventory_purchase_order_status:     App\Inventory\Infrastructure\Doctrine\Types\PurchaseOrderStatusEnumType
+            inventory_repair_status:             App\Inventory\Infrastructure\Doctrine\Types\RepairStatusEnumType
+            inventory_nonserialized_stock_status: App\Inventory\Infrastructure\Doctrine\Types\NonserializedStockStatusEnumType
+            inventory_serialized_stock_status:   App\Inventory\Infrastructure\Doctrine\Types\SerializedStockStatusEnumType
+            inventory_serial_history_reason:     App\Inventory\Infrastructure\Doctrine\Types\SerialHistoryReasonEnumType
+            # Support
+            ticket_id:                   App\Support\Infrastructure\Doctrine\Types\TicketIdType
+            ticket_assignment_id:        App\Support\Infrastructure\Doctrine\Types\TicketAssignmentIdType
+            journey_id:                  App\Support\Infrastructure\Doctrine\Types\JourneyIdType
+            ticket_finding_id:           App\Support\Infrastructure\Doctrine\Types\TicketFindingIdType
+            ticket_spare_part_id:        App\Support\Infrastructure\Doctrine\Types\TicketSparePartIdType
+            ticket_pending_spare_part_id: App\Support\Infrastructure\Doctrine\Types\TicketPendingSparePartIdType
+            ticket_evidence_id:          App\Support\Infrastructure\Doctrine\Types\TicketEvidenceIdType
+            ticket_pause_id:             App\Support\Infrastructure\Doctrine\Types\TicketPauseIdType
+            ticket_reschedule_id:        App\Support\Infrastructure\Doctrine\Types\TicketRescheduleIdType
+            # Support Enum Types
+            support_ticket_status:         App\Support\Infrastructure\Doctrine\Types\TicketStatusEnumType
+            support_service_type:          App\Support\Infrastructure\Doctrine\Types\ServiceTypeEnumType
+            support_journey_type:          App\Support\Infrastructure\Doctrine\Types\JourneyTypeEnumType
+            support_reschedule_requested_by: App\Support\Infrastructure\Doctrine\Types\RescheduleRequestedByEnumType
+            # Geography (Location BC)
+            geo_region_id:   App\Location\Infrastructure\Doctrine\Types\RegionIdType
+            geo_province_id: App\Location\Infrastructure\Doctrine\Types\ProvinceIdType
+            geo_city_id:     App\Location\Infrastructure\Doctrine\Types\CityIdType
+    orm:
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        auto_mapping: false
+        mappings:
+            Identity:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/app/Identity/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Identity\Domain\Entities'
+                alias: Identity
+            Client:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/app/Client/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Client\Domain\Entities'
+                alias: Client
+            Organization:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/app/Organization/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Organization\Domain\Entities'
+                alias: Organization
+            Inventory:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/app/Inventory/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Inventory\Domain\Entities'
+                alias: Inventory
+            Location:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/app/Location/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Location\Domain\Entities'
+                alias: Location
+            Support:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/app/Support/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Support\Domain\Entities'
+                alias: Support
+
+when@test:
+    doctrine:
+        dbal:
+            # "TEST_TOKEN" is typically set by ParaTest
+            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+
+when@prod:
+    doctrine:
+        orm:
+            query_cache_driver:
+                type: pool
+                pool: doctrine.system_cache_pool
+            result_cache_driver:
+                type: pool
+                pool: doctrine.result_cache_pool
+
+    framework:
+        cache:
+            pools:
+                doctrine.result_cache_pool:
+                    adapter: cache.app
+                doctrine.system_cache_pool:
+                    adapter: cache.system
+

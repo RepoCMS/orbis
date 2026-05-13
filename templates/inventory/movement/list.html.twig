@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Movimientos de stock{% endblock %}
+{% block page_title %}Movimientos de stock{% endblock %}
+
+{% block body %}
+    {% if movements is empty %}
+        <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+            <svg class="w-12 h-12 mb-3 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 3M21 7.5H7.5"/>
+            </svg>
+            <p class="text-sm font-medium text-gray-600">No hay movimientos registrados.</p>
+        </div>
+    {% else %}
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-100 text-left">
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Tipo</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Estado</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden md:table-cell">Stock</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden md:table-cell">Origen → Destino</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden lg:table-cell">Fecha</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide text-right">Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        {% for movement in movements %}
+                        <tr class="hover:bg-slate-50/60 transition-colors">
+                            <td class="px-4 py-3">
+                                <span class="text-xs font-medium px-2.5 py-1 rounded-full
+                                    {% if movement.type == 'ENTRY' %}bg-green-100 text-green-700
+                                    {% elseif movement.type == 'EXIT' %}bg-red-100 text-red-700
+                                    {% else %}bg-blue-100 text-blue-700{% endif %}">
+                                    {{ movement.typeLabel }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="text-xs font-medium px-2.5 py-1 rounded-full
+                                    {% if movement.status == 'COMPLETED' %}bg-green-100 text-green-700
+                                    {% elseif movement.status == 'CANCELLED' %}bg-red-100 text-red-700
+                                    {% elseif movement.status == 'IN_TRANSIT' %}bg-yellow-100 text-yellow-700
+                                    {% else %}bg-slate-100 text-slate-600{% endif %}">
+                                    {{ movement.statusLabel }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 hidden md:table-cell font-mono text-xs text-gray-600">
+                                {% if movement.serializedStockId %}
+                                    {{ movement.serializedStockId|slice(0, 10) }}…
+                                {% elseif movement.nonserializedStockId %}
+                                    {{ movement.nonserializedStockId|slice(0, 10) }}… × {{ movement.quantity }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                            <td class="px-4 py-3 hidden md:table-cell text-gray-600">
+                                {{ movement.sourceLocationId ? movement.sourceLocationId|slice(0,8)~'…' : '(exterior)' }}
+                                →
+                                {{ movement.destinationLocationId ? movement.destinationLocationId|slice(0,8)~'…' : '(exterior)' }}
+                            </td>
+                            <td class="px-4 py-3 hidden lg:table-cell text-gray-500 text-xs">
+                                {{ movement.createdAt|date('d/m/Y H:i') }}
+                            </td>
+                            <td class="px-4 py-3 text-right">
+                                <a href="{{ path('inventory_movement_show', {id: movement.id}) }}"
+                                   class="text-xs font-medium text-blue-600 hover:underline">Ver</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

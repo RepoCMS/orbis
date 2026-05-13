@@ -1,0 +1,445 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ticket {{ ticket.ticketNumber }}{% endblock %}
+
+{% block body %}
+<div class="p-6 space-y-5">
+
+    {# Header #}
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <a href="{{ path('support_ticket_list') }}" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </a>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">Ticket {{ ticket.ticketNumber }}</h1>
+                <p class="text-sm text-gray-500">{{ ticket.serviceTypeLabel }}</p>
+            </div>
+        </div>
+        {% set statusColor = {
+            'CREATED':         'bg-gray-100 text-gray-700',
+            'ASSIGNED':        'bg-blue-100 text-blue-700',
+            'IN_TRANSIT_OUT':  'bg-indigo-100 text-indigo-700',
+            'WAITING':         'bg-yellow-100 text-yellow-700',
+            'IN_ASSISTANCE':   'bg-orange-100 text-orange-700',
+            'PAUSED':          'bg-red-100 text-red-700',
+            'IN_TRANSIT_BACK': 'bg-purple-100 text-purple-700',
+            'PENDING_CLOSURE': 'bg-amber-100 text-amber-700',
+            'CLOSED':          'bg-green-100 text-green-700',
+            'CANCELLED':       'bg-gray-200 text-gray-500',
+        } %}
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold {{ statusColor[ticket.status] ?? 'bg-gray-100 text-gray-600' }}">
+            {{ ticket.statusLabel }}
+        </span>
+    </div>
+
+    {# Flash messages #}
+    {% for msg in app.flashes('success') %}
+        <div class="bg-green-50 border border-green-200 text-green-800 rounded-lg px-4 py-3 text-sm">{{ msg }}</div>
+    {% endfor %}
+    {% for msg in app.flashes('error') %}
+        <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg px-4 py-3 text-sm">{{ msg }}</div>
+    {% endfor %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+        {# Main details #}
+        <div class="lg:col-span-2 space-y-5">
+
+            {# Info card #}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Información del Ticket</h2>
+                <dl class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+                    <div>
+                        <dt class="text-gray-400 text-xs">Tipo de Servicio</dt>
+                        <dd class="font-medium text-gray-800">{{ ticket.serviceTypeLabel }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-gray-400 text-xs">Estado</dt>
+                        <dd class="font-medium text-gray-800">{{ ticket.statusLabel }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-gray-400 text-xs">Agendado</dt>
+                        <dd class="font-medium text-gray-800">{{ ticket.scheduledAt ?? '—' }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-gray-400 text-xs">SLA Máximo</dt>
+                        <dd class="font-medium text-gray-800">{{ ticket.slaDeadlineAt ?? '—' }}</dd>
+                    </div>
+                    {% if ticket.closedAt %}
+                        <div>
+                            <dt class="text-gray-400 text-xs">Cerrado</dt>
+                            <dd class="font-medium text-gray-800">{{ ticket.closedAt }}</dd>
+                        </div>
+                    {% endif %}
+                    {% if ticket.cancelledAt %}
+                        <div>
+                            <dt class="text-gray-400 text-xs">Cancelado</dt>
+                            <dd class="font-medium text-red-600">{{ ticket.cancelledAt }}</dd>
+                        </div>
+                    {% endif %}
+                    {% if ticket.cancellationReason %}
+                        <div class="col-span-2">
+                            <dt class="text-gray-400 text-xs">Motivo cancelación</dt>
+                            <dd class="font-medium text-gray-800">{{ ticket.cancellationReason }}</dd>
+                        </div>
+                    {% endif %}
+                    <div class="col-span-2">
+                        <dt class="text-gray-400 text-xs">Descripción</dt>
+                        <dd class="text-gray-700 mt-1">{{ ticket.description }}</dd>
+                    </div>
+                </dl>
+            </div>
+
+        </div>
+
+        {# Sidebar: actions #}
+        <div class="space-y-4">
+
+            {# Lifecycle actions #}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Acciones</h2>
+                <div class="space-y-2">
+
+                    {% if ticket.status == 'CREATED' and is_granted('ticket.assign') %}
+                        <button type="button"
+                                onclick="document.getElementById('modal-assign').classList.remove('hidden')"
+                                class="w-full px-3 py-2 text-sm text-white rounded-lg font-medium"
+                                style="background:#1e3585">
+                            Asignar técnicos
+                        </button>
+                    {% endif %}
+
+                    {% if ticket.status == 'ASSIGNED' %}
+                        <form method="post" action="{{ path('support_ticket_start_journey', {id: ticket.id}) }}">
+                            <button class="w-full px-3 py-2 text-sm text-white rounded-lg font-medium bg-indigo-600">
+                                Iniciar viaje (ida)
+                            </button>
+                        </form>
+                    {% endif %}
+
+                    {% if ticket.status == 'IN_TRANSIT_OUT' %}
+                        <form method="post" action="{{ path('support_ticket_arrive_site', {id: ticket.id}) }}">
+                            <button class="w-full px-3 py-2 text-sm text-white rounded-lg font-medium bg-indigo-600">
+                                Llegar al sitio
+                            </button>
+                        </form>
+                    {% endif %}
+
+                    {% if ticket.status == 'WAITING' %}
+                        <form method="post" action="{{ path('support_ticket_start_assistance', {id: ticket.id}) }}">
+                            <button class="w-full px-3 py-2 text-sm text-white rounded-lg font-medium bg-orange-500">
+                                Iniciar asistencia
+                            </button>
+                        </form>
+                    {% endif %}
+
+                    {% if ticket.status == 'IN_ASSISTANCE' %}
+                        <button type="button"
+                                onclick="document.getElementById('modal-finding').classList.remove('hidden')"
+                                class="w-full px-3 py-2 text-sm text-white rounded-lg font-medium bg-blue-600">
+                            Registrar hallazgo
+                        </button>
+                        <button type="button"
+                                onclick="document.getElementById('modal-pause').classList.remove('hidden')"
+                                class="w-full px-3 py-2 text-sm text-white rounded-lg font-medium bg-yellow-500">
+                            Pausar
+                        </button>
+                        <form method="post" action="{{ path('support_ticket_complete_assistance', {id: ticket.id}) }}">
+                            <button class="w-full px-3 py-2 text-sm text-white rounded-lg font-medium bg-green-600">
+                                Completar asistencia
+                            </button>
+                        </form>
+                    {% endif %}
+
+                    {% if ticket.status == 'PAUSED' %}
+                        <form method="post" action="{{ path('support_ticket_resume', {id: ticket.id}) }}">
+                            <button class="w-full px-3 py-2 text-sm text-white rounded-lg font-medium bg-orange-500">
+                                Reanudar
+                            </button>
+                        </form>
+                    {% endif %}
+
+                    {% if ticket.status == 'PENDING_CLOSURE' and is_granted('ticket.approve') %}
+                        <form method="post" action="{{ path('support_ticket_approve', {id: ticket.id}) }}">
+                            <button class="w-full px-3 py-2 text-sm text-white rounded-lg font-medium bg-green-600">
+                                Aprobar y cerrar
+                            </button>
+                        </form>
+                    {% endif %}
+
+                    {% if ticket.status == 'IN_TRANSIT_BACK' %}
+                        <form method="post" action="{{ path('support_ticket_arrive_base', {id: ticket.id}) }}">
+                            <button class="w-full px-3 py-2 text-sm text-white rounded-lg font-medium bg-indigo-600">
+                                Llegar a base
+                            </button>
+                        </form>
+                    {% endif %}
+
+                    {% if ticket.status in ['CREATED','ASSIGNED','IN_TRANSIT_OUT','WAITING'] %}
+                        <button type="button"
+                                onclick="document.getElementById('modal-cancel').classList.remove('hidden')"
+                                class="w-full px-3 py-2 text-sm text-red-600 border border-red-200 rounded-lg font-medium hover:bg-red-50">
+                            Cancelar ticket
+                        </button>
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{# ── Modal: Assign ticket ── #}
+<div id="modal-assign" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 space-y-4">
+        <h3 class="text-lg font-semibold text-gray-800">Asignar Técnicos</h3>
+        <form method="post" action="{{ path('support_ticket_assign', {id: ticket.id}) }}" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Técnicos asignados</label>
+                <select name="employeeIds[]" multiple size="5"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none">
+                    {% for emp in employees %}
+                        <option value="{{ emp.id }}">{{ emp.fullName }}</option>
+                    {% endfor %}
+                </select>
+                <p class="text-xs text-gray-400 mt-1">Ctrl+clic para seleccionar múltiples</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Responsable</label>
+                <select name="inChargeId" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                    <option value="">Seleccione…</option>
+                    {% for emp in employees %}
+                        <option value="{{ emp.id }}">{{ emp.fullName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Fecha agendada</label>
+                <input type="datetime-local" name="scheduledAt"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('modal-assign').classList.add('hidden')"
+                        class="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">
+                    Cancelar
+                </button>
+                <button type="submit" class="px-4 py-2 text-sm text-white rounded-lg font-medium" style="background:#1e3585">
+                    Asignar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{# ── Modal: Registrar hallazgo ── #}
+<div id="modal-finding" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 space-y-4 max-h-screen overflow-y-auto">
+        <h3 class="text-lg font-semibold text-gray-800">Registrar Hallazgo</h3>
+        <form method="post" action="{{ path('support_ticket_register_finding', {id: ticket.id}) }}" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de problema encontrado <span class="text-red-500">*</span></label>
+                <input type="text" name="problemTypeFound" required placeholder="Ej: Falla mecánica, daño eléctrico…"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Detalle del problema <span class="text-red-500">*</span></label>
+                <textarea name="problemDetail" rows="3" required
+                          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none"></textarea>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Solución aplicada <span class="text-red-500">*</span></label>
+                <textarea name="solution" rows="3" required
+                          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none"></textarea>
+            </div>
+            <div class="flex items-center gap-3">
+                <input type="checkbox" name="batteryVoltageOk" value="1" id="batteryVoltageOk"
+                       class="w-4 h-4 rounded border-gray-300">
+                <label for="batteryVoltageOk" class="text-sm text-gray-700">Voltaje de batería OK</label>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Componentes afectados (opcional)</label>
+                <div id="atm-tree" class="border border-gray-200 rounded-lg p-3 max-h-48 overflow-y-auto bg-gray-50 space-y-1 text-sm">
+                    <p id="atm-loading" class="text-gray-400 text-xs">Cargando dispositivos…</p>
+                </div>
+                <div id="atm-selected-inputs"></div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nº documento físico (opcional)</label>
+                <input type="text" name="physicalDocNumber" placeholder="Ej: FA-001234"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('modal-finding').classList.add('hidden')"
+                        class="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">
+                    Cancelar
+                </button>
+                <button type="submit" class="px-4 py-2 text-sm text-white rounded-lg font-medium" style="background:#1e3585">
+                    Guardar hallazgo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{# ── Modal: Pause ticket ── #}
+<div id="modal-pause" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 space-y-4">
+        <h3 class="text-lg font-semibold text-gray-800">Pausar Ticket</h3>
+        <form method="post" action="{{ path('support_ticket_pause', {id: ticket.id}) }}" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Motivo de la pausa <span class="text-red-500">*</span></label>
+                <textarea name="reason" rows="3" required placeholder="Indique el motivo…"
+                          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none"></textarea>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('modal-pause').classList.add('hidden')"
+                        class="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">
+                    Volver
+                </button>
+                <button type="submit" class="px-4 py-2 text-sm text-white bg-yellow-500 rounded-lg font-medium hover:bg-yellow-600">
+                    Confirmar pausa
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{# ── Modal: Cancel ticket ── #}
+<div id="modal-cancel" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 space-y-4">
+        <h3 class="text-lg font-semibold text-gray-800">Cancelar Ticket</h3>
+        <form method="post" action="{{ path('support_ticket_cancel', {id: ticket.id}) }}" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Motivo de cancelación <span class="text-red-500">*</span></label>
+                <textarea name="reason" rows="3" required placeholder="Indique el motivo…"
+                          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none"></textarea>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('modal-cancel').classList.add('hidden')"
+                        class="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">
+                    Volver
+                </button>
+                <button type="submit" class="px-4 py-2 text-sm text-white bg-red-600 rounded-lg font-medium hover:bg-red-700">
+                    Confirmar cancelación
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+(function () {
+    'use strict';
+
+    const API_BASE = '/api/atm-components';
+    const selected = {}; // componentId → { name, notes }
+
+    function renderTree(parentEl, components, depth) {
+        components.forEach(function (c) {
+            var wrap = document.createElement('div');
+            wrap.style.paddingLeft = (depth * 16) + 'px';
+            wrap.className = 'flex items-start gap-2 py-1';
+
+            var cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.value = c.id;
+            cb.id = 'atm-' + c.id;
+            cb.className = 'mt-0.5 w-4 h-4 rounded border-gray-300 shrink-0';
+
+            var label = document.createElement('label');
+            label.htmlFor = 'atm-' + c.id;
+            label.className = 'flex-1 text-gray-700';
+            var displayName = c.name;
+            if (c.aliases) { displayName += ' <span class="text-gray-400 text-xs">(' + c.aliases + ')</span>'; }
+            label.innerHTML = displayName;
+
+            // Toggle expand arrow for device level
+            var toggleBtn = null;
+            if (c.level === 'device' || c.level === 'module') {
+                toggleBtn = document.createElement('button');
+                toggleBtn.type = 'button';
+                toggleBtn.textContent = '▸';
+                toggleBtn.className = 'text-gray-400 hover:text-gray-600 text-xs w-4 shrink-0';
+                var childContainer = document.createElement('div');
+                childContainer.className = 'ml-0';
+                childContainer.style.display = 'none';
+                var loaded = false;
+
+                toggleBtn.addEventListener('click', function () {
+                    if (childContainer.style.display === 'none') {
+                        if (!loaded) {
+                            loaded = true;
+                            childContainer.innerHTML = '<p class="text-xs text-gray-400 pl-4">Cargando…</p>';
+                            fetch(API_BASE + '?parentId=' + c.id)
+                                .then(function (r) { return r.json(); })
+                                .then(function (data) {
+                                    childContainer.innerHTML = '';
+                                    if (data.length === 0) {
+                                        childContainer.innerHTML = '<p class="text-xs text-gray-400 pl-4 italic">Sin sub-componentes</p>';
+                                    } else {
+                                        renderTree(childContainer, data, depth + 1);
+                                    }
+                                });
+                        }
+                        childContainer.style.display = '';
+                        toggleBtn.textContent = '▾';
+                    } else {
+                        childContainer.style.display = 'none';
+                        toggleBtn.textContent = '▸';
+                    }
+                });
+
+                wrap.appendChild(toggleBtn);
+                wrap.appendChild(cb);
+                wrap.appendChild(label);
+                parentEl.appendChild(wrap);
+                parentEl.appendChild(childContainer);
+            } else {
+                wrap.appendChild(cb);
+                wrap.appendChild(label);
+                parentEl.appendChild(wrap);
+            }
+
+            cb.addEventListener('change', function () {
+                syncSelectedInputs();
+            });
+        });
+    }
+
+    function syncSelectedInputs() {
+        var container = document.getElementById('atm-selected-inputs');
+        container.innerHTML = '';
+        document.querySelectorAll('#atm-tree input[type=checkbox]:checked').forEach(function (cb) {
+            var hidden = document.createElement('input');
+            hidden.type = 'hidden';
+            hidden.name = 'componentIds[]';
+            hidden.value = cb.value;
+            container.appendChild(hidden);
+        });
+    }
+
+    // Load root devices when modal opens
+    document.querySelector('[onclick*="modal-finding"]') &&
+    document.querySelector('[onclick*="modal-finding"]').addEventListener('click', function () {
+        var tree = document.getElementById('atm-tree');
+        var loading = document.getElementById('atm-loading');
+        if (loading) {
+            loading.remove();
+            fetch(API_BASE)
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    renderTree(tree, data, 0);
+                });
+        }
+    });
+})();
+</script>
+{% endblock %}
+
+{% endblock %}

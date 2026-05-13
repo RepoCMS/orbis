@@ -1,0 +1,198 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Stock de Inventario{% endblock %}
+{% block page_title %}Stock de Inventario{% endblock %}
+
+{% block body %}
+{# ── Metric cards ──────────────────────────────────────────────────────── #}
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white rounded-xl shadow-sm p-4 flex flex-col gap-1">
+        <span class="text-xs font-semibold text-green-600 uppercase tracking-wide">Disponible</span>
+        <span class="text-3xl font-bold text-gray-800">{{ result.totalAvailable }}</span>
+        <span class="text-xs text-gray-400">unidades totales</span>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm p-4 flex flex-col gap-1">
+        <span class="text-xs font-semibold text-yellow-500 uppercase tracking-wide">Reservado</span>
+        <span class="text-3xl font-bold text-gray-800">{{ result.totalReserved }}</span>
+        <span class="text-xs text-gray-400">unidades totales</span>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm p-4 flex flex-col gap-1">
+        <span class="text-xs font-semibold text-red-500 uppercase tracking-wide">Dañado</span>
+        <span class="text-3xl font-bold text-gray-800">{{ result.totalDamaged }}</span>
+        <span class="text-xs text-gray-400">unidades totales</span>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm p-4 flex flex-col gap-1">
+        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Dado de baja</span>
+        <span class="text-3xl font-bold text-gray-800">{{ result.totalDecommissioned }}</span>
+        <span class="text-xs text-gray-400">unidades totales</span>
+    </div>
+</div>
+
+{# ── Filters ───────────────────────────────────────────────────────────── #}
+<form method="GET" action="{{ path('inventory_stock_overview') }}"
+      class="bg-white rounded-xl shadow-sm p-4 mb-5"
+      data-controller="table-filter">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+
+        {# Search #}
+        <div class="lg:col-span-2">
+            <label class="block text-xs font-medium text-gray-500 mb-1">Búsqueda</label>
+            <input type="text" name="search" value="{{ filters.search ?? '' }}"
+                   placeholder="Nombre, código, serial…"
+                   class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+
+        {# Location #}
+        <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Ubicación</label>
+            <select name="location"
+                    class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <option value="">Todas</option>
+                {% for loc in locations %}
+                    <option value="{{ loc.id }}" {% if filters.locationId == loc.id %}selected{% endif %}>
+                        {{ loc.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        {# Status #}
+        <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Estado</label>
+            <select name="status"
+                    class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <option value="">Todos</option>
+                {% for s in statuses %}
+                    <option value="{{ s.value }}" {% if filters.status == s.value %}selected{% endif %}>
+                        {{ s.name|lower|capitalize }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        {# Type #}
+        <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Tipo</label>
+            <select name="type"
+                    class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <option value="">Todos</option>
+                <option value="serialized"    {% if filters.type == 'serialized' %}selected{% endif %}>Con serial</option>
+                <option value="nonserialized" {% if filters.type == 'nonserialized' %}selected{% endif %}>Sin serial</option>
+            </select>
+        </div>
+
+    </div>
+
+    <div class="flex items-center gap-3 mt-3">
+        <button type="submit"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white shadow-sm"
+                style="background:#1e3585">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/>
+            </svg>
+            Filtrar
+        </button>
+        <a href="{{ path('inventory_stock_overview') }}"
+           class="text-sm text-gray-500 hover:text-gray-700 underline">Limpiar filtros</a>
+        <span class="ml-auto text-sm text-gray-400">
+            {{ result.total }} resultado(s) — página {{ result.page }} de {{ result.totalPages() }}
+        </span>
+    </div>
+</form>
+
+{# ── Stock table ───────────────────────────────────────────────────────── #}
+{% if result.items is empty %}
+    <div class="bg-white rounded-xl shadow-sm p-12 text-center text-gray-400">
+        <svg class="w-12 h-12 mx-auto mb-3 opacity-30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
+        </svg>
+        <p class="font-medium">No hay stock que coincida con los filtros aplicados.</p>
+    </div>
+{% else %}
+<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+            <thead>
+                <tr class="bg-gray-50 border-b border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                    <th class="px-4 py-3 text-left">Producto</th>
+                    <th class="px-4 py-3 text-left">Código</th>
+                    <th class="px-4 py-3 text-left">Ubicación</th>
+                    <th class="px-4 py-3 text-left">Serial</th>
+                    <th class="px-4 py-3 text-center">Tipo</th>
+                    <th class="px-4 py-3 text-center">Cantidad</th>
+                    <th class="px-4 py-3 text-center">Estado</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                {% for item in result.items %}
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-4 py-3 font-medium text-gray-800">{{ item.productName }}</td>
+                    <td class="px-4 py-3 text-gray-500 font-mono text-xs">{{ item.productCode }}</td>
+                    <td class="px-4 py-3 text-gray-600">{{ item.locationName }}</td>
+                    <td class="px-4 py-3 font-mono text-xs text-gray-500">
+                        {% if item.serialNumber %}
+                            <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded">{{ item.serialNumber }}</span>
+                        {% else %}
+                            <span class="text-gray-300">—</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-3 text-center">
+                        {% if item.type == 'serialized' %}
+                            <span class="inline-block bg-purple-50 text-purple-700 text-xs font-medium px-2 py-0.5 rounded-full">Con serial</span>
+                        {% else %}
+                            <span class="inline-block bg-slate-100 text-slate-600 text-xs font-medium px-2 py-0.5 rounded-full">Sin serial</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-3 text-center font-semibold text-gray-700">{{ item.quantity }}</td>
+                    <td class="px-4 py-3 text-center">
+                        {% set statusColors = {
+                            'disponible':   'bg-green-100 text-green-700',
+                            'reservado':    'bg-yellow-100 text-yellow-700',
+                            'dañado':       'bg-red-100 text-red-700',
+                            'dado de baja': 'bg-gray-100 text-gray-500'
+                        } %}
+                        <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full {{ statusColors[item.status] ?? 'bg-gray-100 text-gray-500' }}">
+                            {{ item.statusLabel }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {# ── Pagination ──────────────────────────────────────────────────────── #}
+    {% if result.totalPages() > 1 %}
+    <div class="flex items-center justify-between px-4 py-3 border-t border-gray-100">
+        <div class="text-xs text-gray-400">
+            Mostrando {{ ((result.page - 1) * result.perPage) + 1 }}–{{ min(result.page * result.perPage, result.total) }} de {{ result.total }}
+        </div>
+        <div class="flex items-center gap-1">
+            {% if result.page > 1 %}
+                <a href="{{ path('inventory_stock_overview', filters|merge({'page': result.page - 1})) }}"
+                   class="px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">
+                    ← Anterior
+                </a>
+            {% endif %}
+
+            {% for p in range(max(1, result.page - 2), min(result.totalPages(), result.page + 2)) %}
+                <a href="{{ path('inventory_stock_overview', filters|merge({'page': p})) }}"
+                   class="px-3 py-1.5 rounded-lg text-sm transition-colors
+                          {% if p == result.page %}font-bold text-white{% else %}text-gray-600 hover:bg-gray-100{% endif %}"
+                   {% if p == result.page %}style="background:#1e3585"{% endif %}>
+                    {{ p }}
+                </a>
+            {% endfor %}
+
+            {% if result.page < result.totalPages() %}
+                <a href="{{ path('inventory_stock_overview', filters|merge({'page': result.page + 1})) }}"
+                   class="px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors">
+                    Siguiente →
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

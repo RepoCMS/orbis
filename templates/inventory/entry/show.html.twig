@@ -1,0 +1,156 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Entrada: {{ entry.reference }}{% endblock %}
+{% block page_title %}Entrada: {{ entry.reference }}{% endblock %}
+
+{% block header_actions %}
+    <div class="flex items-center gap-2">
+        {% if is_granted('inventory.create') and entry.status == 'draft' %}
+        <form method="POST" action="{{ path('inventory_entry_confirm', {id: entry.id}) }}"
+              onsubmit="return confirm('¿Confirmar la entrada? Esto cargará el stock al inventario.')">
+            <button type="submit"
+                    class="text-sm font-medium px-4 py-2 rounded-lg text-white"
+                    style="background: #00a86b;" onmouseover="this.style.background='#009060'" onmouseout="this.style.background='#00a86b'">
+                Confirmar entrada
+            </button>
+        </form>
+        {% endif %}
+        {% if is_granted('inventory.update') and entry.status == 'draft' %}
+        <form method="POST" action="{{ path('inventory_entry_cancel', {id: entry.id}) }}"
+              onsubmit="return confirm('¿Cancelar esta entrada?')">
+            <button type="submit"
+                    class="text-sm font-medium px-3 py-2 rounded-lg border border-red-200 text-red-600 hover:bg-red-50">
+                Cancelar
+            </button>
+        </form>
+        {% endif %}
+        <a href="{{ path('inventory_entry_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Volver
+        </a>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="space-y-6">
+        {# Cabecera #}
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Referencia</dt>
+                    <dd class="text-sm font-medium text-gray-900">{{ entry.reference }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Estado</dt>
+                    <dd>
+                        <span class="text-xs font-medium px-2.5 py-1 rounded-full
+                            {% if entry.status == 'draft' %}bg-yellow-100 text-yellow-700
+                            {% elseif entry.status == 'confirmed' %}bg-green-100 text-green-700
+                            {% else %}bg-gray-100 text-gray-600{% endif %}">
+                            {{ entry.statusLabel }}
+                        </span>
+                    </dd>
+                </div>
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Creado</dt>
+                    <dd class="text-sm text-gray-600">{{ entry.createdAt }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Confirmado</dt>
+                    <dd class="text-sm text-gray-600">{{ entry.confirmedAt ?: '—' }}</dd>
+                </div>
+            </dl>
+            {% if entry.notes %}
+            <div class="mt-4 pt-4 border-t border-slate-100">
+                <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Notas</dt>
+                <dd class="text-sm text-gray-600">{{ entry.notes }}</dd>
+            </div>
+            {% endif %}
+        </div>
+
+        {# Ítems #}
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+            <div class="px-6 py-4 border-b border-slate-100">
+                <h2 class="text-sm font-semibold text-gray-700">Ítems recibidos</h2>
+            </div>
+
+            {% if items is not empty %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-100 text-left">
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Producto</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Tipo</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">N.º Serie / Cantidad</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden md:table-cell">Ubicación</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        {% for item in items %}
+                        <tr class="hover:bg-slate-50/60">
+                            <td class="px-4 py-2.5 text-gray-700 text-xs font-mono">{{ item.productId }}</td>
+                            <td class="px-4 py-2.5">
+                                <span class="text-xs font-medium px-2 py-0.5 rounded-full
+                                    {% if item.serialized %}bg-blue-100 text-blue-700{% else %}bg-slate-100 text-slate-600{% endif %}">
+                                    {{ item.serialized ? 'Serializado' : 'No serializado' }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-2.5 font-mono text-xs">
+                                {{ item.serialized ? item.serialNumber : item.quantity ~ ' uds.' }}
+                            </td>
+                            <td class="px-4 py-2.5 text-gray-500 text-xs hidden md:table-cell">{{ item.locationId }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
+            {# Agregar ítem (solo en draft) #}
+            {% if is_granted('inventory.create') and entry.status == 'draft' %}
+            <div class="px-6 py-4 border-t border-slate-100">
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Agregar ítem</h3>
+                <form method="POST" action="{{ path('inventory_entry_add_item', {id: entry.id}) }}"
+                      class="flex flex-wrap items-end gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1">Producto</label>
+                        <select name="product_id" required
+                                class="text-sm rounded-lg border border-slate-200 px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                            <option value="">— Seleccionar —</option>
+                            {% for product in products %}
+                            <option value="{{ product.id }}">{{ product.name }} ({{ product.code }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1">Ubicación destino</label>
+                        <select name="location_id" required
+                                class="text-sm rounded-lg border border-slate-200 px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                            <option value="">— Seleccionar —</option>
+                            {% for location in locations %}
+                            <option value="{{ location.id }}">{{ location.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1">N.º Serie (serializado)</label>
+                        <input type="text" name="serial_number"
+                               class="text-sm rounded-lg border border-slate-200 px-3 py-1.5 font-mono w-40 focus:outline-none focus:ring-2 focus:ring-blue-400/30"
+                               placeholder="Dejar vacío si no aplica">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1">Cantidad</label>
+                        <input type="number" name="quantity" min="1" value="1"
+                               class="text-sm rounded-lg border border-slate-200 px-3 py-1.5 w-20 focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                    </div>
+                    <button type="submit"
+                            class="text-sm font-medium px-4 py-1.5 rounded-lg text-white"
+                            style="background: #1e3585;">Agregar</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,31 @@
+security:
+    password_hashers:
+        App\Identity\Infrastructure\Security\SymfonySecurityUser:
+            algorithm: bcrypt
+
+    providers:
+        app_user_provider:
+            id: App\Identity\Infrastructure\Security\SymfonyUserProvider
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: app_user_provider
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                username_parameter: username
+                password_parameter: password
+                default_target_path: app_home
+                failure_path: app_login
+            logout:
+                path: app_logout
+                target: app_login
+
+    access_control:
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/verify, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: ROLE_USER }

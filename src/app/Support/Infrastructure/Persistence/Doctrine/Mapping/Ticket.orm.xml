@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <!--
+        Aggregate Root del BC Support.
+        Gestiona el ciclo de vida de una intervención técnica sobre un cajero automático.
+        Soft delete mediante deleted_at.
+    -->
+    <entity name="App\Support\Domain\Entities\Ticket" table="tickets">
+
+        <id name="id" type="ticket_id" column="id" length="26" />
+
+        <field name="ticketNumber"         type="string"   column="ticket_number"          length="20"  unique="true" />
+        <field name="clientId"             type="string"   column="client_id"              length="26" />
+        <field name="terminalAssignmentId" type="string"   column="terminal_assignment_id" length="26" />
+        <field name="serviceType"          type="support_service_type" column="service_type" length="50" />
+        <field name="description"          type="text"     column="description" />
+        <field name="status"               type="support_ticket_status" column="status" length="30" />
+        <field name="createdBy"            type="string"   column="created_by"             length="26" />
+        <field name="scheduledAt"          type="datetime_immutable" column="scheduled_at"        nullable="true" />
+        <field name="slaDeadlineAt"        type="datetime_immutable" column="sla_deadline_at"      nullable="true" />
+        <field name="inTransitOutAt"       type="datetime_immutable" column="in_transit_out_at"    nullable="true" />
+        <field name="waitingStartAt"       type="datetime_immutable" column="waiting_start_at"     nullable="true" />
+        <field name="assistanceStartAt"    type="datetime_immutable" column="assistance_start_at"  nullable="true" />
+        <field name="inTransitBackAt"      type="datetime_immutable" column="in_transit_back_at"   nullable="true" />
+        <field name="closedAt"             type="datetime_immutable" column="closed_at"            nullable="true" />
+        <field name="cancelledAt"          type="datetime_immutable" column="cancelled_at"         nullable="true" />
+        <field name="cancellationReason"   type="text"     column="cancellation_reason"    nullable="true" />
+        <field name="deletedAt"            type="datetime_immutable" column="deleted_at"           nullable="true" />
+
+        <indexes>
+            <index name="idx_tickets_client_id"              columns="client_id" />
+            <index name="idx_tickets_terminal_assignment_id" columns="terminal_assignment_id" />
+            <index name="idx_tickets_status"                 columns="status" />
+            <index name="idx_tickets_created_by"             columns="created_by" />
+            <index name="idx_tickets_scheduled_at"           columns="scheduled_at" />
+            <index name="idx_tickets_deleted_at"             columns="deleted_at" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

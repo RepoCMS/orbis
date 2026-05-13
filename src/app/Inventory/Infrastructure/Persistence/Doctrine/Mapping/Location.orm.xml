@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Inventory\Domain\Entities\Location" table="stock_locations">
+
+        <id name="id" type="location_id" column="id" length="26" />
+
+        <field name="name"      type="location_name"      column="name"       length="100" />
+        <field name="city"      type="string"             column="city"       length="100" />
+        <field name="address"   type="string"             column="address"    length="255" />
+        <field name="type"      type="inventory_location_type" column="type" length="20" />
+        <field name="deletedAt" type="datetime_immutable" column="deleted_at" nullable="true" />
+
+        <indexes>
+            <index name="idx_stock_locations_city" columns="city" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

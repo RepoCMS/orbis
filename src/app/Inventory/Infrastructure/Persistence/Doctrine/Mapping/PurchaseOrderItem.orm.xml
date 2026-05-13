@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Inventory\Domain\Entities\PurchaseOrderItem" table="purchase_order_items">
+
+        <id name="id" type="purchase_order_item_id" column="id" length="26" />
+
+        <field name="purchaseOrderId"  type="purchase_order_id"  column="purchase_order_id" length="26" />
+        <field name="productId"        type="product_id"         column="product_id"        length="26" />
+        <field name="quantityOrdered"  type="integer"            column="quantity_ordered" />
+        <field name="quantityReceived" type="integer"            column="quantity_received" />
+
+        <indexes>
+            <index name="idx_purchase_order_items_purchase_order_id" columns="purchase_order_id" />
+            <index name="idx_purchase_order_items_product_id"        columns="product_id" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

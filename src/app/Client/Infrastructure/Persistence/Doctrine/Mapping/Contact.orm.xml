@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Client\Domain\Entities\Contact" table="contacts">
+
+        <id name="id" type="contact_id" column="id" length="26" />
+
+        <field name="clientId"    type="client_id"          column="client_id"   length="26" />
+        <field name="userId"      type="user_id"            column="user_id"     length="26"  nullable="true" />
+        <field name="firstName"   type="string"             column="first_name"  length="100" />
+        <field name="lastName"    type="string"             column="last_name"   length="100" />
+        <field name="email"       type="contact_email"       column="email"       length="255" unique="true" />
+        <field name="phoneNumber" type="contact_phone_number" column="phone_number" length="10" />
+        <field name="role"        type="contact_role"         column="role"        length="100" />
+        <field name="status"      type="contact_status"       column="status"      length="20" />
+        <field name="deletedAt"   type="datetime_immutable" column="deleted_at"  nullable="true" />
+
+        <indexes>
+            <index name="idx_contacts_client_id" columns="client_id" />
+            <index name="idx_contacts_user_id"   columns="user_id" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

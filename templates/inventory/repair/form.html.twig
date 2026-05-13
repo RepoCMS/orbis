@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Asignar reparación{% endblock %}
+{% block page_title %}Asignar Reparación{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('inventory_repair_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Volver
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="max-w-lg">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+
+            {% if errors is not empty %}
+                <div class="mb-5 bg-red-50 border border-red-200 rounded-lg p-4 space-y-1">
+                    {% for error in errors %}
+                        <p class="text-sm text-red-700">• {{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{{ path('inventory_repair_create') }}" novalidate>
+
+                <div class="space-y-5">
+
+                    <div>
+                        <label for="serialized_stock_id" class="block text-sm font-medium text-gray-700 mb-1">
+                            ID de stock serializado <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="serialized_stock_id" name="serialized_stock_id"
+                               value="{{ input.serialized_stock_id ?? '' }}"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm font-mono shadow-sm outline-none"
+                               onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                               style="transition: border-color .15s;"
+                               placeholder="ULID del ítem de stock"
+                               required autocomplete="off">
+                        <p class="mt-1 text-xs text-gray-400">Corresponde al ID del stock serializado dañado.</p>
+                    </div>
+
+                    <div>
+                        <label for="laboratory_id" class="block text-sm font-medium text-gray-700 mb-1">
+                            Laboratorio <span class="text-red-500">*</span>
+                        </label>
+                        <select id="laboratory_id" name="laboratory_id" required
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white shadow-sm outline-none"
+                                onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                style="transition: border-color .15s;">
+                            <option value="">— Seleccionar laboratorio —</option>
+                            {% for loc in locations %}
+                                {% if loc.type == 'laboratory' %}
+                                <option value="{{ loc.id }}"
+                                    {{ (input.laboratory_id ?? '') == loc.id ? 'selected' : '' }}>
+                                    {{ loc.name }}{% if loc.city %} — {{ loc.city }}{% endif %}
+                                </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Notas</label>
+                        <textarea id="notes" name="notes" rows="3"
+                                  class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none resize-none"
+                                  onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                  style="transition: border-color .15s;"
+                                  placeholder="Descripción del daño...">{{ input.notes ?? '' }}</textarea>
+                    </div>
+
+                </div>
+
+                <div class="mt-6 flex items-center gap-3">
+                    <button type="submit"
+                            class="px-5 py-2 text-sm font-medium text-white rounded-lg shadow-sm"
+                            style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+                        Asignar reparación
+                    </button>
+                    <a href="{{ path('inventory_repair_list') }}"
+                       class="px-4 py-2 text-sm font-medium text-gray-600 rounded-lg border border-slate-200 hover:bg-slate-50">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nueva transformación{% endblock %}
+{% block page_title %}Registrar transformación{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('inventory_transformation_list') }}"
+       class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        ← Volver
+    </a>
+{% endblock %}
+
+{% block body %}
+    {% for error in errors %}
+        <div class="mb-4 p-4 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+            {{ error }}
+        </div>
+    {% endfor %}
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 max-w-xl">
+        <form method="POST" action="{{ path('inventory_transformation_create') }}" class="space-y-5">
+            <div>
+                <label for="serialized_stock_id" class="block text-sm font-medium text-gray-700 mb-1">
+                    Stock serializado <span class="text-red-500">*</span>
+                </label>
+                <select id="serialized_stock_id" name="serialized_stock_id" required
+                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <option value="">— Seleccione —</option>
+                    {% for s in stock %}
+                        <option value="{{ s.id }}"
+                            {% if (input.serializedStockId ?? '') == s.id %}selected{% endif %}>
+                            {{ s.serialNumber ?? s.id }} ({{ s.productId|slice(0,8) }}…)
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="laboratory_id" class="block text-sm font-medium text-gray-700 mb-1">
+                    Laboratorio <span class="text-red-500">*</span>
+                </label>
+                <select id="laboratory_id" name="laboratory_id" required
+                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <option value="">— Seleccione —</option>
+                    {% for loc in locations %}
+                        {% if loc.type == 'LABORATORY' %}
+                            <option value="{{ loc.id }}"
+                                {% if (input.laboratoryId ?? '') == loc.id %}selected{% endif %}>
+                                {{ loc.name }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="new_product_id" class="block text-sm font-medium text-gray-700 mb-1">
+                    Nuevo producto (opcional)
+                </label>
+                <input type="text" id="new_product_id" name="new_product_id"
+                       value="{{ input.newProductId ?? '' }}"
+                       placeholder="ID del nuevo producto (ULID)"
+                       class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 font-mono"/>
+                <p class="mt-1 text-xs text-gray-400">Dejar en blanco si el producto no cambia.</p>
+            </div>
+
+            <div>
+                <label for="new_serial_number" class="block text-sm font-medium text-gray-700 mb-1">
+                    Nuevo número de serie (opcional)
+                </label>
+                <input type="text" id="new_serial_number" name="new_serial_number"
+                       value="{{ input.newSerialNumber ?? '' }}"
+                       placeholder="Ej: SN-12345678"
+                       class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+                <p class="mt-1 text-xs text-gray-400">Dejar en blanco si el número de serie no cambia.</p>
+            </div>
+
+            <div>
+                <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Notas</label>
+                <textarea id="notes" name="notes" rows="3"
+                          placeholder="Descripción del trabajo realizado…"
+                          class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none">{{ input.notes ?? '' }}</textarea>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-2">
+                <a href="{{ path('inventory_transformation_list') }}"
+                   class="px-4 py-2 text-sm font-medium text-gray-600 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="px-5 py-2 text-sm font-medium text-white rounded-lg shadow-sm transition-colors"
+                        style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+                    Registrar transformación
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

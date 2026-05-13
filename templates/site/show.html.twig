@@ -1,0 +1,171 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ site.name }} — {{ client.name }}{% endblock %}
+{% block page_title %}Detalle de Sucursal{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('client_show', {id: client.id}) }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Volver a {{ client.name }}
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="max-w-2xl space-y-4">
+
+        {# Mensajes flash #}
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="px-4 py-3 rounded-xl text-sm font-medium border
+                    {{ label == 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' :
+                       label == 'error'   ? 'bg-red-50 border-red-200 text-red-700' :
+                                           'bg-amber-50 border-amber-200 text-amber-800' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        {# Card principal #}
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 flex items-center justify-between" style="background: linear-gradient(135deg, #1e3585 0%, #2a4db5 100%);">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-white/20">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-white">{{ site.name }}</h2>
+                        <p class="text-xs mt-0.5" style="color: rgba(255,255,255,0.6);">{{ client.name }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    {% if site.status == 'active' %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold" style="background: rgba(0,168,107,0.25); color: #00c882; border: 1px solid rgba(0,168,107,0.4);">Activa</span>
+                    {% else %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-white/60">Inactiva</span>
+                    {% endif %}
+                    {% if is_granted('site.update') %}
+                        <button type="button" id="toggle-edit-site"
+                                class="text-xs font-medium px-3 py-1 rounded-lg border border-white/40 text-white/80 hover:bg-white/10">Editar</button>
+                    {% endif %}
+                </div>
+            </div>
+
+            {# Acciones de estado #}
+            {% if is_granted('site.update') %}
+            <div class="px-6 py-3 border-b border-slate-100 bg-slate-50 flex items-center gap-3">
+                {% if site.status == 'active' %}
+                    <form method="POST" action="{{ path('site_deactivate', {clientId: client.id, siteId: site.id}) }}">
+                        <button type="submit"
+                                class="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-amber-700 bg-amber-50 border-amber-200 hover:bg-amber-100"
+                                onclick="return confirm('¿Desactivar la sucursal {{ site.name|e('js') }}?')">
+                            Desactivar
+                        </button>
+                    </form>
+                {% else %}
+                    <form method="POST" action="{{ path('site_reactivate', {clientId: client.id, siteId: site.id}) }}">
+                        <button type="submit"
+                                class="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-emerald-700 bg-emerald-50 border-emerald-200 hover:bg-emerald-100">
+                            Reactivar
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {# Vista de datos #}
+            <div id="view-site" class="px-6 py-5 grid grid-cols-2 gap-4 text-sm">
+                <div>
+                    <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">ID</p>
+                    <p class="font-mono text-xs text-gray-600 break-all">{{ site.id }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Terminal ID</p>
+                    <p class="font-mono text-xs text-gray-700">{{ site.terminalId }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Ciudad</p>
+                    <p class="font-mono text-xs text-gray-700">{{ site.cityId }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Zona de Servicio</p>
+                    {% if site.serviceZoneId %}
+                        {% set assignedZone = zones|filter(z => z.id == site.serviceZoneId)|first %}
+                        <p class="text-gray-700">{{ assignedZone is not null ? assignedZone.name : site.serviceZoneId }}</p>
+                    {% else %}
+                        <p class="text-gray-400">—</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            {# Formulario de edición #}
+            {% if is_granted('site.update') %}
+            <form id="form-edit-site" method="POST" action="{{ path('site_edit', {clientId: client.id, siteId: site.id}) }}"
+                  class="{{ editMode is defined and editMode ? '' : 'hidden' }} px-6 py-5 space-y-4 border-t border-slate-100">
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Nombre</label>
+                    <input type="text" name="name"
+                           value="{{ (editInput.name is defined) ? editInput.name : site.name }}"
+                           class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           required>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Zona de Servicio <span class="text-gray-400">(opcional)</span></label>
+                    <select name="service_zone_id"
+                            class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">— Sin zona —</option>
+                        {% for zone in zones %}
+                            <option value="{{ zone.id }}"
+                                {% if (editInput.serviceZoneId is defined and editInput.serviceZoneId == zone.id)
+                                   or (editInput is not defined and site.serviceZoneId == zone.id) %}
+                                    selected
+                                {% endif %}>
+                                {{ zone.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="submit"
+                            class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm"
+                            style="background: #1e3585;"
+                            onmouseover="this.style.background='#152970'"
+                            onmouseout="this.style.background='#1e3585'">
+                        Guardar cambios
+                    </button>
+                    <button type="button" id="cancel-edit-site" class="text-sm text-gray-500 hover:text-gray-700">Cancelar</button>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    (function () {
+        const toggleBtn  = document.getElementById('toggle-edit-site');
+        const cancelBtn  = document.getElementById('cancel-edit-site');
+        const viewBlock  = document.getElementById('view-site');
+        const formBlock  = document.getElementById('form-edit-site');
+
+        if (!toggleBtn || !formBlock) return;
+
+        toggleBtn.addEventListener('click', () => {
+            formBlock.classList.toggle('hidden');
+            viewBlock.classList.toggle('hidden');
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            formBlock.classList.add('hidden');
+            viewBlock.classList.remove('hidden');
+        });
+    })();
+</script>
+{% endblock %}

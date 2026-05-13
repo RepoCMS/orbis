@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Support\Domain\Entities\TicketFinding" table="ticket_findings">
+
+        <id name="id" type="ticket_finding_id" column="id" length="26" />
+
+        <field name="ticketId"          type="ticket_id" column="ticket_id"           length="26" unique="true" />
+        <field name="catCode"           type="string"    column="cat_code"            length="100" nullable="true" unique="true" />
+        <field name="physicalDocNumber" type="string"    column="physical_doc_number" length="100" nullable="true" />
+        <field name="problemTypeFound"  type="string"    column="problem_type_found"  length="100" />
+        <field name="problemDetail"     type="text"      column="problem_detail" />
+        <field name="batteryVoltageOk"  type="boolean"   column="battery_voltage_ok" />
+        <field name="solution"          type="text"      column="solution" />
+        <field name="registeredBy"      type="string"    column="registered_by"       length="26" />
+
+        <indexes>
+            <index name="idx_ticket_findings_ticket_id"   columns="ticket_id" />
+            <index name="idx_ticket_findings_registered_by" columns="registered_by" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

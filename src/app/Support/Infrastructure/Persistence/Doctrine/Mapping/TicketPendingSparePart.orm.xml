@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Support\Domain\Entities\TicketPendingSparePart" table="ticket_pending_spare_parts">
+
+        <id name="id" type="ticket_pending_spare_part_id" column="id" length="26" />
+
+        <field name="ticketId"    type="ticket_id" column="ticket_id"    length="26" />
+        <field name="productCode" type="string"    column="product_code" length="50" />
+        <field name="quantity"    type="integer"   column="quantity" />
+        <field name="notes"       type="text"      column="notes"         nullable="true" />
+
+        <indexes>
+            <index name="idx_ticket_pending_spare_parts_ticket_id" columns="ticket_id" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

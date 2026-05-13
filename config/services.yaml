@@ -1,0 +1,209 @@
+# yaml-language-server: $schema=../vendor/symfony/dependency-injection/Loader/schema/services.schema.json
+
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+# See also https://symfony.com/doc/current/service_container/import.html
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # Top-level src/ only (Kernel) — excludes src/app/ to avoid
+    # namespace mismatch (App\ prefix + src/app/ path != App\BC\ namespaces).
+    # Controllers viven en src/app/{BC}/Presentation/Http/ con su propio namespace.
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Kernel.php'
+            - '../src/app/'
+
+    # Bounded Context services — incluye Application/, Infrastructure/ y Presentation/.
+    # Solo se excluye Domain/ (clases puras sin dependencias de framework).
+    App\Client\:
+        resource: '../src/app/Client/'
+        exclude:
+            - '../src/app/Client/Domain/'
+
+    App\Identity\:
+        resource: '../src/app/Identity/'
+        exclude:
+            - '../src/app/Identity/Domain/'
+
+    App\Organization\:
+        resource: '../src/app/Organization/'
+        exclude:
+            - '../src/app/Organization/Domain/'
+
+    App\Inventory\:
+        resource: '../src/app/Inventory/'
+        exclude:
+            - '../src/app/Inventory/Domain/'
+
+    App\Location\:
+        resource: '../src/app/Location/'
+        exclude:
+            - '../src/app/Location/Domain/'
+
+    App\Shared\:
+        resource: '../src/app/Shared/'
+        exclude:
+            - '../src/app/Shared/Domain/'
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # Interface → Implementation bindings
+    # ──────────────────────────────────────────────────────────────────────────
+
+    # Identity
+    App\Identity\Domain\Repositories\UserRepositoryInterface:
+        class: App\Identity\Infrastructure\Persistence\Doctrine\DoctrineUserRepository
+
+    App\Identity\Domain\Repositories\RoleRepositoryInterface:
+        class: App\Identity\Infrastructure\Persistence\Doctrine\DoctrineRoleRepository
+
+    App\Identity\Domain\Repositories\PermissionRepositoryInterface:
+        class: App\Identity\Infrastructure\Persistence\Doctrine\DoctrinePermissionRepository
+
+    App\Identity\Domain\Repositories\UserTokenRepositoryInterface:
+        class: App\Identity\Infrastructure\Persistence\Doctrine\DoctrineUserTokenRepository
+
+    App\Identity\Domain\Repositories\AuthLogRepositoryInterface:
+        class: App\Identity\Infrastructure\Persistence\Doctrine\DoctrineAuthLogRepository
+
+    App\Identity\Domain\Service\PasswordHasherInterface:
+        class: App\Identity\Infrastructure\Service\NativePasswordHasher
+
+    App\Identity\Domain\Service\AccountNotifierInterface:
+        class: App\Identity\Infrastructure\Service\SymfonyMailerAccountNotifier
+        arguments:
+            $fromEmail: '%env(MAILER_FROM_EMAIL)%'
+            $fromName: '%env(MAILER_FROM_NAME)%'
+
+    App\Identity\Domain\Repositories\UserMfaConfigRepositoryInterface:
+        class: App\Identity\Infrastructure\Persistence\Doctrine\DoctrineUserMfaConfigRepository
+
+    App\Identity\Domain\Service\UserEmailResolverInterface:
+        class: App\Identity\Infrastructure\Service\CrossBcUserEmailResolver
+
+    App\Identity\Domain\Service\UserBindingCheckerInterface:
+        class: App\Identity\Infrastructure\Service\UserBindingChecker
+
+    App\Shared\Domain\Service\IdGeneratorInterface:
+        class: App\Shared\Infrastructure\Service\UlidGenerator
+
+    App\Shared\Domain\Event\DomainEventPublisherInterface:
+        class: App\Shared\Infrastructure\Event\SymfonyDomainEventPublisher
+
+    # Client
+    App\Client\Domain\Repositories\ClientRepositoryInterface:
+        class: App\Client\Infrastructure\Persistence\Doctrine\DoctrineClientRepository
+
+    App\Client\Domain\Repositories\ContactRepositoryInterface:
+        class: App\Client\Infrastructure\Persistence\Doctrine\DoctrineContactRepository
+
+    App\Client\Domain\Repositories\TerminalRepositoryInterface:
+        class: App\Client\Infrastructure\Persistence\Doctrine\DoctrineTerminalRepository
+
+    App\Client\Domain\Repositories\SiteRepositoryInterface:
+        class: App\Client\Infrastructure\Persistence\Doctrine\DoctrineSiteRepository
+
+    # Organization
+    App\Organization\Domain\Repositories\EmployeeRepositoryInterface:
+        class: App\Organization\Infrastructure\Persistence\Doctrine\DoctrineEmployeeRepository
+
+    App\Organization\Domain\Repositories\EmployeeSpecialPeriodRepositoryInterface:
+        class: App\Organization\Infrastructure\Persistence\Doctrine\DoctrineEmployeeSpecialPeriodRepository
+
+    App\Organization\Domain\Repositories\ServiceZoneRepositoryInterface:
+        class: App\Organization\Infrastructure\Persistence\Doctrine\DoctrineServiceZoneRepository
+
+    # Inventory
+    App\Inventory\Domain\Repositories\ProductRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineProductRepository
+
+    App\Inventory\Domain\Repositories\LocationRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineLocationRepository
+
+    App\Inventory\Domain\Repositories\SerializedStockRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineSerializedStockRepository
+
+    App\Inventory\Domain\Repositories\NonserializedStockRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineNonserializedStockRepository
+
+    App\Inventory\Domain\Repositories\MovementRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineMovementRepository
+
+    App\Inventory\Domain\Repositories\PurchaseOrderRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrinePurchaseOrderRepository
+
+    App\Inventory\Domain\Repositories\PurchaseOrderItemRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrinePurchaseOrderItemRepository
+
+    App\Inventory\Domain\Repositories\EntryRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineEntryRepository
+
+    App\Inventory\Domain\Repositories\EntryItemRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineEntryItemRepository
+
+    App\Inventory\Domain\Repositories\RepairRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineRepairRepository
+
+    App\Inventory\Domain\Repositories\TransformationRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineTransformationRepository
+
+    # Location
+    App\Location\Domain\Repositories\RegionRepositoryInterface:
+        class: App\Location\Infrastructure\Persistence\Doctrine\DoctrineRegionRepository
+
+    App\Location\Domain\Repositories\ProvinceRepositoryInterface:
+        class: App\Location\Infrastructure\Persistence\Doctrine\DoctrineProvinceRepository
+
+    App\Location\Domain\Repositories\CityRepositoryInterface:
+        class: App\Location\Infrastructure\Persistence\Doctrine\DoctrineCityRepository
+
+    App\Inventory\Domain\Repositories\StockMinimumRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineStockMinimumRepository
+
+    App\Inventory\Domain\Repositories\SerialHistoryRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineSerialHistoryRepository
+
+    # Support
+    App\Support\:
+        resource: '../src/app/Support/'
+        exclude:
+            - '../src/app/Support/Domain/'
+
+    App\Support\Domain\Repositories\TicketRepositoryInterface:
+        class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineTicketRepository
+
+    App\Support\Domain\Repositories\TicketAssignmentRepositoryInterface:
+        class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineTicketAssignmentRepository
+
+    App\Support\Domain\Repositories\JourneyRepositoryInterface:
+        class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineJourneyRepository
+
+    App\Support\Domain\Repositories\TicketFindingRepositoryInterface:
+        class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineTicketFindingRepository
+
+    App\Support\Domain\Repositories\TicketSparePartRepositoryInterface:
+        class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineTicketSparePartRepository
+
+    App\Support\Domain\Repositories\TicketPauseRepositoryInterface:
+        class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineTicketPauseRepository
+
+    App\Support\Domain\Repositories\TicketRescheduleRepositoryInterface:
+        class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineTicketRescheduleRepository
+
+    # DeviceCatalog
+    App\DeviceCatalog\:
+        resource: '../src/app/DeviceCatalog/'
+        exclude:
+            - '../src/app/DeviceCatalog/Domain/'
+
+    App\DeviceCatalog\Domain\AtmComponentRepositoryInterface:
+        class: App\DeviceCatalog\Infrastructure\Persistence\Doctrine\DoctrineAtmComponentRepository

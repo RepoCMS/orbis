@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <!--
+        Cada registro es una unidad fÃ­sica identificable por nÃºmero de serie.
+        La unicidad de (product_id, serial_number) se garantiza con unique-constraint.
+    -->
+    <entity name="App\Inventory\Domain\Entities\SerializedStock" table="serialized_stock">
+
+        <id name="id" type="serialized_stock_id" column="id" length="26" />
+
+        <field name="productId"    type="product_id"          column="product_id"    length="26" />
+        <field name="serialNumber" type="stock_serial_number"  column="serial_number" length="100" />
+        <field name="locationId"   type="location_id"          column="location_id"   length="26" />
+        <field name="status"       type="inventory_serialized_stock_status" column="status" length="20" />
+        <field name="deletedAt"    type="datetime_immutable"   column="deleted_at"    nullable="true" />
+
+        <unique-constraints>
+            <unique-constraint name="uq_serialized_stock_product_serial" columns="product_id,serial_number" />
+        </unique-constraints>
+
+        <indexes>
+            <index name="idx_serialized_stock_product_id"  columns="product_id" />
+            <index name="idx_serialized_stock_location_id" columns="location_id" />
+            <index name="idx_serialized_stock_status"      columns="status" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

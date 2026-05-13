@@ -1,0 +1,89 @@
+﻿{% extends 'base.html.twig' %}
+{% import 'components/_macros.html.twig' as ui %}
+
+{% block title %}Usuarios{% endblock %}
+{% block page_title %}Gestión de Usuarios{% endblock %}
+
+{% block header_actions %}{% endblock %}
+
+{% block body %}
+    {% if users is empty %}
+        <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+            <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4" style="background: #eef1f9;">
+                <svg class="w-8 h-8" fill="none" stroke="#1e3585" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                </svg>
+            </div>
+            <p class="text-sm font-medium text-gray-600">No hay usuarios registrados aún.</p>
+            <p class="text-xs text-gray-400 mt-1">Los usuarios se crean desde el perfil de cada empleado.</p>
+        </div>
+    {% else %}
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200"
+             data-controller="table-filter">
+
+            {# -- Toolbar --------------------------------------- #}
+            {{ include('components/_table_toolbar.html.twig', {placeholder: 'Buscar usuario...'}) }}
+
+            {# -- Panel de filtros (client-side) --------------- #}
+            <div data-table-filter-target="panel"
+                 class="hidden bg-slate-50/60 border-b border-slate-100 px-4 py-3">
+                <div class="flex flex-wrap items-end gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1">Estado</label>
+                        <select data-table-filter-target="filterSelect"
+                                data-col="2"
+                                data-match="exact"
+                                data-action="change->table-filter#filterRows"
+                                class="text-sm rounded-lg border border-slate-200 px-3 py-1.5 bg-white w-40 focus:outline-none focus:ring-2 focus:ring-blue-400/30 focus:border-blue-400 transition-colors">
+                            <option value="">Todos</option>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="unverified">Sin verificar</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            {# -- Tabla ----------------------------------------- #}
+            <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="text-xs uppercase tracking-wide text-white" style="background: #1e3585;">
+                    <tr>
+                        <th class="px-6 py-3.5 text-left font-semibold">Usuario</th>
+                        <th class="px-6 py-3.5 text-left font-semibold">Rol</th>
+                        <th class="px-6 py-3.5 text-left font-semibold">Estado</th>
+                        <th class="px-6 py-3.5 text-left font-semibold">Intentos fallidos</th>
+                        <th class="px-6 py-3.5 text-right font-semibold">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for user in users %}
+                        <tr class="hover:bg-gray-50 transition-colors"
+                            data-table-filter-target="row">
+                            <td class="px-6 py-4 font-medium text-gray-900">{{ user.username }}</td>
+                            <td class="px-6 py-4 text-gray-600">{{ rolesById[user.roleId] ?? user.roleId }}</td>
+                            <td class="px-6 py-4">{{ ui.status_badge(user.status) }}</td>
+                            <td class="px-6 py-4 text-gray-600">
+                                {% if user.failedLoginAttempts > 0 %}
+                                    <span class="text-red-600 font-medium">{{ user.failedLoginAttempts }}</span>
+                                {% else %}
+                                    <span class="text-gray-400">0</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-right">{{ ui.btn_view(path('user_show', {id: user.id})) }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr data-table-filter-target="noResults" class="hidden">
+                        <td colspan="5" class="px-6 py-12 text-center text-sm text-gray-400">
+                            No se encontraron usuarios con los filtros aplicados.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <!--
+        Registro de transformación de un repuesto serializado en laboratorio.
+        new_product_id      = null si solo se cambió el serial.
+        new_serial_number   = null si solo se cambió el producto.
+        original_serial_number y new_serial_number registran el antes y después del serial.
+    -->
+    <entity name="App\Inventory\Domain\Entities\Transformation" table="stock_transformations">
+
+        <id name="id" type="transformation_id" column="id" length="26" />
+
+        <field name="serializedStockId"    type="serialized_stock_id"  column="serialized_stock_id"    length="26" />
+        <field name="laboratoryId"         type="location_id"          column="laboratory_id"          length="26" />
+        <field name="performedById"        type="user_id"              column="performed_by_id"        length="26" />
+        <field name="originalProductId"    type="product_id"           column="original_product_id"    length="26" />
+        <field name="newProductId"         type="product_id"           column="new_product_id"         length="26" nullable="true" />
+        <field name="originalSerialNumber" type="stock_serial_number"  column="original_serial_number" length="100" nullable="true" />
+        <field name="newSerialNumber"      type="stock_serial_number"  column="new_serial_number"      length="100" nullable="true" />
+        <field name="notes"                type="text"                 column="notes"                  nullable="true" />
+        <field name="createdAt"            type="datetime_immutable"   column="created_at" />
+
+        <indexes>
+            <index name="idx_stock_transformations_serialized_stock_id" columns="serialized_stock_id" />
+            <index name="idx_stock_transformations_laboratory_id"       columns="laboratory_id" />
+            <index name="idx_stock_transformations_performed_by_id"     columns="performed_by_id" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

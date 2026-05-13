@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <!--
+        Entrada de inventario: recepciÃ³n fÃ­sica de mercancÃ­a.
+        reference debe ser Ãºnico (e.g., nÃºmero de guÃ­a o documento de recepciÃ³n).
+        confirmed_at es null mientras la entrada sea DRAFT.
+    -->
+    <entity name="App\Inventory\Domain\Entities\Entry" table="inventory_entries">
+
+        <id name="id" type="entry_id" column="id" length="26" />
+
+        <field name="reference"   type="string"             column="reference"    length="100" />
+        <field name="status"      type="inventory_entry_status" column="status" length="20" />
+        <field name="notes"       type="text"               column="notes"        nullable="true" />
+        <field name="createdBy"   type="user_id"            column="created_by"   length="26" />
+        <field name="createdAt"   type="datetime_immutable" column="created_at" />
+        <field name="confirmedAt" type="datetime_immutable" column="confirmed_at" nullable="true" />
+
+        <unique-constraints>
+            <unique-constraint name="uq_inventory_entries_reference" columns="reference" />
+        </unique-constraints>
+
+        <indexes>
+            <index name="idx_inventory_entries_status"     columns="status" />
+            <index name="idx_inventory_entries_created_by" columns="created_by" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

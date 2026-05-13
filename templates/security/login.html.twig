@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión — CMS Orbis</title>
+    <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+    {% block javascripts %}{% block importmap %}{{ importmap('app') }}{% endblock %}{% endblock %}
+</head>
+<body class="bg-slate-100 text-gray-900 antialiased min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-sm">
+
+        {# Marca #}
+        <div class="flex flex-col items-center mb-8">
+            <div class="flex items-center gap-2 mb-2">
+                <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+                    <path d="M4 24 C8 14, 20 8, 30 10" stroke="#00a86b" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+                    <path d="M4 24 C10 20, 22 20, 30 10" stroke="#00c882" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+                </svg>
+                <span class="text-2xl font-bold tracking-tight" style="color: #1e3585;">Orbis</span>
+            </div>
+            <p class="text-sm text-gray-500">CMS Business Solutions</p>
+        </div>
+
+        {# Card #}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 px-8 py-8">
+
+            <h1 class="text-lg font-semibold text-gray-800 mb-6">Iniciar sesión</h1>
+
+            {# Error de autenticación #}
+            {% if error %}
+                <div class="mb-4 bg-red-50 border border-red-200 rounded-lg px-4 py-3 flex items-start gap-2">
+                    <svg class="w-4 h-4 text-red-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <p class="text-sm text-red-700">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+                </div>
+            {% endif %}
+
+            {# Mensajes flash (e.g. tras logout) #}
+            {% for message in app.flashes('success') %}
+                <div class="mb-4 bg-green-50 border border-green-200 rounded-lg px-4 py-3">
+                    <p class="text-sm text-green-700">{{ message }}</p>
+                </div>
+            {% endfor %}
+
+            <form method="POST" action="{{ path('app_login') }}" class="space-y-4">
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <div>
+                    <label for="username" class="block text-xs font-medium text-gray-700 mb-1">Usuario</label>
+                    <input id="username" type="text" name="username"
+                           value="{{ last_username }}"
+                           autocomplete="username" autofocus required
+                           class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:border-transparent"
+                           style="focus:ring-color: #1e3585;"
+                           onfocus="this.style.boxShadow='0 0 0 3px rgba(30,53,133,0.15)'; this.style.borderColor='#1e3585';"
+                           onblur="this.style.boxShadow=''; this.style.borderColor='';">
+                </div>
+
+                <div>
+                    <label for="password" class="block text-xs font-medium text-gray-700 mb-1">Contraseña</label>
+                    <input id="password" type="password" name="password"
+                           autocomplete="current-password" required
+                           class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2.5 focus:outline-none"
+                           onfocus="this.style.boxShadow='0 0 0 3px rgba(30,53,133,0.15)'; this.style.borderColor='#1e3585';"
+                           onblur="this.style.boxShadow=''; this.style.borderColor='';">
+                </div>
+
+                <button type="submit"
+                        class="w-full text-white text-sm font-semibold py-2.5 rounded-lg shadow-sm transition-all mt-2"
+                        style="background: #1e3585;"
+                        onmouseover="this.style.background='#152970'"
+                        onmouseout="this.style.background='#1e3585'">
+                    Ingresar
+                </button>
+
+            </form>
+        </div>
+
+        <p class="text-center text-xs text-gray-400 mt-6">
+            Ecuador © {{ "now"|date("Y") }} Orbis. Todos los derechos reservados.
+        </p>
+
+    </div>
+
+</body>
+</html>

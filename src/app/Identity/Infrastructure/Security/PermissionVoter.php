@@ -1,0 +1,28 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Identity\Infrastructure\Security;
+
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+
+final class PermissionVoter extends Voter
+{
+    protected function supports(string $attribute, mixed $subject): bool
+    {
+        return str_contains($attribute, '.');
+    }
+
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, ?Vote $vote = null): bool
+    {
+        $user = $token->getUser();
+
+        if (!$user instanceof SymfonySecurityUser) {
+            return false;
+        }
+
+        return $user->hasPermission($attribute);
+    }
+}

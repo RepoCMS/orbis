@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Transformación #{{ transformation.id|slice(0,8) }}{% endblock %}
+{% block page_title %}Detalle de transformación{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('inventory_transformation_list') }}"
+       class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        ← Volver a transformaciones
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 max-w-2xl">
+        <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5 text-sm">
+            <div>
+                <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">ID</dt>
+                <dd class="font-mono text-gray-800 break-all">{{ transformation.id }}</dd>
+            </div>
+            <div>
+                <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Fecha</dt>
+                <dd class="text-gray-700">{{ transformation.createdAt|date('d/m/Y H:i') }}</dd>
+            </div>
+            <div>
+                <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Stock serializado</dt>
+                <dd class="font-mono text-gray-800 break-all">{{ transformation.serializedStockId }}</dd>
+            </div>
+            <div>
+                <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Laboratorio</dt>
+                <dd class="font-mono text-gray-700 break-all">{{ transformation.laboratoryId }}</dd>
+            </div>
+            <div>
+                <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Realizado por</dt>
+                <dd class="text-gray-700">{{ transformation.performedById }}</dd>
+            </div>
+            <div>
+                <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Cambios</dt>
+                <dd>
+                    {% if transformation.changedProduct and transformation.changedSerial %}
+                        <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-purple-100 text-purple-700">Producto + N.º Serie</span>
+                    {% elseif transformation.changedProduct %}
+                        <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">Producto</span>
+                    {% elseif transformation.changedSerial %}
+                        <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-teal-100 text-teal-700">N.º Serie</span>
+                    {% else %}
+                        <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">Solo notas</span>
+                    {% endif %}
+                </dd>
+            </div>
+
+            {# Producto #}
+            <div>
+                <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Producto original</dt>
+                <dd class="font-mono text-gray-700">{{ transformation.originalProductId }}</dd>
+            </div>
+            {% if transformation.changedProduct %}
+            <div>
+                <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Nuevo producto</dt>
+                <dd class="font-mono text-green-700 font-medium">{{ transformation.newProductId }}</dd>
+            </div>
+            {% endif %}
+
+            {# Serial #}
+            {% if transformation.originalSerialNumber %}
+            <div>
+                <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Serie original</dt>
+                <dd class="font-mono text-gray-700">{{ transformation.originalSerialNumber }}</dd>
+            </div>
+            {% endif %}
+            {% if transformation.changedSerial %}
+            <div>
+                <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Nueva serie</dt>
+                <dd class="font-mono text-green-700 font-medium">{{ transformation.newSerialNumber }}</dd>
+            </div>
+            {% endif %}
+
+            {% if transformation.notes %}
+            <div class="sm:col-span-2">
+                <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Notas</dt>
+                <dd class="text-gray-700 whitespace-pre-line">{{ transformation.notes }}</dd>
+            </div>
+            {% endif %}
+        </dl>
+    </div>
+{% endblock %}

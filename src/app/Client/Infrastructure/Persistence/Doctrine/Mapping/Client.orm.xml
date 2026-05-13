@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Client\Domain\Entities\Client" table="clients">
+
+        <id name="id" type="client_id" column="id" length="26" />
+
+        <field name="name"      type="client_name"        column="name"       length="100" />
+        <field name="ruc"       type="client_ruc"         column="ruc"        length="13"  unique="true" />
+        <field name="address"   type="string"             column="address"    length="255" nullable="true" />
+        <field name="status"    type="client_status"      column="status"     length="20" />
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false" />
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true" />
+        <field name="deletedAt" type="datetime_immutable" column="deleted_at" nullable="true" />
+
+    </entity>
+
+</doctrine-mapping>
+

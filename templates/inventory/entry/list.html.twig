@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Entradas de inventario{% endblock %}
+{% block page_title %}Entradas de Inventario{% endblock %}
+
+{% block header_actions %}
+    {% if is_granted('inventory.create') %}
+    <a href="{{ path('inventory_entry_new') }}"
+       class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm"
+       style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+        </svg>
+        Nueva entrada
+    </a>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    {% if entries is empty %}
+        <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+            <svg class="w-12 h-12 mb-3 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+            </svg>
+            <p class="text-sm font-medium text-gray-600">No hay entradas en borrador.</p>
+        </div>
+    {% else %}
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-100 text-left">
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Referencia</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Estado</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden md:table-cell">Creado</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        {% for entry in entries %}
+                        <tr class="hover:bg-slate-50/60 transition-colors">
+                            <td class="px-4 py-3 font-medium text-gray-900">
+                                <a href="{{ path('inventory_entry_show', {id: entry.id}) }}"
+                                   class="hover:text-blue-700 transition-colors">{{ entry.reference }}</a>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="text-xs font-medium px-2.5 py-1 rounded-full
+                                    {% if entry.status == 'draft' %}bg-yellow-100 text-yellow-700
+                                    {% elseif entry.status == 'confirmed' %}bg-green-100 text-green-700
+                                    {% else %}bg-gray-100 text-gray-600{% endif %}">
+                                    {{ entry.statusLabel }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-gray-500 text-xs hidden md:table-cell">{{ entry.createdAt }}</td>
+                            <td class="px-4 py-3 text-right">
+                                {% if is_granted('inventory.update') and entry.status == 'draft' %}
+                                <form method="POST" action="{{ path('inventory_entry_cancel', {id: entry.id}) }}"
+                                      onsubmit="return confirm('¿Cancelar esta entrada?')" class="inline">
+                                    <button type="submit"
+                                            class="text-xs px-3 py-1.5 rounded-lg border border-red-200 text-red-600 hover:bg-red-50">
+                                        Cancelar
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

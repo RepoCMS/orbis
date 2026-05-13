@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Client\Domain\Entities\Site" table="sites">
+
+        <id name="id" type="site_id" column="id" length="26" />
+
+        <field name="clientId"       type="client_id"          column="client_id"        length="26" />
+        <field name="cityId"         type="string"             column="city_id"          length="26" />
+        <field name="terminalId"     type="terminal_id"        column="terminal_id"      length="26" />
+        <field name="name"           type="string"             column="name"             length="100" />
+        <field name="status"         type="site_status"        column="status"           length="10" />
+        <field name="serviceZoneId"  type="service_zone_id"    column="service_zone_id"  length="26" nullable="true" />
+        <field name="deletedAt"      type="datetime_immutable" column="deleted_at"       nullable="true" />
+
+        <indexes>
+            <index name="idx_sites_client_id"      columns="client_id" />
+            <index name="idx_sites_service_zone_id" columns="service_zone_id" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>
