@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Organization\Domain\Entities\ServiceZoneAssignment" table="org_service_zone_assignments">
+
+        <id name="id" type="service_zone_assignment_id" column="id" length="26" />
+
+        <field name="employeeId"       type="employee_id"               column="employee_id"        length="26" nullable="false" />
+        <field name="newZoneId"        type="service_zone_id"           column="new_zone_id"        length="26" nullable="false" />
+        <field name="previousZoneId"   type="service_zone_id"           column="previous_zone_id"   length="26" nullable="true" />
+        <field name="assignedByUserId" type="string"                    column="assigned_by_user_id" length="26" nullable="true" />
+        <field name="createdAt"        type="datetime_immutable"        column="created_at"         nullable="false" />
+        <field name="updatedAt"        type="datetime_immutable"        column="updated_at"         nullable="true" />
+
+        <indexes>
+            <index name="idx_sza_employee_id" columns="employee_id" />
+            <index name="idx_sza_new_zone_id" columns="new_zone_id" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

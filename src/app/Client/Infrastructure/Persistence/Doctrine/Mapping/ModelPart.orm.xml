@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Client\Domain\Entities\ModelPart" table="client_model_parts">
+
+        <id name="id" type="model_part_id" column="id" length="26" />
+
+        <field name="model"            type="string"             column="model"               length="200" />
+        <field name="partName"         type="string"             column="part_name"           length="255" />
+        <field name="partNumber"       type="string"             column="part_number"         length="100" />
+        <field name="level"            type="integer"            column="level"               default="0" />
+        <field name="parentPartNumber" type="string"             column="parent_part_number"  length="100" nullable="true" />
+        <field name="createdAt"        type="datetime_immutable" column="created_at" />
+        <field name="updatedAt"        type="datetime_immutable" column="updated_at"          nullable="true" />
+        <field name="deletedAt"        type="datetime_immutable" column="deleted_at"          nullable="true" />
+
+        <indexes>
+            <index name="idx_model_parts_model" columns="model" />
+            <index name="idx_model_parts_part_number" columns="part_number" />
+            <index name="idx_model_parts_parent_part_number" columns="parent_part_number" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

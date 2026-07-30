@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
     {% block javascripts %}{% block importmap %}{{ importmap('app') }}{% endblock %}{% endblock %}
 </head>
-<body class="bg-slate-100 text-gray-900 antialiased min-h-screen flex items-center justify-center p-4">
+<body class="bg-gray-100 text-gray-900 antialiased min-h-screen flex items-center justify-center p-4">
 
     <div class="w-full max-w-sm">
 
@@ -24,7 +24,7 @@
         </div>
 
         {# Card #}
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 px-8 py-8">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 px-8 py-8">
 
             <div class="flex items-center gap-3 mb-6">
                 <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style="background: #eef1f9;">
@@ -67,6 +67,10 @@
                     Verificar
                 </button>
             </form>
+
+            <p class="text-center mt-4">
+                <a href="{{ path('mfa_recovery') }}" class="text-xs" style="color: #d97706;">¿No tienes acceso a tu aplicación? Usa un código de respaldo</a>
+            </p>
         </div>
 
         <form method="POST" action="{{ path('app_logout') }}" class="text-center mt-4">

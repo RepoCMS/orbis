@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                         https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="App\Client\Domain\Entities\Site" table="sites">
+    <entity name="App\Client\Domain\Entities\Site" table="client_sites">
 
         <id name="id" type="site_id" column="id" length="26" />
 

@@ -7,35 +7,48 @@
         "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "doctrine/doctrine-bundle": "^3.2",
-        "doctrine/doctrine-migrations-bundle": "*",
-        "doctrine/orm": "^3.6",
-        "endroid/qr-code": "^6.1",
-        "ramsey/uuid": "*",
-        "spomky-labs/otphp": "^11.4",
+        "doctrine/doctrine-bundle": "^3.2.4",
+        "doctrine/doctrine-migrations-bundle": ">=4",
+        "doctrine/orm": "^3.6.7",
+        "dompdf/dompdf": "^3.1.5",
+        "endroid/qr-code": "^6.1.3",
+        "lexik/jwt-authentication-bundle": ">=3.2",
+        "phpoffice/phpspreadsheet": "^3.10.6",
+        "ramsey/uuid": ">=4.9.3",
+        "spomky-labs/otphp": "^11.5",
         "symfony/asset": "8.0.*",
         "symfony/console": "8.0.*",
+        "symfony/doctrine-messenger": "8.0.*",
         "symfony/dotenv": "8.0.*",
-        "symfony/flex": "^2",
+        "symfony/flex": "^2.11",
         "symfony/framework-bundle": "8.0.*",
         "symfony/mailer": "8.0.*",
+        "symfony/messenger": "8.0.*",
         "symfony/runtime": "8.0.*",
+        "symfony/scheduler": "8.0.*",
         "symfony/security-bundle": "8.0.*",
+        "symfony/serializer": "8.0.*",
         "symfony/twig-bundle": "8.0.*",
         "symfony/uid": "8.0.*",
-        "symfony/ux-turbo": "^3.0",
+        "symfony/ux-turbo": "^3.2",
         "symfony/yaml": "8.0.*",
         "symfonycasts/tailwind-bundle": "^0.12.0",
-        "twig/extra-bundle": "*"
+        "twig/extra-bundle": ">=3.24"
     },
     "require-dev": {
-        "phpunit/phpunit": "11"
+        "phpunit/phpunit": "11",
+        "symfony/browser-kit": "8.0.*",
+        "symfony/css-selector": "8.0.*",
+        "symfony/dom-crawler": "8.0.*"
     },
     "config": {
         "allow-plugins": {
             "php-http/discovery": true,
             "symfony/flex": true,
             "symfony/runtime": true
+        },
+        "audit": {
+            "block-insecure": false
         },
         "bump-after-update": true,
         "sort-packages": true
@@ -50,7 +63,9 @@
             "App\\Location\\": "src/app/Location/",
             "App\\Shared\\": "src/app/Shared/",
             "App\\Support\\": "src/app/Support/",
-            "App\\DeviceCatalog\\": "src/app/DeviceCatalog/"
+            "App\\DeviceCatalog\\": "src/app/DeviceCatalog/",
+            "App\\Expense\\": "src/app/Expense/",
+            "App\\Notification\\": "src/app/Notification/"
         },
         "exclude-from-classmap": [
             "src/app/"

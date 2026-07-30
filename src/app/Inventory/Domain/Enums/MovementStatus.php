@@ -10,4 +10,5 @@ enum MovementStatus: string
     case IN_TRANSIT = 'in_transit';
     case COMPLETED  = 'completed';
     case CANCELLED  = 'cancelled';
+    case REJECTED   = 'rejected';
 }

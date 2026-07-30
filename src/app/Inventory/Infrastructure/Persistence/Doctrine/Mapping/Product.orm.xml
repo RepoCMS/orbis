@@ -13,7 +13,14 @@
         <field name="name"                  type="product_name"       column="name"          length="150" />
         <field name="description"           type="text"               column="description" />
         <field name="trackingType"          type="product_tracking_type"             column="tracking_type" length="20" />
+        <field name="lastPurchasePrice"     type="string"             column="last_purchase_price" length="20" nullable="true" />
+        <field name="isTransformable"       type="boolean"            column="is_transformable" default="false" />
+        <field name="createdAt"             type="datetime_immutable" column="created_at" />
+        <field name="updatedAt"             type="datetime_immutable" column="updated_at"    nullable="true" />
         <field name="deletedAt"             type="datetime_immutable" column="deleted_at"    nullable="true" />
+        <field name="createdBy"             type="string"             column="created_by"    length="26" nullable="true" />
+        <field name="updatedBy"             type="string"             column="updated_by"    length="26" nullable="true" />
+        <field name="deletedBy"             type="string"             column="deleted_by"    length="26" nullable="true" />
 
         <indexes>
             <index name="idx_products_code" columns="code" />

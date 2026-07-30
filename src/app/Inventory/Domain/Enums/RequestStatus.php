@@ -19,6 +19,7 @@ enum RequestStatus: string
     case PENDING                       = 'pending';
     case APPROVED                      = 'approved';
     case AWAITING_TECHNICIAN_ACCEPTANCE = 'awaiting_technician_acceptance';
+    case PARTIALLY_FULFILLED           = 'partially_fulfilled';
     case REJECTED                      = 'rejected';
     case FULFILLED                     = 'fulfilled';
     case CANCELLED                     = 'cancelled';

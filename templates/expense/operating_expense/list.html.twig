@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+{% import 'components/_macros.html.twig' as ui %}
+
+{% block title %}Liquidaciones{% endblock %}
+{% block page_title %}Liquidaciones{% endblock %}
+
+{% block header_actions %}
+    <div class="flex items-center gap-3">
+        {% if is_granted('expense.create') %}
+            <a href="{{ path('expense_oe_new') }}"
+               class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-all hover:shadow-md"
+               style="background: #00a86b;"
+               onmouseover="this.style.background='#008a56'"
+               onmouseout="this.style.background='#00a86b'">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                </svg>
+                Nueva liquidación
+            </a>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block body %}
+    {% if expenses is empty %}
+        <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+            <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4" style="background: #eef1f9;">
+                <svg class="w-8 h-8" fill="none" stroke="#1e3585" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+            </div>
+            <p class="text-sm font-medium text-gray-600">No hay liquidaciones registradas.</p>
+            <p class="text-xs text-gray-400 mt-1">Cree una nueva liquidación para comenzar.</p>
+        </div>
+    {% else %}
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="text-xs uppercase tracking-wide text-white" style="background: #1e3585;">
+                        <tr>
+                            <th class="px-6 py-3.5 text-left font-semibold">#</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Empleado</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Motivo</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Estado</th>
+                            <th class="px-6 py-3.5 text-right font-semibold">Total</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Período</th>
+                            <th class="px-6 py-3.5 text-right font-semibold">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for expense in expenses %}
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 font-mono text-xs text-gray-500">{{ expense.sequence }}</td>
+                                <td class="px-6 py-4 font-medium text-gray-900">{{ employeeNames[expense.employeeId] ?? expense.employeeId|slice(0, 8) ~ '...' }}</td>
+                                <td class="px-6 py-4 text-gray-600 max-w-xs truncate">{{ expense.reason }}</td>
+                                <td class="px-6 py-4">{{ ui.status_badge(expense.status) }}</td>
+                                <td class="px-6 py-4 text-right font-bold text-gray-800">${{ expense.totalExpenses|number_format(2) }}</td>
+                                <td class="px-6 py-4 text-gray-500 text-xs">{{ expense.startDate }} al {{ expense.endDate }}</td>
+                                <td class="px-6 py-4 text-right">{{ ui.btn_view(path('expense_oe_show', {id: expense.id})) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Support\Domain\Entities\TicketAuditLog" table="ticket_audit_logs">
+
+        <id name="id" type="ticket_audit_log_id" column="id" length="26" />
+
+        <field name="ticketId"  type="string"             column="ticket_id"   length="26" />
+        <field name="fieldName" type="string"             column="field_name"  length="100" />
+        <field name="oldValue"  type="text"               column="old_value"   nullable="true" />
+        <field name="newValue"  type="text"               column="new_value"   nullable="true" />
+        <field name="changedBy" type="string"             column="changed_by"  length="26" />
+        <field name="changedAt" type="datetime_immutable" column="changed_at" />
+
+        <indexes>
+            <index name="idx_tal_ticket_id"   columns="ticket_id" />
+            <index name="idx_tal_changed_by"  columns="changed_by" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

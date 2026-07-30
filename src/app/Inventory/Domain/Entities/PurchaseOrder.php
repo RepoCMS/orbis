@@ -82,6 +82,12 @@ final class PurchaseOrder
         $this->status = PurchaseOrderStatus::COMPLETED;
     }
 
+    public function update(string $reference, ?string $notes): void
+    {
+        $this->reference = $reference;
+        $this->notes     = $notes;
+    }
+
     public function cancel(): void
     {
         $this->status = PurchaseOrderStatus::CANCELLED;

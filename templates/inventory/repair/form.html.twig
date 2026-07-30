@@ -14,7 +14,7 @@
 
 {% block body %}
     <div class="max-w-lg">
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
 
             {% if errors is not empty %}
                 <div class="mb-5 bg-red-50 border border-red-200 rounded-lg p-4 space-y-1">
@@ -46,6 +46,7 @@
                         <label for="laboratory_id" class="block text-sm font-medium text-gray-700 mb-1">
                             Laboratorio <span class="text-red-500">*</span>
                         </label>
+                        {% if locations is not empty %}
                         <select id="laboratory_id" name="laboratory_id" required
                                 class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white shadow-sm outline-none"
                                 onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
@@ -60,6 +61,19 @@
                                 {% endif %}
                             {% endfor %}
                         </select>
+                        {% else %}
+                            <div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+                                <div class="flex items-start gap-3">
+                                    <svg class="w-5 h-5 shrink-0 mt-0.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
+                                    </svg>
+                                    <div class="text-sm">
+                                        <p class="font-medium text-amber-800">No hay laboratorios disponibles</p>
+                                        <p class="text-amber-700 mt-0.5">Debe crear al menos un laboratorio antes de poder registrar una reparación.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
 
                     <div>
@@ -80,7 +94,7 @@
                         Asignar reparación
                     </button>
                     <a href="{{ path('inventory_repair_list') }}"
-                       class="px-4 py-2 text-sm font-medium text-gray-600 rounded-lg border border-slate-200 hover:bg-slate-50">
+                       class="px-4 py-2 text-sm font-medium text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-50">
                         Cancelar
                     </a>
                 </div>

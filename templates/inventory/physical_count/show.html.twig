@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conteo f&iacute;sico{% endblock %}
+{% block page_title %}Detalle del conteo f&iacute;sico{% endblock %}
+
+{% block body %}
+    <div class="max-w-3xl mx-auto">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide">Ubicaci&oacute;n</dt>
+                    <dd class="mt-1 text-sm text-gray-900">{{ count.locationId }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide">Estado</dt>
+                    <dd class="mt-1">
+                        <span class="text-xs font-medium px-2.5 py-1 rounded-full
+                            {% if count.status == 'approved' %}bg-green-100 text-green-700
+                            {% elseif count.status == 'in_progress' %}bg-blue-100 text-blue-700
+                            {% elseif count.status == 'submitted' %}bg-yellow-100 text-yellow-700
+                            {% elseif count.status == 'rejected' %}bg-red-100 text-red-700
+                            {% else %}bg-gray-100 text-gray-600{% endif %}">
+                            {{ count.statusLabel ?? count.status }}
+                        </span>
+                    </dd>
+                </div>
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide">Contado por</dt>
+                    <dd class="mt-1 text-sm text-gray-700">{{ count.countedBy }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide">Creado</dt>
+                    <dd class="mt-1 text-sm text-gray-700">{{ count.createdAt|date('d/m/Y H:i') }}</dd>
+                </div>
+                {% if count.notes %}
+                <div class="md:col-span-2">
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide">Notas</dt>
+                    <dd class="mt-1 text-sm text-gray-700">{{ count.notes }}</dd>
+                </div>
+                {% endif %}
+            </dl>
+        </div>
+
+        <div class="mt-6 flex items-center gap-3">
+            {% if count.status == 'in_progress' %}
+            <form method="post" action="{{ path('inventory_physical_count_submit', {id: count.id}) }}" class="inline">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 text-white bg-blue-600 text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    Enviar para aprobaci&oacute;n
+                </button>
+            </form>
+            {% endif %}
+            {% if count.status == 'submitted' %}
+            <form method="post" action="{{ path('inventory_physical_count_approve', {id: count.id}) }}" class="inline">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 text-white bg-green-600 text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                    Aprobar
+                </button>
+            </form>
+            <form method="post" action="{{ path('inventory_physical_count_reject', {id: count.id}) }}" class="inline"
+                  onsubmit="return prompt('Motivo del rechazo:') ? true : false">
+                <input type="hidden" name="reason" id="reason_input" />
+                <button type="submit"
+                        class="inline-flex items-center gap-2 text-red-600 bg-red-50 text-sm font-medium px-4 py-2 rounded-lg hover:bg-red-100 transition-colors">
+                    Rechazar
+                </button>
+            </form>
+            {% endif %}
+            <a href="{{ path('inventory_physical_count_list') }}" class="text-sm text-gray-500 hover:underline ml-auto">Volver</a>
+        </div>
+    </div>
+{% endblock %}

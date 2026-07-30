@@ -18,7 +18,7 @@ final readonly class FindRequestByIdHandler
 
     public function __invoke(string $id): RequestResponse
     {
-        $request = $this->requestRepository->findById(new RequestIdValueObject($id));
+        $request = $this->requestRepository->findByIdWithItems(new RequestIdValueObject($id));
 
         if ($request === null) {
             throw RequestNotFoundException::withId($id);

@@ -10,6 +10,7 @@ use App\Inventory\Application\Query\Response\StockAlertResponse;
 use App\Inventory\Domain\Entities\Location;
 use App\Inventory\Domain\Entities\Product;
 use App\Inventory\Domain\Entities\StockMinimum;
+use App\Inventory\Domain\Enums\ProductTrackingType;
 use App\Inventory\Domain\Enums\LocationType;
 use App\Inventory\Domain\Repositories\LocationRepositoryInterface;
 use App\Inventory\Domain\Repositories\NonserializedStockRepositoryInterface;
@@ -37,7 +38,7 @@ final class ListStockAlertsHandlerTest extends TestCase
             new ProductCodeAssignedBySupplierValueObject('CODE-S'),
             new ProductNameValueObject('ATM Display'),
             'Desc',
-            'serialized',
+            ProductTrackingType::SERIALIZED,
         );
     }
 
@@ -48,7 +49,7 @@ final class ListStockAlertsHandlerTest extends TestCase
             new ProductCodeAssignedBySupplierValueObject('CODE-N'),
             new ProductNameValueObject('Papel Térmico'),
             'Desc',
-            'non_serialized',
+            ProductTrackingType::NON_SERIALIZED,
         );
     }
 

@@ -5,20 +5,17 @@
     xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                         https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="App\Client\Domain\Entities\Terminal" table="terminals">
+    <entity name="App\Client\Domain\Entities\Terminal" table="client_terminals">
 
         <id name="id" type="terminal_id" column="id" length="26" />
 
         <field name="clientId"      type="client_id"        column="client_id"    length="26" />
         <field name="serial"        type="terminal_serial"  column="serial"       length="100" />
-        <field name="vendor"        type="string"           column="vendor"       length="100"
-               enumType="App\Client\Domain\Enums\TerminalVendor" />
-        <field name="funcionality"  type="string"           column="funcionality" length="100"
-               enumType="App\Client\Domain\Enums\TerminalFunctionality" />
-        <field name="type"          type="string"           column="type"         length="100"
-               enumType="App\Client\Domain\Enums\TerminalType" />
-        <field name="status"        type="string"           column="status"       length="20"
-               enumType="App\Client\Domain\Enums\TerminalStatus" />
+        <field name="vendor"        type="terminal_vendor"           column="vendor"       length="100" />
+        <field name="funcionality"  type="terminal_functionality"     column="funcionality" length="100" />
+        <field name="type"          type="terminal_type"              column="type"         length="100" />
+        <field name="atmModelCode"  type="atm_model_code"            column="atm_model_code" length="50" nullable="true" />
+        <field name="status"        type="terminal_status"            column="status"       length="20" />
         <field name="deletedAt"     type="datetime_immutable" column="deleted_at" nullable="true" />
 
         <indexes>

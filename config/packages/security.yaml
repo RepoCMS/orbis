@@ -11,6 +11,17 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        api_public:
+            pattern: ^/api/v1/auth/(forgot-password|reset-password)
+            security: false
+        api_jwt:
+            pattern: ^/api/v1/auth/jwt/(login|refresh)
+            security: false
+        api:
+            pattern: ^/api/
+            provider: app_user_provider
+            stateless: true
+            jwt: ~
         main:
             lazy: true
             provider: app_user_provider
@@ -27,5 +38,7 @@ security:
 
     access_control:
         - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/forgot-password, roles: PUBLIC_ACCESS }
+        - { path: ^/reset-password, roles: PUBLIC_ACCESS }
         - { path: ^/verify, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: ROLE_USER }

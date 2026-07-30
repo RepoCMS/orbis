@@ -4,24 +4,28 @@ declare(strict_types=1);
 
 namespace App\Organization\Application\Command\LinkUserToEmployee;
 
+use App\Identity\Application\Exception\UserNotFoundException;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
-use App\Identity\Application\Exception\UserNotFoundException;
-use App\Identity\Domain\Service\UserBindingCheckerInterface;
 use App\Organization\Application\Exception\EmployeeNotFoundException;
+use App\Organization\Application\Service\EmployeeUserInvariantService;
+use App\Organization\Domain\Events\EmployeeUserLinked;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
+use App\Shared\Domain\Event\DomainEventPublisherInterface;
 
 /**
  * Vincula un User (Identity BC) ya existente a un Employee sin acceso.
- * Valida que tanto el empleado como el usuario existan antes de persistir.
+ * Valida que tanto el empleado como el usuario existan antes de persistir
+ * y que ninguno esté ya vinculado en el otro lado.
  */
 final readonly class LinkUserToEmployeeHandler
 {
     public function __construct(
         private EmployeeRepositoryInterface $employeeRepository,
-        private UserRepositoryInterface     $userRepository,
-        private UserBindingCheckerInterface $bindingChecker,
+        private UserRepositoryInterface $userRepository,
+        private EmployeeUserInvariantService $invariantService,
+        private DomainEventPublisherInterface $publisher,
     ) {
     }
 
@@ -35,15 +39,23 @@ final readonly class LinkUserToEmployeeHandler
         }
 
         $userId = new UserIdValueObject($command->userId);
+        $user   = $this->userRepository->findById($userId);
 
-        if ($this->userRepository->findById($userId) === null) {
+        if ($user === null) {
             throw UserNotFoundException::withId($command->userId);
         }
 
-        $this->bindingChecker->ensureNotBound($userId);
+        $this->invariantService->validateCanLink($employee, $command->userId);
 
         $employee->linkUser($userId);
+        $user->linkEmployee($command->employeeId);
 
         $this->employeeRepository->save($employee);
+        $this->userRepository->save($user);
+
+        $this->publisher->publish(new EmployeeUserLinked(
+            employeeId: $command->employeeId,
+            userId: $command->userId,
+        ));
     }
 }

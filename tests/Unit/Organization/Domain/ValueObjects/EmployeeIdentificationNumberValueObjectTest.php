@@ -10,12 +10,13 @@ use PHPUnit\Framework\TestCase;
 
 final class EmployeeIdentificationNumberValueObjectTest extends TestCase
 {
+    private const VALID_ID = '1710034065';
+
     public function testItCreatesWithValidIdentificationNumber(): void
     {
-        $valueObject = new EmployeeIdentificationNumberValueObject('1234567890');
+        $valueObject = new EmployeeIdentificationNumberValueObject(self::VALID_ID);
 
-        self::assertSame('1234567890', (string) $valueObject);
-        self::assertSame('1234567890', (string) $valueObject);
+        self::assertSame(self::VALID_ID, (string) $valueObject);
     }
 
     public function testItThrowsWhenIdentificationNumberIsEmpty(): void
@@ -39,6 +40,6 @@ final class EmployeeIdentificationNumberValueObjectTest extends TestCase
         $this->expectException(EmployeeIdentificationNumberException::class);
         $this->expectExceptionMessage('El número de identificación no puede exceder los 10 caracteres.');
 
-        new EmployeeIdentificationNumberValueObject('12345678901');
+        new EmployeeIdentificationNumberValueObject('12345678901234');
     }
 }

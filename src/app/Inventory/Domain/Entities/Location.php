@@ -11,15 +11,22 @@ use DateTimeImmutable;
 
 final class Location
 {
+    private DateTimeImmutable $createdAt;
+    private ?DateTimeImmutable $updatedAt = null;
     private ?DateTimeImmutable $deletedAt = null;
+    private ?string $createdBy = null;
+    private ?string $updatedBy = null;
+    private ?string $deletedBy = null;
 
-    public function __construct(
+    private function __construct(
         private LocationIdValueObject $id,
         private LocationNameValueObject $name,
         private LocationType $type,
         private string $city,
         private string $address,
+        private ?string $employeeId = null,
     ) {
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public static function create(
@@ -57,6 +64,11 @@ final class Location
         return $this->type;
     }
 
+    public function employeeId(): ?string
+    {
+        return $this->employeeId;
+    }
+
     public function isWarehouse(): bool
     {
         return $this->type === LocationType::WAREHOUSE;
@@ -72,11 +84,57 @@ final class Location
         return $this->type === LocationType::BACKPACK;
     }
 
-    public function update(string $name, string $city, string $address): void
+    public function isCustody(): bool
     {
-        $this->name    = new LocationNameValueObject($name);
-        $this->city    = $city;
-        $this->address = $address;
+        return $this->type === LocationType::CUSTODY;
+    }
+
+    public function update(string $name, string $city, string $address, ?string $employeeId = null): void
+    {
+        $this->name      = new LocationNameValueObject($name);
+        $this->city      = $city;
+        $this->address   = $address;
+        $this->updatedAt = new DateTimeImmutable();
+
+        if ($employeeId !== null) {
+            $this->employeeId = $employeeId;
+        }
+    }
+
+    public function createdAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function updatedAt(): ?DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function createdBy(): ?string
+    {
+        return $this->createdBy;
+    }
+
+    public function updatedBy(): ?string
+    {
+        return $this->updatedBy;
+    }
+
+    public function deletedBy(): ?string
+    {
+        return $this->deletedBy;
+    }
+
+    public function setCreatedBy(string $userId): void
+    {
+        $this->createdBy = $userId;
+    }
+
+    public function setUpdatedBy(string $userId): void
+    {
+        $this->updatedBy = $userId;
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function isDeleted(): bool
@@ -84,8 +142,9 @@ final class Location
         return $this->deletedAt !== null;
     }
 
-    public function delete(): void
+    public function delete(?string $deletedBy = null): void
     {
         $this->deletedAt = new DateTimeImmutable();
+        $this->deletedBy = $deletedBy;
     }
 }

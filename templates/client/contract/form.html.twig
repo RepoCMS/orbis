@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nuevo Contrato{% endblock %}
+{% block page_title %}Registrar Contrato{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('client_contract_list', {clientId: clientId}) }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Volver
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="max-w-lg">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+
+            {% if errors is not empty %}
+                <div class="mb-5 bg-red-50 border border-red-200 rounded-lg p-4 space-y-1">
+                    {% for error in errors %}
+                        <p class="text-sm text-red-700">• {{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{{ path('client_contract_create', {clientId: clientId}) }}" novalidate>
+
+                <div class="space-y-5">
+
+                    <div>
+                        <label for="startDate" class="block text-sm font-medium text-gray-700 mb-1">
+                            Fecha de inicio <span class="text-red-500">*</span>
+                        </label>
+                        <input type="date" id="startDate" name="startDate"
+                               value="{{ input.startDate ?? '' }}"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                               onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                               style="transition: border-color .15s;"
+                               required>
+                    </div>
+
+                    <div>
+                        <label for="endDate" class="block text-sm font-medium text-gray-700 mb-1">
+                            Fecha de fin <span class="text-gray-400 font-normal">(opcional)</span>
+                        </label>
+                        <input type="date" id="endDate" name="endDate"
+                               value="{{ input.endDate ?? '' }}"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                               onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                               style="transition: border-color .15s;">
+                    </div>
+
+                    <div>
+                        <label for="scope" class="block text-sm font-medium text-gray-700 mb-1">
+                            Alcance <span class="text-gray-400 font-normal">(opcional)</span>
+                        </label>
+                        <textarea id="scope" name="scope" rows="3"
+                                  class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none resize-none"
+                                  onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                  style="transition: border-color .15s;"
+                                  placeholder="Descripción del alcance del contrato">{{ input.scope ?? '' }}</textarea>
+                    </div>
+
+                    <div>
+                        <label for="terms" class="block text-sm font-medium text-gray-700 mb-1">
+                            Términos <span class="text-gray-400 font-normal">(opcional)</span>
+                        </label>
+                        <textarea id="terms" name="terms" rows="4"
+                                  class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none resize-none"
+                                  onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                  style="transition: border-color .15s;"
+                                  placeholder="Términos y condiciones del contrato">{{ input.terms ?? '' }}</textarea>
+                    </div>
+
+                </div>
+
+                <div class="mt-6 flex items-center gap-3">
+                    <button type="submit"
+                            class="text-white text-sm font-medium px-5 py-2.5 rounded-lg shadow-sm transition-all hover:shadow-md"
+                            style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+                        Registrar contrato
+                    </button>
+                    <a href="{{ path('client_contract_list', {clientId: clientId}) }}" class="text-sm text-gray-500 hover:text-gray-700">
+                        Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+{% endblock %}

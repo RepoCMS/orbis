@@ -6,14 +6,14 @@ namespace App\Support\Domain\Enums;
 
 enum ServiceType: string
 {
-    case PREASLISTAMIENTO = 'PREASLISTAMIENTO';
-    case INSTALACION      = 'INSTALACION';
-    case DESINSTALACION   = 'DESINSTALACION';
-    case VISITA           = 'VISITA';
-    case ACTIVACION       = 'ACTIVACION';
-    case DESACTIVACION    = 'DESACTIVACION';
-    case CORRECTIVO       = 'CORRECTIVO';
-    case MANTENIMIENTO    = 'MANTENIMIENTO';
+    case PREASLISTAMIENTO = 'preaslistamiento';
+    case INSTALACION      = 'instalacion';
+    case DESINSTALACION   = 'desinstalacion';
+    case VISITA           = 'visita';
+    case ACTIVACION       = 'activacion';
+    case DESACTIVACION    = 'desactivacion';
+    case CORRECTIVO       = 'correctivo';
+    case MANTENIMIENTO    = 'mantenimiento';
 
     public function label(): string
     {

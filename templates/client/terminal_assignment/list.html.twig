@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+{% import 'components/_macros.html.twig' as ui %}
+
+{% block title %}Asignaciones de Terminales{% endblock %}
+{% block page_title %}Asignaciones de Terminales{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('client_terminal_assignment_new', {clientId: clientId}) }}"
+       class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-all hover:shadow-md"
+       style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+        </svg>
+        Nueva asignación
+    </a>
+    <a href="{{ path('client_show', {id: clientId}) }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1 ml-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Volver al cliente
+    </a>
+{% endblock %}
+
+{% block body %}
+    {% for message in app.flashes('success') %}
+        <div class="mb-4 bg-green-50 border border-green-200 rounded-xl px-5 py-3">
+            <p class="text-sm text-green-700">{{ message }}</p>
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="mb-4 bg-red-50 border border-red-200 rounded-xl px-5 py-3">
+            <p class="text-sm text-red-700">{{ message }}</p>
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('warning') %}
+        <div class="mb-4 bg-amber-50 border border-amber-200 rounded-xl px-5 py-3">
+            <p class="text-sm text-amber-700">{{ message }}</p>
+        </div>
+    {% endfor %}
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        {% if assignments is empty %}
+            <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+                <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4" style="background: #eef1f9;">
+                    <svg class="w-8 h-8" fill="none" stroke="#1e3585" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                    </svg>
+                </div>
+                <p class="text-sm font-medium text-gray-600">No hay asignaciones registradas.</p>
+                <a href="{{ path('client_terminal_assignment_new', {clientId: clientId}) }}"
+                   class="mt-4 inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg"
+                   style="background: #1e3585;">Nueva asignación</a>
+            </div>
+        {% else %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="text-xs uppercase tracking-wide text-white" style="background: #1e3585;">
+                        <tr>
+                            <th class="px-6 py-3.5 text-left font-semibold">Nombre</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Terminal</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">ID Cliente</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Ubicación</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Estado</th>
+                            <th class="px-6 py-3.5 text-right font-semibold">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for assignment in assignments %}
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 font-medium text-gray-900">{{ assignment.name }}</td>
+                                <td class="px-6 py-4 font-mono text-xs text-gray-600">{{ assignment.terminalId }}</td>
+                                <td class="px-6 py-4 font-mono text-xs text-gray-600">{{ assignment.idAssignedByClient }}</td>
+                                <td class="px-6 py-4 font-mono text-xs text-gray-600">{{ assignment.locationId }}</td>
+                                <td class="px-6 py-4">{{ ui.status_badge(assignment.status) }}</td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        {{ ui.btn_view(path('client_terminal_assignment_show', {clientId: clientId, id: assignment.id})) }}
+                                        {% if assignment.status == 'active' and is_granted('terminal.manage') %}
+                                            <form method="POST" action="{{ path('client_terminal_assignment_deactivate', {clientId: clientId, id: assignment.id}) }}">
+                                                <button type="submit"
+                                                        class="inline-flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-md border border-amber-200 text-amber-700 bg-amber-50 hover:bg-amber-100 transition-colors">
+                                                    Desactivar
+                                                </button>
+                                            </form>
+                                        {% elseif assignment.status != 'active' and is_granted('terminal.manage') %}
+                                            <form method="POST" action="{{ path('client_terminal_assignment_reactivate', {clientId: clientId, id: assignment.id}) }}">
+                                                <button type="submit"
+                                                        class="inline-flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-md border border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-colors">
+                                                    Reactivar
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

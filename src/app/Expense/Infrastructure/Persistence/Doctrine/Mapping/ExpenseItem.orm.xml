@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <!--
+        Item individual de gasto dentro de una liquidación (OperatingExpense).
+        Cada item tiene un tipo (ExpenseItemType), monto y estado de revisión.
+        evidence_path = ruta al comprobante/evidencia (opcional según tipo).
+    -->
+    <entity name="App\Expense\Domain\Entities\ExpenseItem" table="expense_items">
+
+        <id name="id" type="expense_item_id" column="id" length="26" />
+
+        <many-to-one field="expense" target-entity="App\Expense\Domain\Entities\OperatingExpense">
+            <join-column name="expense_id" referenced-column-name="id" nullable="false" />
+        </many-to-one>
+
+        <field name="type"             type="expense_item_type"   column="type"            length="30" />
+        <field name="amount"           type="float"               column="amount" />
+        <field name="evidenceRequired" type="boolean"             column="evidence_required" />
+        <field name="ticketIds"        type="json"                column="ticket_ids" />
+        <field name="notes"            type="text"                column="notes"           nullable="true" />
+        <field name="status"           type="expense_item_status" column="status"          length="20" />
+        <field name="evidencePath"     type="string"              column="evidence_path"   length="500" nullable="true" />
+        <field name="rejectionReason"  type="text"                column="rejection_reason" nullable="true" />
+        <field name="reviewedBy"       type="string"              column="reviewed_by"     length="26" nullable="true" />
+        <field name="reviewedAt"       type="datetime_immutable"  column="reviewed_at"     nullable="true" />
+        <field name="createdAt"        type="datetime_immutable"  column="created_at" />
+        <field name="updatedAt"        type="datetime_immutable"  column="updated_at"      nullable="true" />
+        <field name="deletedAt"        type="datetime_immutable"  column="deleted_at"      nullable="true" />
+
+        <indexes>
+            <index name="idx_expense_items_expense_id"  columns="expense_id" />
+            <index name="idx_expense_items_type"         columns="type" />
+            <index name="idx_expense_items_status"       columns="status" />
+            <index name="idx_expense_items_reviewed_by"  columns="reviewed_by" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

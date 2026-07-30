@@ -6,9 +6,9 @@ namespace App\Support\Domain\Enums;
 
 enum JourneyType: string
 {
-    case OUTWARD   = 'OUTWARD';
-    case NEXT_SITE = 'NEXT_SITE';
-    case RETURN    = 'RETURN';
+    case OUTWARD   = 'outward';
+    case NEXT_SITE = 'next_site';
+    case RETURN    = 'return';
 
     public function label(): string
     {

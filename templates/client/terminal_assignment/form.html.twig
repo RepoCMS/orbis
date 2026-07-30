@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nueva Asignación de Terminal{% endblock %}
+{% block page_title %}Registrar Asignación de Terminal{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('client_terminal_assignment_list', {clientId: clientId}) }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Volver
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="max-w-lg">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+
+            {% if errors is not empty %}
+                <div class="mb-5 bg-red-50 border border-red-200 rounded-lg p-4 space-y-1">
+                    {% for error in errors %}
+                        <p class="text-sm text-red-700">• {{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{{ path('client_terminal_assignment_create', {clientId: clientId}) }}" novalidate>
+
+                <div class="space-y-5">
+
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
+                            Nombre de la asignación <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="name" name="name"
+                               value="{{ input.name ?? '' }}"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                               onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                               style="transition: border-color .15s;"
+                               placeholder="ej: Sucursal Principal"
+                               required autocomplete="off">
+                    </div>
+
+                    <div>
+                        <label for="terminalId" class="block text-sm font-medium text-gray-700 mb-1">
+                            Terminal <span class="text-red-500">*</span>
+                        </label>
+                        <select id="terminalId" name="terminalId" required
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none bg-white"
+                                onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                style="transition: border-color .15s;">
+                            <option value="">— Seleccione un terminal —</option>
+                            {% for terminal in terminals %}
+                                <option value="{{ terminal.id }}" {% if input.terminalId is defined and input.terminalId == terminal.id %}selected{% endif %}>
+                                    {{ terminal.serial }} {{ terminal.type == 'lobby' ? '(Lobby)' : '(TTW)' }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="locationId" class="block text-sm font-medium text-gray-700 mb-1">
+                            Ubicación / Zona de servicio <span class="text-red-500">*</span>
+                        </label>
+                        <select id="locationId" name="locationId" required
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none bg-white"
+                                onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                style="transition: border-color .15s;">
+                            <option value="">— Seleccione una ubicación —</option>
+                            {% for zone in serviceZones %}
+                                <option value="{{ zone.id }}" {% if input.locationId is defined and input.locationId == zone.id %}selected{% endif %}>
+                                    {{ zone.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="idAssignedByClient" class="block text-sm font-medium text-gray-700 mb-1">
+                            ID asignado por el cliente <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="idAssignedByClient" name="idAssignedByClient"
+                               value="{{ input.idAssignedByClient ?? '' }}"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                               onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                               style="transition: border-color .15s;"
+                               placeholder="ej: ID-001"
+                               required autocomplete="off">
+                    </div>
+
+                </div>
+
+                <div class="mt-6 flex items-center gap-3">
+                    <button type="submit"
+                            class="text-white text-sm font-medium px-5 py-2.5 rounded-lg shadow-sm transition-all hover:shadow-md"
+                            style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+                        Registrar asignación
+                    </button>
+                    <a href="{{ path('client_terminal_assignment_list', {clientId: clientId}) }}" class="text-sm text-gray-500 hover:text-gray-700">
+                        Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+{% endblock %}

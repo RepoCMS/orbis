@@ -8,8 +8,8 @@ use App\Inventory\Application\Command\ApproveRequest\ApproveRequestCommand;
 use App\Inventory\Application\Command\ApproveRequest\ApproveRequestHandler;
 use App\Inventory\Application\Command\CancelRequest\CancelRequestCommand;
 use App\Inventory\Application\Command\CancelRequest\CancelRequestHandler;
-use App\Inventory\Application\Command\FulfillRequest\FulfillRequestCommand;
-use App\Inventory\Application\Command\FulfillRequest\FulfillRequestHandler;
+use App\Inventory\Application\Command\FulfillRequestItem\FulfillRequestItemCommand;
+use App\Inventory\Application\Command\FulfillRequestItem\FulfillRequestItemHandler;
 use App\Inventory\Application\Command\RejectRequest\RejectRequestCommand;
 use App\Inventory\Application\Command\RejectRequest\RejectRequestHandler;
 use App\Inventory\Application\Command\SubmitRequest\SubmitRequestCommand;
@@ -163,12 +163,12 @@ final class StockRequestController extends AbstractController
     }
 
     #[IsGranted('inventory.update')]
-    #[Route('/{id}/fulfill', name: 'inventory_request_fulfill', methods: ['POST'])]
-    public function fulfill(string $id, FulfillRequestHandler $handler): Response
+    #[Route('/{id}/fulfill-item/{itemId}', name: 'inventory_request_fulfill_item', methods: ['POST'])]
+    public function fulfillItem(string $id, string $itemId, FulfillRequestItemHandler $handler): Response
     {
         try {
-            ($handler)(new FulfillRequestCommand($id));
-            $this->addFlash('success', 'Solicitud ejecutada. El stock fue transferido.');
+            ($handler)(new FulfillRequestItemCommand($id, $itemId));
+            $this->addFlash('success', 'Item de solicitud ejecutado. El stock fue transferido.');
         } catch (RequestNotFoundException $e) {
             $this->addFlash('error', $e->getMessage());
         } catch (\Exception $e) {

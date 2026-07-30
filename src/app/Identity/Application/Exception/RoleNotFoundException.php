@@ -12,4 +12,9 @@ class RoleNotFoundException extends ApplicationException
     {
         return new self(sprintf('No se encontró el rol con ID "%s".', $id));
     }
+
+    public static function withSlug(string $slug): self
+    {
+        return new self(sprintf('No se encontró el rol con slug "%s".', $slug));
+    }
 }

@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Custodias{% endblock %}
+{% block page_title %}Asignaciones de custodia{% endblock %}
+
+{% block body %}
+    <div class="mb-4 flex items-center gap-3">
+        <a href="{{ path('inventory_custody_assign_form') }}"
+           class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-all hover:shadow-md"
+           style="background: #1e3585;">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+            </svg>
+            Asignar custodia
+        </a>
+        <a href="{{ path('inventory_custody_return_form') }}"
+           class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"/>
+            </svg>
+            Devolver custodia
+        </a>
+    </div>
+
+    {% if assignments is empty %}
+        <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+            <svg class="w-12 h-12 mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
+            </svg>
+            <p class="text-sm font-medium text-gray-600">No hay asignaciones de custodia.</p>
+        </div>
+    {% else %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-100 text-left">
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Empleado</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Stock</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden md:table-cell">Ubicaci&oacute;n</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden lg:table-cell">Asignado</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide text-right">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        {% for assignment in assignments %}
+                        <tr class="hover:bg-gray-50/60 transition-colors">
+                            <td class="px-4 py-3 text-gray-800">{{ assignment.employeeId|slice(0,8) }}…</td>
+                            <td class="px-4 py-3 font-mono text-xs text-gray-600">{{ assignment.stockItemId|slice(0,12) }}…</td>
+                            <td class="px-4 py-3 hidden md:table-cell text-gray-600">{{ assignment.locationId|slice(0,8) }}…</td>
+                            <td class="px-4 py-3 hidden lg:table-cell text-gray-500 text-xs">{{ assignment.createdAt|date('d/m/Y') }}</td>
+                            <td class="px-4 py-3 text-right">
+                                {% if assignment.returnedAt is null %}
+                                <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-green-100 text-green-700">Activa</span>
+                                {% else %}
+                                <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-gray-100 text-gray-600">Devuelta</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

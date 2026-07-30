@@ -31,7 +31,7 @@
         </div>
     {% else %}
 
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200"
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200"
              data-controller="table-filter">
 
             {# -- Toolbar --------------------------------------- #}
@@ -39,7 +39,7 @@
 
             {# -- Panel de filtros (client-side) --------------- #}
             <div data-table-filter-target="panel"
-                 class="hidden bg-slate-50/60 border-b border-slate-100 px-4 py-3">
+                 class="hidden bg-gray-50/60 border-b border-gray-100 px-4 py-3">
                 <div class="flex flex-wrap items-end gap-3">
                     <div>
                         <label class="block text-xs font-medium text-gray-500 mb-1">Estado</label>
@@ -47,7 +47,7 @@
                                 data-col="1"
                                 data-match="exact"
                                 data-action="change->table-filter#filterRows"
-                                class="text-sm rounded-lg border border-slate-200 px-3 py-1.5 bg-white w-36 focus:outline-none focus:ring-2 focus:ring-blue-400/30 focus:border-blue-400 transition-colors">
+                                class="text-sm rounded-lg border border-gray-200 px-3 py-1.5 bg-white w-36 focus:outline-none focus:ring-2 focus:ring-blue-400/30 focus:border-blue-400 transition-colors">
                             <option value="">Todos</option>
                             <option value="activo">Activo</option>
                             <option value="inactivo">Inactivo</option>
@@ -69,7 +69,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     {% for role in roles %}
-                        <tr class="hover:bg-slate-50 transition-colors"
+                        <tr class="hover:bg-gray-50 transition-colors"
                             data-table-filter-target="row">
                             <td class="px-6 py-4 font-medium text-gray-900">{{ role.name }}</td>
                             <td class="px-6 py-4">{{ ui.status_badge(role.status) }}</td>

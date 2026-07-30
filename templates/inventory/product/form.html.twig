@@ -15,7 +15,7 @@
 
 {% block body %}
     <div class="max-w-lg">
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
 
             {% if errors is not empty %}
                 <div class="mb-5 bg-red-50 border border-red-200 rounded-lg p-4 space-y-1">
@@ -84,7 +84,7 @@
                         </p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <label class="flex items-start gap-3 p-4 rounded-xl border-2 cursor-pointer transition-colors
-                                          {% if (input.tracking_type ?? 'serialized') == 'serialized' %}border-blue-500 bg-blue-50{% else %}border-slate-200 hover:border-slate-300{% endif %}"
+                                          {% if (input.tracking_type ?? 'serialized') == 'serialized' %}border-blue-500 bg-blue-50{% else %}border-gray-200 hover:border-gray-300{% endif %}"
                                    id="label-serialized">
                                 <input type="radio" name="tracking_type" value="serialized"
                                        {% if (input.tracking_type ?? 'serialized') == 'serialized' %}checked{% endif %}
@@ -96,7 +96,7 @@
                                 </div>
                             </label>
                             <label class="flex items-start gap-3 p-4 rounded-xl border-2 cursor-pointer transition-colors
-                                          {% if (input.tracking_type ?? '') == 'non_serialized' %}border-blue-500 bg-blue-50{% else %}border-slate-200 hover:border-slate-300{% endif %}"
+                                          {% if (input.tracking_type ?? '') == 'non_serialized' %}border-blue-500 bg-blue-50{% else %}border-gray-200 hover:border-gray-300{% endif %}"
                                    id="label-non-serialized">
                                 <input type="radio" name="tracking_type" value="non_serialized"
                                        {% if (input.tracking_type ?? '') == 'non_serialized' %}checked{% endif %}
@@ -120,7 +120,7 @@
                         </p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <label class="flex items-start gap-3 p-4 rounded-xl border-2 cursor-pointer transition-colors
-                                          {% if (input.tracking_type ?? 'serialized') == 'serialized' %}border-blue-500 bg-blue-50{% else %}border-slate-200 hover:border-slate-300{% endif %}"
+                                          {% if (input.tracking_type ?? 'serialized') == 'serialized' %}border-blue-500 bg-blue-50{% else %}border-gray-200 hover:border-gray-300{% endif %}"
                                    id="label-serialized">
                                 <input type="radio" name="tracking_type" value="serialized"
                                        {% if (input.tracking_type ?? 'serialized') == 'serialized' %}checked{% endif %}
@@ -132,7 +132,7 @@
                                 </div>
                             </label>
                             <label class="flex items-start gap-3 p-4 rounded-xl border-2 cursor-pointer transition-colors
-                                          {% if (input.tracking_type ?? '') == 'non_serialized' %}border-blue-500 bg-blue-50{% else %}border-slate-200 hover:border-slate-300{% endif %}"
+                                          {% if (input.tracking_type ?? '') == 'non_serialized' %}border-blue-500 bg-blue-50{% else %}border-gray-200 hover:border-gray-300{% endif %}"
                                    id="label-non-serialized">
                                 <input type="radio" name="tracking_type" value="non_serialized"
                                        {% if (input.tracking_type ?? '') == 'non_serialized' %}checked{% endif %}
@@ -147,8 +147,8 @@
                     </div>
                     {% else %}
                     {# Edición: con stock → bloqueado #}
-                    <div class="rounded-lg bg-slate-50 border border-slate-200 px-4 py-3 flex items-center gap-3">
-                        <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <div class="rounded-lg bg-gray-50 border border-gray-200 px-4 py-3 flex items-center gap-3">
+                        <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                         <p class="text-xs text-gray-500">
@@ -167,7 +167,7 @@
                         {{ isEdit ? 'Guardar cambios' : 'Registrar producto' }}
                     </button>
                     <a href="{{ path('inventory_product_list') }}"
-                       class="px-4 py-2 text-sm font-medium text-gray-600 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
+                       class="px-4 py-2 text-sm font-medium text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
                         Cancelar
                     </a>
                 </div>
@@ -180,8 +180,8 @@
         var n = document.getElementById('label-non-serialized');
         if (!s || !n) return;
         var isSer = document.querySelector('input[name="tracking_type"][value="serialized"]')?.checked;
-        s.className = s.className.replace(/border-blue-500 bg-blue-50/g, 'border-slate-200').replace(/border-slate-200/g, isSer ? 'border-blue-500 bg-blue-50' : 'border-slate-200');
-        n.className = n.className.replace(/border-blue-500 bg-blue-50/g, 'border-slate-200').replace(/border-slate-200/g, !isSer ? 'border-blue-500 bg-blue-50' : 'border-slate-200');
+        s.className = s.className.replace(/border-blue-500 bg-blue-50/g, 'border-gray-200').replace(/border-gray-200/g, isSer ? 'border-blue-500 bg-blue-50' : 'border-gray-200');
+        n.className = n.className.replace(/border-blue-500 bg-blue-50/g, 'border-gray-200').replace(/border-gray-200/g, !isSer ? 'border-blue-500 bg-blue-50' : 'border-gray-200');
     }
     </script>
 {% endblock %}

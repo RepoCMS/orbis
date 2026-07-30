@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Client\Domain\Entities\TerminalModel" table="client_terminal_models">
+
+        <id name="id" type="terminal_model_id" column="id" length="26" />
+
+        <field name="name"        type="string"             column="name"        length="200" />
+        <field name="description" type="text"               column="description" nullable="true" />
+        <field name="createdAt"   type="datetime_immutable" column="created_at" />
+        <field name="updatedAt"   type="datetime_immutable" column="updated_at"  nullable="true" />
+        <field name="deletedAt"   type="datetime_immutable" column="deleted_at"  nullable="true" />
+
+        <indexes>
+            <index name="idx_terminal_models_name" columns="name" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

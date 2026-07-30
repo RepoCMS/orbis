@@ -6,8 +6,8 @@ namespace App\Support\Domain\Enums;
 
 enum RescheduleRequestedBy: string
 {
-    case CLIENT = 'CLIENT';
-    case CMS    = 'CMS';
+    case CLIENT = 'client';
+    case CMS    = 'cms';
 
     public function label(): string
     {

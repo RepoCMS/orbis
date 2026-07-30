@@ -1,13 +1,25 @@
 {% extends 'base.html.twig' %}
+{% import 'components/_macros.html.twig' as ui %}
+
+{% set cancelPoAction = is_granted('inventory.update') and po.status == 'open' ? path('inventory_po_cancel', {id: po.id}) : '' %}
 
 {% block title %}OC: {{ po.reference }}{% endblock %}
+
 {% block page_title %}Orden de Compra: {{ po.reference }}{% endblock %}
 
 {% block header_actions %}
     <div class="flex items-center gap-2">
         {% if is_granted('inventory.update') and po.status == 'open' %}
-        <form method="POST" action="{{ path('inventory_po_cancel', {id: po.id}) }}"
-              onsubmit="return confirm('¿Cancelar esta orden?')">
+                <button type="button" onclick="openModal('modal-edit-po')"
+                        class="text-sm font-medium px-3 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50">
+                    Editar
+                </button>
+                <a href="{{ path('inventory_po_receive', {id: po.id}) }}"
+                   class="text-sm font-medium px-3 py-2 rounded-lg border border-green-200 text-green-600 hover:bg-green-50">
+                    Recibir
+                </a>
+        <form method="POST" action="{{ cancelPoAction }}"
+              onsubmit="return false;" onclick="event.preventDefault(); openModal('modal-cancel-po')">
             <button type="submit"
                     class="text-sm font-medium px-3 py-2 rounded-lg border border-red-200 text-red-600 hover:bg-red-50">
                 Cancelar orden
@@ -26,7 +38,7 @@
 {% block body %}
     <div class="space-y-6">
         {# Cabecera #}
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div>
                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Referencia</dt>
@@ -56,8 +68,8 @@
         </div>
 
         {# Ítems #}
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
-            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                 <h2 class="text-sm font-semibold text-gray-700">Líneas de producto</h2>
             </div>
 
@@ -65,8 +77,10 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
-                        <tr class="border-b border-slate-100 text-left">
-                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Producto</th>
+                        <tr class="border-b border-gray-100 text-left">
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide font-mono">ID</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">C&oacute;digo</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Nombre</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide text-center">Pedido</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide text-center">Recibido</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide text-center">Pendiente</th>
@@ -74,8 +88,11 @@
                     </thead>
                     <tbody class="divide-y divide-slate-50">
                         {% for item in items %}
-                        <tr class="hover:bg-slate-50/60">
-                            <td class="px-4 py-2.5 text-gray-700 text-xs font-mono">{{ item.productId }}</td>
+                        <tr class="hover:bg-gray-50/60">
+                            {% set p = productMap[item.productId] ?? null %}
+                            <td class="px-4 py-2.5 text-xs font-mono text-gray-500">{{ p ? p.id : item.productId }}</td>
+                            <td class="px-4 py-2.5 text-xs text-gray-700 font-mono">{{ p ? p.code : '&mdash;' }}</td>
+                            <td class="px-4 py-2.5 text-sm text-gray-800">{{ p ? p.name : '&mdash;' }}</td>
                             <td class="px-4 py-2.5 text-center">{{ item.quantityOrdered }}</td>
                             <td class="px-4 py-2.5 text-center text-green-700 font-medium">{{ item.quantityReceived }}</td>
                             <td class="px-4 py-2.5 text-center
@@ -90,24 +107,33 @@
             {% endif %}
 
             {% if is_granted('inventory.create') and po.status in ['open', 'partial'] %}
-            <div class="px-6 py-4 border-t border-slate-100">
+            <div class="px-6 py-4 border-t border-gray-100">
                 <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Agregar línea</h3>
                 <form method="POST" action="{{ path('inventory_po_add_item', {id: po.id}) }}"
                       class="flex flex-wrap items-end gap-3">
                     <div>
                         <label class="block text-xs font-medium text-gray-500 mb-1">Producto</label>
-                        <select name="product_id" required
-                                class="text-sm rounded-lg border border-slate-200 px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30">
-                            <option value="">— Seleccionar —</option>
-                            {% for product in products %}
-                            <option value="{{ product.id }}">{{ product.name }} ({{ product.code }})</option>
-                            {% endfor %}
-                        </select>
+                        <div class="flex gap-2">
+                            <select name="product_id" required
+                                    class="text-sm rounded-lg border border-gray-200 px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                                <option value="">— Seleccionar —</option>
+                                {% for product in products %}
+                                <option value="{{ product.id }}">{{ product.name }} ({{ product.code }})</option>
+                                {% endfor %}
+                            </select>
+                            <button type="button" onclick="openModal('modal-quick-create-product')"
+                                    class="text-sm px-3 py-1.5 rounded-lg border border-dashed border-blue-300 text-blue-600 hover:bg-blue-50 hover:border-blue-400 transition-colors flex items-center gap-1.5 whitespace-nowrap">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                <span>Nuevo</span>
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-500 mb-1">Cantidad</label>
                         <input type="number" name="quantity_ordered" min="1" value="1"
-                               class="text-sm rounded-lg border border-slate-200 px-3 py-1.5 w-24 focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                               class="text-sm rounded-lg border border-gray-200 px-3 py-1.5 w-24 focus:outline-none focus:ring-2 focus:ring-blue-400/30">
                     </div>
                     <button type="submit"
                             class="text-sm font-medium px-4 py-1.5 rounded-lg text-white"
@@ -117,4 +143,118 @@
             {% endif %}
         </div>
     </div>
+
+    {% include 'components/_confirm_modal.html.twig' with {
+        id: 'modal-cancel-po',
+        title: 'Cancelar orden de compra',
+        message: '¿Cancelar esta orden de compra?',
+        action: cancelPoAction,
+        confirmText: 'Cancelar orden',
+        confirmStyle: 'red',
+    } %}
+
+    {# ── Modal: crear producto rápido ── #}
+    <div id="modal-quick-create-product" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40" onclick="if(event.target===this)closeModal('modal-quick-create-product')">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6 space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-base font-semibold text-gray-800">Crear producto rápido</h3>
+                <button type="button" onclick="closeModal('modal-quick-create-product')" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <form method="POST" action="{{ path('inventory_po_quick_create_product', {id: po.id}) }}" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Código <span class="text-red-500">*</span></label>
+                    <input type="text" name="code" required maxlength="50"
+                           class="w-full text-sm rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400/40 transition-colors"
+                           placeholder="Código del proveedor">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nombre <span class="text-red-500">*</span></label>
+                    <input type="text" name="name" required maxlength="150"
+                           class="w-full text-sm rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400/40 transition-colors"
+                           placeholder="Nombre del producto">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                    <textarea name="description" rows="2" maxlength="500"
+                              class="w-full text-sm rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400/40 transition-colors resize-none"
+                              placeholder="Opcional"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de tracking <span class="text-red-500">*</span></label>
+                    <select name="tracking_type" required
+                            class="w-full text-sm rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400/40 transition-colors">
+                        {% for tt in trackingTypes %}
+                        <option value="{{ tt.value }}">{{ tt.value == 'serialized' ? 'Serializado' : 'No serializado' }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="flex justify-end gap-3 pt-1">
+                    <button type="button" onclick="closeModal('modal-quick-create-product')"
+                            class="text-sm px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                            class="text-sm px-4 py-2 rounded-lg text-white font-medium transition-colors"
+                            style="background: #1e3585;"
+                            onmouseover="this.style.background='#152970'"
+                            onmouseout="this.style.background='#1e3585'">
+                        Crear producto
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# ── Modal: editar orden de compra ── #}
+    <div id="modal-edit-po" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40" onclick="if(event.target===this)closeModal('modal-edit-po')">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6 space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-base font-semibold text-gray-800">Editar orden de compra</h3>
+                <button type="button" onclick="closeModal('modal-edit-po')" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <form method="POST" action="{{ path('inventory_po_update', {id: po.id}) }}" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Referencia <span class="text-red-500">*</span></label>
+                    <input type="text" name="reference" required maxlength="100" value="{{ po.reference }}"
+                           class="w-full text-sm rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400/40 transition-colors">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Notas</label>
+                    <textarea name="notes" rows="3" maxlength="1000"
+                              class="w-full text-sm rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400/40 transition-colors resize-none"
+                              placeholder="Opcional">{{ po.notes }}</textarea>
+                </div>
+                <div class="flex justify-end gap-3 pt-1">
+                    <button type="button" onclick="closeModal('modal-edit-po')"
+                            class="text-sm px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                            class="text-sm px-4 py-2 rounded-lg text-white font-medium transition-colors"
+                            style="background: #1e3585;"
+                            onmouseover="this.style.background='#152970'"
+                            onmouseout="this.style.background='#1e3585'">
+                        Guardar cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+    </script>
 {% endblock %}

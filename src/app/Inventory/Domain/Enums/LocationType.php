@@ -15,4 +15,5 @@ enum LocationType: string
     case WAREHOUSE  = 'warehouse';
     case LABORATORY = 'laboratory';
     case BACKPACK   = 'backpack';
+    case CUSTODY    = 'custody';
 }

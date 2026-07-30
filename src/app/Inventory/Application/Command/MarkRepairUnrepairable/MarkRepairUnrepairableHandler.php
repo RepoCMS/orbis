@@ -29,6 +29,7 @@ final readonly class MarkRepairUnrepairableHandler
         $stock = $this->serializedStockRepository->findById($repair->serializedStockId());
         if ($stock !== null) {
             $stock->decommission();
+            $stock->incrementRepairCount();
             $this->serializedStockRepository->save($stock);
         }
     }

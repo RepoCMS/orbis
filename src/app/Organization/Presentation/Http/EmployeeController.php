@@ -33,6 +33,8 @@ use App\Organization\Application\Command\UpdateEmployee\UpdateEmployeeCommand;
 use App\Organization\Application\Command\UpdateEmployee\UpdateEmployeeHandler;
 use App\Organization\Application\Command\LinkUserToEmployee\LinkUserToEmployeeCommand;
 use App\Organization\Application\Command\LinkUserToEmployee\LinkUserToEmployeeHandler;
+use App\Organization\Application\Command\UnlinkUserFromEmployee\UnlinkUserFromEmployeeCommand;
+use App\Organization\Application\Command\UnlinkUserFromEmployee\UnlinkUserFromEmployeeHandler;
 use App\Organization\Application\Exception\EmployeeNotFoundException;
 use App\Organization\Application\Query\FindEmployeeById\FindEmployeeByIdHandler;
 use App\Organization\Application\Query\FindEmployeeById\FindEmployeeByIdQuery;
@@ -189,6 +191,25 @@ final class EmployeeController extends AbstractController
             throw $this->createNotFoundException('Empleado no encontrado.');
         } catch (DomainException $e) {
             $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('employee_show', ['id' => $id]);
+    }
+
+    #[IsGranted('employee.update')]
+    #[Route('/{id}/unlink-user', name: 'employee_unlink_user', methods: ['POST'])]
+    public function unlinkUser(
+        string $id,
+        UnlinkUserFromEmployeeHandler $unlinkUserFromEmployee,
+    ): Response {
+        try {
+            ($unlinkUserFromEmployee)(new UnlinkUserFromEmployeeCommand(
+                employeeId: $id,
+            ));
+
+            $this->addFlash('success', 'Usuario desvinculado del empleado exitosamente.');
+        } catch (EmployeeNotFoundException) {
+            throw $this->createNotFoundException('Empleado no encontrado.');
         }
 
         return $this->redirectToRoute('employee_show', ['id' => $id]);

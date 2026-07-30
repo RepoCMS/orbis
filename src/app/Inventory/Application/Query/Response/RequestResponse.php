@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Inventory\Application\Query\Response;
 
 use App\Inventory\Domain\Entities\Request;
+use App\Inventory\Domain\Entities\RequestItem;
 use App\Inventory\Domain\Enums\RequestStatus;
 
 final readonly class RequestResponse
@@ -29,6 +30,9 @@ final readonly class RequestResponse
         public ?string $fulfilledMovementId,
         public ?string $cancelledBy,
         public string $createdAt,
+        public array $items,
+        public int $fulfilledItemsCount,
+        public int $pendingItemsCount,
     ) {
     }
 
@@ -42,13 +46,32 @@ final readonly class RequestResponse
             RequestStatus::CANCELLED => 'Cancelada',
         };
 
+        $items = array_map(
+            static fn (RequestItem $item) => RequestItemResponse::fromEntity($item),
+            $request->items(),
+        );
+
+        $fulfilledCount = 0;
+        $pendingCount = 0;
+        $firstItem = null;
+        foreach ($request->items() as $item) {
+            if ($firstItem === null) {
+                $firstItem = $item;
+            }
+            if ($item->isFulfilled()) {
+                ++$fulfilledCount;
+            } elseif ($item->isPending()) {
+                ++$pendingCount;
+            }
+        }
+
         return new self(
             id:                   (string) $request->id(),
             reference:            $request->reference(),
             requestedBy:          (string) $request->requestedBy(),
-            productId:            (string) $request->productId(),
-            serializedStockId:    $request->serializedStockId() !== null ? (string) $request->serializedStockId() : null,
-            quantity:             $request->quantity(),
+            productId:            $firstItem !== null ? (string) $firstItem->productId() : '',
+            serializedStockId:    $firstItem !== null && $firstItem->serializedStockId() !== null ? (string) $firstItem->serializedStockId() : null,
+            quantity:             $firstItem !== null ? $firstItem->quantity() : 0,
             sourceLocationId:     (string) $request->sourceLocationId(),
             destinationLocationId: (string) $request->destinationLocationId(),
             status:               $request->status()->value,
@@ -59,9 +82,12 @@ final readonly class RequestResponse
             rejectedBy:           $request->rejectedBy() !== null ? (string) $request->rejectedBy() : null,
             rejectedAt:           $request->rejectedAt()?->format('Y-m-d H:i:s'),
             rejectionReason:      $request->rejectionReason(),
-            fulfilledMovementId:  $request->fulfilledMovementId() !== null ? (string) $request->fulfilledMovementId() : null,
+            fulfilledMovementId:  null,
             cancelledBy:          $request->cancelledBy() !== null ? (string) $request->cancelledBy() : null,
             createdAt:            $request->createdAt()->format('Y-m-d H:i:s'),
+            items:                $items,
+            fulfilledItemsCount:  $fulfilledCount,
+            pendingItemsCount:    $pendingCount,
         );
     }
 }

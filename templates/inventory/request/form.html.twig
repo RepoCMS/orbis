@@ -21,52 +21,150 @@
     </div>
     {% endif %}
 
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 max-w-2xl">
-        <form method="POST" action="{{ path('inventory_request_create') }}" class="space-y-5">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 max-w-3xl">
+<form method="POST" action="{{ path('inventory_request_create') }}" class="space-y-5"
+      data-controller="multi-item-form prevent-double-submit"
+      data-action="submit->prevent-double-submit#handle"
+      data-turbo="false">
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
-                    <label for="product_id" class="block text-xs font-medium text-gray-500 mb-1">
-                        Producto <span class="text-red-500">*</span>
-                    </label>
-                    <select id="product_id" name="product_id" required
-                            class="w-full text-sm rounded-lg border border-slate-200 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30">
-                        <option value="">— Seleccionar —</option>
-                        {% for product in products %}
-                        <option value="{{ product.id }}"
-                            {% if input.productId is defined and input.productId == product.id %}selected{% endif %}>
-                            {{ product.name }} ({{ product.code }})
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div>
-                    <label for="quantity" class="block text-xs font-medium text-gray-500 mb-1">
-                        Cantidad <span class="text-red-500">*</span>
-                    </label>
-                    <input type="number" id="quantity" name="quantity" min="1" value="{{ input.quantity ?? 1 }}" required
-                           class="w-full text-sm rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400/30">
-                </div>
-            </div>
-
+            {# Items table #}
             <div>
-                <label for="serialized_stock_id" class="block text-xs font-medium text-gray-500 mb-1">
-                    ID de stock serializado <span class="text-gray-400 font-normal">(opcional, si solicita unidad específica)</span>
-                </label>
-                <input type="text" id="serialized_stock_id" name="serialized_stock_id"
-                       value="{{ input.serializedStockId ?? '' }}"
-                       class="w-full text-sm rounded-lg border border-slate-200 px-3 py-2 font-mono focus:outline-none focus:ring-2 focus:ring-blue-400/30"
-                       placeholder="ULID del stock serializado">
+                <label class="block text-xs font-medium text-gray-500 mb-2">Items solicitados <span class="text-red-500">*</span></label>
+
+                <div class="overflow-x-auto border border-gray-200 rounded-lg">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="bg-gray-50 border-b border-gray-200 text-left">
+                                <th class="px-3 py-2 font-semibold text-gray-500 text-xs uppercase">Producto</th>
+                                <th class="px-3 py-2 font-semibold text-gray-500 text-xs uppercase w-24">Cantidad</th>
+                                <th class="px-3 py-2 font-semibold text-gray-500 text-xs uppercase">Serial (opcional)</th>
+                                <th class="px-3 py-2 w-10"></th>
+                            </tr>
+                        </thead>
+                        <tbody data-multi-item-form-target="container">
+                            <tr data-multi-item-form-target="row" data-index="0">
+                                <td class="px-3 py-2">
+                                    <select name="product_id[0]" required
+                                            class="w-full text-xs rounded-lg border border-gray-200 px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                                        <option value="">— Seleccionar —</option>
+                                        {% for product in products %}
+                                        <option value="{{ product.id }}">{{ product.name }} ({{ product.code }})</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td class="px-3 py-2">
+                                    <input type="number" name="quantity[0]" min="1" value="1" required
+                                           class="w-full text-xs rounded-lg border border-gray-200 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                                </td>
+                                <td class="px-3 py-2">
+                                    <input type="text" name="serialized_stock_id[0]"
+                                           class="w-full text-xs rounded-lg border border-gray-200 px-2 py-1.5 font-mono focus:outline-none focus:ring-2 focus:ring-blue-400/30"
+                                           placeholder="ULID del stock serializado">
+                                </td>
+                                <td class="px-3 py-2 text-center">
+                                    <button type="button" data-action="multi-item-form#removeRow"
+                                            class="text-red-400 hover:text-red-600 transition-colors" style="display:none">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <button type="button" data-action="multi-item-form#addRow"
+                        class="mt-2 text-xs px-3 py-1.5 rounded-lg border border-dashed border-gray-300 text-gray-500 hover:border-gray-400 hover:text-gray-700 transition-colors">
+                    + Agregar item
+                </button>
             </div>
 
+            {# Template for new rows #}
+            <template data-multi-item-form-target="template">
+                <tr data-multi-item-form-target="row" data-index="__index__">
+                    <td class="px-3 py-2">
+                        <select name="product_id[__index__]" required
+                                class="w-full text-xs rounded-lg border border-gray-200 px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                            <option value="">— Seleccionar —</option>
+                            {% for product in products %}
+                            <option value="{{ product.id }}">{{ product.name }} ({{ product.code }})</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td class="px-3 py-2">
+                        <input type="number" name="quantity[__index__]" min="1" value="1" required
+                               class="w-full text-xs rounded-lg border border-gray-200 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                    </td>
+                    <td class="px-3 py-2">
+                        <input type="text" name="serialized_stock_id[__index__]"
+                               class="w-full text-xs rounded-lg border border-gray-200 px-2 py-1.5 font-mono focus:outline-none focus:ring-2 focus:ring-blue-400/30"
+                               placeholder="ULID del stock serializado">
+                    </td>
+                    <td class="px-3 py-2 text-center">
+                        <button type="button" data-action="multi-item-form#removeRow"
+                                class="text-red-400 hover:text-red-600 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            </template>
+
+            {% set is_technician = backpack_id is defined and backpack_id is not null %}
+
+            {% if is_technician %}
+            <div>
+                <label for="source_location_id" class="block text-xs font-medium text-gray-500 mb-1">
+                    Solicitar a <span class="text-red-500">*</span>
+                </label>
+                {% if locations is not empty %}
+                <select id="source_location_id" name="source_location_id" required
+                        class="w-full text-sm rounded-lg border border-gray-200 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                    <option value="">— Seleccionar —</option>
+                    {% for loc in locations %}
+                    <option value="{{ loc.id }}"
+                        {% if input.sourceLocationId is defined and input.sourceLocationId == loc.id %}selected{% endif %}>
+                        {{ loc.name }} ({{ loc.typeLabel }})
+                    </option>
+                    {% endfor %}
+                </select>
+                <p class="mt-1 text-xs text-gray-500">Ubicación que tiene el repuesto</p>
+                {% else %}
+                    <div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 shrink-0 mt-0.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
+                            </svg>
+                            <div class="text-sm">
+                                <p class="font-medium text-amber-800">No hay ubicaciones disponibles</p>
+                                <p class="text-amber-700 mt-0.5">Debe crear al menos una ubicación antes de poder solicitar stock.</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <div>
+                <label for="destination_location_id" class="block text-xs font-medium text-gray-500 mb-1">
+                    Destino <span class="text-red-500">*</span>
+                </label>
+                <input type="text" id="destination_location_id" name="destination_location_id"
+                       value="Tu mochila"
+                       disabled readonly
+                       class="w-full text-sm rounded-lg border border-gray-200 px-3 py-2 bg-gray-50 text-gray-500 cursor-not-allowed">
+                <input type="hidden" name="destination_location_id" value="{{ backpack_id }}">
+                <p class="mt-1 text-xs text-gray-500">El destino será tu mochila automáticamente</p>
+            </div>
+            {% else %}
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                     <label for="source_location_id" class="block text-xs font-medium text-gray-500 mb-1">
                         Ubicación de origen <span class="text-red-500">*</span>
                     </label>
+                    {% if locations is not empty %}
                     <select id="source_location_id" name="source_location_id" required
-                            class="w-full text-sm rounded-lg border border-slate-200 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                            class="w-full text-sm rounded-lg border border-gray-200 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30">
                         <option value="">— Seleccionar —</option>
                         {% for loc in locations %}
                         <option value="{{ loc.id }}"
@@ -75,14 +173,28 @@
                         </option>
                         {% endfor %}
                     </select>
+                    {% else %}
+                        <div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+                            <div class="flex items-start gap-3">
+                                <svg class="w-5 h-5 shrink-0 mt-0.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
+                                </svg>
+                                <div class="text-sm">
+                                    <p class="font-medium text-amber-800">No hay ubicaciones disponibles</p>
+                                    <p class="text-amber-700 mt-0.5">Debe crear al menos una ubicación antes de poder solicitar stock.</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
 
                 <div>
                     <label for="destination_location_id" class="block text-xs font-medium text-gray-500 mb-1">
                         Ubicación de destino <span class="text-red-500">*</span>
                     </label>
+                    {% if locations is not empty %}
                     <select id="destination_location_id" name="destination_location_id" required
-                            class="w-full text-sm rounded-lg border border-slate-200 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                            class="w-full text-sm rounded-lg border border-gray-200 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30">
                         <option value="">— Seleccionar —</option>
                         {% for loc in locations %}
                         <option value="{{ loc.id }}"
@@ -91,18 +203,33 @@
                         </option>
                         {% endfor %}
                     </select>
+                    {% else %}
+                        <div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+                            <div class="flex items-start gap-3">
+                                <svg class="w-5 h-5 shrink-0 mt-0.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
+                                </svg>
+                                <div class="text-sm">
+                                    <p class="font-medium text-amber-800">No hay ubicaciones disponibles</p>
+                                    <p class="text-amber-700 mt-0.5">Debe crear al menos una ubicación antes de poder solicitar stock.</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
+            {% endif %}
 
             <div>
                 <label for="notes" class="block text-xs font-medium text-gray-500 mb-1">Notas</label>
                 <textarea id="notes" name="notes" rows="3"
-                          class="w-full text-sm rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400/30 resize-none"
+                          class="w-full text-sm rounded-lg border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400/30 resize-none"
                           placeholder="Motivo de la solicitud...">{{ input.notes ?? '' }}</textarea>
             </div>
 
             <div class="pt-2">
                 <button type="submit"
+                        data-submitting-text="Enviando..."
                         class="px-6 py-2 text-sm font-medium text-white rounded-lg shadow-sm"
                         style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
                     Enviar solicitud

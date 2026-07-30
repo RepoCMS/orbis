@@ -6,6 +6,7 @@ namespace App\Inventory\Application\Command\AddProduct;
 
 use App\Inventory\Application\Exception\ProductCodeAlreadyExistsException;
 use App\Inventory\Domain\Entities\Product;
+use App\Inventory\Domain\Enums\ProductTrackingType;
 use App\Inventory\Domain\Repositories\ProductRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\ProductCodeAssignedBySupplierValueObject;
 use App\Inventory\Domain\ValueObjects\ProductIdValueObject;
@@ -36,7 +37,7 @@ final readonly class AddProductHandler
             productCode:  $code,
             name:         new ProductNameValueObject($command->name),
             description:  $command->description,
-            trackingType: $command->trackingType,
+            trackingType: ProductTrackingType::from($command->trackingType),
         );
 
         $this->productRepository->save($product);

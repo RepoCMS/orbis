@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sub-ubicaciones{% endblock %}
+{% block page_title %}Sub-ubicaciones: {{ location.name }}{% endblock %}
+
+{% block body %}
+    <div class="mb-4">
+        <a href="{{ path('inventory_sublocation_new', {locationId: location.id}) }}"
+           class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-all hover:shadow-md"
+           style="background: #1e3585;">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+            </svg>
+            Nueva sub-ubicaci&oacute;n
+        </a>
+        <a href="{{ path('inventory_location_list') }}" class="text-sm text-gray-500 hover:underline ml-4">Volver a ubicaciones</a>
+    </div>
+
+    {% if tree is empty %}
+        <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+            <p class="text-sm font-medium text-gray-600">No hay sub-ubicaciones.</p>
+        </div>
+    {% else %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-100 text-left">
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Nombre</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">C&oacute;digo</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Tipo</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden md:table-cell">Padre</th>
+                            <th class="px-4 py-3 text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        {% for item in tree %}
+                        <tr class="hover:bg-gray-50/60 transition-colors">
+                            <td class="px-4 py-3 font-medium text-gray-800">{{ item.name }}</td>
+                            <td class="px-4 py-3 font-mono text-xs text-gray-600">{{ item.code }}</td>
+                            <td class="px-4 py-3 text-gray-600">{{ item.type }}</td>
+                            <td class="px-4 py-3 hidden md:table-cell text-gray-500">{{ item.parentName ?? '—' }}</td>
+                            <td class="px-4 py-3 text-right">
+                                <a href="{{ path('inventory_sublocation_edit', {locationId: location.id, id: item.id}) }}"
+                                   class="text-xs font-medium text-blue-600 hover:underline">Editar</a>
+                                <form method="post" action="{{ path('inventory_sublocation_delete', {locationId: location.id, id: item.id}) }}" class="inline ml-2"
+                                      onsubmit="return confirm('¿Eliminar sub-ubicación?')">
+                                    <button type="submit" class="text-xs font-medium text-red-600 hover:underline">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

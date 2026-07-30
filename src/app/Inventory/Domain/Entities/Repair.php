@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Inventory\Domain\Entities;
 
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
+use App\Inventory\Domain\Enums\RepairPriority;
 use App\Inventory\Domain\Enums\RepairStatus;
 use App\Inventory\Domain\Exceptions\InvalidLocationTypeException;
 use App\Inventory\Domain\ValueObjects\LocationIdValueObject;
@@ -32,6 +33,7 @@ final class Repair
         private UserIdValueObject $assignedById,
         private ?UserIdValueObject $technicianId,
         private RepairStatus $status,
+        private RepairPriority $priority,
         private ?string $notes,
         private DateTimeImmutable $createdAt,
         private ?DateTimeImmutable $startedAt,
@@ -45,6 +47,7 @@ final class Repair
         LocationIdValueObject $laboratoryId,
         UserIdValueObject $assignedById,
         ?string $notes = null,
+        RepairPriority $priority = RepairPriority::NORMAL,
     ): self {
         return new self(
             id:               $id,
@@ -53,6 +56,7 @@ final class Repair
             assignedById:     $assignedById,
             technicianId:     null,
             status:           RepairStatus::PENDING,
+            priority:         $priority,
             notes:            $notes,
             createdAt:        new DateTimeImmutable(),
             startedAt:        null,
@@ -93,6 +97,11 @@ final class Repair
     public function notes(): ?string
     {
         return $this->notes;
+    }
+
+    public function priority(): RepairPriority
+    {
+        return $this->priority;
     }
 
     public function createdAt(): DateTimeImmutable

@@ -9,11 +9,17 @@
 
         <id name="id" type="location_id" column="id" length="26" />
 
-        <field name="name"      type="location_name"      column="name"       length="100" />
-        <field name="city"      type="string"             column="city"       length="100" />
-        <field name="address"   type="string"             column="address"    length="255" />
-        <field name="type"      type="inventory_location_type" column="type" length="20" />
-        <field name="deletedAt" type="datetime_immutable" column="deleted_at" nullable="true" />
+        <field name="name"       type="location_name"         column="name"       length="100" />
+        <field name="city"       type="string"                column="city"       length="100" />
+        <field name="address"    type="string"                column="address"    length="255" />
+        <field name="type"       type="inventory_location_type" column="type"     length="20" />
+        <field name="employeeId" type="string"                column="employee_id" length="26" nullable="true" />
+        <field name="createdAt"  type="datetime_immutable"    column="created_at" />
+        <field name="updatedAt"  type="datetime_immutable"    column="updated_at" nullable="true" />
+        <field name="deletedAt"  type="datetime_immutable"    column="deleted_at" nullable="true" />
+        <field name="createdBy"  type="string"                column="created_by" length="26" nullable="true" />
+        <field name="updatedBy"  type="string"                column="updated_by" length="26" nullable="true" />
+        <field name="deletedBy"  type="string"                column="deleted_by" length="26" nullable="true" />
 
         <indexes>
             <index name="idx_stock_locations_city" columns="city" />

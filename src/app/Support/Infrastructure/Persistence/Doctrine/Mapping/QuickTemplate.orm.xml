@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Support\Domain\Entities\QuickTemplate" table="quick_templates">
+
+        <id name="id" type="quick_template_id" column="id" length="26" />
+
+        <field name="modelId"     type="string"             column="model_id"     length="26" />
+        <field name="name"        type="string"             column="name"         length="200" />
+        <field name="description" type="text"               column="description"  nullable="true" />
+        <field name="isActive"    type="boolean"            column="is_active" />
+        <field name="createdBy"   type="string"             column="created_by"   length="26" />
+        <field name="createdAt"   type="datetime_immutable" column="created_at" />
+        <field name="updatedAt"   type="datetime_immutable" column="updated_at"   nullable="true" />
+
+        <one-to-many field="items" target-entity="App\Support\Domain\Entities\QuickTemplateItem" />
+
+        <indexes>
+            <index name="idx_qt_model_id"   columns="model_id" />
+            <index name="idx_qt_created_by" columns="created_by" />
+            <index name="idx_qt_is_active"  columns="is_active" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

@@ -14,7 +14,5 @@ final readonly class RegisterFindingCommand
         public string  $solution,
         public string  $registeredBy,
         public ?string $physicalDocNumber = null,
-        /** @var string[] */
-        public array   $componentIds = [],
     ) {}
 }

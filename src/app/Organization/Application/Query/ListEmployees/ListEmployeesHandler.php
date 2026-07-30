@@ -19,9 +19,17 @@ final readonly class ListEmployeesHandler
      */
     public function __invoke(ListEmployeesQuery $query): array
     {
+        $employees = $query->profile !== null || $query->status !== null || $query->search !== null
+            ? $this->employeeRepository->findByFilters(
+                profile: $query->profile,
+                status: $query->status,
+                search: $query->search,
+            )
+            : $this->employeeRepository->findAll();
+
         return array_map(
             static fn($employee) => EmployeeResponse::fromEntity($employee),
-            $this->employeeRepository->findAll(),
+            $employees,
         );
     }
 }

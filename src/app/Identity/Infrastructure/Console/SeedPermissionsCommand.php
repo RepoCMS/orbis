@@ -68,8 +68,17 @@ final class SeedPermissionsCommand extends Command
         'role.deactivate'         => 'Desactivar rol',
         'role.assign_permission'  => 'Asignar / revocar permisos en un rol',
 
+        // ── Identity: Dashboard ─────────────────────────────────────────────
+        'identity.view_dashboard' => 'Ver dashboard de seguridad',
+        'auth_log.view'           => 'Ver bitácora de eventos de seguridad',
+
         // ── Identity: Permisos ───────────────────────────────────────────────
         'permission.view_all'     => 'Listar todos los permisos del sistema',
+        'permission.update'       => 'Editar descripción de un permiso',
+
+        // ── Organization: Dashboard ──────────────────────────────────────────
+        'organization.view_dashboard' => 'Ver dashboard de organización',
+        'organization.import'         => 'Importar empleados',
 
         // ── Organization: Empleados ──────────────────────────────────────────
         'employee.view'           => 'Ver perfil de un empleado',
@@ -118,6 +127,12 @@ final class SeedPermissionsCommand extends Command
         'ticket.reopen'           => 'Reabrir ticket cerrado',
         'ticket.add_comment'      => 'Agregar comentario / nota técnica',
 
+        // ── Support: Reportes ─────────────────────────────────────────────────
+        'support.report'          => 'Generar reportes del módulo de soporte',
+
+        // ── Support: Árbol de Módulos ─────────────────────────────────────────
+        'support.manage_modules'  => 'Gestionar el árbol de módulos ATM (crear, editar, eliminar nodos)',
+
         // ── Expense: Gastos operativos ───────────────────────────────────────
         'expense.view'            => 'Ver detalle de un gasto',
         'expense.view_all'        => 'Listar todos los gastos',
@@ -126,6 +141,7 @@ final class SeedPermissionsCommand extends Command
         'expense.delete'          => 'Eliminar gasto (soft delete)',
         'expense.approve'         => 'Aprobar gasto',
         'expense.reject'          => 'Rechazar gasto',
+        'expense.report'          => 'Generar reportes del módulo de gastos',
 
         // ── Inventory ────────────────────────────────────────────────────────
         'inventory.view'          => 'Ver módulo de inventario (productos, ubicaciones, stock)',
@@ -133,6 +149,11 @@ final class SeedPermissionsCommand extends Command
         'inventory.update'        => 'Editar productos, ubicaciones y órdenes de compra',
         'inventory.delete'        => 'Eliminar productos y ubicaciones (soft delete)',
         'inventory.move_stock'    => 'Mover / transferir stock entre ubicaciones',
+        'inventory.report'        => 'Generar reportes del módulo de inventario',
+        'inventory.import'        => 'Importar datos al módulo de inventario',
+
+        // ── Organization: Reportes ────────────────────────────────────────────
+        'organization.report'     => 'Generar reportes del módulo de organización',
     ];
 
     public function __construct(

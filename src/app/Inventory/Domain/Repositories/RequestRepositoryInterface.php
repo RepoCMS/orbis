@@ -20,5 +20,7 @@ interface RequestRepositoryInterface
     /** @return Request[] */
     public function findAll(): array;
 
+    public function findByIdWithItems(RequestIdValueObject $id): ?Request;
+
     public function save(Request $request): void;
 }

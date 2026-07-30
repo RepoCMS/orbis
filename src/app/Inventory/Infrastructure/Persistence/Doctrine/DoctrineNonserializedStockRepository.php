@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Inventory\Infrastructure\Persistence\Doctrine;
 
 use App\Inventory\Domain\Entities\NonserializedStock;
+use App\Inventory\Domain\Enums\NonserializedStockStatus;
 use App\Inventory\Domain\Repositories\NonserializedStockRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\LocationIdValueObject;
 use App\Inventory\Domain\ValueObjects\NonserializedStockIdValueObject;
@@ -80,6 +81,48 @@ final class DoctrineNonserializedStockRepository implements NonserializedStockRe
         }
 
         return $stock->quantity();
+    }
+
+    public function findByProductAndLocationAndStatus(
+        ProductIdValueObject $productId,
+        LocationIdValueObject $locationId,
+        NonserializedStockStatus $status,
+    ): ?NonserializedStock {
+        return $this->em->createQueryBuilder()
+            ->select('s')
+            ->from(NonserializedStock::class, 's')
+            ->where('s.productId = :productId')
+            ->andWhere('s.locationId = :locationId')
+            ->andWhere('s.status = :status')
+            ->andWhere('s.deletedAt IS NULL')
+            ->setParameter('productId', $productId)
+            ->setParameter('locationId', $locationId)
+            ->setParameter('status', $status->value)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function hardDeleteByProductAndLocationAndStatus(
+        ProductIdValueObject $productId,
+        LocationIdValueObject $locationId,
+        NonserializedStockStatus $status,
+    ): void {
+        $this->em->createQueryBuilder()
+            ->delete(NonserializedStock::class, 's')
+            ->where('s.productId = :productId')
+            ->andWhere('s.locationId = :locationId')
+            ->andWhere('s.status = :status')
+            ->setParameter('productId', $productId)
+            ->setParameter('locationId', $locationId)
+            ->setParameter('status', $status->value)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function remove(NonserializedStock $stock): void
+    {
+        $this->em->remove($stock);
+        $this->em->flush();
     }
 
     public function save(NonserializedStock $stock): void

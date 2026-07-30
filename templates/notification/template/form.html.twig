@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% set isEdit = template is defined and template is not null %}
+{% block title %}{{ isEdit ? 'Editar plantilla' : 'Nueva plantilla' }}{% endblock %}
+{% block page_title %}{{ isEdit ? 'Editar plantilla' : 'Nueva plantilla' }}{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('notification_template_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Volver
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="max-w-lg">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+
+            {% if errors is not empty %}
+                <div class="mb-5 bg-red-50 border border-red-200 rounded-lg p-4 space-y-1">
+                    {% for error in errors %}
+                        <p class="text-sm text-red-700">• {{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="POST"
+                  action="{{ isEdit ? path('notification_template_update', {id: template.id}) : path('notification_template_create') }}"
+                  novalidate>
+
+                <div class="space-y-5">
+                    <div>
+                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Asunto</label>
+                        <input type="text" id="subject" name="subject"
+                               value="{{ template.subject ?? '' }}"
+                               maxlength="255"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                               style="transition: border-color .15s;"
+                               onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                               placeholder="ej: Ticket #{{ '{{' }}ticketId{{ '}}' }} ha sido creado"
+                               autocomplete="off">
+                    </div>
+
+                    <div>
+                        <label for="eventType" class="block text-sm font-medium text-gray-700 mb-1">Evento</label>
+                        <select id="eventType" name="eventType"
+                                {% if isEdit %}disabled{% endif %}
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white outline-none"
+                                style="transition: border-color .15s;"
+                                onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''">
+                            <option value="">— Seleccionar —</option>
+                            {% for et in eventTypes %}
+                            <option value="{{ et.value }}"
+                                    {% if (template.eventType ?? '') == et.value %}selected{% endif %}>
+                                {{ et.label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        {% if isEdit %}
+                            <p class="mt-1 text-xs text-gray-400">El evento no puede modificarse.</p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="channel" class="block text-sm font-medium text-gray-700 mb-1">Canal</label>
+                        <select id="channel" name="channel"
+                                {% if isEdit %}disabled{% endif %}
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white outline-none"
+                                style="transition: border-color .15s;"
+                                onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''">
+                            <option value="">— Seleccionar —</option>
+                            {% for ch in channels %}
+                            <option value="{{ ch.value }}"
+                                    {% if (template.channel ?? '') == ch.value %}selected{% endif %}>
+                                {{ ch.label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        {% if isEdit %}
+                            <p class="mt-1 text-xs text-gray-400">El canal no puede modificarse.</p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="bodyTemplate" class="block text-sm font-medium text-gray-700 mb-1">
+                            Cuerpo de la plantilla <span class="text-red-500">*</span>
+                        </label>
+                        <textarea id="bodyTemplate" name="bodyTemplate" rows="8" required
+                                  class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none font-mono"
+                                  style="transition: border-color .15s;"
+                                  onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                  placeholder="Contenido de la plantilla...">{{ template.bodyTemplate ?? '' }}</textarea>
+                        <p class="mt-1 text-xs text-gray-400">Usa variables como <code class="text-gray-600 bg-gray-100 px-1 rounded">{{ '{{' }}nombre{{ '}}' }}</code>.</p>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <input type="hidden" name="isActive" value="0">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="isActive" value="1"
+                                   {% if (template.isActive ?? true) %}checked{% endif %}
+                                   class="rounded" style="accent-color: #1e3585;">
+                            <span class="text-sm text-gray-700">Activo</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex items-center gap-3">
+                    <button type="submit"
+                            class="px-5 py-2 text-sm font-medium text-white rounded-lg shadow-sm transition-all"
+                            style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+                        {{ isEdit ? 'Guardar cambios' : 'Crear plantilla' }}
+                    </button>
+                    <a href="{{ path('notification_template_list') }}"
+                       class="px-4 py-2 text-sm font-medium text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Support\Domain\Entities\ScheduledMaintenance" table="support_scheduled_maintenances">
+
+        <id name="id" type="scheduled_maintenance_id" column="id" length="26" />
+
+        <field name="clientId"             type="string"                   column="client_id"              length="26" />
+        <field name="terminalAssignmentId" type="string"                   column="terminal_assignment_id" length="26" />
+        <field name="modelId"              type="string"                   column="model_id"              length="26" />
+        <field name="frequency"            type="maintenance_frequency_type" column="frequency" length="50" />
+        <field name="nextScheduledAt"      type="datetime_immutable"       column="next_scheduled_at" />
+        <field name="lastCompletedAt"      type="datetime_immutable"       column="last_completed_at"     nullable="true" />
+        <field name="isActive"             type="boolean"                  column="is_active">
+            <options>
+                <option name="default">true</option>
+            </options>
+        </field>
+        <field name="createdBy"            type="string"                   column="created_by"            length="26" />
+        <field name="createdAt"            type="datetime_immutable"       column="created_at" />
+        <field name="updatedAt"            type="datetime_immutable"       column="updated_at"            nullable="true" />
+        <field name="deletedAt"            type="datetime_immutable"       column="deleted_at"            nullable="true" />
+
+        <indexes>
+            <index name="idx_sm_terminal" columns="terminal_assignment_id" />
+            <index name="idx_sm_model"    columns="model_id" />
+            <index name="idx_sm_next_sched" columns="next_scheduled_at" />
+            <index name="idx_sm_active"   columns="is_active" />
+        </indexes>
+
+    </entity>
+</doctrine-mapping>

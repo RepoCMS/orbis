@@ -29,6 +29,7 @@ final readonly class CompleteRepairHandler
         $stock = $this->serializedStockRepository->findById($repair->serializedStockId());
         if ($stock !== null) {
             $stock->release();
+            $stock->incrementRepairCount();
             $this->serializedStockRepository->save($stock);
         }
     }

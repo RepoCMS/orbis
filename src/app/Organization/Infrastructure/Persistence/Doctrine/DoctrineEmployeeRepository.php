@@ -6,6 +6,8 @@ namespace App\Organization\Infrastructure\Persistence\Doctrine;
 
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Organization\Domain\Entities\Employee;
+use App\Organization\Domain\Enums\EmployeeProfile;
+use App\Organization\Domain\Enums\EmployeeStatus;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use Doctrine\ORM\EntityManagerInterface;
@@ -51,6 +53,39 @@ final class DoctrineEmployeeRepository implements EmployeeRepositoryInterface
             ->from(Employee::class, 'e')
             ->where('e.deletedAt IS NULL')
             ->orderBy('e.lastName', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Employee[]
+     */
+    public function findByFilters(
+        ?EmployeeProfile $profile = null,
+        ?EmployeeStatus $status = null,
+        ?string $search = null,
+    ): array {
+        $qb = $this->em->createQueryBuilder()
+            ->select('e')
+            ->from(Employee::class, 'e')
+            ->where('e.deletedAt IS NULL');
+
+        if ($profile !== null) {
+            $qb->andWhere('e.profile = :profile')
+                ->setParameter('profile', $profile->value);
+        }
+
+        if ($status !== null) {
+            $qb->andWhere('e.status = :status')
+                ->setParameter('status', $status->value);
+        }
+
+        if ($search !== null) {
+            $qb->andWhere('LOWER(CONCAT(e.firstName, \' \', e.lastName)) LIKE :search')
+                ->setParameter('search', '%' . mb_strtolower($search) . '%');
+        }
+
+        return $qb->orderBy('e.lastName', 'ASC')
             ->getQuery()
             ->getResult();
     }

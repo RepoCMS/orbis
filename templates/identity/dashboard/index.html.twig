@@ -1,0 +1,218 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard Seguridad{% endblock %}
+{% block page_title %}Dashboard Seguridad{% endblock %}
+
+{% block body %}
+<div class="space-y-6">
+
+    {# ════════════════════════════════════════════════════
+       ROW 1 — KPI Cards (6 columns)
+       ════════════════════════════════════════════════════ #}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Usuarios totales</p>
+            <p class="text-2xl font-bold text-gray-900 mt-1">{{ metrics.totalUsers|orbis_format_number }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Usuarios activos</p>
+            <p class="text-2xl font-bold text-green-700 mt-1">{{ metrics.activeUsers|orbis_format_number }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Bloqueados</p>
+            <p class="text-2xl font-bold text-red-700 mt-1">{{ metrics.lockedUsers|orbis_format_number }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">MFA habilitado</p>
+            <p class="text-2xl font-bold text-gray-900 mt-1">{{ metrics.mfaEnabledCount|orbis_format_number }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Adopción MFA</p>
+            <p class="text-2xl font-bold text-blue-700 mt-1">{{ metrics.mfaAdoptionRate }}%</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Sesiones activas</p>
+            <p class="text-2xl font-bold text-gray-900 mt-1">{{ metrics.activeSessions|orbis_format_number }}</p>
+        </div>
+    </div>
+
+    {# ════════════════════════════════════════════════════
+       ROW 2 — Users by status + Login events last 7d
+       ════════════════════════════════════════════════════ #}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        {# Left: Users by status bars #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-4">Usuarios por estado</h3>
+            {% if metrics.usersByStatus is empty %}
+                {% include 'components/_empty_state.html.twig' with {
+                    icon: 'users',
+                    title: 'Sin usuarios',
+                    message: 'No hay usuarios registrados.',
+                } %}
+            {% else %}
+            {% set statusLabels = {
+                'active': 'Activo',
+                'inactive': 'Inactivo',
+                'unverified': 'No verificado',
+            } %}
+            {% set statusColors = {
+                'active': '#16a34a',
+                'inactive': '#9ca3af',
+                'unverified': '#f59e0b',
+            } %}
+            {% set maxStatus = metrics.usersByStatus|reduce((max, row) => max > row.total ? max : row.total, 0) %}
+            <div class="space-y-4">
+                {% for row in metrics.usersByStatus %}
+                {% set pct = maxStatus > 0 ? ((row.total / maxStatus) * 100)|round : 0 %}
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-gray-600 font-medium">{{ statusLabels[row.status] ?? row.status }}</span>
+                        <span class="font-bold text-gray-700">{{ row.total|orbis_format_number }}</span>
+                    </div>
+                    <div class="bg-gray-100 rounded-full h-3 overflow-hidden">
+                        <div class="h-full rounded-full transition-all" style="width:{{ pct }}%; background:{{ statusColors[row.status] ?? '#3b82f6' }};"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        {# Right: Login events last 7d #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-4">Eventos de login (últimos 7 días)</h3>
+            {% if metrics.loginEventsLast7d is empty %}
+                {% include 'components/_empty_state.html.twig' with {
+                    icon: 'chart',
+                    title: 'Sin eventos',
+                    message: 'No hay eventos de login en los últimos 7 días.',
+                } %}
+            {% else %}
+            {% set eventLabels = {
+                'login_success': 'Exitosos',
+                'login_failed': 'Fallidos',
+            } %}
+            {% set eventColors = {
+                'login_success': '#16a34a',
+                'login_failed': '#dc2626',
+            } %}
+            {% set maxEvent = metrics.loginEventsLast7d|reduce((max, row) => max > row.total ? max : row.total, 0) %}
+            <div class="space-y-4">
+                {% for row in metrics.loginEventsLast7d %}
+                {% set pct = maxEvent > 0 ? ((row.total / maxEvent) * 100)|round : 0 %}
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-gray-600 font-medium">{{ eventLabels[row.event] ?? row.event }}</span>
+                        <span class="font-bold text-gray-700">{{ row.total|orbis_format_number }}</span>
+                    </div>
+                    <div class="bg-gray-100 rounded-full h-3 overflow-hidden">
+                        <div class="h-full rounded-full transition-all" style="width:{{ pct }}%; background:{{ eventColors[row.event] ?? '#3b82f6' }};"></div>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400">
+                    <span>Fallidos: <strong class="text-red-600">{{ metrics.failedLoginsLast7d|orbis_format_number }}</strong></span>
+                    <span>Exitosos: <strong class="text-green-600">{{ metrics.successfulLoginsLast7d|orbis_format_number }}</strong></span>
+                    <span>Tasa éxito: <strong class="text-gray-700">{{ metrics.loginSuccessRate }}%</strong></span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# ════════════════════════════════════════════════════
+       ROW 3 — Users by role + Security events last 24h
+       ════════════════════════════════════════════════════ #}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        {# Left: Users by role table #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-4">Usuarios por rol</h3>
+            {% if metrics.usersByRole is empty %}
+                {% include 'components/_empty_state.html.twig' with {
+                    icon: 'users',
+                    title: 'Sin roles',
+                    message: 'No hay usuarios con roles asignados.',
+                } %}
+            {% else %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm">
+                    <thead>
+                        <tr class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                            <th class="px-4 py-3 text-left">Rol</th>
+                            <th class="px-4 py-3 text-right">Usuarios</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        {% for row in metrics.usersByRole %}
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-3 font-medium text-gray-700">{{ row.role_name }}</td>
+                            <td class="px-4 py-3 text-right font-bold text-gray-800">{{ row.total|orbis_format_number }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+
+        {# Right: Security events last 24h #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-4">Eventos de seguridad (últimas 24h)</h3>
+            {% if metrics.securityEventsLast24h is empty %}
+                {% include 'components/_empty_state.html.twig' with {
+                    icon: 'shield',
+                    title: 'Sin eventos de seguridad',
+                    message: 'No hay eventos de seguridad en las últimas 24 horas.',
+                } %}
+            {% else %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm">
+                    <thead>
+                        <tr class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                            <th class="px-4 py-3 text-left">Fecha</th>
+                            <th class="px-4 py-3 text-right">Eventos</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        {% for row in metrics.securityEventsLast24h %}
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-3 font-medium text-gray-700">{{ row.date }}</td>
+                            <td class="px-4 py-3 text-right font-bold text-gray-800">{{ row.total|orbis_format_number }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# ════════════════════════════════════════════════════
+       ROW 4 — Quick actions
+       ════════════════════════════════════════════════════ #}
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <h3 class="text-sm font-semibold text-gray-700 mb-4">Acceso rápido</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            <a href="{{ path('user_list') }}"
+               class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">
+                Ver usuarios
+            </a>
+            <a href="{{ path('role_list') }}"
+               class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">
+                Roles
+            </a>
+            <a href="{{ path('auth_log_list') }}"
+               class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">
+                Bitácora
+            </a>
+            <a href="{{ path('role_new') }}"
+               class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">
+                Nuevo rol
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

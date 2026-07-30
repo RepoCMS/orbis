@@ -16,4 +16,6 @@ interface EntryItemRepositoryInterface
     public function findByEntry(EntryIdValueObject $entryId): array;
 
     public function save(EntryItem $item): void;
+
+    public function delete(EntryItem $item): void;
 }

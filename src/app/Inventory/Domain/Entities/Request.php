@@ -8,30 +8,21 @@ use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Inventory\Domain\Enums\RequestStatus;
 use App\Inventory\Domain\ValueObjects\LocationIdValueObject;
 use App\Inventory\Domain\ValueObjects\MovementIdValueObject;
-use App\Inventory\Domain\ValueObjects\ProductIdValueObject;
 use App\Inventory\Domain\ValueObjects\RequestIdValueObject;
-use App\Inventory\Domain\ValueObjects\SerializedStockIdValueObject;
+use App\Inventory\Domain\ValueObjects\RequestItemIdValueObject;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
-/**
- * Solicitud formal de movimiento de stock.
- *
- * Un técnico solicita repuestos desde almacén/laboratorio hacia su mochila.
- * El flujo requiere aprobación antes de generar el Movement correspondiente.
- *
- * Ciclo: PENDING → APPROVED → FULFILLED
- *                └──────────→ REJECTED
- *        PENDING → CANCELLED
- */
 final class Request
 {
-    public function __construct(
+    /** @var Collection<int, RequestItem> */
+    private Collection $items;
+
+    private function __construct(
         private RequestIdValueObject $id,
         private string $reference,
         private UserIdValueObject $requestedBy,
-        private ProductIdValueObject $productId,
-        private ?SerializedStockIdValueObject $serializedStockId,
-        private int $quantity,
         private LocationIdValueObject $sourceLocationId,
         private LocationIdValueObject $destinationLocationId,
         private RequestStatus $status,
@@ -41,30 +32,31 @@ final class Request
         private ?UserIdValueObject $rejectedBy,
         private ?DateTimeImmutable $rejectedAt,
         private ?string $rejectionReason,
-        private ?MovementIdValueObject $fulfilledMovementId,
         private ?UserIdValueObject $cancelledBy,
         private DateTimeImmutable $createdAt,
+        array $items = [],
     ) {
+        $this->items = new ArrayCollection();
+
+        foreach ($items as $item) {
+            $this->items->add($item);
+            $item->setRequest($this);
+        }
     }
 
     public static function submit(
         RequestIdValueObject $id,
         string $reference,
         UserIdValueObject $requestedBy,
-        ProductIdValueObject $productId,
-        ?SerializedStockIdValueObject $serializedStockId,
-        int $quantity,
         LocationIdValueObject $sourceLocationId,
         LocationIdValueObject $destinationLocationId,
         ?string $notes = null,
+        array $items = [],
     ): self {
         return new self(
             id:                   $id,
             reference:            $reference,
             requestedBy:          $requestedBy,
-            productId:            $productId,
-            serializedStockId:    $serializedStockId,
-            quantity:             $quantity,
             sourceLocationId:     $sourceLocationId,
             destinationLocationId: $destinationLocationId,
             status:               RequestStatus::PENDING,
@@ -74,9 +66,9 @@ final class Request
             rejectedBy:           null,
             rejectedAt:           null,
             rejectionReason:      null,
-            fulfilledMovementId:  null,
             cancelledBy:          null,
             createdAt:            new DateTimeImmutable(),
+            items:                $items,
         );
     }
 
@@ -93,21 +85,6 @@ final class Request
     public function requestedBy(): UserIdValueObject
     {
         return $this->requestedBy;
-    }
-
-    public function productId(): ProductIdValueObject
-    {
-        return $this->productId;
-    }
-
-    public function serializedStockId(): ?SerializedStockIdValueObject
-    {
-        return $this->serializedStockId;
-    }
-
-    public function quantity(): int
-    {
-        return $this->quantity;
     }
 
     public function sourceLocationId(): LocationIdValueObject
@@ -155,11 +132,6 @@ final class Request
         return $this->rejectionReason;
     }
 
-    public function fulfilledMovementId(): ?MovementIdValueObject
-    {
-        return $this->fulfilledMovementId;
-    }
-
     public function cancelledBy(): ?UserIdValueObject
     {
         return $this->cancelledBy;
@@ -168,6 +140,123 @@ final class Request
     public function createdAt(): DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function addItem(RequestItem $item): void
+    {
+        $this->items->add($item);
+        $item->setRequest($this);
+    }
+
+    /** @return RequestItem[] */
+    public function items(): array
+    {
+        return $this->items->toArray();
+    }
+
+    public function pendingItems(): array
+    {
+        return array_values(
+            array_filter(
+                $this->items->toArray(),
+                static fn(RequestItem $item) => $item->isPending(),
+            ),
+        );
+    }
+
+    public function fulfilledItems(): array
+    {
+        return array_values(
+            array_filter(
+                $this->items->toArray(),
+                static fn(RequestItem $item) => $item->isFulfilled(),
+            ),
+        );
+    }
+
+    public function allItemsCancelled(): bool
+    {
+        if ($this->items->isEmpty()) {
+            return false;
+        }
+
+        foreach ($this->items as $item) {
+            if (!$item->isCancelled()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function allItemsFulfilled(): bool
+    {
+        if ($this->items->isEmpty()) {
+            return false;
+        }
+
+        foreach ($this->items as $item) {
+            if (!$item->isFulfilled()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function derivedStatus(): RequestStatus
+    {
+        if ($this->allItemsCancelled()) {
+            return RequestStatus::CANCELLED;
+        }
+
+        if ($this->allItemsFulfilled()) {
+            return RequestStatus::FULFILLED;
+        }
+
+        foreach ($this->items as $item) {
+            if ($item->isFulfilled()) {
+                return RequestStatus::PARTIALLY_FULFILLED;
+            }
+        }
+
+        return RequestStatus::PENDING;
+    }
+
+    public function fulfillItem(RequestItemIdValueObject $itemId, MovementIdValueObject $movementId): void
+    {
+        foreach ($this->items as $item) {
+            if ((string) $item->id() === (string) $itemId) {
+                $item->fulfill($movementId);
+                break;
+            }
+        }
+
+        $this->status = $this->derivedStatus();
+    }
+
+    public function cancelItem(RequestItemIdValueObject $itemId): RequestItem
+    {
+        $cancelled = null;
+
+        foreach ($this->items as $item) {
+            if ((string) $item->id() === (string) $itemId) {
+                $item->cancel();
+                $cancelled = $item;
+                break;
+            }
+        }
+
+        $this->status = $this->derivedStatus();
+
+        return $cancelled;
+    }
+
+    public function setAllItemsPending(): void
+    {
+        foreach ($this->items as $item) {
+            $item->setPending();
+        }
     }
 
     public function approve(UserIdValueObject $approvedBy): void
@@ -199,8 +288,13 @@ final class Request
             throw new \LogicException('Solo se pueden ejecutar solicitudes en estado APPROVED o AWAITING_TECHNICIAN_ACCEPTANCE.');
         }
 
-        $this->status              = RequestStatus::FULFILLED;
-        $this->fulfilledMovementId = $movementId;
+        foreach ($this->items as $item) {
+            if ($item->isPending()) {
+                $item->fulfill($movementId);
+            }
+        }
+
+        $this->status = $this->derivedStatus();
     }
 
     public function notifyTechnicianAcceptance(): void
@@ -212,14 +306,13 @@ final class Request
         $this->status = RequestStatus::AWAITING_TECHNICIAN_ACCEPTANCE;
     }
 
-    public function acceptByTechnician(MovementIdValueObject $movementId): void
+    public function acceptByTechnician(): void
     {
         if ($this->status !== RequestStatus::AWAITING_TECHNICIAN_ACCEPTANCE) {
             throw new \LogicException('Solo se puede aceptar desde estado AWAITING_TECHNICIAN_ACCEPTANCE.');
         }
 
-        $this->status              = RequestStatus::FULFILLED;
-        $this->fulfilledMovementId = $movementId;
+        $this->status = RequestStatus::PARTIALLY_FULFILLED;
     }
 
     public function rejectByTechnician(UserIdValueObject $rejectedBy, string $reason): void
@@ -238,6 +331,12 @@ final class Request
     {
         if ($this->status !== RequestStatus::PENDING) {
             throw new \LogicException('Solo se pueden cancelar solicitudes en estado PENDING.');
+        }
+
+        foreach ($this->items as $item) {
+            if ($item->isPending()) {
+                $item->cancel();
+            }
         }
 
         $this->status      = RequestStatus::CANCELLED;

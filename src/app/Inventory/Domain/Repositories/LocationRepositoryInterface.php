@@ -14,6 +14,12 @@ interface LocationRepositoryInterface
     /** @return Location[] */
     public function findAll(): array;
 
+    /** @return Location[] */
+    public function findByEmployeeId(string $employeeId): array;
+
+    /** @return Location[] */
+    public function findByType(\App\Inventory\Domain\Enums\LocationType $type): array;
+
     public function save(Location $location): void;
 
     public function delete(LocationIdValueObject $id): void;

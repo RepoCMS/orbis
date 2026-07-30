@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+{% import 'components/_macros.html.twig' as ui %}
+
+{% block title %}Adelantos{% endblock %}
+{% block page_title %}Adelantos{% endblock %}
+
+{% block header_actions %}
+    <div class="flex items-center gap-3">
+        {% if is_granted('expense.create') %}
+            <a href="{{ path('expense_ca_new') }}"
+               class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-all hover:shadow-md"
+               style="background: #00a86b;"
+               onmouseover="this.style.background='#008a56'"
+               onmouseout="this.style.background='#00a86b'">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                </svg>
+                Nuevo adelanto
+            </a>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block body %}
+    {% if advances is empty %}
+        <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+            <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4" style="background: #eef1f9;">
+                <svg class="w-8 h-8" fill="none" stroke="#1e3585" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                </svg>
+            </div>
+            <p class="text-sm font-medium text-gray-600">No hay adelantos registrados.</p>
+        </div>
+    {% else %}
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="text-xs uppercase tracking-wide text-white" style="background: #1e3585;">
+                        <tr>
+                            <th class="px-6 py-3.5 text-left font-semibold">N° Adelanto</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Empleado</th>
+                            <th class="px-6 py-3.5 text-right font-semibold">Monto</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Estado</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Entregado</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Días</th>
+                            <th class="px-6 py-3.5 text-right font-semibold">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for advance in advances %}
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 font-mono text-xs text-gray-500">{{ advance.advanceNumber }}</td>
+                                <td class="px-6 py-4 font-medium text-gray-900">{{ employeeNames[advance.employeeId] ?? advance.employeeId|slice(0, 8) ~ '...' }}</td>
+                                <td class="px-6 py-4 text-right font-bold text-gray-800">${{ advance.amount|number_format(2) }}</td>
+                                <td class="px-6 py-4">{{ ui.status_badge(advance.status) }}</td>
+                                <td class="px-6 py-4 text-gray-600 text-xs">{{ advance.givenAt|date('d/m/Y') }}</td>
+                                <td class="px-6 py-4 text-gray-600 text-xs">{{ advance.daysSinceGiven }} días</td>
+                                <td class="px-6 py-4 text-right">{{ ui.btn_view(path('expense_ca_show', {id: advance.id})) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

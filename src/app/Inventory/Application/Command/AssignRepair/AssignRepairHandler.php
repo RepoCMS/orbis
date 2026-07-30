@@ -45,7 +45,7 @@ final readonly class AssignRepairHandler
 
         $repair = Repair::assign(
             id:           new RepairIdValueObject($this->idGenerator->generate()),
-            stockId:      $stockId,
+            serializedStockId: $stockId,
             laboratoryId: $labId,
             assignedById: new UserIdValueObject($command->assignedById),
             notes:        $command->notes,

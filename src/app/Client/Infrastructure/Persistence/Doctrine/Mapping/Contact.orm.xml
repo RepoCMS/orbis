@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                         https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="App\Client\Domain\Entities\Contact" table="contacts">
+    <entity name="App\Client\Domain\Entities\Contact" table="client_contacts">
 
         <id name="id" type="contact_id" column="id" length="26" />
 

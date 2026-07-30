@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+{% import 'components/_macros.html.twig' as ui %}
+
+{% block title %}Garantías{% endblock %}
+{% block page_title %}Garantías del Terminal{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('client_terminal_warranty_new', {clientId: clientId, terminalId: terminalId}) }}"
+       class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-all hover:shadow-md"
+       style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+        </svg>
+        Nueva garantía
+    </a>
+    <a href="{{ path('client_terminal_show', {clientId: clientId, id: terminalId}) }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1 ml-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Volver al terminal
+    </a>
+{% endblock %}
+
+{% block body %}
+    {% for message in app.flashes('success') %}
+        <div class="mb-4 bg-green-50 border border-green-200 rounded-xl px-5 py-3">
+            <p class="text-sm text-green-700">{{ message }}</p>
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="mb-4 bg-red-50 border border-red-200 rounded-xl px-5 py-3">
+            <p class="text-sm text-red-700">{{ message }}</p>
+        </div>
+    {% endfor %}
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        {% if warranties is empty %}
+            <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+                <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4" style="background: #eef1f9;">
+                    <svg class="w-8 h-8" fill="none" stroke="#1e3585" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                </div>
+                <p class="text-sm font-medium text-gray-600">No hay garantías registradas para este terminal.</p>
+                <a href="{{ path('client_terminal_warranty_new', {clientId: clientId, terminalId: terminalId}) }}"
+                   class="mt-4 inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg"
+                   style="background: #1e3585;">Registrar garantía</a>
+            </div>
+        {% else %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="text-xs uppercase tracking-wide text-white" style="background: #1e3585;">
+                        <tr>
+                            <th class="px-6 py-3.5 text-left font-semibold">Tipo</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Inicio</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Fin</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Vencida</th>
+                            <th class="px-6 py-3.5 text-right font-semibold">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for warranty in warranties %}
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 font-medium text-gray-900">{{ warranty.type }}</td>
+                                <td class="px-6 py-4 text-gray-800">{{ warranty.startDate }}</td>
+                                <td class="px-6 py-4 text-gray-600">{{ warranty.endDate }}</td>
+                                <td class="px-6 py-4">
+                                    {% if warranty.isExpired %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">Sí</span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">No</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    {{ ui.btn_view(path('client_terminal_warranty_show', {clientId: clientId, terminalId: terminalId, id: warranty.id})) }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

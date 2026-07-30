@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nuevo Terminal{% endblock %}
+{% block page_title %}Registrar Terminal{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('client_terminal_list', {clientId: clientId}) }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Volver
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="max-w-lg">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+
+            {% if errors is not empty %}
+                <div class="mb-5 bg-red-50 border border-red-200 rounded-lg p-4 space-y-1">
+                    {% for error in errors %}
+                        <p class="text-sm text-red-700">• {{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{{ path('client_terminal_create', {clientId: clientId}) }}" novalidate>
+
+                <div class="space-y-5">
+
+                    <div>
+                        <label for="serial" class="block text-sm font-medium text-gray-700 mb-1">
+                            Número de serie <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="serial" name="serial"
+                               value="{{ input.serial ?? '' }}"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none font-mono"
+                               onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                               style="transition: border-color .15s;"
+                               placeholder="Ingrese el serial del terminal"
+                               required autocomplete="off">
+                    </div>
+
+                    <div>
+                        <label for="vendor" class="block text-sm font-medium text-gray-700 mb-1">
+                            Fabricante <span class="text-red-500">*</span>
+                        </label>
+                        <select id="vendor" name="vendor" required
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none bg-white"
+                                onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                style="transition: border-color .15s;">
+                            <option value="">— Seleccione —</option>
+                            <option value="hyosung"  {% if input.vendor is defined and input.vendor == 'hyosung' %}selected{% endif %}>Hyosung</option>
+                            <option value="diebold"  {% if input.vendor is defined and input.vendor == 'diebold' %}selected{% endif %}>Diebold Nixdorf</option>
+                            <option value="ncr"      {% if input.vendor is defined and input.vendor == 'ncr' %}selected{% endif %}>NCR</option>
+                            <option value="grg"      {% if input.vendor is defined and input.vendor == 'grg' %}selected{% endif %}>GRG</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="funcionality" class="block text-sm font-medium text-gray-700 mb-1">
+                            Funcionalidad <span class="text-red-500">*</span>
+                        </label>
+                        <select id="funcionality" name="funcionality" required
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none bg-white"
+                                onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                style="transition: border-color .15s;">
+                            <option value="">— Seleccione —</option>
+                            <option value="dispenser"     {% if input.funcionality is defined and input.funcionality == 'dispenser' %}selected{% endif %}>Dispensador</option>
+                            <option value="recycler"      {% if input.funcionality is defined and input.funcionality == 'recycler' %}selected{% endif %}>Reciclador</option>
+                            <option value="multinfunction" {% if input.funcionality is defined and input.funcionality == 'multinfunction' %}selected{% endif %}>Multifunción</option>
+                            <option value="counter"       {% if input.funcionality is defined and input.funcionality == 'counter' %}selected{% endif %}>Contador (TCR)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="type" class="block text-sm font-medium text-gray-700 mb-1">
+                            Tipo <span class="text-red-500">*</span>
+                        </label>
+                        <select id="type" name="type" required
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none bg-white"
+                                onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                                style="transition: border-color .15s;">
+                            <option value="">— Seleccione —</option>
+                            <option value="lobby" {% if input.type is defined and input.type == 'lobby' %}selected{% endif %}>ATM Lobby</option>
+                            <option value="ttw"   {% if input.type is defined and input.type == 'ttw' %}selected{% endif %}>ATM TTW</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="atmModelCode" class="block text-sm font-medium text-gray-700 mb-1">
+                            Código de modelo <span class="text-gray-400 font-normal">(opcional)</span>
+                        </label>
+                        <input type="text" id="atmModelCode" name="atmModelCode"
+                               value="{{ input.atmModelCode ?? '' }}"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                               onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                               style="transition: border-color .15s;"
+                               placeholder="ej: H-5000" autocomplete="off">
+                    </div>
+
+                </div>
+
+                <div class="mt-6 flex items-center gap-3">
+                    <button type="submit"
+                            class="text-white text-sm font-medium px-5 py-2.5 rounded-lg shadow-sm transition-all hover:shadow-md"
+                            style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+                        Registrar terminal
+                    </button>
+                    <a href="{{ path('client_terminal_list', {clientId: clientId}) }}" class="text-sm text-gray-500 hover:text-gray-700">
+                        Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+{% endblock %}

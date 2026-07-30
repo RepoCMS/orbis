@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Support\Domain\Entities\QuickTemplateItem" table="quick_template_items">
+
+        <id name="id" type="quick_template_item_id" column="id" length="26" />
+
+        <field name="modelPartId" type="string"             column="model_part_id"  length="26"  nullable="true" />
+        <field name="partNumber"  type="string"             column="part_number"    length="100" nullable="true" />
+        <field name="productCode" type="string"             column="product_code"   length="50"  nullable="true" />
+        <field name="description" type="text"               column="description" />
+        <field name="quantity"    type="integer"            column="quantity" />
+        <field name="notes"       type="text"               column="notes"          nullable="true" />
+        <field name="sortOrder"   type="integer"            column="sort_order" />
+        <field name="createdAt"   type="datetime_immutable" column="created_at" />
+
+        <indexes>
+            <index name="idx_qti_product_code" columns="product_code" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Inventory\Infrastructure\Persistence\Doctrine;
 
 use App\Inventory\Domain\Entities\Location;
+use App\Inventory\Domain\Enums\LocationType;
 use App\Inventory\Domain\Repositories\LocationRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\LocationIdValueObject;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,6 +34,34 @@ final class DoctrineLocationRepository implements LocationRepositoryInterface
             ->select('l')
             ->from(Location::class, 'l')
             ->where('l.deletedAt IS NULL')
+            ->orderBy('l.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /** @return Location[] */
+    public function findByEmployeeId(string $employeeId): array
+    {
+        return $this->em->createQueryBuilder()
+            ->select('l')
+            ->from(Location::class, 'l')
+            ->where('l.deletedAt IS NULL')
+            ->andWhere('l.employeeId = :employeeId')
+            ->setParameter('employeeId', $employeeId)
+            ->orderBy('l.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /** @return Location[] */
+    public function findByType(LocationType $type): array
+    {
+        return $this->em->createQueryBuilder()
+            ->select('l')
+            ->from(Location::class, 'l')
+            ->where('l.deletedAt IS NULL')
+            ->andWhere('l.type = :type')
+            ->setParameter('type', $type->value)
             ->orderBy('l.name', 'ASC')
             ->getQuery()
             ->getResult();

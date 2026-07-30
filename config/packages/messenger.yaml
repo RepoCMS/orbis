@@ -1,0 +1,40 @@
+framework:
+    messenger:
+        failure_transport: failed
+
+        transports:
+            async_events:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    use_notify: true
+                    check_delayed_interval: 60000
+                    queue_name: events
+                retry_strategy:
+                    max_retries: 3
+                    delay: 5000
+                    multiplier: 2
+                    max_delay: 300000
+            async_notifications:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    use_notify: true
+                    check_delayed_interval: 60000
+                    queue_name: notifications
+                retry_strategy:
+                    max_retries: 5
+                    delay: 10000
+                    multiplier: 3
+                    max_delay: 3600000
+            failed: 'doctrine://default?queue_name=failed'
+            sync: 'sync://'
+
+        routing:
+            # Cross-BC domain events → async_events transport
+            'App\Shared\Infrastructure\Messenger\Message\DomainEventMessage': async_events
+
+            # Notification sending → async_notifications transport
+            'App\Notification\Application\Command\SendNotification\SendNotificationMessage': async_notifications
+
+            # Import messages → async for files >= 100 rows (sync via handler for smaller files)
+            'App\Client\Application\Command\ImportClients\ImportClientsMessage': async_events
+            'App\Client\Application\Command\ImportTerminals\ImportTerminalsMessage': async_events

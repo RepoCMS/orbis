@@ -4,7 +4,18 @@
 {% block title %}Usuarios{% endblock %}
 {% block page_title %}Gestión de Usuarios{% endblock %}
 
-{% block header_actions %}{% endblock %}
+{% block header_actions %}
+    {% if is_granted('user.create') %}
+        <a href="{{ path('user_new') }}"
+           class="inline-flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg text-white shadow-sm transition-all hover:shadow-md"
+           style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+            </svg>
+            Nuevo usuario
+        </a>
+    {% endif %}
+{% endblock %}
 
 {% block body %}
     {% if users is empty %}
@@ -15,7 +26,13 @@
                 </svg>
             </div>
             <p class="text-sm font-medium text-gray-600">No hay usuarios registrados aún.</p>
-            <p class="text-xs text-gray-400 mt-1">Los usuarios se crean desde el perfil de cada empleado.</p>
+            <p class="text-xs text-gray-400 mt-1">Los usuarios se crean desde el perfil de cada empleado o directamente aquí.</p>
+            {% if is_granted('user.create') %}
+                <a href="{{ path('user_new') }}" class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg text-white shadow-sm transition-all hover:shadow-md" style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                    Nuevo usuario
+                </a>
+            {% endif %}
         </div>
     {% else %}
 
@@ -55,6 +72,7 @@
                         <th class="px-6 py-3.5 text-left font-semibold">Rol</th>
                         <th class="px-6 py-3.5 text-left font-semibold">Estado</th>
                         <th class="px-6 py-3.5 text-left font-semibold">Intentos fallidos</th>
+                        <th class="px-6 py-3.5 text-left font-semibold">Bloqueo</th>
                         <th class="px-6 py-3.5 text-right font-semibold">Acciones</th>
                     </tr>
                 </thead>
@@ -72,11 +90,37 @@
                                     <span class="text-gray-400">0</span>
                                 {% endif %}
                             </td>
-                            <td class="px-6 py-4 text-right">{{ ui.btn_view(path('user_show', {id: user.id})) }}</td>
+                            <td class="px-6 py-4">
+                                {% if user.lockedUntil is not null %}
+                                    {% if user.isLocked %}
+                                        <span class="text-xs text-red-600 font-medium" title="UTC: {{ user.lockedUntil|date('Y-m-d H:i:s') }}">
+                                            {{ user.lockedUntil|date('d/m H:i', 'America/Guayaquil') }}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-xs text-orange-500" title="UTC: {{ user.lockedUntil|date('Y-m-d H:i:s') }}">
+                                            {{ user.lockedUntil|date('d/m H:i', 'America/Guayaquil') }}
+                                        </span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="text-gray-400">—</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-right flex items-center justify-end gap-1">
+                                {{ ui.btn_view(path('user_show', {id: user.id})) }}
+                                {% if user.isLocked and is_granted('user.unlock') %}
+                                    <form method="post" action="{{ path('user_unlock', {id: user.id}) }}" class="inline" onsubmit="return confirm('¿Desbloquear este usuario?')">
+                                        <button type="submit" class="inline-flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-md transition-colors"
+                                                style="color: #b45309; background: #fef3c7;"
+                                                onmouseover="this.style.background='#fde68a'" onmouseout="this.style.background='#fef3c7'">
+                                            Desbloquear
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                     <tr data-table-filter-target="noResults" class="hidden">
-                        <td colspan="5" class="px-6 py-12 text-center text-sm text-gray-400">
+                        <td colspan="6" class="px-6 py-12 text-center text-sm text-gray-400">
                             No se encontraron usuarios con los filtros aplicados.
                         </td>
                     </tr>

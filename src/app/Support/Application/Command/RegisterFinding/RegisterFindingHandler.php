@@ -10,7 +10,6 @@ use App\Support\Domain\Repositories\TicketFindingRepositoryInterface;
 use App\Support\Domain\Repositories\TicketRepositoryInterface;
 use App\Support\Domain\ValueObjects\TicketFindingIdValueObject;
 use App\Support\Domain\ValueObjects\TicketIdValueObject;
-use Doctrine\DBAL\Connection;
 
 final readonly class RegisterFindingHandler
 {
@@ -18,7 +17,6 @@ final readonly class RegisterFindingHandler
         private TicketRepositoryInterface        $ticketRepo,
         private TicketFindingRepositoryInterface $findingRepo,
         private IdGeneratorInterface             $idGenerator,
-        private Connection                       $connection,
     ) {}
 
     public function __invoke(RegisterFindingCommand $command): void
@@ -45,15 +43,5 @@ final readonly class RegisterFindingHandler
 
         $this->ticketRepo->save($ticket);
         $this->findingRepo->save($finding);
-
-        foreach ($command->componentIds as $componentId) {
-            if (!\preg_match('/^[0-9A-HJKMNP-TV-Z]{26}$/', $componentId)) {
-                continue;
-            }
-            $this->connection->executeStatement(
-                'INSERT INTO ticket_finding_components (id, finding_id, component_id, notes) VALUES (?, ?, ?, NULL)',
-                [$this->idGenerator->generate(), (string) $finding->id(), $componentId]
-            );
-        }
     }
 }

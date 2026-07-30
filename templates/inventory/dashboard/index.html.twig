@@ -1,0 +1,306 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard de inventario{% endblock %}
+{% block page_title %}Dashboard de inventario{% endblock %}
+
+{% block body %}
+<div class="space-y-6">
+
+    {# ════════════════════════════════════════════════════
+       ROW 1 — KPI Cards (14 columns grid)
+       ════════════════════════════════════════════════════ #}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Valor inventario</p>
+            <p class="text-2xl font-bold text-gray-900 mt-1">${{ metrics.totalInventoryValue|number_format(2) }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Productos</p>
+            <p class="text-2xl font-bold text-gray-900 mt-1">{{ metrics.totalProducts }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Stock serializado</p>
+            <p class="text-2xl font-bold text-gray-900 mt-1">{{ metrics.totalSerializedStock }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Stock no serializado</p>
+            <p class="text-2xl font-bold text-gray-900 mt-1">{{ metrics.totalNonSerializedStock }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Solicitudes pendientes</p>
+            <p class="text-2xl font-bold text-gray-900 mt-1">{{ metrics.pendingRequests }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Reparaciones abiertas</p>
+            <p class="text-2xl font-bold text-gray-900 mt-1">{{ metrics.openRepairs }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">OC abiertas</p>
+            <p class="text-2xl font-bold text-gray-900 mt-1">{{ metrics.openPurchaseOrders }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Conteos pendientes</p>
+            <p class="text-2xl font-bold text-gray-900 mt-1">{{ metrics.physicalCountsPending }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Pend. conciliación</p>
+            <p class="text-2xl font-bold text-amber-600 mt-1">{{ metrics.pendingReviewCount }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Alertas stock</p>
+            <p class="text-2xl font-bold text-red-700 mt-1">{{ metrics.stockAlertsCount }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Sin movimiento 90d</p>
+            <p class="text-2xl font-bold text-red-700 mt-1">{{ metrics.itemsWithoutMovement90d }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Mov. hoy</p>
+            <p class="text-2xl font-bold text-gray-900 mt-1">{{ metrics.movementsToday }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Tpo. promedio reparación</p>
+            <p class="text-2xl font-bold text-gray-900 mt-1">{{ metrics.avgRepairTimeHours|number_format(1) }}h</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Fill rate</p>
+            <p class="text-2xl font-bold text-gray-900 mt-1">{{ metrics.fillRatePct }}%</p>
+        </div>
+    </div>
+
+    {# ════════════════════════════════════════════════════
+       ROW 2 — ABC Analysis + Stock Alerts + Quick access
+       ════════════════════════════════════════════════════ #}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        {# Left: ABC analysis #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-4">ABC analysis</h3>
+            {% if metrics.abcAnalysis is not empty %}
+            <ul class="divide-y divide-gray-100">
+                {% for item in metrics.abcAnalysis %}
+                <li class="py-2 flex items-center justify-between">
+                    <span class="text-sm text-gray-700 truncate mr-2">{{ item.product }}</span>
+                    <span class="text-xs font-medium px-2 py-0.5 rounded-full shrink-0
+                        {% if item.abc_class == 'A' %}bg-red-100 text-red-700
+                        {% elseif item.abc_class == 'B' %}bg-yellow-100 text-yellow-700
+                        {% else %}bg-green-100 text-green-700{% endif %}">
+                        {{ item.abc_class }}
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-sm text-gray-500 py-4 text-center">Sin datos</p>
+            {% endif %}
+        </div>
+
+        {# Center: Stock alerts #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-4">Alertas de stock mínimo</h3>
+            {% if metrics.stockAlerts is not empty %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm">
+                    <thead>
+                        <tr class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                            <th class="px-3 py-2 text-left">Producto</th>
+                            <th class="px-3 py-2 text-left">Ubicación</th>
+                            <th class="px-3 py-2 text-right">Actual</th>
+                            <th class="px-3 py-2 text-right">Mínimo</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        {% for alert in metrics.stockAlerts %}
+                        <tr class="hover:bg-gray-50 transition-colors {% if alert.current == 0 %}bg-red-50{% endif %}">
+                            <td class="px-3 py-2 font-medium text-gray-700">{{ alert.product }}</td>
+                            <td class="px-3 py-2 text-gray-500">{{ alert.location }}</td>
+                            <td class="px-3 py-2 text-right font-bold {% if alert.current == 0 %}text-red-600{% else %}text-gray-800{% endif %}">{{ alert.current }}</td>
+                            <td class="px-3 py-2 text-right text-gray-600">{{ alert.threshold }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-sm text-gray-500 py-4 text-center">Sin alertas activas</p>
+            {% endif %}
+        </div>
+
+        {# Right: Quick actions #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-4">Acceso rápido</h3>
+            <div class="grid grid-cols-2 gap-3">
+                <a href="{{ path('inventory_product_list') }}" class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">Productos</a>
+                <a href="{{ path('inventory_location_list') }}" class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">Ubicaciones</a>
+                <a href="{{ path('inventory_movement_list') }}" class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">Movimientos</a>
+                <a href="{{ path('inventory_entry_list') }}" class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">Ingresos</a>
+                <a href="{{ path('inventory_request_list') }}" class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">Solicitudes</a>
+                <a href="{{ path('inventory_stock_overview') }}" class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">Stock</a>
+                <a href="{{ path('inventory_loan_list') }}" class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">Préstamos</a>
+                <a href="{{ path('inventory_custody_list') }}" class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">Custodias</a>
+            </div>
+        </div>
+    </div>
+
+    {# ════════════════════════════════════════════════════
+       ROW 3 — Stock by location + Movements by type (30d) + Value by category
+       ════════════════════════════════════════════════════ #}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        {# Left: Stock by location #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-4">Stock por ubicación</h3>
+            {% if metrics.stockByLocation is not empty %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm">
+                    <thead>
+                        <tr class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                            <th class="px-3 py-2 text-left">Ubicación</th>
+                            <th class="px-3 py-2 text-right">Serializado</th>
+                            <th class="px-3 py-2 text-right">No serializado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        {% for row in metrics.stockByLocation %}
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-3 py-2 font-medium text-gray-700">{{ row.location }}</td>
+                            <td class="px-3 py-2 text-right text-gray-800">{{ row.serialized|orbis_format_number }}</td>
+                            <td class="px-3 py-2 text-right text-gray-800">{{ row.nonserialized|orbis_format_number }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-sm text-gray-500 py-4 text-center">Sin datos</p>
+            {% endif %}
+        </div>
+
+        {# Center: Movements by type (30d) #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-4">Movimientos por tipo (30d)</h3>
+            {% if metrics.movementsByType is not empty %}
+            {% set maxMovement = metrics.movementsByType|reduce((max, row) => max > row.total ? max : row.total, 0) %}
+            <div class="space-y-4">
+                {% for row in metrics.movementsByType %}
+                {% set pct = maxMovement > 0 ? ((row.total / maxMovement) * 100)|round : 0 %}
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-gray-600 font-medium capitalize">{{ row.type|replace({'_': ' '}) }}</span>
+                        <span class="font-bold text-gray-700">{{ row.total|orbis_format_number }}</span>
+                    </div>
+                    <div class="bg-gray-100 rounded-full h-3 overflow-hidden">
+                        <div class="h-full rounded-full transition-all" style="width:{{ pct }}%; background:#3b82f6;"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-sm text-gray-500 py-4 text-center">Sin movimientos en los últimos 30 días</p>
+            {% endif %}
+        </div>
+
+        {# Right: Value by category + Dead stock detail #}
+        <div class="space-y-6">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                <h3 class="text-sm font-semibold text-gray-700 mb-4">Valor por categoría</h3>
+                {% if metrics.valueByCategory is not empty %}
+                <div class="space-y-4">
+                    {% for row in metrics.valueByCategory %}
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600 font-medium capitalize">{{ row.category|replace({'_': ' '}) }}</span>
+                        <span class="font-bold text-gray-800">${{ row.total|number_format(2) }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-sm text-gray-500 py-4 text-center">Sin datos</p>
+                {% endif %}
+            </div>
+
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                <h3 class="text-sm font-semibold text-gray-700 mb-4">Dead stock (90d sin movimiento)</h3>
+                {% if metrics.deadStock90d is not empty %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead>
+                            <tr class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                <th class="px-3 py-2 text-left">Producto</th>
+                                <th class="px-3 py-2 text-left">Serial</th>
+                                <th class="px-3 py-2 text-right">Días</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                            {% for item in metrics.deadStock90d %}
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-3 py-2 font-medium text-gray-700">{{ item.product_name }}</td>
+                                <td class="px-3 py-2 font-mono text-xs text-gray-500">{{ item.serial }}</td>
+                                <td class="px-3 py-2 text-right font-bold text-red-600">{{ item.days_in_stock }}d</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-sm text-gray-500 py-4 text-center">Sin dead stock</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {# ════════════════════════════════════════════════════
+       ROW 4 — Movements today + Top used parts
+       ════════════════════════════════════════════════════ #}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        {# Left: Movements by type (today) #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-4">Movimientos por tipo (hoy)</h3>
+            {% if metrics.movementsByTypeToday is not empty %}
+            {% set maxMovementToday = metrics.movementsByTypeToday|reduce((max, row) => max > row.total ? max : row.total, 0) %}
+            <div class="space-y-4">
+                {% for row in metrics.movementsByTypeToday %}
+                {% set pct = maxMovementToday > 0 ? ((row.total / maxMovementToday) * 100)|round : 0 %}
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-gray-600 font-medium capitalize">{{ row.type|replace({'_': ' '}) }}</span>
+                        <span class="font-bold text-gray-700">{{ row.total|orbis_format_number }}</span>
+                    </div>
+                    <div class="bg-gray-100 rounded-full h-3 overflow-hidden">
+                        <div class="h-full rounded-full transition-all" style="width:{{ pct }}%; background:#8b5cf6;"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-sm text-gray-500 py-4 text-center">Sin movimientos hoy</p>
+            {% endif %}
+        </div>
+
+        {# Right: Top 10 most used parts #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-4">Partes m&aacute;s usadas (top 10)</h3>
+            {% if metrics.topUsedParts is not empty %}
+            {% set maxUsed = metrics.topUsedParts|reduce((max, row) => max > row.total_quantity ? max : row.total_quantity, 0) %}
+            <div class="space-y-4">
+                {% for row in metrics.topUsedParts %}
+                {% set pct = maxUsed > 0 ? ((row.total_quantity / maxUsed) * 100)|round : 0 %}
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-gray-600 font-medium truncate mr-2">{{ row.product }}</span>
+                        <span class="font-bold text-gray-700 shrink-0">{{ row.total_quantity|orbis_format_number }}</span>
+                    </div>
+                    <div class="bg-gray-100 rounded-full h-3 overflow-hidden">
+                        <div class="h-full rounded-full transition-all" style="width:{{ pct }}%; background:#16a34a;"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-sm text-gray-500 py-4 text-center">Sin datos de uso de partes</p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

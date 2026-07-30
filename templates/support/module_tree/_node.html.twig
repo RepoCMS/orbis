@@ -1,0 +1,112 @@
+<div class="select-none"
+     data-tree-target="branch"
+     data-code="{{ node.code }}">
+    <div class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-50 transition-colors group"
+         style="padding-left: {{ (depth * 24) + 8 }}px;">
+
+        {% if node.children is not empty or node.components is not empty %}
+            <button type="button"
+                    data-action="tree#toggleBranch"
+                    data-tree-target="toggle"
+                    class="w-5 h-5 flex items-center justify-center shrink-0 text-gray-400 hover:text-gray-700 transition-colors rounded hover:bg-gray-200">
+                <svg class="w-3.5 h-3.5 transition-transform duration-150" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+                </svg>
+            </button>
+        {% else %}
+            <span class="w-5 h-5 flex items-center justify-center shrink-0">
+                <svg class="w-3 h-3 text-gray-300" fill="currentColor" viewBox="0 0 16 16">
+                    <circle cx="8" cy="8" r="3"/>
+                </svg>
+            </span>
+        {% endif %}
+
+        <a href="{{ path('support_module_tree_show', {code: node.code, model: model.value}) }}"
+           class="flex-1 flex items-center gap-2 min-w-0">
+            <span class="text-sm font-medium text-gray-900 truncate">{{ node.label }}</span>
+            <span class="text-xs font-mono text-gray-400 shrink-0">{{ node.code }}</span>
+        </a>
+
+        {% if node.children is not empty %}
+            <span class="text-xs text-gray-400 shrink-0 hidden sm:inline">
+                {{ node.children|length }} hijos
+            </span>
+        {% elseif node.components is not empty %}
+            <span class="text-xs text-gray-400 shrink-0 hidden sm:inline">
+                {{ node.components|length }} componentes
+            </span>
+        {% endif %}
+
+        <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+            <a href="{{ path('support_module_tree_add_child', {code: node.code, model: model.value}) }}"
+               class="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:text-blue-700 hover:bg-blue-50 transition-colors"
+               title="Agregar hijo">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                </svg>
+            </a>
+            <a href="{{ path('support_module_tree_edit', {code: node.code, model: model.value}) }}"
+               class="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:text-amber-700 hover:bg-amber-50 transition-colors"
+               title="Editar">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
+                </svg>
+            </a>
+            <div data-controller="modal">
+                <button type="button"
+                        data-action="modal#open"
+                        class="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:text-red-700 hover:bg-red-50 transition-colors"
+                        title="Eliminar">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+
+                <div data-modal-target="backdrop"
+                     class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+                     data-action="click->modal#closeBackdrop">
+                    <div data-modal-target="content"
+                         class="hidden bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Eliminar nodo</h3>
+                        <p class="text-sm text-gray-600 mb-5">
+                            ¿Eliminar <strong>{{ node.label }}</strong> ({{ node.code }}) y todos sus hijos?
+                        </p>
+                        <form method="POST" action="{{ path('support_module_tree_delete', {code: node.code, model: model.value}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete-module-node') }}">
+                            <div class="flex justify-end gap-3">
+                                <button type="button"
+                                        data-action="modal#close"
+                                        class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100">
+                                    Cancelar
+                                </button>
+                                <button type="submit"
+                                        class="px-4 py-2 rounded-lg text-sm font-medium text-white bg-red-600 hover:bg-red-700 shadow-sm">
+                                    Eliminar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if node.children is not empty %}
+        <div data-tree-target="children" class="hidden">
+            {% for child in node.children %}
+                {% include 'support/module_tree/_node.html.twig' with {node: child, model: model, depth: depth + 1} %}
+            {% endfor %}
+        </div>
+    {% elseif node.components is not empty %}
+        <div data-tree-target="children" class="hidden">
+            <div class="px-2 py-1.5 flex flex-wrap gap-1.5"
+                 style="padding-left: {{ (depth * 24) + 40 }}px;">
+                {% for component in node.components %}
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
+                        {{ component }}
+                    </span>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>

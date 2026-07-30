@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <!--
+        Liquidación de gastos operativos de un técnico.
+        Contiene items (ExpenseItem) que representan cada gasto individual.
+        cash_advance_id referencia opcional a CashAdvance (mismo BC).
+        approved_by referencia user_id de Identity BC (sin FK explícita entre BCs).
+    -->
+    <entity name="App\Expense\Domain\Entities\OperatingExpense" table="operating_expenses">
+
+        <id name="id" type="expense_operating_id" column="id" length="26" />
+
+        <field name="sequence"      type="integer"            column="sequence" />
+        <field name="employeeId"    type="string"             column="employee_id"      length="26" />
+        <field name="reason"        type="text"               column="reason" />
+        <field name="startDate"     type="datetime_immutable" column="start_date" />
+        <field name="endDate"       type="datetime_immutable" column="end_date" />
+        <field name="status"        type="expense_status"     column="status"           length="20" />
+        <field name="cashAdvanceId" type="string"             column="cash_advance_id"  length="26" nullable="true" />
+        <field name="ticketIds"     type="json"               column="ticket_ids" />
+        <field name="createdAt"     type="datetime_immutable" column="created_at" />
+        <field name="updatedAt"     type="datetime_immutable" column="updated_at"       nullable="true" />
+        <field name="submittedAt"   type="datetime_immutable" column="submitted_at"     nullable="true" />
+        <field name="approvedBy"    type="string"             column="approved_by"      length="26" nullable="true" />
+        <field name="approvedAt"    type="datetime_immutable" column="approved_at"      nullable="true" />
+        <field name="deletedAt"     type="datetime_immutable" column="deleted_at"       nullable="true" />
+
+        <indexes>
+            <index name="idx_operating_expenses_employee_id"  columns="employee_id" />
+            <index name="idx_operating_expenses_status"       columns="status" />
+            <index name="idx_operating_expenses_cash_advance" columns="cash_advance_id" />
+            <index name="idx_operating_expenses_deleted_at"   columns="deleted_at" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

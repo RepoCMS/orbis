@@ -12,6 +12,7 @@ use App\Support\Domain\Events\TicketAssigned;
 use App\Support\Domain\Events\TicketCancelled;
 use App\Support\Domain\Events\TicketClosed;
 use App\Support\Domain\Events\TicketCreated;
+use App\Support\Domain\Events\TicketModuleFindingRecorded;
 use App\Support\Domain\Events\TicketReassigned;
 use App\Support\Domain\Events\TicketRescheduled;
 use App\Support\Domain\ValueObjects\TicketIdValueObject;
@@ -50,6 +51,9 @@ final class Ticket
 
     private ?TicketFinding $finding = null;
 
+    /** @var TicketModuleFinding[] */
+    private array $moduleFindings = [];
+
     private function __construct(
         private TicketIdValueObject  $id,
         private string               $ticketNumber,
@@ -69,6 +73,9 @@ final class Ticket
         private ?\DateTimeImmutable  $cancelledAt,
         private ?string              $cancellationReason,
         private ?\DateTimeImmutable  $deletedAt,
+        private ?\DateTimeImmutable  $reopenedAt = null,
+        private ?string              $reopenedReason = null,
+        private ?string              $parentTicketId = null,
     ) {}
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -83,6 +90,7 @@ final class Ticket
         ServiceType $serviceType,
         string $description,
         string $createdBy,
+        ?string $parentTicketId = null,
     ): self {
         if (trim($clientId) === '') {
             throw new \InvalidArgumentException('El ID del cliente es obligatorio.');
@@ -119,6 +127,9 @@ final class Ticket
             cancelledAt: null,
             cancellationReason: null,
             deletedAt: null,
+            reopenedAt: null,
+            reopenedReason: null,
+            parentTicketId: $parentTicketId,
         );
 
         $ticket->recordEvent(new TicketCreated(
@@ -383,6 +394,20 @@ final class Ticket
         $this->finding = $finding;
     }
 
+    public function recordModuleFinding(TicketModuleFinding $finding): void
+    {
+        $this->guardNotTerminal();
+        $this->moduleFindings[] = $finding;
+        $this->recordEvent(new TicketModuleFindingRecorded(
+            findingId: (string) $finding->id(),
+            ticketId: (string) $this->id,
+            modulePath: $finding->modulePath()->path,
+            componentName: $finding->componentName(),
+            findingType: $finding->findingType()->value,
+            registeredBy: $finding->registeredBy(),
+        ));
+    }
+
     public function addEvidence(TicketEvidence $evidence): void
     {
         $this->guardNotTerminal();
@@ -406,6 +431,36 @@ final class Ticket
     {
         $this->guardNotTerminal();
         $this->serviceType = $serviceType;
+    }
+
+    public function requestReopen(string $reason, string $requestedBy): void
+    {
+        if (!$this->status->isTerminal()) {
+            throw new \LogicException(
+                "Solo se puede solicitar reapertura de un ticket en estado terminal. Estado actual: {$this->status->value}."
+            );
+        }
+
+        $this->reopenedReason = $reason;
+        $this->status = TicketStatus::PENDING_CLOSURE;
+    }
+
+    public function approveReopen(string $approvedBy): void
+    {
+        if ($this->status !== TicketStatus::PENDING_CLOSURE) {
+            throw new \LogicException(
+                "Solo se puede aprobar reapertura de un ticket pendiente de cierre. Estado actual: {$this->status->value}."
+            );
+        }
+
+        $this->reopenedAt = new \DateTimeImmutable();
+        $this->status = TicketStatus::REOPENED;
+
+        $this->recordEvent(new \App\Support\Domain\Events\TicketReopened(
+            ticketId: (string) $this->id,
+            reason: $this->reopenedReason ?? '',
+            approvedBy: $approvedBy,
+        ));
     }
 
     public function softDelete(): void
@@ -435,6 +490,9 @@ final class Ticket
     public function cancelledAt(): ?\DateTimeImmutable   { return $this->cancelledAt; }
     public function cancellationReason(): ?string        { return $this->cancellationReason; }
     public function deletedAt(): ?\DateTimeImmutable     { return $this->deletedAt; }
+    public function reopenedAt(): ?\DateTimeImmutable    { return $this->reopenedAt; }
+    public function reopenedReason(): ?string            { return $this->reopenedReason; }
+    public function parentTicketId(): ?string             { return $this->parentTicketId; }
 
     /** @return TicketAssignment[] */
     public function assignments(): array  { return $this->assignments; }
@@ -452,6 +510,9 @@ final class Ticket
     public function evidences(): array    { return $this->evidences; }
 
     public function finding(): ?TicketFinding { return $this->finding; }
+
+    /** @return TicketModuleFinding[] */
+    public function moduleFindings(): array { return $this->moduleFindings; }
 
     public function isDeleted(): bool { return $this->deletedAt !== null; }
 

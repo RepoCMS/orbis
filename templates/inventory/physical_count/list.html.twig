@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conteos f&iacute;sicos{% endblock %}
+{% block page_title %}Conteos f&iacute;sicos{% endblock %}
+
+{% block body %}
+    <div class="mb-4">
+        <a href="{{ path('inventory_physical_count_new') }}"
+           class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-all hover:shadow-md"
+           style="background: #1e3585;">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+            </svg>
+            Nuevo conteo
+        </a>
+    </div>
+
+    {% if counts is empty %}
+        <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+            <svg class="w-12 h-12 mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15a2.25 2.25 0 012.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"/>
+            </svg>
+            <p class="text-sm font-medium text-gray-600">No hay conteos f&iacute;sicos.</p>
+        </div>
+    {% else %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-100 text-left">
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Ubicaci&oacute;n</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden md:table-cell">Estado</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden lg:table-cell">Contado por</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden lg:table-cell">Fecha</th>
+                            <th class="px-4 py-3 text-right">Acci&oacute;n</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        {% for count in counts %}
+                        <tr class="hover:bg-gray-50/60 transition-colors">
+                            <td class="px-4 py-3 font-medium text-gray-800">{{ count.locationId|slice(0,8) }}…</td>
+                            <td class="px-4 py-3 hidden md:table-cell">
+                                <span class="text-xs font-medium px-2.5 py-1 rounded-full
+                                    {% if count.status == 'approved' %}bg-green-100 text-green-700
+                                    {% elseif count.status == 'in_progress' %}bg-blue-100 text-blue-700
+                                    {% elseif count.status == 'submitted' %}bg-yellow-100 text-yellow-700
+                                    {% elseif count.status == 'rejected' %}bg-red-100 text-red-700
+                                    {% else %}bg-gray-100 text-gray-600{% endif %}">
+                                    {{ count.statusLabel ?? count.status }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 hidden lg:table-cell text-gray-600">{{ count.countedBy|slice(0,8) }}…</td>
+                            <td class="px-4 py-3 hidden lg:table-cell text-gray-500 text-xs">{{ count.createdAt|date('d/m/Y') }}</td>
+                            <td class="px-4 py-3 text-right">
+                                <a href="{{ path('inventory_physical_count_show', {id: count.id}) }}"
+                                   class="text-xs font-medium text-blue-600 hover:underline">Ver</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

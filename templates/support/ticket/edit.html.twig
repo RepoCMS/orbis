@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar Ticket {{ ticket.ticketNumber }}{% endblock %}
+
+{% block body %}
+<div class="p-6 max-w-2xl mx-auto space-y-4">
+
+    {# Header #}
+    <div class="flex items-center gap-3">
+        <a href="{{ path('support_ticket_show', {id: ticket.id}) }}" class="text-gray-400 hover:text-gray-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </a>
+        <h1 class="text-2xl font-bold text-gray-800">Editar Ticket {{ ticket.ticketNumber }}</h1>
+    </div>
+
+    {% for msg in app.flashes('error') %}
+        <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg px-4 py-3 text-sm">{{ msg }}</div>
+    {% endfor %}
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <form method="post" action="{{ path('support_ticket_update', {id: ticket.id}) }}" class="space-y-5">
+
+            {# Service type #}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de servicio</label>
+                <select name="serviceType"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2">
+                    <option value="">Sin cambios</option>
+                    {% for st in serviceTypes %}
+                        <option value="{{ st.value }}" {% if ticket.serviceType == st.value %}selected{% endif %}>{{ st.label() }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {# Description #}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                <textarea name="description" rows="4"
+                          placeholder="Describa el servicio solicitado…"
+                          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 resize-none">{{ ticket.description }}</textarea>
+            </div>
+
+            {# Actions #}
+            <div class="flex items-center justify-end gap-3 pt-2 border-t border-gray-100">
+                <a href="{{ path('support_ticket_show', {id: ticket.id}) }}"
+                   class="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="px-5 py-2 text-sm text-white rounded-lg font-medium shadow"
+                        style="background:#1e3585">
+                    Guardar cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

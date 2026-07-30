@@ -16,4 +16,6 @@ interface PurchaseOrderItemRepositoryInterface
     public function findByPurchaseOrder(PurchaseOrderIdValueObject $purchaseOrderId): array;
 
     public function save(PurchaseOrderItem $item): void;
+
+    public function findLastPurchaseDateByProduct(string $productId): ?\DateTimeImmutable;
 }

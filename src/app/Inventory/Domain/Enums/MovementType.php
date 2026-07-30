@@ -16,7 +16,9 @@ namespace App\Inventory\Domain\Enums;
  */
 enum MovementType: string
 {
-    case ENTRY    = 'entry';
-    case TRANSFER = 'transfer';
-    case EXIT     = 'exit';
+    case ENTRY      = 'entry';
+    case TRANSFER   = 'transfer';
+    case EXIT       = 'exit';
+    case LOAN       = 'loan';
+    case ADJUSTMENT = 'adjustment';
 }

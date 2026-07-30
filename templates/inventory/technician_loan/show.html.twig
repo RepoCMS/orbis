@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pr&eacute;stamo{% endblock %}
+{% block page_title %}Detalle del pr&eacute;stamo{% endblock %}
+
+{% block body %}
+    <div class="max-w-3xl mx-auto">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide">Stock</dt>
+                    <dd class="mt-1 text-sm font-mono text-gray-900">{{ loan.serializedStockId }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide">T&eacute;cnico origen</dt>
+                    <dd class="mt-1 text-sm text-gray-700">{{ loan.fromTechnicianId }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide">T&eacute;cnico destino</dt>
+                    <dd class="mt-1 text-sm text-gray-700">{{ loan.toTechnicianId }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide">Estado</dt>
+                    <dd class="mt-1">
+                        <span class="text-xs font-medium px-2.5 py-1 rounded-full
+                            {% if loan.status == 'approved' %}bg-green-100 text-green-700
+                            {% elseif loan.status == 'pending' %}bg-yellow-100 text-yellow-700
+                            {% elseif loan.status == 'cancelled' %}bg-red-100 text-red-700
+                            {% else %}bg-gray-100 text-gray-600{% endif %}">
+                            {{ loan.statusLabel ?? loan.status }}
+                        </span>
+                    </dd>
+                </div>
+                {% if loan.ticketId %}
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide">Ticket</dt>
+                    <dd class="mt-1 text-sm text-gray-700">{{ loan.ticketId }}</dd>
+                </div>
+                {% endif %}
+                {% if loan.notes %}
+                <div class="md:col-span-2">
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide">Notas</dt>
+                    <dd class="mt-1 text-sm text-gray-700">{{ loan.notes }}</dd>
+                </div>
+                {% endif %}
+            </dl>
+        </div>
+
+        <div class="mt-6 flex items-center gap-3">
+            {% if loan.status == 'pending' %}
+            <form method="post" action="{{ path('inventory_loan_approve', {id: loan.id}) }}" class="inline">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 text-white bg-green-600 text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                    Aprobar
+                </button>
+            </form>
+            <form method="post" action="{{ path('inventory_loan_cancel', {id: loan.id}) }}" class="inline">
+                <button type="submit" onclick="return confirm('¿Cancelar este préstamo?')"
+                        class="inline-flex items-center gap-2 text-red-600 bg-red-50 text-sm font-medium px-4 py-2 rounded-lg hover:bg-red-100 transition-colors">
+                    Cancelar
+                </button>
+            </form>
+            {% endif %}
+            <a href="{{ path('inventory_loan_list') }}" class="text-sm text-gray-500 hover:underline ml-auto">Volver</a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,62 @@
+# ADR-011: TransactionManagerInterface
+
+## Status
+Accepted
+
+## Context
+Los Application Handlers del dominio necesitaban manejar transacciones de base de datos para garantizar atomicidad en operaciones que persisten múltiples entidades (ej. CreateTransferHandler: reservar stock, crear movimiento; CompleteRepairHandler: liberar stock, registrar historial, cerrar reparación).
+
+Inicialmente, los handlers inyectaban directamente `Doctrine\ORM\EntityManagerInterface` únicamente para acceder a los métodos `beginTransaction()`, `commit()` y `rollback()`. Esto introducía un **framework leakage** en la capa Application: los handlers dependían de Doctrine ORM, violando el principio de Hexagonal Architecture que establece que la capa Application debe depender solo de interfaces definidas en ella misma.
+
+Además, al depender de `EntityManagerInterface`, los tests unitarios requerían mockear el EntityManager de Doctrine, lo que añadía complejidad innecesaria y acoplamiento al framework de persistencia.
+
+## Decision
+Crear una interfaz `TransactionManagerInterface` en el Shared Kernel, dentro de la capa Application (`src/app/Shared/Application/Service/`):
+
+```php
+interface TransactionManagerInterface
+{
+    public function begin(): void;
+    public function commit(): void;
+    public function rollback(): void;
+}
+```
+
+La implementación concreta `DoctrineTransactionManager` vive en Infrastructure (`src/app/Shared/Infrastructure/Persistence/Doctrine/`) y delega en `EntityManagerInterface` de Doctrine. El binding se configura en `config/services.yaml`:
+
+```yaml
+App\Shared\Application\Service\TransactionManagerInterface:
+    class: App\Shared\Infrastructure\Persistence\Doctrine\DoctrineTransactionManager
+```
+
+Todos los Application Handlers que requieren transacciones inyectan ahora `TransactionManagerInterface` en lugar de `EntityManagerInterface`.
+
+## Consequences
+
+### Positive
+- **Application layer pura**: los handlers ya no dependen de Doctrine ni de ningún framework ORM. La única dependencia es una interfaz definida en Application.
+- **Testeabilidad**: en tests unitarios, `TransactionManagerInterface` se mockea trivialmente con `createMock(TransactionManagerInterface::class)` sin necesidad de configurar Doctrine.
+- **Flexibilidad de implementación**: si en el futuro se cambia de ORM o se introduce un manejador de transacciones alternativo (ej. para MongoDB, eventos distribuidos), solo se necesita una nueva implementación de la interfaz.
+- **Consistencia**: todos los handlers que necesitan transacciones usan la misma interfaz, estandarizando el patrón.
+
+### Negative
+- Una interfaz adicional que mantener. Sin embargo, al ser trival (3 métodos) y estable, el costo de mantenimiento es mínimo.
+
+### Migration
+- Ninguna: los handlers que inyectaban `EntityManagerInterface` fueron actualizados progresivamente conforme se modificaban. No hay migración de datos requerida.
+
+### Handlers afectados (Inventory BC)
+- `CreateTransferHandler`
+- `ConfirmTransferHandler`
+- `CancelTransferHandler`
+- `RejectTransferHandler`
+- `CompleteRepairHandler`
+- `ReturnFromCustodyHandler`
+- `CreateCustodyAssignmentHandler`
+- `CreateTechnicianLoanHandler`
+- `RegisterDirectStockHandler`
+- `RegisterEmergencyPartUsageHandler`
+- `FulfillRequestItemHandler`
+- `RecordTransformationHandler`
+- `ConfirmEntryHandler`
+- `AssignRepairHandler`

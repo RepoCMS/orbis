@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Support\Domain\Entities\RmaRecord" table="support_rma_records">
+
+        <id name="id" type="rma_record_id" column="id" length="26" />
+
+        <field name="ticketId"    type="string"              column="ticket_id"     length="26" />
+        <field name="productCode" type="string"              column="product_code"  length="50" />
+        <field name="serialNumber" type="string"             column="serial_number" length="100" nullable="true" />
+        <field name="quantity"    type="integer"             column="quantity">
+            <options>
+                <option name="default">1</option>
+            </options>
+        </field>
+        <field name="notes"       type="text"                column="notes"         nullable="true" />
+        <field name="createdBy"   type="string"              column="created_by"    length="26" />
+        <field name="createdAt"   type="datetime_immutable"  column="created_at" />
+        <field name="deletedAt"   type="datetime_immutable"  column="deleted_at"    nullable="true" />
+
+        <indexes>
+            <index name="idx_rma_ticket_id"   columns="ticket_id" />
+            <index name="idx_rma_product"     columns="product_code" />
+            <index name="idx_rma_created_by"  columns="created_by" />
+        </indexes>
+
+    </entity>
+</doctrine-mapping>

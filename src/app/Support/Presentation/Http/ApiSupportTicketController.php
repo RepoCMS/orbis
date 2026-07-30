@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace App\Support\Presentation\Http;
 
 use App\Identity\Infrastructure\Security\SymfonySecurityUser;
+use App\Support\Application\Command\AddEvidence\AddEvidenceCommand;
+use App\Support\Application\Command\AddEvidence\AddEvidenceHandler;
+use App\Support\Application\Command\ApproveReopenTicket\ApproveReopenTicketCommand;
+use App\Support\Application\Command\ApproveReopenTicket\ApproveReopenTicketHandler;
 use App\Support\Application\Command\ApproveTicket\ApproveTicketCommand;
 use App\Support\Application\Command\ApproveTicket\ApproveTicketHandler;
 use App\Support\Application\Command\ArriveAtBase\ArriveAtBaseCommand;
@@ -21,20 +25,34 @@ use App\Support\Application\Command\CreateTicket\CreateTicketCommand;
 use App\Support\Application\Command\CreateTicket\CreateTicketHandler;
 use App\Support\Application\Command\PauseTicket\PauseTicketCommand;
 use App\Support\Application\Command\PauseTicket\PauseTicketHandler;
+use App\Support\Application\Command\ReassignTicket\ReassignTicketCommand;
+use App\Support\Application\Command\ReassignTicket\ReassignTicketHandler;
 use App\Support\Application\Command\RegisterFinding\RegisterFindingCommand;
 use App\Support\Application\Command\RegisterFinding\RegisterFindingHandler;
+use App\Support\Application\Command\RegisterSparePart\RegisterSparePartCommand;
+use App\Support\Application\Command\RegisterSparePart\RegisterSparePartHandler;
+use App\Support\Application\Command\RequestPendingSparePart\RequestPendingSparePartCommand;
+use App\Support\Application\Command\RequestPendingSparePart\RequestPendingSparePartHandler;
+use App\Support\Application\Command\RequestReopenTicket\RequestReopenTicketCommand;
+use App\Support\Application\Command\RequestReopenTicket\RequestReopenTicketHandler;
 use App\Support\Application\Command\RescheduleTicket\RescheduleTicketCommand;
 use App\Support\Application\Command\RescheduleTicket\RescheduleTicketHandler;
 use App\Support\Application\Command\ResumeTicket\ResumeTicketCommand;
 use App\Support\Application\Command\ResumeTicket\ResumeTicketHandler;
+use App\Support\Application\Command\SoftDeleteTicket\SoftDeleteTicketCommand;
+use App\Support\Application\Command\SoftDeleteTicket\SoftDeleteTicketHandler;
 use App\Support\Application\Command\StartAssistanceFromWaiting\StartAssistanceFromWaitingCommand;
 use App\Support\Application\Command\StartAssistanceFromWaiting\StartAssistanceFromWaitingHandler;
 use App\Support\Application\Command\StartWaiting\StartWaitingCommand;
 use App\Support\Application\Command\StartWaiting\StartWaitingHandler;
 use App\Support\Application\Command\StartOutwardJourney\StartOutwardJourneyCommand;
 use App\Support\Application\Command\StartOutwardJourney\StartOutwardJourneyHandler;
+use App\Support\Application\Command\UpdateTicket\UpdateTicketCommand;
+use App\Support\Application\Command\UpdateTicket\UpdateTicketHandler;
 use App\Support\Application\Query\GetTicketDetail\GetTicketDetailHandler;
 use App\Support\Application\Query\GetTicketDetail\GetTicketDetailQuery;
+use App\Support\Application\Query\ListTicketPendingSpareParts\ListTicketPendingSparePartsHandler;
+use App\Support\Application\Query\ListTicketPendingSpareParts\ListTicketPendingSparePartsQuery;
 use App\Support\Application\Query\ListTickets\ListTicketsHandler;
 use App\Support\Application\Query\ListTickets\ListTicketsQuery;
 use App\Support\Domain\Enums\JourneyType;
@@ -150,7 +168,7 @@ final class ApiSupportTicketController extends AbstractController
                 slaMaxResponseHours: (int) ($payload['slaMaxResponseHours'] ?? 0),
             ));
 
-            return $this->json(['data' => ['id' => $id, 'status' => 'ASSIGNED']]);
+            return $this->json(['data' => ['id' => $id, 'status' => 'assigned']]);
         } catch (\InvalidArgumentException $e) {
             return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
         } catch (DomainException | \DomainException $e) {
@@ -179,7 +197,7 @@ final class ApiSupportTicketController extends AbstractController
                 notes:        isset($payload['notes']) ? trim((string) $payload['notes']) : null,
             ));
 
-            return $this->json(['data' => ['id' => $id, 'status' => 'IN_TRANSIT_OUT']]);
+            return $this->json(['data' => ['id' => $id, 'status' => 'in_transit_out']]);
         } catch (\InvalidArgumentException $e) {
             return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
         } catch (DomainException | \DomainException $e) {
@@ -262,7 +280,7 @@ final class ApiSupportTicketController extends AbstractController
         try {
             $handler(new StartWaitingCommand(ticketId: $id));
 
-            return $this->json(['data' => ['id' => $id, 'status' => 'WAITING']]);
+            return $this->json(['data' => ['id' => $id, 'status' => 'waiting']]);
         } catch (\InvalidArgumentException $e) {
             return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
         } catch (DomainException | \DomainException $e) {
@@ -279,7 +297,7 @@ final class ApiSupportTicketController extends AbstractController
         try {
             $handler(new StartAssistanceFromWaitingCommand(ticketId: $id));
 
-            return $this->json(['data' => ['id' => $id, 'status' => 'IN_ASSISTANCE']]);
+            return $this->json(['data' => ['id' => $id, 'status' => 'in_assistance']]);
         } catch (\InvalidArgumentException $e) {
             return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
         } catch (DomainException | \DomainException $e) {
@@ -306,7 +324,7 @@ final class ApiSupportTicketController extends AbstractController
                 pausedBy: (string) $user->getDomainUser()->id(),
             ));
 
-            return $this->json(['data' => ['id' => $id, 'status' => 'PAUSED']]);
+            return $this->json(['data' => ['id' => $id, 'status' => 'paused']]);
         } catch (\InvalidArgumentException $e) {
             return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
         } catch (DomainException | \DomainException $e) {
@@ -323,7 +341,7 @@ final class ApiSupportTicketController extends AbstractController
         try {
             $handler(new ResumeTicketCommand(ticketId: $id));
 
-            return $this->json(['data' => ['id' => $id, 'status' => 'IN_ASSISTANCE']]);
+            return $this->json(['data' => ['id' => $id, 'status' => 'in_assistance']]);
         } catch (\InvalidArgumentException $e) {
             return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
         } catch (DomainException | \DomainException $e) {
@@ -340,7 +358,7 @@ final class ApiSupportTicketController extends AbstractController
         try {
             $handler(new CompleteAssistanceCommand(ticketId: $id));
 
-            return $this->json(['data' => ['id' => $id, 'status' => 'PENDING_CLOSURE']]);
+            return $this->json(['data' => ['id' => $id, 'status' => 'pending_closure']]);
         } catch (\InvalidArgumentException $e) {
             return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
         } catch (DomainException | \DomainException $e) {
@@ -369,7 +387,7 @@ final class ApiSupportTicketController extends AbstractController
                 terminalCode: trim((string) ($payload['terminalCode'] ?? '')),
             ));
 
-            return $this->json(['data' => ['id' => $id, 'status' => 'CLOSED']]);
+            return $this->json(['data' => ['id' => $id, 'status' => 'closed']]);
         } catch (\InvalidArgumentException $e) {
             return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
         } catch (DomainException | \DomainException $e) {
@@ -393,7 +411,7 @@ final class ApiSupportTicketController extends AbstractController
                 cancelledBy: trim((string) ($payload['cancelledBy'] ?? '')),
             ));
 
-            return $this->json(['data' => ['id' => $id, 'status' => 'CANCELLED']]);
+            return $this->json(['data' => ['id' => $id, 'status' => 'cancelled']]);
         } catch (\InvalidArgumentException $e) {
             return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
         } catch (DomainException | \DomainException $e) {
@@ -429,6 +447,254 @@ final class ApiSupportTicketController extends AbstractController
             ));
 
             return $this->json(['data' => ['id' => $id, 'status' => 'RESCHEDULED']]);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
+        } catch (DomainException | \DomainException $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    #[IsGranted('ticket.assistance')]
+    #[Route('/{id}/spare-parts/request', name: 'api_support_tickets_spare_parts_request', methods: ['POST'])]
+    public function requestPendingSparePart(
+        string $id,
+        Request $request,
+        RequestPendingSparePartHandler $handler,
+    ): JsonResponse {
+        $payload = $request->toArray();
+
+        /** @var SymfonySecurityUser $user */
+        $user = $this->getUser();
+
+        try {
+            $handler(new RequestPendingSparePartCommand(
+                ticketId:    $id,
+                productCode: trim((string) ($payload['productCode'] ?? '')),
+                quantity:    (int) ($payload['quantity'] ?? 1),
+                notes:       isset($payload['notes']) ? trim((string) $payload['notes']) : null,
+                userId:      (string) $user->getDomainUser()->id(),
+            ));
+
+            return $this->json(['data' => ['id' => $id, 'status' => 'pending_spare_part_requested']]);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (DomainException | \DomainException $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    #[IsGranted('ticket.assistance')]
+    #[Route('/{id}/spare-parts/register', name: 'api_support_tickets_spare_parts_register', methods: ['POST'])]
+    public function registerSparePart(
+        string $id,
+        Request $request,
+        RegisterSparePartHandler $handler,
+    ): JsonResponse {
+        $payload = $request->toArray();
+
+        /** @var SymfonySecurityUser $user */
+        $user = $this->getUser();
+
+        try {
+            $handler(new RegisterSparePartCommand(
+                ticketId:          $id,
+                findingId:         trim((string) ($payload['findingId'] ?? '')),
+                productCode:       trim((string) ($payload['productCode'] ?? '')),
+                userId:            (string) $user->getDomainUser()->id(),
+                serialNumber:      isset($payload['serialNumber']) ? trim((string) $payload['serialNumber']) : null,
+                quantity:          (int) ($payload['quantity'] ?? 1),
+                isIncoming:        (bool) ($payload['isIncoming'] ?? true),
+                isVisibleToClient: (bool) ($payload['isVisibleToClient'] ?? true),
+            ));
+
+            return $this->json(['data' => ['id' => $id, 'status' => 'spare_part_registered']]);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (DomainException | \DomainException $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    #[IsGranted('ticket.view')]
+    #[Route('/{id}/spare-parts/pending', name: 'api_support_tickets_spare_parts_pending', methods: ['GET'])]
+    public function listPendingSpareParts(
+        string $id,
+        ListTicketPendingSparePartsHandler $handler,
+    ): JsonResponse {
+        try {
+            $parts = $handler(new ListTicketPendingSparePartsQuery(
+                ticketId: $id,
+                userId: $this->getCurrentUserId() ?: null,
+            ));
+
+            return $this->json(['data' => $parts]);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    #[IsGranted('ticket.update')]
+    #[Route('/{id}', name: 'api_support_tickets_update', methods: ['PUT'])]
+    public function updateTicket(
+        string $id,
+        Request $request,
+        UpdateTicketHandler $handler,
+    ): JsonResponse {
+        $payload = $request->toArray();
+
+        try {
+            $serviceType = isset($payload['serviceType'])
+                ? ServiceType::tryFrom((string) $payload['serviceType'])
+                : null;
+
+            $handler(new UpdateTicketCommand(
+                ticketId:    $id,
+                description: isset($payload['description']) ? trim((string) $payload['description']) : null,
+                serviceType: $serviceType,
+            ));
+
+            return $this->json(['data' => ['id' => $id]]);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
+        } catch (DomainException | \DomainException $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    #[IsGranted('ticket.update')]
+    #[Route('/{id}/reassign', name: 'api_support_tickets_reassign', methods: ['PATCH'])]
+    public function reassignTicket(
+        string $id,
+        Request $request,
+        ReassignTicketHandler $handler,
+    ): JsonResponse {
+        $payload = $request->toArray();
+
+        /** @var SymfonySecurityUser $user */
+        $user = $this->getUser();
+
+        try {
+            $scheduledAt = isset($payload['scheduledAt'])
+                ? new \DateTimeImmutable((string) $payload['scheduledAt'])
+                : null;
+
+            $handler(new ReassignTicketCommand(
+                ticketId:           $id,
+                newEmployeeId:      trim((string) ($payload['newEmployeeId'] ?? '')),
+                previousEmployeeId: trim((string) ($payload['previousEmployeeId'] ?? '')),
+                reassignedBy:       (string) $user->getDomainUser()->id(),
+                scheduledAt:        $scheduledAt,
+            ));
+
+            return $this->json(['data' => ['id' => $id, 'status' => 'reassigned']]);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
+        } catch (DomainException | \DomainException $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    #[IsGranted('ticket.update')]
+    #[Route('/{id}/evidence', name: 'api_support_tickets_evidence', methods: ['POST'])]
+    public function addEvidence(
+        string $id,
+        Request $request,
+        AddEvidenceHandler $handler,
+    ): JsonResponse {
+        /** @var SymfonySecurityUser $user */
+        $user = $this->getUser();
+
+        $uploadedFile = $request->files->get('file');
+        if ($uploadedFile === null) {
+            return $this->json(['error' => 'El archivo es requerido.'], Response::HTTP_BAD_REQUEST);
+        }
+
+        try {
+            $uploadsDir = $this->getParameter('kernel.project_dir') . '/var/uploads/evidence';
+            if (!is_dir($uploadsDir)) {
+                mkdir($uploadsDir, 0755, true);
+            }
+
+            $fileName = sprintf('%s_%s_%s', $id, (new \DateTimeImmutable())->format('YmdHis'), $uploadedFile->getClientOriginalName());
+            $filePath = $uploadsDir . '/' . $fileName;
+            $uploadedFile->move($uploadsDir, $fileName);
+
+            $handler(new AddEvidenceCommand(
+                ticketId:   $id,
+                filePath:   $filePath,
+                uploadedBy: (string) $user->getDomainUser()->id(),
+            ));
+
+            return $this->json(['data' => ['id' => $id, 'evidence' => $fileName]]);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
+        } catch (DomainException | \DomainException $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    #[IsGranted('ticket.view')]
+    #[Route('/{id}/request-reopen', name: 'api_support_tickets_request_reopen', methods: ['POST'])]
+    public function requestReopenTicket(
+        string $id,
+        Request $request,
+        RequestReopenTicketHandler $handler,
+    ): JsonResponse {
+        $payload = $request->toArray();
+
+        /** @var SymfonySecurityUser $user */
+        $user = $this->getUser();
+
+        try {
+            $handler(new RequestReopenTicketCommand(
+                ticketId:    $id,
+                reason:      trim((string) ($payload['reason'] ?? '')),
+                requestedBy: (string) $user->getDomainUser()->id(),
+            ));
+
+            return $this->json(['data' => ['id' => $id, 'status' => 'reopen_requested']]);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
+        } catch (DomainException | \DomainException $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    #[IsGranted('ticket.approve')]
+    #[Route('/{id}/approve-reopen', name: 'api_support_tickets_approve_reopen', methods: ['POST'])]
+    public function approveReopenTicket(
+        string $id,
+        ApproveReopenTicketHandler $handler,
+    ): JsonResponse {
+        /** @var SymfonySecurityUser $user */
+        $user = $this->getUser();
+
+        try {
+            $handler(new ApproveReopenTicketCommand(
+                ticketId:   $id,
+                approvedBy: (string) $user->getDomainUser()->id(),
+            ));
+
+            return $this->json(['data' => ['id' => $id, 'status' => 'reopened']]);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
+        } catch (DomainException | \DomainException $e) {
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    #[IsGranted('ticket.update')]
+    #[Route('/{id}', name: 'api_support_tickets_delete', methods: ['DELETE'])]
+    public function deleteTicket(
+        string $id,
+        SoftDeleteTicketHandler $handler,
+    ): JsonResponse {
+        try {
+            $handler(new SoftDeleteTicketCommand(
+                ticketId: $id,
+            ));
+
+            return $this->json(['data' => ['id' => $id, 'status' => 'deleted']]);
         } catch (\InvalidArgumentException $e) {
             return $this->json(['error' => 'Ticket no encontrado.'], Response::HTTP_NOT_FOUND);
         } catch (DomainException | \DomainException $e) {

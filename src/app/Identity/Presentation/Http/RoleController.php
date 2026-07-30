@@ -10,6 +10,8 @@ use App\Identity\Application\Command\CreateRole\CreateRoleCommand;
 use App\Identity\Application\Command\CreateRole\CreateRoleHandler;
 use App\Identity\Application\Command\DeactivateRole\DeactivateRoleCommand;
 use App\Identity\Application\Command\DeactivateRole\DeactivateRoleHandler;
+use App\Identity\Application\Command\RevokePermissionFromRole\RevokePermissionFromRoleCommand;
+use App\Identity\Application\Command\RevokePermissionFromRole\RevokePermissionFromRoleHandler;
 use App\Identity\Application\Command\SyncRolePermissions\SyncRolePermissionsCommand;
 use App\Identity\Application\Command\SyncRolePermissions\SyncRolePermissionsHandler;
 use App\Identity\Application\Exception\RoleNameAlreadyExistsException;
@@ -149,6 +151,26 @@ final class RoleController extends AbstractController
         return $this->redirectToRoute('role_show', ['id' => $id]);
     }
 
+    #[IsGranted('role.assign_permission')]
+    #[Route('/{roleId}/permissions/{permissionId}/revoke', name: 'role_revoke_permission', methods: ['POST'])]
+    public function revokePermission(
+        string $roleId,
+        string $permissionId,
+        RevokePermissionFromRoleHandler $revokePermission,
+    ): Response {
+        try {
+            ($revokePermission)(new RevokePermissionFromRoleCommand($roleId, $permissionId));
+            $this->addFlash('success', 'Permiso revocado correctamente.');
+        } catch (RoleNotFoundException $e) {
+            $this->addFlash('error', $e->getMessage());
+        } catch (\InvalidArgumentException | DomainException $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('role_show', ['id' => $roleId]);
+    }
+
+    #[IsGranted('role.activate')]
     #[Route('/{id}/activate', name: 'role_activate', methods: ['POST'])]
     public function activate(string $id, ActivateRoleHandler $activateRole): Response
     {

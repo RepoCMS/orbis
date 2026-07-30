@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace App\Inventory\Presentation\Http;
 
+use App\Inventory\Application\Command\AddProduct\AddProductCommand;
+use App\Inventory\Application\Command\AddProduct\AddProductHandler;
 use App\Inventory\Application\Command\AddPurchaseOrderItem\AddPurchaseOrderItemCommand;
 use App\Inventory\Application\Command\AddPurchaseOrderItem\AddPurchaseOrderItemHandler;
 use App\Inventory\Application\Command\CancelPurchaseOrder\CancelPurchaseOrderCommand;
 use App\Inventory\Application\Command\CancelPurchaseOrder\CancelPurchaseOrderHandler;
 use App\Inventory\Application\Command\CreatePurchaseOrder\CreatePurchaseOrderCommand;
 use App\Inventory\Application\Command\CreatePurchaseOrder\CreatePurchaseOrderHandler;
+use App\Inventory\Application\Command\UpdatePurchaseOrder\UpdatePurchaseOrderCommand;
+use App\Inventory\Application\Command\UpdatePurchaseOrder\UpdatePurchaseOrderHandler;
 use App\Inventory\Application\Exception\PurchaseOrderNotFoundException;
 use App\Inventory\Application\Exception\PurchaseOrderReferenceAlreadyExistsException;
 use App\Inventory\Application\Query\FindPurchaseOrderById\FindPurchaseOrderByIdHandler;
 use App\Inventory\Application\Query\ListProducts\ListProductsHandler;
 use App\Inventory\Application\Query\ListPurchaseOrders\ListPurchaseOrdersHandler;
+use App\Inventory\Domain\Enums\ProductTrackingType;
 use App\Shared\Exceptions\DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,9 +84,10 @@ final class PurchaseOrderController extends AbstractController
         }
 
         return $this->render('inventory/purchase_order/show.html.twig', [
-            'po'       => $data['po'],
-            'items'    => $data['items'],
-            'products' => $listProducts(),
+            'po'            => $data['po'],
+            'items'         => $data['items'],
+            'products'      => $listProducts(),
+            'trackingTypes' => ProductTrackingType::cases(),
         ]);
     }
 
@@ -100,6 +106,60 @@ final class PurchaseOrderController extends AbstractController
         }
 
         return $this->redirectToRoute('inventory_po_show', ['id' => $id]);
+    }
+
+    #[IsGranted('inventory.create')]
+    #[Route('/{id}/quick-create-product', name: 'inventory_po_quick_create_product', methods: ['POST'])]
+    public function quickCreateProduct(string $id, Request $request, AddProductHandler $handler): Response
+    {
+        $code         = trim((string) $request->request->get('code', ''));
+        $name         = trim((string) $request->request->get('name', ''));
+        $description  = trim((string) $request->request->get('description', ''));
+        $trackingType = trim((string) $request->request->get('tracking_type', 'serialized'));
+
+        try {
+            ($handler)(new AddProductCommand(
+                code:         $code,
+                name:         $name,
+                description:  $description,
+                trackingType: $trackingType,
+            ));
+            $this->addFlash('success', sprintf('Producto "%s" creado.', $name));
+        } catch (DomainException $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('inventory_po_show', ['id' => $id]);
+    }
+
+    #[IsGranted('inventory.update')]
+    #[Route('/{id}/update', name: 'inventory_po_update', methods: ['POST'])]
+    public function update(string $id, Request $request, UpdatePurchaseOrderHandler $handler): Response
+    {
+        $reference = trim((string) $request->request->get('reference', ''));
+        $notes     = trim((string) $request->request->get('notes', '')) ?: null;
+
+        try {
+            ($handler)(new UpdatePurchaseOrderCommand(
+                purchaseOrderId: $id,
+                reference:       $reference,
+                notes:           $notes,
+            ));
+            $this->addFlash('success', 'Orden de compra actualizada correctamente.');
+        } catch (PurchaseOrderReferenceAlreadyExistsException | DomainException $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('inventory_po_show', ['id' => $id]);
+    }
+
+    #[IsGranted('inventory.create')]
+    #[Route('/{id}/receive', name: 'inventory_po_receive', methods: ['GET'])]
+    public function receive(string $id): Response
+    {
+        $this->addFlash('info', 'Cree una entrada de inventario vinculada a esta orden para recibir los productos.');
+
+        return $this->redirectToRoute('inventory_entry_new');
     }
 
     #[IsGranted('inventory.update')]

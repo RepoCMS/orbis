@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Support\Domain\Entities\TicketModuleFinding" table="ticket_module_findings">
+
+        <id name="id" type="ticket_module_finding_id" column="id" length="26" />
+
+        <field name="ticketId"      type="ticket_id"          column="ticket_id"       length="26" />
+        <field name="modulePath"    type="module_path"        column="module_path"     length="500" />
+        <field name="componentName" type="string"             column="component_name"  length="200" />
+        <field name="findingType"   type="support_finding_type" column="finding_type"    length="10" />
+        <field name="notes"         type="text"               column="notes"           nullable="true" />
+        <field name="registeredBy"  type="string"             column="registered_by"   length="26" />
+        <field name="registeredAt"  type="datetime_immutable" column="registered_at" />
+
+        <one-to-many field="evidences" target-entity="App\Support\Domain\Entities\FindingEvidence" mapped-by="finding">
+            <cascade>
+                <cascade-persist />
+                <cascade-remove />
+            </cascade>
+        </one-to-many>
+
+        <many-to-one field="ticket" target-entity="App\Support\Domain\Entities\Ticket">
+            <join-column name="ticket_id" referenced-column-name="id" insertable="false" updatable="false" />
+        </many-to-one>
+
+        <indexes>
+            <index name="idx_tmf_ticket_id"     columns="ticket_id" />
+            <index name="idx_tmf_registered_by" columns="registered_by" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

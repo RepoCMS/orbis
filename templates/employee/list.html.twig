@@ -30,7 +30,7 @@
         </div>
     {% else %}
 
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200"
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200"
              data-controller="table-filter">
 
             {# -- Toolbar --------------------------------------- #}
@@ -38,7 +38,7 @@
 
             {# -- Panel de filtros (client-side) --------------- #}
             <div data-table-filter-target="panel"
-                 class="hidden bg-slate-50/60 border-b border-slate-100 px-4 py-3">
+                 class="hidden bg-gray-50/60 border-b border-gray-100 px-4 py-3">
                 <div class="flex flex-wrap items-end gap-3">
                     <div>
                         <label class="block text-xs font-medium text-gray-500 mb-1">Estado</label>
@@ -46,7 +46,7 @@
                                 data-col="6"
                                 data-match="exact"
                                 data-action="change->table-filter#filterRows"
-                                class="text-sm rounded-lg border border-slate-200 px-3 py-1.5 bg-white w-40 focus:outline-none focus:ring-2 focus:ring-blue-400/30 focus:border-blue-400 transition-colors">
+                                class="text-sm rounded-lg border border-gray-200 px-3 py-1.5 bg-white w-40 focus:outline-none focus:ring-2 focus:ring-blue-400/30 focus:border-blue-400 transition-colors">
                             <option value="">Todos</option>
                             <option value="Activo">Activo</option>
                             <option value="Inactivo">Inactivo</option>
@@ -63,7 +63,7 @@
                     <tr>
                         <th class="px-6 py-3.5 text-left font-semibold">Empleado</th>
                         <th class="px-6 py-3.5 text-left font-semibold">Cédula</th>
-                        <th class="px-6 py-3.5 text-left font-semibold">Usuario</th>
+                        <th class="px-6 py-3.5 text-left font-semibold">Acceso</th>
                         <th class="px-6 py-3.5 text-left font-semibold">Email</th>
                         <th class="px-6 py-3.5 text-left font-semibold">Teléfono</th>
                         <th class="px-6 py-3.5 text-left font-semibold">Ingreso</th>
@@ -73,7 +73,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     {% for employee in employees %}
-                        <tr class="hover:bg-slate-50 transition-colors"
+                        <tr class="hover:bg-gray-50 transition-colors"
                             data-table-filter-target="row">
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
@@ -83,13 +83,17 @@
                             </td>
                             <td class="px-6 py-4 font-mono text-xs text-gray-600">{{ employee.identificationNumber }}</td>
                             <td class="px-6 py-4 text-gray-600">
-                                {% if employee.userId and usernamesById[employee.userId] is defined %}
-                                    <span class="inline-flex items-center gap-1">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>
-                                        {{ usernamesById[employee.userId] }}
+                                {% if usernameByEmployee[employee.id] is defined %}
+                                    <span class="inline-flex items-center gap-1" title="Tiene acceso al sistema">
+                                        <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                                        <span class="text-green-700 text-xs font-medium">Con acceso</span>
                                     </span>
                                 {% else %}
-                                    <span class="text-gray-300 text-xs">Sin acceso</span>
+                                    <a href="{{ path('employee_show', {id: employee.id, setup: '1'}) }}"
+                                       class="inline-flex items-center gap-1 group" title="Crear usuario de acceso">
+                                        <span class="w-2 h-2 rounded-full bg-red-400"></span>
+                                        <span class="text-red-500 text-xs group-hover:underline">Sin acceso</span>
+                                    </a>
                                 {% endif %}
                             </td>
                             <td class="px-6 py-4 text-gray-600">{{ employee.email }}</td>

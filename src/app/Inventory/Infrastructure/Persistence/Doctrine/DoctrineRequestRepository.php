@@ -46,6 +46,17 @@ final class DoctrineRequestRepository implements RequestRepositoryInterface
             ->getQuery()->getResult();
     }
 
+    public function findByIdWithItems(RequestIdValueObject $id): ?Request
+    {
+        return $this->em->createQueryBuilder()
+            ->select('r', 'i')
+            ->from(Request::class, 'r')
+            ->leftJoin('r.items', 'i')
+            ->where('r.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()->getOneOrNullResult();
+    }
+
     public function save(Request $request): void
     {
         $this->em->persist($request);

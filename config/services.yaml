@@ -7,6 +7,10 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.standby_allowed_profiles:
+        - technician_field
+        - supervisor_technician
+    app.reports_dir: '%kernel.project_dir%/var/reports'
 
 services:
     # default configuration for services in *this* file
@@ -87,17 +91,49 @@ services:
     App\Identity\Domain\Repositories\UserMfaConfigRepositoryInterface:
         class: App\Identity\Infrastructure\Persistence\Doctrine\DoctrineUserMfaConfigRepository
 
+    App\Identity\Domain\Repositories\RefreshTokenRepositoryInterface:
+        class: App\Identity\Infrastructure\Persistence\Doctrine\DoctrineRefreshTokenRepository
+
     App\Identity\Domain\Service\UserEmailResolverInterface:
         class: App\Identity\Infrastructure\Service\CrossBcUserEmailResolver
 
     App\Identity\Domain\Service\UserBindingCheckerInterface:
         class: App\Identity\Infrastructure\Service\UserBindingChecker
 
+    App\Identity\Domain\Service\UserByEmailResolverInterface:
+        class: App\Identity\Infrastructure\Service\CrossBcUserByEmailResolver
+
+    App\Identity\Domain\Service\ForgotPasswordEmailSenderInterface:
+        class: App\Identity\Infrastructure\Service\EmailForgotPasswordEmailSender
+        arguments:
+            $fromEmail: '%env(MAILER_FROM_EMAIL)%'
+
+    App\Identity\Domain\Service\ContactFinderInterface:
+        class: App\Identity\Infrastructure\Service\CrossBcContactFinder
+
+    App\Identity\Domain\Service\OrphanUserCheckerInterface:
+        class: App\Identity\Infrastructure\Service\OrphanUserChecker
+        arguments:
+            - '@App\Organization\Domain\Repositories\EmployeeRepositoryInterface'
+            - '@App\Client\Domain\Repositories\ContactRepositoryInterface'
+            - '@App\Identity\Domain\Repositories\UserRepositoryInterface'
+
+    App\Identity\Domain\Repositories\UserMfaBackupCodeRepositoryInterface:
+        class: App\Identity\Infrastructure\Persistence\Doctrine\DoctrineUserMfaBackupCodeRepository
+
     App\Shared\Domain\Service\IdGeneratorInterface:
         class: App\Shared\Infrastructure\Service\UlidGenerator
 
     App\Shared\Domain\Event\DomainEventPublisherInterface:
         class: App\Shared\Infrastructure\Event\SymfonyDomainEventPublisher
+
+    App\Shared\Domain\Repositories\ProcessedCommandRepositoryInterface:
+        class: App\Shared\Infrastructure\Persistence\Doctrine\DoctrineProcessedCommandRepository
+
+    App\Shared\Application\Service\IdempotencyService: ~
+
+    App\Shared\Application\Service\TransactionManagerInterface:
+        class: App\Shared\Infrastructure\Persistence\Doctrine\DoctrineTransactionManager
 
     # Client
     App\Client\Domain\Repositories\ClientRepositoryInterface:
@@ -109,8 +145,20 @@ services:
     App\Client\Domain\Repositories\TerminalRepositoryInterface:
         class: App\Client\Infrastructure\Persistence\Doctrine\DoctrineTerminalRepository
 
-    App\Client\Domain\Repositories\SiteRepositoryInterface:
-        class: App\Client\Infrastructure\Persistence\Doctrine\DoctrineSiteRepository
+    App\Client\Domain\Repositories\TerminalAssignmentRepositoryInterface:
+        class: App\Client\Infrastructure\Persistence\Doctrine\DoctrineTerminalAssignmentRepository
+
+    App\Client\Domain\Repositories\ContractRepositoryInterface:
+        class: App\Client\Infrastructure\Persistence\Doctrine\DoctrineContractRepository
+
+    App\Client\Domain\Repositories\TerminalWarrantyRepositoryInterface:
+        class: App\Client\Infrastructure\Persistence\Doctrine\DoctrineTerminalWarrantyRepository
+
+    App\Client\Domain\Repositories\TerminalModelRepositoryInterface:
+        class: App\Client\Infrastructure\Persistence\Doctrine\DoctrineTerminalModelRepository
+
+    App\Client\Domain\Repositories\ModelPartRepositoryInterface:
+        class: App\Client\Infrastructure\Persistence\Doctrine\DoctrineModelPartRepository
 
     # Organization
     App\Organization\Domain\Repositories\EmployeeRepositoryInterface:
@@ -119,10 +167,28 @@ services:
     App\Organization\Domain\Repositories\EmployeeSpecialPeriodRepositoryInterface:
         class: App\Organization\Infrastructure\Persistence\Doctrine\DoctrineEmployeeSpecialPeriodRepository
 
+    App\Organization\Domain\Repositories\EmploymentPeriodRepositoryInterface:
+        class: App\Organization\Infrastructure\Persistence\Doctrine\DoctrineEmploymentPeriodRepository
+
     App\Organization\Domain\Repositories\ServiceZoneRepositoryInterface:
         class: App\Organization\Infrastructure\Persistence\Doctrine\DoctrineServiceZoneRepository
 
+    App\Organization\Domain\Repositories\VacationRequestRepositoryInterface:
+        class: App\Organization\Infrastructure\Persistence\Doctrine\DoctrineVacationRequestRepository
+
+    App\Organization\Domain\Repositories\OvertimeRecordRepositoryInterface:
+        class: App\Organization\Infrastructure\Persistence\Doctrine\DoctrineOvertimeRecordRepository
+
+    App\Organization\Domain\Repositories\ServiceZoneAssignmentRepositoryInterface:
+        class: App\Organization\Infrastructure\Persistence\Doctrine\DoctrineServiceZoneAssignmentRepository
+
+    App\Organization\Application\Service\TerminationVerificationServiceInterface:
+        class: App\Organization\Application\Service\TerminationVerificationService
+
     # Inventory
+    App\Inventory\Application\Service\MovementScopeResolverInterface:
+        class: App\Inventory\Application\Service\MovementViewScopeResolver
+
     App\Inventory\Domain\Repositories\ProductRepositoryInterface:
         class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineProductRepository
 
@@ -156,6 +222,9 @@ services:
     App\Inventory\Domain\Repositories\TransformationRepositoryInterface:
         class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineTransformationRepository
 
+    App\Inventory\Domain\Repositories\RequestRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineRequestRepository
+
     # Location
     App\Location\Domain\Repositories\RegionRepositoryInterface:
         class: App\Location\Infrastructure\Persistence\Doctrine\DoctrineRegionRepository
@@ -171,6 +240,21 @@ services:
 
     App\Inventory\Domain\Repositories\SerialHistoryRepositoryInterface:
         class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineSerialHistoryRepository
+
+    App\Inventory\Domain\Repositories\SubLocationRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineSubLocationRepository
+
+    App\Inventory\Domain\Repositories\TechnicianLoanRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineTechnicianLoanRepository
+
+    App\Inventory\Domain\Repositories\PhysicalCountRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrinePhysicalCountRepository
+
+    App\Inventory\Domain\Repositories\RepairEvidenceRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineRepairEvidenceRepository
+
+    App\Inventory\Domain\Repositories\ConsumableRepositoryInterface:
+        class: App\Inventory\Infrastructure\Persistence\Doctrine\DoctrineConsumableRepository
 
     # Support
     App\Support\:
@@ -199,11 +283,117 @@ services:
     App\Support\Domain\Repositories\TicketRescheduleRepositoryInterface:
         class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineTicketRescheduleRepository
 
-    # DeviceCatalog
-    App\DeviceCatalog\:
-        resource: '../src/app/DeviceCatalog/'
-        exclude:
-            - '../src/app/DeviceCatalog/Domain/'
+    App\Support\Domain\Repositories\TicketEvidenceRepositoryInterface:
+        class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineTicketEvidenceRepository
 
-    App\DeviceCatalog\Domain\AtmComponentRepositoryInterface:
-        class: App\DeviceCatalog\Infrastructure\Persistence\Doctrine\DoctrineAtmComponentRepository
+    App\Support\Domain\Repositories\TicketAuditLogRepositoryInterface:
+        class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineTicketAuditLogRepository
+
+    App\Support\Domain\Repositories\TicketPendingSparePartRepositoryInterface:
+        class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineTicketPendingSparePartRepository
+
+    App\Support\Domain\Repositories\TicketWaitingRepositoryInterface:
+        class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineTicketWaitingRepository
+
+    App\Support\Domain\Repositories\QuickTemplateRepositoryInterface:
+        class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineQuickTemplateRepository
+
+    App\Support\Domain\Repositories\TicketModuleFindingRepositoryInterface:
+        class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineTicketModuleFindingRepository
+
+    App\Support\Domain\Repositories\RmaRecordRepositoryInterface:
+        class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineRmaRecordRepository
+
+    App\Support\Domain\Repositories\ScheduledMaintenanceRepositoryInterface:
+        class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineScheduledMaintenanceRepository
+
+    App\Support\Domain\Repositories\ModuleNodeRepositoryInterface:
+        class: App\Support\Infrastructure\Persistence\Doctrine\DoctrineModuleNodeRepository
+
+    App\Support\Domain\AtmModel\AtmModuleTreeRegistry: ~
+
+    App\Support\Console\SeedModuleTreeCommand:
+        tags:
+            - { name: console.command }
+
+    App\Support\Application\Service\SparePartViewScopeResolver: ~
+
+    # Expense
+    App\Expense\:
+        resource: '../src/app/Expense/'
+        exclude:
+            - '../src/app/Expense/Domain/'
+
+    App\Expense\Domain\Repositories\OperatingExpenseRepositoryInterface:
+        class: App\Expense\Infrastructure\Persistence\Doctrine\DoctrineOperatingExpenseRepository
+
+    App\Expense\Domain\Repositories\CashAdvanceRepositoryInterface:
+        class: App\Expense\Infrastructure\Persistence\Doctrine\DoctrineCashAdvanceRepository
+
+    App\Expense\Domain\Repositories\ExpenseItemRepositoryInterface:
+        class: App\Expense\Infrastructure\Persistence\Doctrine\DoctrineExpenseItemRepository
+
+    App\Expense\Application\Service\EmployeeResolverInterface:
+        class: App\Expense\Infrastructure\Service\CrossBcEmployeeResolver
+
+    App\Expense\Application\Service\UserResolverInterface:
+        class: App\Expense\Infrastructure\Service\CrossBcUserResolver
+
+    App\Expense\Application\Service\TicketResolverInterface:
+        class: App\Expense\Infrastructure\Service\CrossBcTicketResolver
+
+    # Notification
+    App\Notification\:
+        resource: '../src/app/Notification/'
+        exclude:
+            - '../src/app/Notification/Domain/'
+
+    App\Notification\Domain\Repositories\NotificationLogRepositoryInterface:
+        class: App\Notification\Infrastructure\Persistence\Doctrine\DoctrineNotificationLogRepository
+
+    App\Notification\Domain\Repositories\NotificationTemplateRepositoryInterface:
+        class: App\Notification\Infrastructure\Persistence\Doctrine\DoctrineNotificationTemplateRepository
+
+    App\Notification\Domain\Repositories\NotificationPreferenceRepositoryInterface:
+        class: App\Notification\Infrastructure\Persistence\Doctrine\DoctrineNotificationPreferenceRepository
+
+    # Notification — Channel Senders
+    App\Notification\Infrastructure\Channel\EmailChannelSender:
+        arguments:
+            $fromAddress: '%env(MAILER_FROM_EMAIL)%'
+
+    # Notification — Security
+    App\Notification\Application\Service\SecurityUserResolverInterface:
+        class: App\Notification\Infrastructure\Security\SecurityUserResolver
+
+    # Notification — Contact Resolvers
+    App\Notification\Infrastructure\Service\OrganizationContactResolver:
+        tags: ['app.notification_contact_resolver']
+
+    App\Notification\Infrastructure\Service\ClientContactResolver:
+        tags: ['app.notification_contact_resolver']
+
+    App\Notification\Infrastructure\Service\UserContactResolver:
+        tags: ['app.notification_contact_resolver']
+
+    App\Notification\Infrastructure\Service\LocationContactResolver:
+        tags: ['app.notification_contact_resolver']
+
+    App\Notification\Domain\Services\ContactResolverInterface:
+        class: App\Notification\Infrastructure\Service\ChainContactResolver
+        arguments:
+            $resolvers: !tagged_iterator app.notification_contact_resolver
+
+    # Feature: 010-employee-user-invariant
+    # (ContactStatusCascadeHandler is autoconfigured via App\Client\: resource)
+
+    # Feature: 012-auto-create-backpack
+    App\Inventory\Infrastructure\Messenger\Handler\AutoCreateBackpackHandler:
+        tags:
+            - { name: messenger.message_handler }
+
+    # ── Reports ──────────────────────────────────────────────────────────────
+    App\Shared\Presentation\Console\CleanupReportsCommand:
+        arguments:
+            $reportsDir: '%app.reports_dir%'
+

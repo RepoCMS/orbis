@@ -16,16 +16,18 @@
     <div class="space-y-6">
 
         {# Datos generales #}
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div class="flex items-start justify-between mb-4">
                 <h2 class="text-sm font-semibold text-gray-700">Detalle de la solicitud</h2>
                 <span class="text-xs font-medium px-2.5 py-1 rounded-full
                     {% if stockRequest.status == 'pending' %}bg-yellow-100 text-yellow-700
                     {% elseif stockRequest.status == 'approved' %}bg-blue-100 text-blue-700
+                    {% elseif stockRequest.status == 'awaiting_technician_acceptance' %}bg-purple-100 text-purple-700
+                    {% elseif stockRequest.status == 'partially_fulfilled' %}bg-amber-100 text-amber-700
                     {% elseif stockRequest.status == 'fulfilled' %}bg-green-100 text-green-700
                     {% elseif stockRequest.status == 'rejected' %}bg-red-100 text-red-700
                     {% elseif stockRequest.status == 'cancelled' %}bg-gray-100 text-gray-500
-                    {% else %}bg-slate-100 text-slate-600{% endif %}">
+                    {% else %}bg-gray-100 text-gray-600{% endif %}">
                     {{ stockRequest.statusLabel }}
                 </span>
             </div>
@@ -36,33 +38,23 @@
                 </div>
                 <div>
                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Solicitado por</dt>
-                    <dd class="text-sm text-gray-700 font-mono text-xs">{{ stockRequest.requestedBy }}</dd>
+                    <dd class="text-sm text-gray-700">{{ stockRequest.requestedByName }}</dd>
                 </div>
                 <div>
                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Fecha</dt>
                     <dd class="text-sm text-gray-600">{{ stockRequest.createdAt }}</dd>
                 </div>
                 <div>
-                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Producto</dt>
-                    <dd class="text-sm font-mono text-xs text-gray-700">{{ stockRequest.productId }}</dd>
-                </div>
-                <div>
-                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Cantidad</dt>
-                    <dd class="text-sm font-semibold text-gray-900">{{ stockRequest.quantity }}</dd>
-                </div>
-                {% if stockRequest.serializedStockId %}
-                <div>
-                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Stock serializado</dt>
-                    <dd class="text-sm font-mono text-xs text-gray-700">{{ stockRequest.serializedStockId }}</dd>
-                </div>
-                {% endif %}
-                <div>
                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Origen</dt>
-                    <dd class="text-sm font-mono text-xs text-gray-700">{{ stockRequest.sourceLocationId }}</dd>
+                    <dd class="text-sm text-gray-700">{{ stockRequest.sourceLocationName }}</dd>
                 </div>
                 <div>
                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Destino</dt>
-                    <dd class="text-sm font-mono text-xs text-gray-700">{{ stockRequest.destinationLocationId }}</dd>
+                    <dd class="text-sm text-gray-700">{{ stockRequest.destinationLocationName }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Items</dt>
+                    <dd class="text-sm text-gray-700">{{ stockRequest.fulfilledItemsCount }}/{{ stockRequest.fulfilledItemsCount + stockRequest.pendingItemsCount }} despachados</dd>
                 </div>
                 {% if stockRequest.notes %}
                 <div class="sm:col-span-2 lg:col-span-3">
@@ -73,15 +65,67 @@
             </dl>
         </div>
 
+        {# Tabla de items #}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 class="text-sm font-semibold text-gray-700 mb-4">Items de la solicitud</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-100 text-left">
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Producto</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Cantidad</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Serial</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Estado</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden lg:table-cell">Movement</th>
+                            <th class="px-4 py-3"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        {% for item in stockRequest.items %}
+                        <tr class="hover:bg-gray-50/60 transition-colors">
+                            <td class="px-4 py-3 text-gray-700">{{ item.productName }}</td>
+                            <td class="px-4 py-3 text-gray-700">{{ item.quantity }}</td>
+                            <td class="px-4 py-3 font-mono text-xs text-gray-500">
+                                {{ item.serializedStockId ?? '-' }}
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="text-xs font-medium px-2.5 py-1 rounded-full
+                                    {% if item.status == 'pending' %}bg-yellow-100 text-yellow-700
+                                    {% elseif item.status == 'fulfilled' %}bg-green-100 text-green-700
+                                    {% elseif item.status == 'cancelled' %}bg-gray-100 text-gray-500
+                                    {% else %}bg-gray-100 text-gray-600{% endif %}">
+                                    {{ item.statusLabel }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 hidden lg:table-cell font-mono text-xs text-gray-500">
+                                {{ item.fulfilledMovementId ?? '-' }}
+                            </td>
+                            <td class="px-4 py-3 text-right">
+                                {% if stockRequest.status in ['approved', 'awaiting_technician_acceptance'] and item.status == 'pending' and is_granted('inventory.update') %}
+                                <form method="POST" action="{{ path('inventory_request_fulfill_item', {id: stockRequest.id, itemId: item.id}) }}" class="inline">
+                                    <button type="submit"
+                                            class="text-xs px-3 py-1.5 rounded-lg border border-blue-200 text-blue-700 hover:bg-blue-50 transition-colors">
+                                        Despachar
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         {# Historial de aprobación/rechazo #}
-        {% if stockRequest.approvedAt or stockRequest.rejectedAt or stockRequest.fulfilledMovementId %}
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        {% if stockRequest.approvedAt or stockRequest.rejectedAt %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h2 class="text-sm font-semibold text-gray-700 mb-4">Historial</h2>
             <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {% if stockRequest.approvedAt %}
                 <div>
                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Aprobado por</dt>
-                    <dd class="text-sm font-mono text-xs text-gray-700">{{ stockRequest.approvedBy }}</dd>
+                    <dd class="text-sm text-gray-700">{{ stockRequest.approvedByName }}</dd>
                 </div>
                 <div>
                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Aprobado el</dt>
@@ -91,7 +135,7 @@
                 {% if stockRequest.rejectedAt %}
                 <div>
                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Rechazado por</dt>
-                    <dd class="text-sm font-mono text-xs text-gray-700">{{ stockRequest.rejectedBy }}</dd>
+                    <dd class="text-sm text-gray-700">{{ stockRequest.rejectedByName }}</dd>
                 </div>
                 <div>
                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Rechazado el</dt>
@@ -104,24 +148,17 @@
                 </div>
                 {% endif %}
                 {% endif %}
-                {% if stockRequest.fulfilledMovementId %}
-                <div>
-                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Movimiento generado</dt>
-                    <dd class="text-sm font-mono text-xs text-gray-700">{{ stockRequest.fulfilledMovementId }}</dd>
-                </div>
-                {% endif %}
             </dl>
         </div>
         {% endif %}
 
         {# Acciones #}
-        {% if is_granted('inventory.update') %}
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        {% if is_granted('inventory.update') or is_granted('spare_part.request') %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h2 class="text-sm font-semibold text-gray-700 mb-4">Acciones</h2>
             <div class="flex flex-wrap gap-3">
 
-                {% if stockRequest.status == 'pending' %}
-                {# Aprobar #}
+                {% if stockRequest.status == 'pending' and is_granted('inventory.update') %}
                 <form method="POST" action="{{ path('inventory_request_approve', {id: stockRequest.id}) }}">
                     <button type="submit"
                             class="px-4 py-2 text-sm font-medium text-white rounded-lg shadow-sm bg-green-600 hover:bg-green-700 transition-colors">
@@ -129,37 +166,17 @@
                     </button>
                 </form>
 
-                {# Rechazar #}
-                <form method="POST" action="{{ path('inventory_request_reject', {id: stockRequest.id}) }}"
-                      onsubmit="var r = prompt('Motivo del rechazo:'); if(!r){return false;} this.querySelector('[name=reason]').value=r;">
-                    <input type="hidden" name="reason" value="">
-                    <button type="submit"
-                            class="px-4 py-2 text-sm font-medium text-white rounded-lg shadow-sm bg-red-600 hover:bg-red-700 transition-colors">
-                        Rechazar
-                    </button>
-                </form>
+                <button type="button" onclick="openModal('modal-reject-request')"
+                        class="px-4 py-2 text-sm font-medium text-white rounded-lg shadow-sm bg-red-600 hover:bg-red-700 transition-colors">
+                    Rechazar
+                </button>
                 {% endif %}
 
-                {% if stockRequest.status == 'pending' %}
-                {# Cancelar (solo el propio solicitante, o admin) #}
-                <form method="POST" action="{{ path('inventory_request_cancel', {id: stockRequest.id}) }}"
-                      onsubmit="return confirm('¿Cancelar esta solicitud?')">
-                    <button type="submit"
-                            class="px-4 py-2 text-sm font-medium rounded-lg border border-slate-200 text-gray-600 hover:bg-slate-50 transition-colors">
-                        Cancelar
-                    </button>
-                </form>
-                {% endif %}
-
-                {% if stockRequest.status == 'approved' %}
-                {# Ejecutar traslado #}
-                <form method="POST" action="{{ path('inventory_request_fulfill', {id: stockRequest.id}) }}"
-                      onsubmit="return confirm('¿Confirmar ejecución del traslado de stock?')">
-                    <button type="submit"
-                            class="px-4 py-2 text-sm font-medium text-white rounded-lg shadow-sm bg-blue-600 hover:bg-blue-700 transition-colors">
-                        Ejecutar traslado
-                    </button>
-                </form>
+                {% if stockRequest.status == 'pending' and (is_granted('inventory.update') or is_granted('spare_part.request')) %}
+                <button type="button" onclick="openModal('modal-cancel-request')"
+                        class="px-4 py-2 text-sm font-medium rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
+                    Cancelar solicitud
+                </button>
                 {% endif %}
 
             </div>
@@ -167,4 +184,23 @@
         {% endif %}
 
     </div>
+
+    {% if stockRequest.status == 'pending' %}
+    {% include 'components/_confirm_modal.html.twig' with {
+        id: 'modal-reject-request',
+        title: 'Rechazar solicitud',
+        message: '¿Está seguro de rechazar esta solicitud? Indique el motivo.',
+        action: path('inventory_request_reject', {id: stockRequest.id}),
+        confirmText: 'Rechazar',
+        confirmStyle: 'red',
+    } %}
+    {% include 'components/_confirm_modal.html.twig' with {
+        id: 'modal-cancel-request',
+        title: 'Cancelar solicitud',
+        message: '¿Cancelar esta solicitud?',
+        action: path('inventory_request_cancel', {id: stockRequest.id}),
+        confirmText: 'Cancelar solicitud',
+        confirmStyle: 'red',
+    } %}
+    {% endif %}
 {% endblock %}

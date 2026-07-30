@@ -19,6 +19,9 @@ use DateTimeImmutable;
  */
 final class Entry
 {
+    private ?string $totalCost = null;
+    private ?DateTimeImmutable $updatedAt = null;
+
     public function __construct(
         private EntryIdValueObject $id,
         private string $reference,
@@ -65,6 +68,11 @@ final class Entry
     public function notes(): ?string
     {
         return $this->notes;
+    }
+
+    public function totalCost(): ?string
+    {
+        return $this->totalCost;
     }
 
     public function createdBy(): UserIdValueObject
@@ -117,5 +125,19 @@ final class Entry
         }
 
         $this->status = EntryStatus::CANCELLED;
+    }
+
+    public function update(string $reference, ?string $notes, ?string $totalCost): void
+    {
+        if (!$this->isDraft()) {
+            throw new EntryAlreadyConfirmedException(
+                sprintf('La entrada "%s" ya fue %s y no puede modificarse.', $this->reference, $this->status->value)
+            );
+        }
+
+        $this->reference = $reference;
+        $this->notes     = $notes;
+        $this->totalCost = $totalCost;
+        $this->updatedAt = new DateTimeImmutable();
     }
 }

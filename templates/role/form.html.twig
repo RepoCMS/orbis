@@ -14,7 +14,7 @@
 
 {% block body %}
     <div class="max-w-xl">
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
 
             {% if errors is not empty %}
                 <div class="mb-5 bg-red-50 border border-red-200 rounded-lg p-4 space-y-1">
@@ -70,25 +70,25 @@
 
                             {# Etiquetas legibles por recurso #}
                             {% set resourceLabels = {
-                                'user':           'Usuarios',
-                                'role':           'Roles',
-                                'permission':     'Permisos',
-                                'employee':       'Empleados',
-                                'client':         'Clientes',
-                                'contact':        'Contactos',
-                                'ticket':         'Tickets de servicio',
-                                'expense':        'Gastos operativos',
+                                'user':         'Usuarios',
+                                'role':         'Roles',
+                                'permission':   'Permisos',
+                                'employee':     'Empleados',
+                                'client':       'Clientes',
+                                'contact':      'Contactos',
+                                'service_zone': 'Zonas de servicio',
+                                'ticket':       'Tickets de servicio',
+                                'expense':      'Gastos operativos',
+                                'inventory':    'Inventario',
                                 'spare_part':     'Repuestos',
-                                'warehouse':      'Almacenes y laboratorios',
-                                'repair':         'Reparaciones',
-                                'purchase_order': 'Órdenes de compra'
+                                'quick_template': 'Plantillas rápidas',
                             } %}
 
                             <div class="space-y-3">
                                 {% for resource, group in groups %}
                                     <div class="border border-gray-200 rounded-lg overflow-hidden">
                                         {# Cabecera del grupo con checkbox "seleccionar grupo" #}
-                                        <div class="flex items-center gap-2 px-4 py-2 bg-slate-50 border-b border-gray-200">
+                                        <div class="flex items-center gap-2 px-4 py-2 bg-gray-50 border-b border-gray-200">
                                             <input type="checkbox"
                                                    id="group_{{ resource }}"
                                                    class="rounded group-toggle"
@@ -106,7 +106,7 @@
                                         <div class="divide-y divide-gray-100">
                                             {% for permission in group %}
                                                 {% set isChecked = (input.permissionIds ?? []) | filter(pid => pid == permission.id) | length > 0 %}
-                                                <label class="flex items-start gap-3 px-4 py-2.5 hover:bg-slate-50 cursor-pointer">
+                                                <label class="flex items-start gap-3 px-4 py-2.5 hover:bg-gray-50 cursor-pointer">
                                                     <input type="checkbox"
                                                            name="permission_ids[]"
                                                            value="{{ permission.id }}"

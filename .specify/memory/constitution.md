@@ -1,50 +1,109 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+---
+name: project-constitution
+description: Formal governance document capturing architectural principles, patterns, and quality gates based on ADR implementations
+metadata:
+  type: project
+---
+
+## Preamble
+
+This constitution formalizes the architectural principles and governance standards that guide the Automated Cash Management Solutions application. It is derived from documented architectural decisions (ADR-011, ADR-012, ADR-013) and represents the agreed-upon foundation for sustainable growth.
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Domain-Driven Design Purity
+All code must strictly adhere to DDD boundaries:
+- **Application Layer**: Contains only application logic, never database queries or controller code
+- **Domain Layer**: Pure business concepts with no infrastructure dependencies
+- **Infrastructure Layer**: Concrete implementations of interfaces from Application/Doman layers
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Transaction Integrity
+- All data persistence requiring atomicity must use `TransactionManagerInterface` 
+- Handlers must never directly depend on `EntityManagerInterface`
+- Transaction management follows strict controller boundary rules (beginTransaction → commit/rollback)
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Cross-BC Communication Protocol
+- **Event-Driven Architecture**: BCs communicate exclusively through domain events
+- **Async Processing**: Cross-BC cascades must use async messaging (Symfony Messenger)
+- **Idempotency**: All event consumers must be idempotent to prevent duplicate processing
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Database Governance
+- All tables must use standardized `{bc}_` prefix naming convention
+- DBAL queries must avoid raw SQL; use ORM methods where possible
+- Changes to table names require migration plans with versioned RENAME TABLE statements
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Testing Contracts
+- **Test-First Mandate**: Unit tests must be written before implementation
+- **Mocking Standards**: Interface implementations mocked directly (`createMock(Interface::class)`)
+- **Integration Test Coverage**: All repository implementations require integration test coverage
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Architectural Patterns
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### 1. Transaction Management Pattern
+All handlers requiring atomic operations must inject `TransactionManagerInterface` with methods `begin()`, `commit()`, `rollback()`. This ensures:
+- Application layer transaction boundaries
+- Testability without Doctrine dependency
+- Future ORM agnosticism
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### 2. Cross-BC Event Cascade
+When BC A operations affect BC B:
+1. Publish domain event after successful domain state change
+2. Async handler in target BC consumes event
+3. Event processing is fire-and-forget with error logging only
+4. ProcessedCommand tracking prevents duplicate events
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### 3. Database Naming Convention
+- Prefix all tables with `{bounded_context}_` where `{bounded_context}` is the short identifier
+- Inventory BC tables use `inventory_` prefix universally
+- Migration requires:
+  - ORM mapping updates (`*.orm.xml`)
+  - DBAL query updates
+  - Version-controlled migration scripts
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+## Governance Structure
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+### Decision Process
+1. **Proposal Stage**: Architects submit RFC for new patterns
+2. **Review Stage**: ADR authors and domain experts review
+3. **Acceptance Stage**: RFC accepted if ≥ 60% approval from core architects
+4. **Documentation Stage**: Implement RFC as ADR in `/docs/adr/`
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+### Architectural Review Board (ARB)
+- **Members**: Lead Domain Architect, Infrastructure Lead, Head of Testing
+- **Responsibilities**:
+  - Approve all new ADRs
+  - Review architectural drift
+  - Resolve cross-BC conflicts
+  - Audit compliance with this constitution
+
+### Quality Gates
+Before merging to main:
+- **Code Review**: All core infrastructure changes require ≥ 2 approvals
+- **Test Coverage**: ≥ 80% integration coverage for infrastructure code
+- **Architecture Compliance**: Run architecture validation against this constitution
+- **Performance Check**: Ensure no blocking calls in async paths
+
+## Pattern Conformance Matrix
+
+| Pattern | Location | Standard Implementation | Conformance Check |
+|---------|----------|-------------------------|-------------------|
+| Transaction Manager | `src/app/Shared/Application/Service/` | `DoctrineTransactionManager` | Must use interface, not direct EntityManager |
+| Cross-BC Events | `src/app/Shared/Infrastructure/Messaging/` | `CrossBcDomainEventHandler` | Must use async Messenger, idempotent consumers |
+| Database Prefixes | `src/config/doctrine.yaml` | `{bc}_` pattern | Must follow ADR-013 standards |
+
+## Evolution Framework
+
+### Amendment Process
+1. Propose change via RFC
+2. Minimum 72h review period
+3. 2/3 approval from ARB members
+4. Update relevant ADRs and impact assessment
+
+### Deprecation Policy
+- Features marked deprecated require 6-month notice before removal
+- Deprecation only after alternative implemented and tested
+- Removal only after 2 release cycles post-deprecation
+
+## Version History
+- **v1.0**: Initial constitution based on ADR-011 to ADR-013
+- **v1.1**: Added deprecation policy and amendment process

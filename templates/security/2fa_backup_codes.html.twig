@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Códigos de respaldo{% endblock %}
+{% block page_title %}Autenticación en dos pasos{% endblock %}
+
+{% block body %}
+    <div class="w-full max-w-2xl mx-auto space-y-6">
+
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-5 space-y-4">
+                <div class="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+                    <svg class="w-5 h-5 mt-0.5 shrink-0 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                    </svg>
+                    <div>
+                        <p class="text-sm font-medium text-amber-800">Guarda estos códigos en un lugar seguro</p>
+                        <p class="text-xs text-amber-700 mt-1">
+                            Cada código puede usarse una sola vez para acceder a tu cuenta si pierdes el acceso a tu dispositivo móvil.
+                            Te recomendamos guardarlos en un gestor de contraseñas.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg border border-gray-200 p-4">
+                    <div class="grid grid-cols-2 gap-3">
+                        {% for code in codes %}
+                            <div class="font-mono text-sm text-gray-800 bg-white rounded px-3 py-2 border border-gray-200 select-all">
+                                {{ code }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <form method="POST" action="{{ path('mfa_backup_codes_confirm') }}">
+                    <button type="submit"
+                            class="w-full inline-flex items-center justify-center text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors"
+                            style="background: #1e3585;"
+                            onmouseover="this.style.background='#152970'"
+                            onmouseout="this.style.background='#1e3585'">
+                        He guardado los códigos — Continuar
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

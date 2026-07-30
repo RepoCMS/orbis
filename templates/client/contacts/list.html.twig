@@ -28,7 +28,7 @@
                style="background: #1e3585;">Registrar cliente</a>
         </div>
     {% else %}
-        <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200">
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200">
             <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="text-xs uppercase tracking-wide text-white" style="background: #1e3585;">
@@ -42,7 +42,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     {% for client in clients %}
-                        <tr class="hover:bg-slate-50 transition-colors">
+                        <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 font-medium text-gray-900">{{ client.name }}</td>
                             <td class="px-6 py-4 font-mono text-gray-600 text-xs">{{ client.ruc }}</td>
                             <td class="px-6 py-4">

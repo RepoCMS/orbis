@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Support\Domain\Entities\FindingEvidence" table="finding_evidences">
+
+        <id name="id" type="finding_evidence_id" column="id" length="26" />
+
+        <field name="findingId"    type="ticket_module_finding_id" column="finding_id"    length="26" />
+        <field name="filePath"     type="string"                   column="file_path"     length="500" />
+        <field name="originalName" type="string"                   column="original_name" length="255" />
+        <field name="mimeType"     type="string"                   column="mime_type"     length="50" />
+        <field name="moment"       type="support_evidence_moment"  column="moment"        length="10" />
+        <field name="uploadedBy"   type="string"                   column="uploaded_by"   length="26" />
+        <field name="uploadedAt"   type="datetime_immutable"       column="uploaded_at" />
+
+        <many-to-one field="finding" target-entity="App\Support\Domain\Entities\TicketModuleFinding" inversed-by="evidences">
+            <join-column name="finding_id" referenced-column-name="id" insertable="false" updatable="false" />
+        </many-to-one>
+
+        <indexes>
+            <index name="idx_fe_finding_id" columns="finding_id" />
+            <index name="idx_fe_uploaded_by" columns="uploaded_by" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

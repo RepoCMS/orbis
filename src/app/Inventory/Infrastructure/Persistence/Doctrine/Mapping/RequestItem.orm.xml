@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Inventory\Domain\Entities\RequestItem" table="stock_request_items">
+
+        <id name="id" type="request_item_id" column="id" length="26" />
+
+        <field name="productId"           type="product_id"          column="product_id"            length="26" />
+        <field name="serializedStockId"   type="serialized_stock_id" column="serialized_stock_id"   length="26"  nullable="true" />
+        <field name="quantity"            type="integer"             column="quantity" />
+        <field name="status"              type="request_item_status" column="status"                length="20" />
+        <field name="fulfilledMovementId" type="movement_id"         column="fulfilled_movement_id" length="26"  nullable="true" />
+
+        <many-to-one field="request" target-entity="App\Inventory\Domain\Entities\Request" inversed-by="items">
+            <join-column name="request_id" referenced-column-name="id" nullable="false" />
+        </many-to-one>
+
+        <indexes>
+            <index name="idx_stock_request_items_request_id"   columns="request_id" />
+            <index name="idx_stock_request_items_product_id"   columns="product_id" />
+            <index name="idx_stock_request_items_status"       columns="status" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

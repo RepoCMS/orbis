@@ -32,6 +32,8 @@ final class User
     // Campo de auditoría — gestionado por Infrastructure
     private ?DateTimeImmutable $deletedAt = null;
 
+    private ?string $linkedEmployeeId = null;
+
     private function __construct(
         private UserIdValueObject $id,
         private UsernameValueObject $username,
@@ -120,6 +122,25 @@ final class User
      * Desactiva el usuario.
      * Transición: ACTIVE → INACTIVE
      */
+    public function hasEmployeeLinked(): bool
+    {
+        return $this->linkedEmployeeId !== null;
+    }
+
+    public function linkEmployee(string $employeeId): void
+    {
+        if ($this->linkedEmployeeId !== null) {
+            throw new UserStatusException('El usuario ya está vinculado a un empleado.');
+        }
+
+        $this->linkedEmployeeId = $employeeId;
+    }
+
+    public function unlinkEmployee(): void
+    {
+        $this->linkedEmployeeId = null;
+    }
+
     public function deactivate(): void
     {
         if (!$this->isActive()) {
@@ -146,6 +167,12 @@ final class User
      * Registra un intento de login fallido.
      * Al alcanzar MAX_FAILED_ATTEMPTS bloquea la cuenta por LOCK_DURATION_MINUTES.
      */
+    public function recordSuccessfulLogin(): void
+    {
+        $this->failedLoginAttempts = 0;
+        $this->lockedUntil = null;
+    }
+
     public function recordFailedLogin(): void
     {
         $this->failedLoginAttempts++;

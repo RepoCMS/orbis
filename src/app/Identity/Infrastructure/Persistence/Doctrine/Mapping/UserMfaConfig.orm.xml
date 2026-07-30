@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                         https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="App\Identity\Domain\Entities\UserMfaConfig" table="user_mfa_configs">
+    <entity name="App\Identity\Domain\Entities\UserMfaConfig" table="identity_user_mfa_configs">
 
         <id name="id" type="user_mfa_config_id" column="id" length="26" />
 

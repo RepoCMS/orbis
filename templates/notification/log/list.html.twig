@@ -1,0 +1,153 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historial de notificaciones{% endblock %}
+{% block page_title %}Historial de notificaciones{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('notification_admin', {tab: 'logs'}) }}"
+       class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        ← Volver
+    </a>
+{% endblock %}
+
+{% block body %}
+<form method="GET" action="{{ path('notification_log_list') }}"
+      class="bg-white rounded-xl shadow-sm p-4 mb-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Estado</label>
+            <select name="status"
+                    class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <option value="">Todos</option>
+                {% for s in statuses %}
+                    <option value="{{ s.value }}" {% if filters.status == s.value %}selected{% endif %}>
+                        {{ s.label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Canal</label>
+            <select name="recipientType"
+                    class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <option value="">Todos</option>
+                {% for ch in channels %}
+                    <option value="{{ ch.value }}" {% if filters.recipientType == ch.value %}selected{% endif %}>
+                        {{ ch.label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Evento</label>
+            <select name="eventType"
+                    class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <option value="">Todos</option>
+                {% for et in eventTypes %}
+                    <option value="{{ et.value }}" {% if filters.eventType == et.value %}selected{% endif %}>
+                        {{ et.label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Desde</label>
+            <input type="date" name="dateFrom" value="{{ filters.dateFrom }}"
+                   class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Hasta</label>
+            <input type="date" name="dateTo" value="{{ filters.dateTo }}"
+                   class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+    </div>
+    <div class="flex items-center gap-3 mt-3">
+        <button type="submit"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white shadow-sm"
+                style="background: #1e3585;">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/>
+            </svg>
+            Filtrar
+        </button>
+        <a href="{{ path('notification_log_list') }}"
+           class="text-sm text-gray-500 hover:text-gray-700 underline">Limpiar filtros</a>
+        {% if page > 0 %}
+        <span class="ml-auto text-sm text-gray-400">Página {{ page }}</span>
+        {% endif %}
+    </div>
+</form>
+
+{% if logs is empty %}
+    <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+        <svg class="w-12 h-12 mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <p class="text-sm font-medium text-gray-600">No hay registros de notificaciones.</p>
+    </div>
+{% else %}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-gray-100 text-left">
+                        <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Destinatario</th>
+                        <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Canal</th>
+                        <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Estado</th>
+                        <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Evento</th>
+                        <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden md:table-cell">Asunto</th>
+                        <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden lg:table-cell">Fecha</th>
+                        <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    {% for log in logs %}
+                    <tr class="hover:bg-gray-50/60 transition-colors">
+                        <td class="px-4 py-3 text-gray-700">
+                            <span class="font-mono text-xs">{{ log.recipientId|slice(0,10) }}…</span>
+                            <span class="text-xs text-gray-400">({{ log.recipientType }})</span>
+                        </td>
+                        <td class="px-4 py-3">
+                            <span class="text-xs font-medium px-2 py-0.5 rounded-full
+                                {% if log.channel == 'email' %}bg-blue-100 text-blue-700
+                                {% elseif log.channel == 'in_app' %}bg-green-100 text-green-700
+                                {% elseif log.channel == 'whatsapp' %}bg-emerald-100 text-emerald-700
+                                {% else %}bg-gray-100 text-gray-600{% endif %}">
+                                {{ log.channel|replace({'_': ' '})|title }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3">
+                            <span class="text-xs font-medium px-2.5 py-1 rounded-full
+                                {% if log.status == 'sent' %}bg-green-100 text-green-700
+                                {% elseif log.status == 'failed' %}bg-red-100 text-red-700
+                                {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+                                {{ log.status|capitalize }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 text-gray-600 text-xs">{{ log.eventType|replace({'_': ' '})|title }}</td>
+                        <td class="px-4 py-3 text-gray-600 text-xs hidden md:table-cell truncate max-w-xs">{{ log.subject ?: '—' }}</td>
+                        <td class="px-4 py-3 text-gray-400 text-xs hidden lg:table-cell">{{ log.createdAt|date('d/m/Y H:i') }}</td>
+                        <td class="px-4 py-3 text-right">
+                            <div class="flex justify-end gap-2">
+                                <a href="{{ path('notification_log_show', {id: log.id}) }}"
+                                   class="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-100 transition-colors">
+                                    Ver
+                                </a>
+                                {% if log.status == 'failed' %}
+                                <form method="POST" action="{{ path('notification_log_retry', {id: log.id}) }}">
+                                    <button type="submit"
+                                            class="text-xs px-3 py-1.5 rounded-lg border border-amber-200 text-amber-600 hover:bg-amber-50 transition-colors">
+                                        Reintentar
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

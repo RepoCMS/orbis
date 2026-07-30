@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nuevo adelanto{% endblock %}
+{% block page_title %}Nuevo adelanto{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('expense_ca_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Volver
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="w-full max-w-lg mx-auto">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                <h2 class="text-sm font-semibold text-gray-700">Registrar adelanto</h2>
+            </div>
+
+            {% if errors|length > 0 %}
+                <div class="m-6 bg-red-50 border border-red-200 rounded-xl px-5 py-4">
+                    {% for error in errors %}
+                        <p class="text-sm text-red-700">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{{ path('expense_ca_create') }}" class="px-6 py-5 space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Empleado</label>
+                    <select name="employeeId" required
+                            class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                        <option value="">Seleccione un empleado</option>
+                        {% for employee in employees %}
+                            <option value="{{ employee.id }}" {{ input.employeeId is defined and input.employeeId == employee.id ? 'selected' : '' }}>
+                                {{ employee.firstName }} {{ employee.lastName }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Monto</label>
+                    <input type="number" step="0.01" min="0.01" name="amount"
+                           value="{{ input.amount is defined ? input.amount : '' }}" required
+                           class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Fecha de entrega</label>
+                    <input type="date" name="givenAt" value="{{ input.givenAt is defined ? input.givenAt : 'now'|date('Y-m-d') }}" required
+                           class="w-full rounded-lg border border-gray-300 text-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                </div>
+
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="submit"
+                            class="inline-flex items-center gap-2 text-white text-sm font-medium px-6 py-2.5 rounded-lg shadow-sm transition-all"
+                            style="background: #1e3585;"
+                            onmouseover="this.style.background='#152970'"
+                            onmouseout="this.style.background='#1e3585'">
+                        Crear adelanto
+                    </button>
+                    <a href="{{ path('expense_ca_list') }}" class="text-sm text-gray-500 hover:text-gray-700">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

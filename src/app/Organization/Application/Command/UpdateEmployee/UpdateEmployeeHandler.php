@@ -28,7 +28,6 @@ final readonly class UpdateEmployeeHandler
         $employee->changeEmail(new EmployeeEmailValueObject($command->email));
         $employee->changePhoneNumber($command->phoneNumber);
         $employee->changeProfile(EmployeeProfile::from($command->profile));
-        $employee->update();
 
         $this->employeeRepository->save($employee);
     }

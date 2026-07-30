@@ -1,7 +1,7 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
-        schema_filter: ~^(?!role_permissions)~
+        schema_filter: ~^(?!role_permissions|messenger_messages)~
         profiling_collect_backtrace: '%kernel.debug%'
         types:
             # Identity
@@ -17,7 +17,12 @@ doctrine:
             role_name:       App\Identity\Infrastructure\Doctrine\Types\RoleNameType
             permission_key:  App\Identity\Infrastructure\Doctrine\Types\PermissionKeyType
             role_status:     App\Identity\Infrastructure\Doctrine\Types\RoleStatusType
-            user_status:     App\Identity\Infrastructure\Doctrine\Types\UserStatusType
+            role_slug:       App\Identity\Infrastructure\Doctrine\Types\RoleSlugType
+            user_status:              App\Identity\Infrastructure\Doctrine\Types\UserStatusType
+            user_token_type:          App\Identity\Infrastructure\Doctrine\Types\UserTokenTypeType
+            auth_event:               App\Identity\Infrastructure\Doctrine\Types\AuthEventType
+            user_mfa_backup_code_id: App\Identity\Infrastructure\Doctrine\Types\UserMfaBackupCodeIdType
+            refresh_token_id: App\Identity\Infrastructure\Doctrine\Types\RefreshTokenIdType
             # Client
             client_id:          App\Client\Infrastructure\Doctrine\Types\ClientIdType
             contact_id:         App\Client\Infrastructure\Doctrine\Types\ContactIdType
@@ -30,12 +35,25 @@ doctrine:
             terminal_id:        App\Client\Infrastructure\Doctrine\Types\TerminalIdType
             terminal_serial:    App\Client\Infrastructure\Doctrine\Types\TerminalSerialNumberType
             terminal_assignment_id: App\Client\Infrastructure\Doctrine\Types\TerminalAssignmentIdType
-            site_id:            App\Client\Infrastructure\Doctrine\Types\SiteIdType
             terminal_name:      App\Client\Infrastructure\Doctrine\Types\TerminalNameType
             terminal_id_assigned_by_client: App\Client\Infrastructure\Doctrine\Types\TerminalIdAssignedByClientType
+            terminal_assignment_status: App\Client\Infrastructure\Doctrine\Types\TerminalAssignmentStatusType
+            terminal_vendor:            App\Client\Infrastructure\Doctrine\Types\TerminalVendorType
+            terminal_functionality:     App\Client\Infrastructure\Doctrine\Types\TerminalFunctionalityType
+            terminal_type:              App\Client\Infrastructure\Doctrine\Types\TerminalTypeType
+            terminal_status:            App\Client\Infrastructure\Doctrine\Types\TerminalStatusType
+            contract_id:        App\Client\Infrastructure\Doctrine\Types\ContractIdType
+            contract_status:    App\Client\Infrastructure\Doctrine\Types\ContractStatusType
+            warranty_type:              App\Client\Infrastructure\Doctrine\Types\WarrantyTypeType
+            terminal_warranty_id:       App\Client\Infrastructure\Doctrine\Types\TerminalWarrantyIdType
+            terminal_model_id:          App\Client\Infrastructure\Doctrine\Types\TerminalModelIdType
+            atm_model_code:             App\Client\Infrastructure\Doctrine\Types\AtmModelCodeType
+            model_part_id:              App\Client\Infrastructure\Doctrine\Types\ModelPartIdType
             # Contact
             contact_status: App\Client\Infrastructure\Doctrine\Types\ContactStatusType
-            site_status:    App\Client\Infrastructure\Doctrine\Types\SiteStatusType
+            # Client — Site
+            site_id:            App\Client\Infrastructure\Doctrine\Types\SiteIdType
+            site_status:        App\Client\Infrastructure\Doctrine\Types\SiteStatusType
             # Organization
             employee_id:                    App\Organization\Infrastructure\Doctrine\Types\EmployeeIdType
             employee_email:                 App\Organization\Infrastructure\Doctrine\Types\EmployeeEmailType
@@ -45,8 +63,15 @@ doctrine:
             employee_special_period_type:   App\Organization\Infrastructure\Doctrine\Types\EmployeeSpecialPeriodTypeEnumType
             employee_special_period_status: App\Organization\Infrastructure\Doctrine\Types\EmployeeSpecialPeriodStatusEnumType
             employee_profile:               App\Organization\Infrastructure\Doctrine\Types\EmployeeProfileEnumType
+            employment_period_id:           App\Organization\Infrastructure\Doctrine\Types\EmploymentPeriodIdType
+            employment_period_status:       App\Organization\Infrastructure\Doctrine\Types\EmploymentPeriodStatusEnumType
             service_zone_id:                App\Organization\Infrastructure\Doctrine\Types\ServiceZoneIdType
             service_zone_status:            App\Organization\Infrastructure\Doctrine\Types\ServiceZoneStatusEnumType
+            vacation_request_id:            App\Organization\Infrastructure\Doctrine\Types\VacationRequestIdType
+            vacation_request_status:        App\Organization\Infrastructure\Doctrine\Types\VacationRequestStatusEnumType
+            overtime_record_id:             App\Organization\Infrastructure\Doctrine\Types\OvertimeRecordIdType
+            overtime_status:                App\Organization\Infrastructure\Doctrine\Types\OvertimeStatusEnumType
+            service_zone_assignment_id:     App\Organization\Infrastructure\Doctrine\Types\ServiceZoneAssignmentIdType
             # Inventory
             product_id:             App\Inventory\Infrastructure\Doctrine\Types\ProductIdType
             product_code:           App\Inventory\Infrastructure\Doctrine\Types\ProductCodeType
@@ -65,6 +90,7 @@ doctrine:
             repair_id:              App\Inventory\Infrastructure\Doctrine\Types\RepairIdType
             transformation_id:      App\Inventory\Infrastructure\Doctrine\Types\TransformationIdType
             request_id:             App\Inventory\Infrastructure\Doctrine\Types\RequestIdType
+            request_item_id:        App\Inventory\Infrastructure\Doctrine\Types\RequestItemIdType
             stock_minimum_id:       App\Inventory\Infrastructure\Doctrine\Types\StockMinimumIdType
             serial_history_id:      App\Inventory\Infrastructure\Doctrine\Types\SerialHistoryIdType
             # Inventory Enum Types
@@ -73,11 +99,23 @@ doctrine:
             inventory_movement_status:           App\Inventory\Infrastructure\Doctrine\Types\MovementStatusEnumType
             inventory_entry_status:              App\Inventory\Infrastructure\Doctrine\Types\EntryStatusEnumType
             inventory_request_status:            App\Inventory\Infrastructure\Doctrine\Types\RequestStatusEnumType
+            request_item_status:                 App\Inventory\Infrastructure\Doctrine\Types\RequestItemStatusEnumType
             inventory_purchase_order_status:     App\Inventory\Infrastructure\Doctrine\Types\PurchaseOrderStatusEnumType
             inventory_repair_status:             App\Inventory\Infrastructure\Doctrine\Types\RepairStatusEnumType
+            inventory_repair_priority:           App\Inventory\Infrastructure\Doctrine\Types\RepairPriorityEnumType
             inventory_nonserialized_stock_status: App\Inventory\Infrastructure\Doctrine\Types\NonserializedStockStatusEnumType
             inventory_serialized_stock_status:   App\Inventory\Infrastructure\Doctrine\Types\SerializedStockStatusEnumType
             inventory_serial_history_reason:     App\Inventory\Infrastructure\Doctrine\Types\SerialHistoryReasonEnumType
+            sub_location_id:            App\Inventory\Infrastructure\Doctrine\Types\SubLocationIdType
+            inventory_sub_location_type: App\Inventory\Infrastructure\Doctrine\Types\SubLocationTypeEnumType
+            technician_loan_id:         App\Inventory\Infrastructure\Doctrine\Types\TechnicianLoanIdType
+            inventory_technician_loan_status: App\Inventory\Infrastructure\Doctrine\Types\TechnicianLoanStatusEnumType
+            physical_count_id:          App\Inventory\Infrastructure\Doctrine\Types\PhysicalCountIdType
+            physical_count_item_id:     App\Inventory\Infrastructure\Doctrine\Types\PhysicalCountItemIdType
+            inventory_physical_count_status: App\Inventory\Infrastructure\Doctrine\Types\PhysicalCountStatusEnumType
+            repair_evidence_id:         App\Inventory\Infrastructure\Doctrine\Types\RepairEvidenceIdType
+            inventory_evidence_type:    App\Inventory\Infrastructure\Doctrine\Types\EvidenceTypeEnumType
+            consumable_id:              App\Inventory\Infrastructure\Doctrine\Types\ConsumableIdType
             # Support
             ticket_id:                   App\Support\Infrastructure\Doctrine\Types\TicketIdType
             ticket_assignment_id:        App\Support\Infrastructure\Doctrine\Types\TicketAssignmentIdType
@@ -88,15 +126,50 @@ doctrine:
             ticket_evidence_id:          App\Support\Infrastructure\Doctrine\Types\TicketEvidenceIdType
             ticket_pause_id:             App\Support\Infrastructure\Doctrine\Types\TicketPauseIdType
             ticket_reschedule_id:        App\Support\Infrastructure\Doctrine\Types\TicketRescheduleIdType
+            ticket_waiting_id:           App\Support\Infrastructure\Doctrine\Types\TicketWaitingIdType
+            ticket_audit_log_id:         App\Support\Infrastructure\Doctrine\Types\TicketAuditLogIdType
+            quick_template_id:           App\Support\Infrastructure\Doctrine\Types\QuickTemplateIdType
+            quick_template_item_id:      App\Support\Infrastructure\Doctrine\Types\QuickTemplateItemIdType
             # Support Enum Types
             support_ticket_status:         App\Support\Infrastructure\Doctrine\Types\TicketStatusEnumType
             support_service_type:          App\Support\Infrastructure\Doctrine\Types\ServiceTypeEnumType
             support_journey_type:          App\Support\Infrastructure\Doctrine\Types\JourneyTypeEnumType
             support_reschedule_requested_by: App\Support\Infrastructure\Doctrine\Types\RescheduleRequestedByEnumType
+            support_waiting_category:   App\Support\Infrastructure\Doctrine\Types\WaitingCategoryType
+            support_finding_type:       App\Support\Infrastructure\Doctrine\Types\FindingTypeType
+            support_evidence_moment:    App\Support\Infrastructure\Doctrine\Types\EvidenceMomentType
+            # Support — ATM Module Tree (013)
+            ticket_module_finding_id: App\Support\Infrastructure\Doctrine\Types\TicketModuleFindingIdType
+            finding_evidence_id:      App\Support\Infrastructure\Doctrine\Types\FindingEvidenceIdType
+            ticket_finding_component_id: App\Support\Infrastructure\Doctrine\Types\FindingComponentIdType
+            rma_record_id:            App\Support\Infrastructure\Doctrine\Types\RmaRecordIdType
+            scheduled_maintenance_id: App\Support\Infrastructure\Doctrine\Types\ScheduledMaintenanceIdType
+            maintenance_frequency_type: App\Support\Infrastructure\Doctrine\Types\MaintenanceFrequencyTypeType
+            module_node_id:           App\Support\Infrastructure\Doctrine\Types\ModuleNodeIdType
+            module_path:              App\Support\Infrastructure\Doctrine\Types\ModulePathType
             # Geography (Location BC)
             geo_region_id:   App\Location\Infrastructure\Doctrine\Types\RegionIdType
             geo_province_id: App\Location\Infrastructure\Doctrine\Types\ProvinceIdType
             geo_city_id:     App\Location\Infrastructure\Doctrine\Types\CityIdType
+            # Shared
+            processed_command_id: App\Shared\Infrastructure\Doctrine\Types\ProcessedCommandIdType
+            # Expense
+            expense_operating_id:          App\Expense\Infrastructure\Doctrine\Types\OperatingExpenseIdType
+            expense_item_id:               App\Expense\Infrastructure\Doctrine\Types\ExpenseItemIdType
+            expense_cash_advance_id:       App\Expense\Infrastructure\Doctrine\Types\CashAdvanceIdType
+            expense_status:                App\Expense\Infrastructure\Doctrine\Types\ExpenseStatusType
+            expense_item_status:           App\Expense\Infrastructure\Doctrine\Types\ExpenseItemStatusType
+            expense_item_type:             App\Expense\Infrastructure\Doctrine\Types\ExpenseItemTypeType
+            expense_cash_advance_status:   App\Expense\Infrastructure\Doctrine\Types\CashAdvanceStatusType
+            expense_settlement_direction:  App\Expense\Infrastructure\Doctrine\Types\SettlementDirectionType
+            # Notification
+            notification_template_id:    App\Notification\Infrastructure\Doctrine\Types\NotificationTemplateIdType
+            notification_log_id:         App\Notification\Infrastructure\Doctrine\Types\NotificationLogIdType
+            notification_preference_id:  App\Notification\Infrastructure\Doctrine\Types\NotificationPreferenceIdType
+            notification_channel:        App\Notification\Infrastructure\Doctrine\Types\NotificationChannelType
+            notification_status:         App\Notification\Infrastructure\Doctrine\Types\NotificationStatusType
+            notification_recipient_type: App\Notification\Infrastructure\Doctrine\Types\RecipientTypeType
+            notification_event_type:     App\Notification\Infrastructure\Doctrine\Types\EventTypeType
     orm:
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         auto_mapping: false
@@ -137,6 +210,24 @@ doctrine:
                 dir: '%kernel.project_dir%/src/app/Support/Infrastructure/Persistence/Doctrine/Mapping'
                 prefix: 'App\Support\Domain\Entities'
                 alias: Support
+            Expense:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/app/Expense/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Expense\Domain\Entities'
+                alias: Expense
+            Notification:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/app/Notification/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Notification\Domain\Entities'
+                alias: Notification
+            Shared:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/app/Shared/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Shared\Domain\Entities'
+                alias: Shared
 
 when@test:
     doctrine:

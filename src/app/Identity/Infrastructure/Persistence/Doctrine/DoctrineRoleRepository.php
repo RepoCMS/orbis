@@ -9,6 +9,7 @@ use App\Identity\Domain\Repositories\RoleRepositoryInterface;
 use App\Identity\Domain\ValueObjects\PermissionIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
+use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use ReflectionProperty;
@@ -52,6 +53,25 @@ final class DoctrineRoleRepository implements RoleRepositoryInterface
             ->from(Role::class, 'r')
             ->where('r.name = :name')
             ->setParameter('name', $name)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if ($role === null) {
+            return null;
+        }
+
+        $this->injectPermissionIds($role);
+
+        return $role;
+    }
+
+    public function findBySlug(RoleSlugValueObject $slug): ?Role
+    {
+        $role = $this->em->createQueryBuilder()
+            ->select('r')
+            ->from(Role::class, 'r')
+            ->where('r.name = :name')
+            ->setParameter('name', (string) $slug)
             ->getQuery()
             ->getOneOrNullResult();
 

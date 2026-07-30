@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Identity\Presentation\Http;
 
+use App\Identity\Application\Command\GenerateBackupCodes\GenerateBackupCodesCommand;
+use App\Identity\Application\Command\GenerateBackupCodes\GenerateBackupCodesHandler;
 use App\Identity\Domain\Entities\UserMfaConfig;
+use App\Identity\Domain\Repositories\UserMfaBackupCodeRepositoryInterface;
 use App\Identity\Domain\Repositories\UserMfaConfigRepositoryInterface;
 use App\Identity\Domain\ValueObjects\UserMfaConfigIdValueObject;
 use App\Identity\Infrastructure\Security\LandingRouteResolver;
@@ -26,6 +29,7 @@ final class MfaController extends AbstractController
     public function __construct(
         private readonly TotpService $totp,
         private readonly UserMfaConfigRepositoryInterface $mfaConfigRepository,
+        private readonly UserMfaBackupCodeRepositoryInterface $backupCodeRepo,
         private readonly IdGeneratorInterface $idGenerator,
         private readonly LandingRouteResolver $landingRouteResolver,
     ) {
@@ -94,11 +98,41 @@ final class MfaController extends AbstractController
         $this->mfaConfigRepository->save($mfaConfig);
         $request->getSession()->remove('identity.2fa.pending_secret');
 
-        // Marcar 2FA como completado en sesión
+        // Generar códigos de respaldo
+        $backupCodes = (new GenerateBackupCodesHandler(
+            $this->backupCodeRepo,
+            $this->idGenerator,
+        ))(new GenerateBackupCodesCommand((string) $userId));
+
+        $request->getSession()->set('identity.2fa.backup_codes', $backupCodes);
+
+        return $this->redirectToRoute('mfa_backup_codes');
+    }
+
+    // ── Backup codes: mostrar después de setup ───────────────────
+
+    #[Route('/backup-codes', name: 'mfa_backup_codes', methods: ['GET'])]
+    public function showBackupCodes(Request $request): Response
+    {
+        $codes = $request->getSession()->get('identity.2fa.backup_codes', []);
+
+        if ($codes === []) {
+            return $this->redirectToRoute($this->landingRouteResolver->resolveFor($this->getUser()));
+        }
+
+        return $this->render('security/2fa_backup_codes.html.twig', [
+            'codes' => $codes,
+        ]);
+    }
+
+    #[Route('/backup-codes/confirm', name: 'mfa_backup_codes_confirm', methods: ['POST'])]
+    public function confirmBackupCodes(Request $request): Response
+    {
+        $request->getSession()->remove('identity.2fa.backup_codes');
         $request->getSession()->set(self::SESSION_KEY, true);
 
         $this->addFlash('success', 'Autenticación en dos pasos activada correctamente.');
-        return $this->redirectToRoute($this->landingRouteResolver->resolveFor($secUser));
+        return $this->redirectToRoute($this->landingRouteResolver->resolveFor($this->getUser()));
     }
 
     // ── Check: usuario con MFA configurado, verificar código ────────────────────
@@ -126,6 +160,47 @@ final class MfaController extends AbstractController
         }
 
         $request->getSession()->set(self::SESSION_KEY, true);
+        return $this->redirectToRoute($this->landingRouteResolver->resolveFor($secUser));
+    }
+
+    // ── Recovery: usar código de respaldo si no se tiene el dispositivo ─────────
+
+    #[Route('/recovery', name: 'mfa_recovery', methods: ['GET'])]
+    public function recovery(): Response
+    {
+        return $this->render('security/2fa_recovery.html.twig');
+    }
+
+    #[Route('/recovery', name: 'mfa_recovery_submit', methods: ['POST'])]
+    public function recoverySubmit(Request $request): Response
+    {
+        /** @var SymfonySecurityUser $secUser */
+        $secUser = $this->getUser();
+        $userId  = $secUser->getDomainUser()->id();
+
+        $code = trim((string) $request->request->get('code', ''));
+
+        if ($code === '') {
+            return $this->render('security/2fa_recovery.html.twig', [
+                'error' => 'Ingresa un código de respaldo.',
+            ], new Response(null, Response::HTTP_UNPROCESSABLE_ENTITY));
+        }
+
+        $backupCode = $this->backupCodeRepo->findByCode($userId, $code);
+
+        if ($backupCode === null) {
+            return $this->render('security/2fa_recovery.html.twig', [
+                'error' => 'Código de respaldo inválido o ya utilizado.',
+            ], new Response(null, Response::HTTP_UNPROCESSABLE_ENTITY));
+        }
+
+        $backupCode->markAsUsed();
+        $this->backupCodeRepo->save($backupCode);
+
+        $request->getSession()->set(self::SESSION_KEY, true);
+
+        $this->addFlash('warning', 'Accediste con un código de respaldo. Genera nuevos códigos desde tu perfil para mantener tu cuenta segura.');
+
         return $this->redirectToRoute($this->landingRouteResolver->resolveFor($secUser));
     }
 }

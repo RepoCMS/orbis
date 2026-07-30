@@ -25,6 +25,15 @@ use DateTimeImmutable;
 final class Movement
 {
     private ?DateTimeImmutable $completedAt = null;
+    private ?string $createdByUserId = null;
+    private ?string $assignedToUserId = null;
+    private ?string $cancelledByUserId = null;
+    private ?string $confirmedByUserId = null;
+    private ?string $rejectedByUserId = null;
+    private ?string $rejectionReason = null;
+    private ?DateTimeImmutable $cancelledAt = null;
+    private ?DateTimeImmutable $rejectedAt = null;
+    private int $rejectedQuantity = 0;
 
     public function __construct(
         private MovementIdValueObject $id,
@@ -49,8 +58,10 @@ final class Movement
         ?SerializedStockIdValueObject $serializedStockId,
         int $quantity,
         ?string $notes = null,
+        ?string $createdByUserId = null,
+        ?string $assignedToUserId = null,
     ): self {
-        return new self(
+        $movement = new self(
             id:                   $id,
             productId:            $productId,
             type:                 $type,
@@ -62,6 +73,9 @@ final class Movement
             notes:                $notes,
             createdAt:            new DateTimeImmutable(),
         );
+        $movement->createdByUserId = $createdByUserId;
+        $movement->assignedToUserId = $assignedToUserId;
+        return $movement;
     }
 
     public function id(): MovementIdValueObject
@@ -119,6 +133,21 @@ final class Movement
         return $this->completedAt;
     }
 
+    public function createdByUserId(): ?string
+    {
+        return $this->createdByUserId;
+    }
+
+    public function assignedToUserId(): ?string
+    {
+        return $this->assignedToUserId;
+    }
+
+    public function confirmedByUserId(): ?string
+    {
+        return $this->confirmedByUserId;
+    }
+
     public function isPending(): bool
     {
         return $this->status === MovementStatus::PENDING;
@@ -150,8 +179,73 @@ final class Movement
         $this->completedAt = new DateTimeImmutable();
     }
 
+    public function confirmBy(string $userId): void
+    {
+        $this->status = MovementStatus::COMPLETED;
+        $this->completedAt = new DateTimeImmutable();
+        $this->confirmedByUserId = $userId;
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->status === MovementStatus::REJECTED;
+    }
+
     public function cancel(): void
     {
         $this->status = MovementStatus::CANCELLED;
+    }
+
+    public function cancelBy(string $userId): void
+    {
+        $this->status          = MovementStatus::CANCELLED;
+        $this->cancelledByUserId = $userId;
+        $this->cancelledAt     = new DateTimeImmutable();
+    }
+
+    public function rejectBy(string $userId, string $reason): void
+    {
+        $this->status          = MovementStatus::REJECTED;
+        $this->rejectedByUserId = $userId;
+        $this->rejectionReason = $reason;
+        $this->rejectedAt      = new DateTimeImmutable();
+    }
+
+    public function recordPartialRejection(string $userId, string $notes, int $rejectQty): void
+    {
+        $this->notes            = $notes;
+        $this->rejectedByUserId = $userId;
+        $this->rejectedQuantity += $rejectQty;
+        $this->rejectedAt       = new DateTimeImmutable();
+    }
+
+    public function cancelledByUserId(): ?string
+    {
+        return $this->cancelledByUserId;
+    }
+
+    public function cancelledAt(): ?DateTimeImmutable
+    {
+        return $this->cancelledAt;
+    }
+
+    public function rejectedByUserId(): ?string
+    {
+        return $this->rejectedByUserId;
+    }
+
+    public function rejectedAt(): ?DateTimeImmutable
+    {
+        return $this->rejectedAt;
+    }
+
+    public function rejectionReason(): ?string
+    {
+        return $this->rejectionReason;
+    }
+
+    public function rejectedQuantity(): int
+    {
+        return $this->rejectedQuantity;
     }
 }

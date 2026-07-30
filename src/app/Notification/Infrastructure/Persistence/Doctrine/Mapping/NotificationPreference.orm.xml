@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <!--
+        Preferencia de notificación por destinatario.
+        Determina qué combinaciones recipient_type + channel + event_type están habilitadas.
+    -->
+    <entity name="App\Notification\Domain\Entities\NotificationPreference" table="notification_preferences">
+
+        <id name="id" type="notification_preference_id" column="id" length="26" />
+
+        <field name="recipientType" type="notification_recipient_type" column="recipient_type" length="20" />
+        <field name="recipientId"   type="string"                      column="recipient_id"   length="26" />
+        <field name="channel"       type="notification_channel"        column="channel"        length="20" />
+        <field name="eventType"     type="notification_event_type"     column="event_type"     length="50" />
+        <field name="isEnabled"     type="boolean"                     column="is_enabled"     default="true" />
+
+        <unique-constraints>
+            <unique-constraint name="uq_notification_preferences_recipient_event_channel"
+                               columns="recipient_type,recipient_id,channel,event_type" />
+        </unique-constraints>
+
+        <indexes>
+            <index name="idx_notification_preferences_recipient" columns="recipient_type,recipient_id" />
+            <index name="idx_notification_preferences_event"     columns="event_type" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

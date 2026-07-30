@@ -6,6 +6,7 @@ namespace App\Identity\Infrastructure\Persistence\Doctrine;
 
 use App\Identity\Domain\Entities\User;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;
+use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Identity\Domain\ValueObjects\UsernameValueObject;
 use Doctrine\ORM\EntityManagerInterface;
@@ -68,5 +69,17 @@ final class DoctrineUserRepository implements UserRepositoryInterface
             ->setParameter('id', $id)
             ->getQuery()
             ->execute();
+    }
+
+    public function countByRoleId(RoleIdValueObject $roleId): int
+    {
+        return (int) $this->em->createQueryBuilder()
+            ->select('COUNT(u.id)')
+            ->from(User::class, 'u')
+            ->where('u.roleId = :roleId')
+            ->andWhere('u.deletedAt IS NULL')
+            ->setParameter('roleId', $roleId)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

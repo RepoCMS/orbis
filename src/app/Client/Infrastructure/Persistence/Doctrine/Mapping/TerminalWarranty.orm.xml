@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Client\Domain\Entities\TerminalWarranty" table="client_terminal_warranties">
+
+        <id name="id" type="terminal_warranty_id" column="id" length="26" />
+
+        <field name="terminalId" type="terminal_id"        column="terminal_id" length="26" />
+        <field name="type"       type="warranty_type"      column="type"        length="20" />
+        <field name="startDate"  type="datetime_immutable" column="start_date" />
+        <field name="endDate"    type="datetime_immutable" column="end_date" />
+        <field name="terms"      type="text"               column="terms"       nullable="true" />
+        <field name="createdAt"  type="datetime_immutable" column="created_at" />
+        <field name="updatedAt"  type="datetime_immutable" column="updated_at"  nullable="true" />
+
+        <indexes>
+            <index name="idx_terminal_warranties_terminal_id" columns="terminal_id" />
+            <index name="idx_terminal_warranties_type"        columns="type" />
+            <index name="idx_terminal_warranties_end_date"    columns="end_date" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

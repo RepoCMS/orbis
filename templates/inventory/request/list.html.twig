@@ -4,7 +4,7 @@
 {% block page_title %}Solicitudes de Stock{% endblock %}
 
 {% block header_actions %}
-    {% if is_granted('inventory.create') %}
+    {% if is_granted('inventory.create') or is_granted('spare_part.request') %}
     <a href="{{ path('inventory_request_new') }}"
        class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm"
        style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
@@ -21,13 +21,13 @@
     <div class="flex gap-2 mb-4 flex-wrap">
         <a href="{{ path('inventory_request_list') }}"
            class="text-sm px-4 py-1.5 rounded-full border transition-colors
-               {% if statusFilter is null %}border-transparent text-white{% else %}border-slate-200 text-gray-600 hover:bg-slate-50{% endif %}"
+               {% if statusFilter is null %}border-transparent text-white{% else %}border-gray-200 text-gray-600 hover:bg-gray-50{% endif %}"
            {% if statusFilter is null %}style="background: #1e3585;"{% endif %}>
             Todas
         </a>
         <a href="{{ path('inventory_request_list', {status: 'pending'}) }}"
            class="text-sm px-4 py-1.5 rounded-full border transition-colors
-               {% if statusFilter == 'pending' %}border-transparent text-white{% else %}border-slate-200 text-gray-600 hover:bg-slate-50{% endif %}"
+               {% if statusFilter == 'pending' %}border-transparent text-white{% else %}border-gray-200 text-gray-600 hover:bg-gray-50{% endif %}"
            {% if statusFilter == 'pending' %}style="background: #1e3585;"{% endif %}>
             Pendientes
         </a>
@@ -35,27 +35,27 @@
 
     {% if requests is empty %}
         <div class="flex flex-col items-center justify-center py-20 text-gray-400">
-            <svg class="w-12 h-12 mb-3 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <svg class="w-12 h-12 mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/>
             </svg>
             <p class="text-sm font-medium text-gray-600">No hay solicitudes en este estado.</p>
         </div>
     {% else %}
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
-                        <tr class="border-b border-slate-100 text-left">
+                        <tr class="border-b border-gray-100 text-left">
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Referencia</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Estado</th>
-                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden md:table-cell">Cantidad</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden md:table-cell">Items</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden lg:table-cell">Fecha</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide text-right">Acciones</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-50">
                         {% for req in requests %}
-                        <tr class="hover:bg-slate-50/60 transition-colors">
+                        <tr class="hover:bg-gray-50/60 transition-colors">
                             <td class="px-4 py-3 font-mono text-xs text-gray-700">
                                 <a href="{{ path('inventory_request_show', {id: req.id}) }}"
                                    class="hover:text-blue-700 transition-colors font-medium">{{ req.reference }}</a>
@@ -67,15 +67,15 @@
                                     {% elseif req.status == 'fulfilled' %}bg-green-100 text-green-700
                                     {% elseif req.status == 'rejected' %}bg-red-100 text-red-700
                                     {% elseif req.status == 'cancelled' %}bg-gray-100 text-gray-500
-                                    {% else %}bg-slate-100 text-slate-600{% endif %}">
+                                    {% else %}bg-gray-100 text-gray-600{% endif %}">
                                     {{ req.statusLabel }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 hidden md:table-cell text-gray-600">{{ req.quantity }}</td>
+                            <td class="px-4 py-3 hidden md:table-cell text-gray-600">{{ req.fulfilledItemsCount }}/{{ req.fulfilledItemsCount + req.pendingItemsCount }}</td>
                             <td class="px-4 py-3 hidden lg:table-cell text-gray-400 text-xs">{{ req.createdAt }}</td>
                             <td class="px-4 py-3 text-right">
                                 <a href="{{ path('inventory_request_show', {id: req.id}) }}"
-                                   class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 text-gray-600 hover:bg-slate-100 transition-colors">
+                                   class="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-100 transition-colors">
                                     Ver
                                 </a>
                             </td>

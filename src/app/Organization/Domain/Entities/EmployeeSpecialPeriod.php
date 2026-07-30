@@ -137,6 +137,43 @@ final class EmployeeSpecialPeriod
         return $this->endedAt;
     }
 
+    public function edit(
+        DateTimeImmutable $startedAt,
+        DateTimeImmutable $endedAt,
+        EmployeeSpecialPeriodType $type,
+        ?string $notes = null,
+    ): void {
+        if ($endedAt <= $startedAt) {
+            throw new EmployeeSpecialPeriodException(
+                'La fecha de fin debe ser posterior a la fecha de inicio del período.'
+            );
+        }
+
+        $this->startedAt = $startedAt;
+        $this->endedAt   = $endedAt;
+        $this->type      = $type;
+        $this->notes     = $notes;
+    }
+
+    public function completeWithEndDate(?DateTimeImmutable $realEndDate = null): void
+    {
+        if ($this->status !== EmployeeSpecialPeriodStatus::IN_PROGRESS) {
+            throw new EmployeeSpecialPeriodException('Solo se puede completar un período en curso.');
+        }
+
+        if ($realEndDate !== null) {
+            if ($realEndDate < $this->startedAt) {
+                throw new EmployeeSpecialPeriodException(
+                    'La fecha de fin real no puede ser anterior a la fecha de inicio.'
+                );
+            }
+
+            $this->endedAt = $realEndDate;
+        }
+
+        $this->status = EmployeeSpecialPeriodStatus::COMPLETED;
+    }
+
     public function notes(): ?string
     {
         return $this->notes;

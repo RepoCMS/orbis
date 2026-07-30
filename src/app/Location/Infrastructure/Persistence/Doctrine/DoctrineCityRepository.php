@@ -45,6 +45,20 @@ final class DoctrineCityRepository implements CityRepositoryInterface
         $this->entityManager->flush();
     }
 
+    /** @return City[] */
+    public function searchByName(string $term, int $limit = 20): array
+    {
+        return $this->entityManager->createQueryBuilder()
+            ->select('c')
+            ->from(City::class, 'c')
+            ->where('c.name LIKE :term')
+            ->setParameter('term', '%' . $term . '%')
+            ->orderBy('c.name', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function delete(CityIdValueObject $id): void
     {
         $city = $this->findById($id);

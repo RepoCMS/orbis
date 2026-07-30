@@ -9,6 +9,7 @@ final readonly class AssignTechnicianToZoneCommand
     public function __construct(
         public string $technicianId,
         public string $serviceZoneId,
+        public ?string $assignedByUserId = null,
     ) {
     }
 }

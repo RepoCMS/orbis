@@ -24,6 +24,11 @@ interface CityRepositoryInterface
      */
     public function findByProvince(ProvinceIdValueObject $provinceId): array;
 
+    /**
+     * @return City[]
+     */
+    public function searchByName(string $term, int $limit = 20): array;
+
     public function save(City $city): void;
 
     public function delete(CityIdValueObject $id): void;

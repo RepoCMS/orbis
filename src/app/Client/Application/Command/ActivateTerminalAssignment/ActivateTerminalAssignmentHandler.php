@@ -1,0 +1,36 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Client\Application\Command\ActivateTerminalAssignment;
+
+use App\Client\Application\Exception\TerminalAssignmentNotFoundException;
+use App\Client\Domain\Events\TerminalAssignmentReactivated;
+use App\Client\Domain\Repositories\TerminalAssignmentRepositoryInterface;
+use App\Client\Domain\ValueObjects\TerminalAssignmentIdValueObject;
+use App\Shared\Domain\Event\DomainEventPublisherInterface;
+
+final readonly class ActivateTerminalAssignmentHandler
+{
+    public function __construct(
+        private TerminalAssignmentRepositoryInterface $assignmentRepository,
+        private DomainEventPublisherInterface $eventPublisher,
+    ) {
+    }
+
+    public function __invoke(ActivateTerminalAssignmentCommand $command): void
+    {
+        $assignmentId = new TerminalAssignmentIdValueObject($command->id);
+        $assignment = $this->assignmentRepository->findById($assignmentId)
+            ?? throw TerminalAssignmentNotFoundException::withId($command->id);
+
+        $assignment->activate();
+
+        $this->assignmentRepository->save($assignment);
+
+        $this->eventPublisher->publish(new TerminalAssignmentReactivated(
+            assignmentId: (string) $assignment->id(),
+            terminalId:   (string) $assignment->terminalId(),
+        ));
+    }
+}

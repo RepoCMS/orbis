@@ -1,0 +1,238 @@
+{% extends 'base.html.twig' %}
+{% import 'components/_macros.html.twig' as ui %}
+
+{% block title %}Liquidación #{{ expense.sequence }}{% endblock %}
+{% block page_title %}Liquidación #{{ expense.sequence }}{% endblock %}
+
+{% block header_actions %}
+    <div class="flex items-center gap-3">
+        {% if expense.status == 'draft' and is_granted('expense.create') %}
+            <a href="{{ path('expense_oe_edit', {id: expense.id}) }}"
+               class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 012.828 2.828L11.828 15.828a4 4 0 01-1.414.828l-3 1 1-3a4 4 0 01.828-1.414z"/>
+                </svg>
+                Editar
+            </a>
+        {% endif %}
+        {% if expense.status == 'draft' and is_granted('expense.submit') %}
+            <form method="POST" action="{{ path('expense_oe_submit', {id: expense.id}) }}" class="inline">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-all hover:shadow-md"
+                        style="background: #1e3585;"
+                        onmouseover="this.style.background='#152970'"
+                        onmouseout="this.style.background='#1e3585'">
+                    Enviar a revisión
+                </button>
+            </form>
+        {% endif %}
+        {% if expense.status == 'submitted' and is_granted('expense.approve') %}
+            <form method="POST" action="{{ path('expense_oe_approve', {id: expense.id}) }}" class="inline">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-all hover:shadow-md"
+                        style="background: #00a86b;"
+                        onmouseover="this.style.background='#008a56'"
+                        onmouseout="this.style.background='#00a86b'">
+                    Aprobar
+                </button>
+            </form>
+        {% endif %}
+        {% if expense.status == 'rejected' and is_granted('expense.submit') %}
+            <form method="POST" action="{{ path('expense_oe_resubmit', {id: expense.id}) }}" class="inline">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-blue-300 text-blue-700 hover:bg-blue-50 transition-colors">
+                    Reenviar
+                </button>
+            </form>
+        {% endif %}
+        <a href="{{ path('expense_oe_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Volver
+        </a>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="w-full max-w-5xl mx-auto space-y-6">
+
+        {% for message in app.flashes('success') %}
+            <div class="bg-green-50 border border-green-200 rounded-xl px-5 py-3">
+                <p class="text-sm text-green-700">{{ message }}</p>
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="bg-red-50 border border-red-200 rounded-xl px-5 py-3">
+                <p class="text-sm text-red-700">{{ message }}</p>
+            </div>
+        {% endfor %}
+
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                <h2 class="text-sm font-semibold text-gray-700">Información general</h2>
+            </div>
+            <dl class="divide-y divide-gray-100">
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Empleado</dt>
+                    <dd class="text-gray-900 font-medium">{{ employeeName }}</dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Motivo</dt>
+                    <dd class="text-gray-800">{{ expense.reason }}</dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Estado</dt>
+                    <dd>{{ ui.status_badge(expense.status) }}</dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Período</dt>
+                    <dd class="text-gray-800">{{ expense.startDate }} al {{ expense.endDate }}</dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Total</dt>
+                    <dd class="font-bold text-gray-900">${{ expense.totalExpenses|number_format(2) }}</dd>
+                </div>
+                {% if expense.cashAdvanceId %}
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Adelanto asociado</dt>
+                        <dd class="font-mono text-xs text-gray-800">{{ expense.cashAdvanceId }}</dd>
+                    </div>
+                {% endif %}
+                {% if expense.positiveBalance is not null %}
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Saldo a favor</dt>
+                        <dd class="font-bold text-green-600">${{ expense.positiveBalance|number_format(2) }}</dd>
+                    </div>
+                {% endif %}
+                {% if expense.negativeBalance is not null %}
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Saldo en contra</dt>
+                        <dd class="font-bold text-red-600">${{ expense.negativeBalance|number_format(2) }}</dd>
+                    </div>
+                {% endif %}
+                {% if expense.submittedAt %}
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Enviado</dt>
+                        <dd class="text-gray-600">{{ expense.submittedAt|date('d/m/Y H:i:s') }}</dd>
+                    </div>
+                {% endif %}
+                {% if expense.approvedAt %}
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Aprobado por</dt>
+                        <dd class="text-gray-800">{{ expense.approvedBy|slice(0, 8) ~ '...' }} — {{ expense.approvedAt|date('d/m/Y H:i:s') }}</dd>
+                    </div>
+                {% endif %}
+            </dl>
+        </div>
+
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
+                <h2 class="text-sm font-semibold text-gray-700">Items</h2>
+                {% if expense.status == 'draft' and is_granted('expense.create') %}
+                    <button type="button" onclick="document.getElementById('add-item-form').classList.toggle('hidden')"
+                            class="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                        </svg>
+                        Agregar item
+                    </button>
+                {% endif %}
+            </div>
+
+            <div id="add-item-form" class="hidden px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <form method="POST" action="{{ path('expense_oe_add_item', {id: expense.id}) }}" class="flex flex-wrap items-end gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1">Tipo</label>
+                        <select name="type" required
+                                class="text-sm rounded-lg border border-gray-300 px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                            {% for type in itemTypes %}
+                                <option value="{{ type.value }}">{{ type.label() }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1">Monto</label>
+                        <input type="number" step="0.01" min="0.01" name="amount" required
+                               class="text-sm rounded-lg border border-gray-300 px-3 py-1.5 bg-white w-32 focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1">Tickets (ids separados por coma)</label>
+                        <input type="text" name="ticketIds" placeholder="opcional"
+                               class="text-sm rounded-lg border border-gray-300 px-3 py-1.5 bg-white w-48 focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1">Notas</label>
+                        <input type="text" name="notes" placeholder="opcional"
+                               class="text-sm rounded-lg border border-gray-300 px-3 py-1.5 bg-white w-48 focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                    </div>
+                    <button type="submit"
+                            class="text-sm font-medium px-4 py-1.5 rounded-lg text-white transition-colors"
+                            style="background: #1e3585;"
+                            onmouseover="this.style.background='#152970'"
+                            onmouseout="this.style.background='#1e3585'">
+                        Agregar
+                    </button>
+                </form>
+            </div>
+
+            {% if expense.items is empty %}
+                <div class="px-6 py-8 text-center text-sm text-gray-400">No hay items registrados.</div>
+            {% else %}
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="text-xs uppercase tracking-wide text-gray-500 bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left font-semibold">Tipo</th>
+                                <th class="px-6 py-3 text-right font-semibold">Monto</th>
+                                <th class="px-6 py-3 text-left font-semibold">Estado</th>
+                                <th class="px-6 py-3 text-left font-semibold">Notas</th>
+                                <th class="px-6 py-3 text-left font-semibold">Rechazo</th>
+                                {% if expense.status == 'submitted' and is_granted('expense.approve') %}
+                                    <th class="px-6 py-3 text-right font-semibold">Acciones</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for item in expense.items %}
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="px-6 py-3 text-gray-800">{{ item.typeLabel }}</td>
+                                    <td class="px-6 py-3 text-right font-bold text-gray-900">${{ item.amount|number_format(2) }}</td>
+                                    <td class="px-6 py-3">{{ ui.status_badge(item.status) }}</td>
+                                    <td class="px-6 py-3 text-gray-500 text-xs">{{ item.notes ?? '—' }}</td>
+                                    <td class="px-6 py-3 text-xs text-red-600">{{ item.rejectionReason ?? '—' }}</td>
+                                    {% if expense.status == 'submitted' and is_granted('expense.approve') and item.status == 'pending' %}
+                                        <td class="px-6 py-3 text-right">
+                                            <div class="flex items-center justify-end gap-1">
+                                                <form method="POST" action="{{ path('expense_oe_approve_item', {id: expense.id, itemId: item.id}) }}" class="inline">
+                                                    <button type="submit"
+                                                            class="text-xs font-medium px-2.5 py-1 rounded-md transition-colors"
+                                                            style="color: #00a86b; background: #e6f7f1;"
+                                                            onmouseover="this.style.background='#c8efe3'" onmouseout="this.style.background='#e6f7f1'">
+                                                        Aprobar
+                                                    </button>
+                                                </form>
+                                                <button type="button" onclick="document.getElementById('reject-item-form-{{ item.id }}').classList.toggle('hidden')"
+                                                        class="text-xs font-medium px-2.5 py-1 rounded-md text-red-600 bg-red-50 hover:bg-red-100 transition-colors">
+                                                    Rechazar
+                                                </button>
+                                            </div>
+                                            <form id="reject-item-form-{{ item.id }}" method="POST" action="{{ path('expense_oe_reject_item', {id: expense.id, itemId: item.id}) }}" class="hidden mt-2 flex gap-1">
+                                                <input type="text" name="rejectionReason" placeholder="Motivo del rechazo" required
+                                                       class="text-xs rounded border border-gray-300 px-2 py-1 w-40 focus:outline-none">
+                                                <button type="submit"
+                                                        class="text-xs font-medium px-2 py-1 rounded bg-red-600 text-white hover:bg-red-700 transition-colors">
+                                                    Confirmar
+                                                </button>
+                                            </form>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

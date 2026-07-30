@@ -32,6 +32,18 @@ final class DoctrineTicketSparePartRepository implements TicketSparePartReposito
             ->findBy(['findingId' => (string) $findingId]);
     }
 
+    public function findByEmployeeId(string $employeeId): array
+    {
+        $dql = 'SELECT sp FROM ' . TicketSparePart::class . ' sp
+                JOIN App\Support\Domain\Entities\TicketAssignment ta
+                WITH sp.ticketId = ta.ticketId
+                WHERE ta.employeeId = :employeeId';
+
+        return $this->entityManager->createQuery($dql)
+            ->setParameter('employeeId', $employeeId)
+            ->getResult();
+    }
+
     public function save(TicketSparePart $sparePart): void
     {
         $this->entityManager->persist($sparePart);

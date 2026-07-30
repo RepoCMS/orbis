@@ -1,0 +1,250 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard de soporte{% endblock %}
+{% block page_title %}Dashboard de soporte t&eacute;cnico{% endblock %}
+
+{% block body %}
+<div class="space-y-6">
+
+    {# ════════════════════════════════════════════════════
+       ROW 1 — KPI Cards
+       ════════════════════════════════════════════════════ #}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        {% for card in kpiCards %}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                 style="background: {{ card.color }}15;">
+                <svg class="w-5 h-5" style="color: {{ card.color }}" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="{{ card.icon }}"/>
+                </svg>
+            </div>
+            <div>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ card.label }}</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ card.value }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {# ════════════════════════════════════════════════════
+       ROW 2 — Status + SLA + Technicians + Quick Actions
+       ════════════════════════════════════════════════════ #}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        {# Left: Status breakdown #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-4">Estado de tickets</h3>
+            <div class="space-y-3">
+                {% for item in statusBreakdown %}
+                <div class="flex items-center gap-3">
+                    <span class="w-32 text-sm text-gray-600 shrink-0 truncate" title="{{ item.label }}">{{ item.label }}</span>
+                    <div class="flex-1 bg-gray-100 rounded-full h-3 overflow-hidden">
+                        <div class="h-full rounded-full transition-all" style="width: {{ (item.count / maxBreakdown) * 100 }}%; background: {{ item.color }};"></div>
+                    </div>
+                    <span class="text-sm font-medium text-gray-800 w-10 text-right">{{ item.count }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {# Center: SLA metrics + Resolution by type #}
+        <div class="space-y-6">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                <h3 class="text-sm font-semibold text-gray-700 mb-4">SLA &amp; Calidad</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-xs font-medium text-gray-500 uppercase">Brechas SLA (30d)</p>
+                        <p class="text-xl font-bold {{ metrics.slaBreachCount30d > 0 ? 'text-red-700' : 'text-gray-900' }}">{{ metrics.slaBreachCount30d }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-gray-500 uppercase">Tasa brecha</p>
+                        <p class="text-xl font-bold {{ metrics.slaBreachRate30d > 10 ? 'text-red-700' : 'text-gray-900' }}">{{ metrics.slaBreachRate30d }}%</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-gray-500 uppercase">Reaperturas</p>
+                        <p class="text-xl font-bold {{ metrics.reopenRate > 10 ? 'text-red-700' : 'text-gray-900' }}">{{ metrics.reopenedCount }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-gray-500 uppercase">Tasa reapertura</p>
+                        <p class="text-xl font-bold {{ metrics.reopenRate > 10 ? 'text-red-700' : 'text-gray-900' }}">{{ metrics.reopenRate }}%</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-gray-500 uppercase">Cancelados</p>
+                        <p class="text-xl font-bold text-gray-900">{{ metrics.cancelledCount }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-gray-500 uppercase">Tasa cancelaci&oacute;n</p>
+                        <p class="text-xl font-bold text-gray-900">{{ metrics.cancellationRate }}%</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                <h3 class="text-sm font-semibold text-gray-700 mb-4">Tiempo promedio por tipo</h3>
+                {% if metrics.avgResolutionByServiceType is not empty %}
+                <div class="space-y-3">
+                    {% set maxServiceHours = metrics.avgResolutionByServiceType|reduce((max, row) => max > row.avg_hours ? max : row.avg_hours, 0) %}
+                    {% for row in metrics.avgResolutionByServiceType %}
+                    {% set pct = maxServiceHours > 0 ? ((row.avg_hours / maxServiceHours) * 100)|round : 0 %}
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-gray-600 font-medium">{{ serviceTypeLabels[row.service_type] ?? row.service_type|capitalize }}</span>
+                            <span class="font-bold text-gray-700">{{ row.avg_hours|number_format(1) }}h <span class="font-normal text-gray-400">({{ row.cnt }})</span></span>
+                        </div>
+                        <div class="bg-gray-100 rounded-full h-2 overflow-hidden">
+                            <div class="h-full rounded-full transition-all" style="width:{{ pct }}%; background:#3b82f6;"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-sm text-gray-500 py-4 text-center">Sin datos</p>
+                {% endif %}
+            </div>
+        </div>
+
+        {# Right: Technicians + Quick actions #}
+        <div class="space-y-6">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                <h3 class="text-sm font-semibold text-gray-700 mb-4">T&eacute;cnicos</h3>
+                <div class="grid grid-cols-2 gap-3 mb-4">
+                    <div class="p-3 rounded-lg bg-blue-50 border border-blue-100 text-center">
+                        <p class="text-lg font-bold text-blue-700">{{ metrics.techniciansAvailable }}</p>
+                        <p class="text-xs font-medium text-blue-600">Disponibles</p>
+                    </div>
+                    <div class="p-3 rounded-lg bg-amber-50 border border-amber-100 text-center">
+                        <p class="text-lg font-bold text-amber-700">{{ metrics.techniciansBusy }}</p>
+                        <p class="text-xs font-medium text-amber-600">Ocupados</p>
+                    </div>
+                </div>
+                {% if metrics.topTechnicians is not empty %}
+                <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Top t&eacute;cnicos (tickets)</h4>
+                <ul class="divide-y divide-gray-100">
+                    {% for tech in metrics.topTechnicians %}
+                    <li class="py-2 flex items-center justify-between">
+                        <span class="text-sm text-gray-700 truncate mr-2">{{ tech.employee_id }}</span>
+                        <span class="text-xs font-bold text-gray-800">{{ tech.cnt }} tickets</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% if metrics.avgTimeByTechnician is not empty %}
+                <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 mt-4">Tpo. promedio por t&eacute;cnico</h4>
+                <ul class="divide-y divide-gray-100">
+                    {% for row in metrics.avgTimeByTechnician %}
+                    <li class="py-2 flex items-center justify-between">
+                        <span class="text-sm text-gray-700 truncate mr-2">{{ row.employee_id }}</span>
+                        <span class="text-xs font-bold text-gray-800">{{ row.avg_hours|number_format(1) }}h <span class="font-normal text-gray-400">({{ row.cnt }})</span></span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                <h3 class="text-sm font-semibold text-gray-700 mb-4">Acceso r&aacute;pido</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="{{ path('support_ticket_list') }}" class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">Tickets</a>
+                    <a href="{{ path('support_ticket_new') }}" class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">Nuevo ticket</a>
+                    <a href="{{ path('support_module_tree_list') }}" class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">&Aacute;rbol módulos</a>
+                    <a href="{{ path('support_quick_template_list') }}" class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">Plantillas</a>
+                    <a href="{{ path('support_report_technicians', {'_format': 'xlsx'}) }}" class="p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-sm font-medium text-gray-700 text-center">Reporte t&eacute;cnicos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ════════════════════════════════════════════════════
+       ROW 3 — Top clients + Completions trend + Recent tickets
+       ════════════════════════════════════════════════════ #}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        {# Left: Top clients by tickets #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-4">Clientes con m&aacute;s tickets</h3>
+            {% if metrics.topClientsByTickets is not empty %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm">
+                    <thead>
+                        <tr class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                            <th class="px-3 py-2 text-left">Cliente</th>
+                            <th class="px-3 py-2 text-right">Tickets</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        {% for row in metrics.topClientsByTickets %}
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-3 py-2 font-medium text-gray-700">{{ row.client_id }}</td>
+                            <td class="px-3 py-2 text-right font-bold text-gray-800">{{ row.cnt }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-sm text-gray-500 py-4 text-center">Sin datos</p>
+            {% endif %}
+        </div>
+
+        {# Center: Completions trend (7 days) #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-4">Completados &uacute;ltimos 7 d&iacute;as</h3>
+            {% if metrics.completionsTrend is not empty %}
+            {% set maxCompletions = metrics.completionsTrend|reduce((max, row) => max > row.cnt ? max : row.cnt, 0) %}
+            <div class="flex items-end gap-2 h-32">
+                {% for day in metrics.completionsTrend %}
+                {% set barHeight = maxCompletions > 0 ? ((day.cnt / maxCompletions) * 100)|round : 0 %}
+                <div class="flex-1 flex flex-col items-center gap-1">
+                    <span class="text-xs font-bold text-gray-700">{{ day.cnt }}</span>
+                    <div class="w-full rounded-t-md transition-all" style="height:{{ barHeight }}px; background:#3b82f6;"></div>
+                    <span class="text-[10px] text-gray-500">{{ day.day|date('D'|trans) }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-sm text-gray-500 py-4 text-center">Sin completaciones en los &uacute;ltimos 7 d&iacute;as</p>
+            {% endif %}
+        </div>
+
+        {# Right: Recent tickets #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-4">Tickets recientes</h3>
+            {% if metrics.recentTickets is not empty %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm">
+                    <thead>
+                        <tr class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                            <th class="px-3 py-2 text-left">#</th>
+                            <th class="px-3 py-2 text-left">Cliente</th>
+                            <th class="px-3 py-2 text-left">Tipo</th>
+                            <th class="px-3 py-2 text-left">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        {% for t in metrics.recentTickets %}
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-3 py-2">
+                                <a href="{{ path('support_ticket_show', {id: t.id}) }}" class="text-blue-600 hover:text-blue-800 font-medium">{{ t.ticket_number }}</a>
+                            </td>
+                            <td class="px-3 py-2 text-gray-600">{{ t.client_id }}</td>
+                            <td class="px-3 py-2 text-gray-600">{{ serviceTypeLabels[t.service_type] ?? t.service_type }}</td>
+                            <td class="px-3 py-2">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                                      style="background: {{ (attribute(statusColors, t.status) is defined ? attribute(statusColors, t.status) : '#6b7280') }}15; color: {{ attribute(statusColors, t.status) ?? '#6b7280' }};">
+                                    {{ statusLabels[t.status] ?? t.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-sm text-gray-500 py-4 text-center">Sin tickets recientes</p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

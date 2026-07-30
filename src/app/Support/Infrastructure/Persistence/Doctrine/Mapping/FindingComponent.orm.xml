@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Support\Domain\Entities\FindingComponent" table="finding_components">
+
+        <id name="id" type="ticket_finding_component_id" column="id" length="26" />
+
+        <field name="findingId"  type="ticket_finding_id" column="finding_id"  length="26" />
+        <field name="componentId" type="string"           column="component_id" length="100" />
+
+        <indexes>
+            <index name="idx_fc_finding_id" columns="finding_id" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

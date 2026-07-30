@@ -5,19 +5,19 @@
     xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                         https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="App\Identity\Domain\Entities\AuthLog" table="auth_logs">
+    <entity name="App\Identity\Domain\Entities\AuthLog" table="identity_auth_logs">
 
         <id name="id" type="auth_log_id" column="id" length="26" />
 
         <field name="userId"     type="user_id"            column="user_id"    length="26" />
-        <field name="event"      type="string"             column="event"      length="50" />
+        <field name="event"      type="auth_event"          column="event"      length="50" />
         <field name="ipAddress"  type="string"             column="ip_address" length="45" />
         <field name="userAgent"  type="string"             column="user_agent" length="512" />
         <field name="occurredAt" type="datetime_immutable" column="occurred_at" nullable="false" />
 
         <indexes>
-            <index name="idx_auth_logs_user_id"     columns="user_id" />
-            <index name="idx_auth_logs_occurred_at" columns="occurred_at" />
+            <index name="idx_identity_auth_logs_user_id"     columns="user_id" />
+            <index name="idx_identity_auth_logs_occurred_at" columns="occurred_at" />
         </indexes>
 
     </entity>

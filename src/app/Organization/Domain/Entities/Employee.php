@@ -7,6 +7,7 @@ namespace App\Organization\Domain\Entities;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Organization\Domain\Enums\EmployeeProfile;
 use App\Organization\Domain\Enums\EmployeeStatus;
+use App\Organization\Domain\Exceptions\EmployeeAlreadyHasUserException;
 use App\Organization\Domain\Exceptions\EmployeeNameException;
 use App\Organization\Domain\Exceptions\EmployeePhoneNumberException;
 use App\Organization\Domain\Exceptions\EmployeeProfileException;
@@ -81,7 +82,16 @@ final class Employee implements TimestampableInterface
 
     public function linkUser(UserIdValueObject $userId): void
     {
+        if ($this->userId !== null) {
+            throw EmployeeAlreadyHasUserException::withId((string) $this->id);
+        }
+
         $this->userId = $userId;
+    }
+
+    public function canLinkUser(UserIdValueObject $userId): bool
+    {
+        return $this->userId === null || (string) $this->userId === (string) $userId;
     }
 
     public function unlinkUser(): void

@@ -18,7 +18,8 @@
         <field name="laboratoryId"      type="location_id"         column="laboratory_id"       length="26" />
         <field name="assignedById"      type="user_id"             column="assigned_by_id"      length="26" />
         <field name="technicianId"      type="user_id"             column="technician_id"       length="26" nullable="true" />
-        <field name="status"            type="inventory_repair_status" column="status" length="20" />
+        <field name="status"            type="inventory_repair_status" column="status"   length="20" />
+        <field name="priority"          type="inventory_repair_priority" column="priority" length="20" />
         <field name="notes"             type="text"                column="notes"               nullable="true" />
         <field name="createdAt"         type="datetime_immutable"  column="created_at" />
         <field name="startedAt"         type="datetime_immutable"  column="started_at"          nullable="true" />

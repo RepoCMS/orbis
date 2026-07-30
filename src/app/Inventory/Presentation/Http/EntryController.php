@@ -12,11 +12,16 @@ use App\Inventory\Application\Command\ConfirmEntry\ConfirmEntryCommand;
 use App\Inventory\Application\Command\ConfirmEntry\ConfirmEntryHandler;
 use App\Inventory\Application\Command\CreateEntry\CreateEntryCommand;
 use App\Inventory\Application\Command\CreateEntry\CreateEntryHandler;
+use App\Inventory\Application\Command\DeleteEntryItem\DeleteEntryItemCommand;
+use App\Inventory\Application\Command\DeleteEntryItem\DeleteEntryItemHandler;
+use App\Inventory\Application\Command\UpdateEntry\UpdateEntryCommand;
+use App\Inventory\Application\Command\UpdateEntry\UpdateEntryHandler;
 use App\Inventory\Application\Exception\EntryNotFoundException;
 use App\Inventory\Application\Query\FindEntryById\FindEntryByIdHandler;
 use App\Inventory\Application\Query\ListEntries\ListEntriesHandler;
 use App\Inventory\Application\Query\ListLocations\ListLocationsHandler;
 use App\Inventory\Application\Query\ListProducts\ListProductsHandler;
+use App\Inventory\Application\Query\ListPurchaseOrders\ListPurchaseOrdersHandler;
 use App\Shared\Exceptions\DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,9 +76,11 @@ final class EntryController extends AbstractController
     #[Route('/{id}', name: 'inventory_entry_show', methods: ['GET'])]
     public function show(
         string $id,
+        Request $request,
         FindEntryByIdHandler $findEntry,
         ListProductsHandler $listProducts,
         ListLocationsHandler $listLocations,
+        ListPurchaseOrdersHandler $listPurchaseOrders,
     ): Response {
         try {
             $data = $findEntry($id);
@@ -82,10 +89,12 @@ final class EntryController extends AbstractController
         }
 
         return $this->render('inventory/entry/show.html.twig', [
-            'entry'     => $data['entry'],
-            'items'     => $data['items'],
-            'products'  => $listProducts(),
-            'locations' => $listLocations(),
+            'entry'          => $data['entry'],
+            'items'          => $data['items'],
+            'products'       => $listProducts(),
+            'locations'      => $listLocations(),
+            'purchaseOrders' => $listPurchaseOrders(),
+            'selectedPoId'   => trim((string) $request->query->get('po', '')),
         ]);
     }
 
@@ -123,6 +132,45 @@ final class EntryController extends AbstractController
         try {
             ($handler)(new ConfirmEntryCommand($id));
             $this->addFlash('success', 'Entrada confirmada. El stock ha sido registrado.');
+        } catch (EntryNotFoundException $e) {
+            $this->addFlash('error', $e->getMessage());
+        } catch (DomainException $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('inventory_entry_show', ['id' => $id]);
+    }
+
+    #[IsGranted('inventory.update')]
+    #[Route('/{id}/remove-item/{itemId}', name: 'inventory_entry_remove_item', methods: ['POST'])]
+    public function removeItem(string $id, string $itemId, DeleteEntryItemHandler $handler): Response
+    {
+        try {
+            ($handler)(new DeleteEntryItemCommand($itemId));
+            $this->addFlash('success', 'Ítem eliminado de la entrada.');
+        } catch (DomainException $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('inventory_entry_show', ['id' => $id]);
+    }
+
+    #[IsGranted('inventory.update')]
+    #[Route('/{id}/update', name: 'inventory_entry_update', methods: ['POST'])]
+    public function update(string $id, Request $request, UpdateEntryHandler $handler): Response
+    {
+        $reference = trim((string) $request->request->get('reference', ''));
+        $notes     = trim((string) $request->request->get('notes', '')) ?: null;
+        $totalCost = $request->request->get('total_cost') ? trim((string) $request->request->get('total_cost')) : null;
+
+        try {
+            ($handler)(new UpdateEntryCommand(
+                entryId:   $id,
+                reference: $reference,
+                notes:     $notes,
+                totalCost: $totalCost,
+            ));
+            $this->addFlash('success', 'Entrada actualizada correctamente.');
         } catch (EntryNotFoundException $e) {
             $this->addFlash('error', $e->getMessage());
         } catch (DomainException $e) {

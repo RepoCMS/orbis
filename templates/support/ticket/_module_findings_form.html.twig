@@ -1,0 +1,95 @@
+<div id="modal-module-finding"
+     class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+     data-controller="module-finding"
+     data-module-finding-tree-url-value="/api/v1/support/atm-module-tree"
+     data-module-finding-ticket-id-value="{{ ticketId }}"
+     onclick="if(event.target===this)this.classList.add('hidden')">
+
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl mx-4 p-6 space-y-4 max-h-screen overflow-y-auto">
+        <div class="flex items-center justify-between">
+            <h3 class="text-base font-semibold text-gray-800">Registrar Hallazgo en Módulo</h3>
+            <button type="button" onclick="closeModal('modal-module-finding')"
+                    class="text-gray-400 hover:text-gray-600 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <div data-module-finding-target="feedback" class="text-xs text-gray-400"></div>
+
+        {# ── Model selector ─────────────────────────────────────────── #}
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Modelo de ATM</label>
+            <select data-module-finding-target="modelSelect"
+                    data-action="module-finding#loadTree"
+                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/30 focus:border-blue-400 transition-colors">
+                {% for m in [
+                    {value: 'mx8200st', label: 'Hyosung 8200ST'},
+                    {value: 'mx8200qt', label: 'Hyosung 8200QT'},
+                    {value: 'mx8200ta', label: 'Hyosung 8200TA'},
+                    {value: 'mx8600s',  label: 'Hyosung 8600S'},
+                    {value: 'mx5800t',  label: 'Hyosung 5800T'},
+                    {value: 'mx5800',   label: 'Hyosung 5800'},
+                    {value: 'mx5700',   label: 'Hyosung 5700'},
+                ] %}
+                    <option value="{{ m.value }}" {{ modelValue is defined and modelValue == m.value ? 'selected' : '' }}>{{ m.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        {# ── Tree ───────────────────────────────────────────────────── #}
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Árbol de módulos</label>
+            <div data-module-finding-target="treeContainer"
+                 class="border border-gray-200 rounded-lg p-3 max-h-64 overflow-y-auto bg-gray-50 space-y-0.5 text-sm">
+            </div>
+        </div>
+
+        {# ── Component selector ─────────────────────────────────────── #}
+        <div data-module-finding-target="componentList" class="hidden">
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+                   data-module-finding-target="modelLabel">
+                Seleccione un componente:
+            </label>
+            <div class="border border-gray-200 rounded-lg p-3 bg-gray-50 flex flex-wrap gap-1"></div>
+        </div>
+
+        {# ── Finding type + notes ───────────────────────────────────── #}
+        <form data-action="module-finding#submitFinding" class="space-y-4">
+            <input type="hidden" data-module-finding-target="modulePath" name="modulePath" value="">
+            <input type="hidden" data-module-finding-target="componentName" name="componentName" value="">
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de hallazgo <span class="text-red-500">*</span></label>
+                <select data-module-finding-target="findingType" name="findingType" required
+                        class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/30 focus:border-blue-400 transition-colors">
+                    <option value="faulty">Falla / Dañado</option>
+                    <option value="ok">OK / Funciona correctamente</option>
+                    <option value="replaced">Reemplazado</option>
+                    <option value="pending">Pendiente de revisión</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Notas (opcional)</label>
+                <textarea name="notes" rows="2"
+                          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/30 focus:border-blue-400 transition-colors resize-none"
+                          placeholder="Observaciones adicionales…"></textarea>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="closeModal('modal-module-finding')"
+                        class="text-sm px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
+                    Cancelar
+                </button>
+                <button type="submit"
+                        data-module-finding-target="submitBtn" disabled
+                        class="text-sm px-4 py-2 rounded-lg text-white font-medium transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        style="background:#1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+                    Guardar hallazgo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

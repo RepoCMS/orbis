@@ -17,17 +17,18 @@ use PHPUnit\Framework\TestCase;
 
 final class EmployeeTest extends TestCase
 {
+    private const VALID_ID = '1710034065';
+
     private function createEmployee(): Employee
     {
         return Employee::hire(
             new EmployeeIdValueObject('01ARZ3NDEKTSV4RRFFQ69G5FAV'),
-            new EmployeeIdentificationNumberValueObject('1712345678'),
+            new EmployeeIdentificationNumberValueObject(self::VALID_ID),
             'Juan Carlos Ernesto',
             'Pérez López Martinez',
             new EmployeeEmailValueObject('juan@empresa.com'),
             '0991234567',
             new DateTimeImmutable('2024-01-15'),
-            userId: new UserIdValueObject('01BXZ4MDEKTSV4RRFFQ69G5ABC'),
         );
     }
 
@@ -46,8 +47,7 @@ final class EmployeeTest extends TestCase
         $employee = $this->createEmployee();
 
         self::assertSame('01ARZ3NDEKTSV4RRFFQ69G5FAV', (string) $employee->id());
-        self::assertSame('01BXZ4MDEKTSV4RRFFQ69G5ABC', (string) $employee->userId());
-        self::assertSame('1712345678', (string) $employee->identificationNumber());
+        self::assertSame(self::VALID_ID, (string) $employee->identificationNumber());
         self::assertSame('Juan Carlos Ernesto', $employee->firstName());
         self::assertSame('Pérez López Martinez', $employee->lastName());
         self::assertSame('Juan Carlos Ernesto Pérez López Martinez', $employee->fullName());
@@ -61,7 +61,7 @@ final class EmployeeTest extends TestCase
     {
         $employee = Employee::hire(
             new EmployeeIdValueObject('01ARZ3NDEKTSV4RRFFQ69G5FAV'),
-            new EmployeeIdentificationNumberValueObject('1712345678'),
+            new EmployeeIdentificationNumberValueObject(self::VALID_ID),
             '  Juan   Carlos Ernesto  ',
             '  Pérez   López Martinez  ',
             new EmployeeEmailValueObject('juan@empresa.com'),
@@ -81,7 +81,7 @@ final class EmployeeTest extends TestCase
 
         Employee::hire(
             new EmployeeIdValueObject('01ARZ3NDEKTSV4RRFFQ69G5FAV'),
-            new EmployeeIdentificationNumberValueObject('1712345678'),
+            new EmployeeIdentificationNumberValueObject(self::VALID_ID),
             'Juan',
             'Pérez López Martinez',
             new EmployeeEmailValueObject('juan@empresa.com'),
@@ -96,7 +96,7 @@ final class EmployeeTest extends TestCase
 
         Employee::hire(
             new EmployeeIdValueObject('01ARZ3NDEKTSV4RRFFQ69G5FAV'),
-            new EmployeeIdentificationNumberValueObject('1712345678'),
+            new EmployeeIdentificationNumberValueObject(self::VALID_ID),
             'Juan Carlos Ernesto',
             '',
             new EmployeeEmailValueObject('juan@empresa.com'),
@@ -181,6 +181,7 @@ final class EmployeeTest extends TestCase
     public function testReactivateRestoresActiveStatus(): void
     {
         $employee = $this->createEmployee();
+        $employee->linkUser(new UserIdValueObject('01JCPX8XYZ0000000000000001'));
         $employee->terminate();
 
         $employee->reactivate();
@@ -198,11 +199,24 @@ final class EmployeeTest extends TestCase
         $employee->reactivate();
     }
 
+    public function testTerminateDoesNotValidateUserId(): void
+    {
+        $employee = $this->createEmployee();
+
+        // Employee without userId — terminate should work without validation
+        $employee->terminate();
+
+        self::assertSame(EmployeeStatus::INACTIVE, $employee->status());
+        self::assertFalse($employee->isActive());
+        self::assertNotNull($employee->terminatedAt());
+    }
+
     // --- Full Lifecycle ---
 
     public function testFullLifecycle(): void
     {
         $employee = $this->createEmployee();
+        $employee->linkUser(new UserIdValueObject('01JCPX8XYZ0000000000000001'));
 
         self::assertTrue($employee->isActive());
 

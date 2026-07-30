@@ -19,7 +19,7 @@
 {% block body %}
     {% if locations is empty %}
         <div class="flex flex-col items-center justify-center py-20 text-gray-400">
-            <svg class="w-12 h-12 mb-3 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <svg class="w-12 h-12 mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
             </svg>
@@ -31,21 +31,22 @@
             {% endif %}
         </div>
     {% else %}
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
-                        <tr class="border-b border-slate-100 text-left">
+                        <tr class="border-b border-gray-100 text-left">
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Nombre</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Tipo</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden md:table-cell">Ciudad</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden lg:table-cell">Dirección</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Encargado</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide text-right">Acciones</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-50">
                         {% for location in locations %}
-                        <tr class="hover:bg-slate-50/60 transition-colors">
+                        <tr class="hover:bg-gray-50/60 transition-colors">
                             <td class="px-4 py-3 font-medium text-gray-900">
                                 <a href="{{ path('inventory_location_show', {id: location.id}) }}"
                                    class="hover:text-blue-700 transition-colors">{{ location.name }}</a>
@@ -60,22 +61,28 @@
                             </td>
                             <td class="px-4 py-3 text-gray-500 hidden md:table-cell">{{ location.city }}</td>
                             <td class="px-4 py-3 text-gray-500 hidden lg:table-cell truncate max-w-xs">{{ location.address }}</td>
+                            <td class="px-4 py-3 text-gray-600">
+                                {% if location.employeeId and employeeNames[location.employeeId] is defined %}
+                                    {{ employeeNames[location.employeeId] }}
+                                {% elseif location.employeeId %}
+                                    <span class="text-xs text-gray-400">—</span>
+                                {% else %}
+                                    <span class="text-xs text-gray-400">—</span>
+                                {% endif %}
+                            </td>
                             <td class="px-4 py-3 text-right">
                                 <div class="flex justify-end gap-2">
                                     {% if is_granted('inventory.update') %}
                                     <a href="{{ path('inventory_location_edit', {id: location.id}) }}"
-                                       class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 text-gray-600 hover:bg-slate-100 transition-colors">
+                                       class="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-100 transition-colors">
                                         Editar
                                     </a>
                                     {% endif %}
                                     {% if is_granted('inventory.delete') %}
-                                    <form method="POST" action="{{ path('inventory_location_delete', {id: location.id}) }}"
-                                          onsubmit="return confirm('¿Eliminar esta ubicación?')">
-                                        <button type="submit"
-                                                class="text-xs px-3 py-1.5 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 transition-colors">
-                                            Eliminar
-                                        </button>
-                                    </form>
+                                    <button type="button" onclick="openModal('modal-delete-{{ location.id }}')"
+                                            class="text-xs px-3 py-1.5 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 transition-colors">
+                                        Eliminar
+                                    </button>
                                     {% endif %}
                                 </div>
                             </td>
@@ -85,5 +92,20 @@
                 </table>
             </div>
         </div>
+    {% endif %}
+
+    {% if locations is not empty %}
+    {% for location in locations %}
+    {% if is_granted('inventory.delete') %}
+    {% include 'components/_confirm_modal.html.twig' with {
+        id: 'modal-delete-' ~ location.id,
+        title: 'Eliminar ubicación',
+        message: '¿Eliminar esta ubicación?',
+        action: path('inventory_location_delete', {id: location.id}),
+        confirmText: 'Eliminar',
+        confirmStyle: 'red',
+    } %}
+    {% endif %}
+    {% endfor %}
     {% endif %}
 {% endblock %}

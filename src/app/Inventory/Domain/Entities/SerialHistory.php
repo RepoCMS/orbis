@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Inventory\Domain\Entities;
 
+use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Inventory\Domain\Enums\SerialHistoryReason;
+use App\Inventory\Domain\ValueObjects\ProductIdValueObject;
 use App\Inventory\Domain\ValueObjects\SerialHistoryIdValueObject;
 use App\Inventory\Domain\ValueObjects\SerializedStockIdValueObject;
 use App\Inventory\Domain\ValueObjects\StockSerialNumberValueObject;
@@ -27,6 +29,9 @@ final class SerialHistory
         private StockSerialNumberValueObject $newSerialNumber,
         private SerialHistoryReason $reason,
         private DateTimeImmutable $changedAt,
+        private ?ProductIdValueObject $previousProductId = null,
+        private ?ProductIdValueObject $newProductId = null,
+        private ?UserIdValueObject $changedBy = null,
     ) {
     }
 
@@ -36,6 +41,9 @@ final class SerialHistory
         StockSerialNumberValueObject $previousSerialNumber,
         StockSerialNumberValueObject $newSerialNumber,
         SerialHistoryReason $reason,
+        ?ProductIdValueObject $previousProductId = null,
+        ?ProductIdValueObject $newProductId = null,
+        ?UserIdValueObject $changedBy = null,
     ): self {
         return new self(
             id:                   $id,
@@ -44,7 +52,25 @@ final class SerialHistory
             newSerialNumber:      $newSerialNumber,
             reason:               $reason,
             changedAt:            new DateTimeImmutable(),
+            previousProductId:    $previousProductId,
+            newProductId:         $newProductId,
+            changedBy:            $changedBy,
         );
+    }
+
+    public function previousProductId(): ?ProductIdValueObject
+    {
+        return $this->previousProductId;
+    }
+
+    public function newProductId(): ?ProductIdValueObject
+    {
+        return $this->newProductId;
+    }
+
+    public function changedBy(): ?UserIdValueObject
+    {
+        return $this->changedBy;
     }
 
     public function id(): SerialHistoryIdValueObject

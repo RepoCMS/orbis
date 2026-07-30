@@ -17,7 +17,19 @@
         <field name="serialNumber" type="stock_serial_number"  column="serial_number" length="100" />
         <field name="locationId"   type="location_id"          column="location_id"   length="26" />
         <field name="status"       type="inventory_serialized_stock_status" column="status" length="20" />
+        <field name="createdAt"    type="datetime_immutable"   column="created_at" />
+        <field name="updatedAt"    type="datetime_immutable"   column="updated_at"    nullable="true" />
         <field name="deletedAt"    type="datetime_immutable"   column="deleted_at"    nullable="true" />
+        <field name="createdBy"    type="string"               column="created_by"    length="26" nullable="true" />
+        <field name="updatedBy"    type="string"               column="updated_by"    length="26" nullable="true" />
+        <field name="deletedBy"    type="string"               column="deleted_by"    length="26" nullable="true" />
+
+        <!-- Origin tracking (US16e) -->
+        <field name="originTicketId"   type="string"           column="origin_ticket_id"   length="26" nullable="true" />
+        <field name="originClientId"   type="string"           column="origin_client_id"   length="26" nullable="true" />
+        <field name="originTerminalId" type="string"           column="origin_terminal_id" length="26" nullable="true" />
+        <field name="isVandalism"      type="boolean"          column="is_vandalism"       default="false" />
+        <field name="repairCount"      type="integer"          column="repair_count"       default="0" />
 
         <unique-constraints>
             <unique-constraint name="uq_serialized_stock_product_serial" columns="product_id,serial_number" />

@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
+{% import 'components/_macros.html.twig' as ui %}
 
 {% block title %}Rol: {{ role.name }} — CMS Orbis{% endblock %}
-{% block page_title %}Detalle de Rol{% endblock %}
+{% block page_title %}{{ role.name }}{% endblock %}
 
 {% block header_actions %}
     <a href="{{ path('role_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
@@ -14,7 +15,7 @@
 
 {% block body %}
 
-    {# Flash messages #}
+    {# ── Flash messages ─────────────────────────────────── #}
     {% for message in app.flashes('success') %}
         <div class="mb-4 bg-green-50 border border-green-200 rounded-lg px-4 py-3 text-sm text-green-700">{{ message }}</div>
     {% endfor %}
@@ -25,53 +26,45 @@
         <div class="mb-4 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm text-amber-700">{{ message }}</div>
     {% endfor %}
 
-    <div class="max-w-2xl space-y-4">
+    <div class="w-full max-w-4xl mx-auto space-y-6">
 
-        {# ── Card de identidad del rol ─────────────────────────────────── #}
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-
-            {# Header #}
-            <div class="px-6 py-4 flex items-center justify-between" style="background: linear-gradient(135deg, #1e3585 0%, #2a4db5 100%);">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-white/20">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        {# ── Profile header ───────────────────────────────────── #}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white shrink-0"
+                         style="background: #1e3585;">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                         </svg>
                     </div>
                     <div>
-                        <h2 class="text-lg font-bold text-white">{{ role.name }}</h2>
-                        <p class="text-xs text-blue-200 font-mono mt-0.5">{{ role.id }}</p>
+                        <h1 class="text-lg font-semibold text-gray-900">{{ role.name }}</h1>
+                        <div class="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                            <span class="font-mono text-xs">{{ role.id }}</span>
+                            <span class="text-gray-300">|</span>
+                            <span>{{ ui.status_badge(role.status) }}</span>
+                        </div>
                     </div>
                 </div>
-                {% if role.status == 'active' %}
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold"
-                          style="background: rgba(0,168,107,0.25); color: #00c882; border: 1px solid rgba(0,168,107,0.4);">Activo</span>
-                {% else %}
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-white/60">Inactivo</span>
-                {% endif %}
-            </div>
 
-            {# Acciones de estado #}
-            <div class="px-6 py-3 flex items-center gap-3 border-b border-slate-100 bg-slate-50">
-                {% if role.status == 'active' %}
-                    <form method="POST" action="{{ path('role_deactivate', {id: role.id}) }}">
-                        <button type="submit"
-                                class="text-sm font-medium px-4 py-1.5 rounded-lg border transition-colors text-amber-700 bg-amber-50 border-amber-200 hover:bg-amber-100"
-                                onclick="return confirm('¿Desactivar el rol {{ role.name | e('js') }}?')">
+                <div class="flex items-center gap-2">
+                    {% if role.status == 'active' %}
+                        <button type="button" onclick="openModal('modal-confirm-deactivate-role')"
+                                class="text-sm font-medium px-3 py-1.5 rounded-lg border text-amber-700 bg-amber-50 border-amber-200 hover:bg-amber-100 transition-colors">
                             Desactivar
                         </button>
-                    </form>
-                {% else %}
-                    <form method="POST" action="{{ path('role_activate', {id: role.id}) }}">
-                        <button type="submit"
-                                class="text-sm font-medium px-4 py-1.5 rounded-lg border transition-colors text-emerald-700 bg-emerald-50 border-emerald-200 hover:bg-emerald-100">
-                            Activar
-                        </button>
-                    </form>
-                {% endif %}
+                    {% else %}
+                        <form method="POST" action="{{ path('role_activate', {id: role.id}) }}">
+                            <button type="submit"
+                                    class="text-sm font-medium px-3 py-1.5 rounded-lg border text-emerald-700 bg-emerald-50 border-emerald-200 hover:bg-emerald-100 transition-colors">
+                                Activar
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
             </div>
-
-            {# ── Editor de permisos ───────────────────────────────────── #}
+        </div>{# ── Editor de permisos ───────────────────────────────────── #}
             <div class="px-6 py-5">
 
                 {# Barra superior: título + contador + accesos rápidos #}
@@ -131,18 +124,18 @@
                         {% endfor %}
 
                         {% set resourceLabels = {
-                            'user':           'Usuarios',
-                            'role':           'Roles',
-                            'permission':     'Permisos',
-                            'employee':       'Empleados',
-                            'client':         'Clientes',
-                            'contact':        'Contactos',
-                            'ticket':         'Tickets de servicio',
-                            'expense':        'Gastos operativos',
+                            'user':         'Usuarios',
+                            'role':         'Roles',
+                            'permission':   'Permisos',
+                            'employee':     'Empleados',
+                            'client':       'Clientes',
+                            'contact':      'Contactos',
+                            'service_zone': 'Zonas de servicio',
+                            'ticket':       'Tickets de servicio',
+                            'expense':      'Gastos operativos',
+                            'inventory':    'Inventario',
                             'spare_part':     'Repuestos',
-                            'warehouse':      'Almacenes y laboratorios',
-                            'repair':         'Reparaciones',
-                            'purchase_order': 'Órdenes de compra'
+                            'quick_template': 'Plantillas rápidas',
                         } %}
 
                         <div class="space-y-1.5" id="perm-groups">
@@ -159,7 +152,7 @@
 
                                     {# Cabecera del grupo (accordion trigger) #}
                                     <button type="button"
-                                            class="group-header w-full flex items-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-slate-100 transition-colors text-left"
+                                            class="group-header w-full flex items-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-gray-100 transition-colors text-left"
                                             data-group="{{ resource }}"
                                             onclick="toggleAccordion('{{ resource }}')">
                                         <input type="checkbox"
@@ -188,7 +181,7 @@
                                     <div class="group-body {{ hasAssigned ? '' : 'hidden' }} divide-y divide-gray-100">
                                         {% for permission in group %}
                                             {% set isChecked = permission.id in role.permissionIds %}
-                                            <label class="perm-row flex items-start gap-3 px-4 py-2.5 hover:bg-slate-50 cursor-pointer"
+                                            <label class="perm-row flex items-start gap-3 px-4 py-2.5 hover:bg-gray-50 cursor-pointer"
                                                    data-key="{{ permission.key }}"
                                                    data-desc="{{ permission.description | lower }}">
                                                 <input type="checkbox"
@@ -239,8 +232,15 @@
 
     </div>
 
+    {% include 'components/_confirm_modal.html.twig' with {
+        id: 'modal-confirm-deactivate-role',
+        title: 'Desactivar rol',
+        message: '¿Está seguro de desactivar este rol? Los usuarios con este rol perderán los permisos asociados.',
+        action: path('role_deactivate', {id: role.id}),
+        confirmText: 'Desactivar',
+        confirmStyle: 'amber',
+    } %}
 {% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
     <script>
@@ -384,5 +384,12 @@
         });
         updateCounter();
     });
+    
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
     </script>
 {% endblock %}

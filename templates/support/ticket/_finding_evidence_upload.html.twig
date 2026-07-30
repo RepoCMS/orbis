@@ -1,0 +1,38 @@
+<div class="ml-14 mb-2">
+    <form method="POST" action="/api/v1/support/tickets/{{ ticketId }}/module-findings/{{ findingId }}/evidence"
+          enctype="multipart/form-data"
+          class="flex items-center gap-2"
+          onsubmit="event.preventDefault(); uploadEvidence(this, '{{ findingId }}')">
+
+        <input type="file" name="file" required
+               class="text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border file:border-gray-300 file:text-xs file:font-medium file:bg-gray-50 hover:file:bg-gray-100 transition-colors">
+
+        <button type="submit"
+                class="text-xs px-3 py-1.5 rounded-lg font-medium text-white transition-colors shadow-sm"
+                style="background:#1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+            Subir
+        </button>
+    </form>
+</div>
+
+<script>
+function uploadEvidence(form, findingId) {
+    const formData = new FormData(form);
+    fetch(form.action, {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: formData,
+    })
+    .then(function (r) {
+        if (r.ok) {
+            alert('Evidencia subida correctamente.');
+            window.location.reload();
+        } else {
+            alert('Error al subir evidencia.');
+        }
+    })
+    .catch(function () {
+        alert('Error de conexión.');
+    });
+}
+</script>

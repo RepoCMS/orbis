@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace App\Identity\Presentation\Http;
 
+use App\Identity\Application\Command\ActivateUser\ActivateUserCommand;
+use App\Identity\Application\Command\ActivateUser\ActivateUserHandler;
 use App\Identity\Application\Command\DeactivateUser\DeactivateUserCommand;
 use App\Identity\Application\Command\DeactivateUser\DeactivateUserHandler;
 use App\Identity\Application\Command\ReactivateUser\ReactivateUserCommand;
 use App\Identity\Application\Command\ReactivateUser\ReactivateUserHandler;
+use App\Identity\Application\Command\RegisterUser\RegisterUserCommand;
+use App\Identity\Application\Command\RegisterUser\RegisterUserHandler;
 use App\Identity\Application\Command\SoftDeleteUser\SoftDeleteUserCommand;
 use App\Identity\Application\Command\SoftDeleteUser\SoftDeleteUserHandler;
+use App\Identity\Application\Command\UnlockUser\UnlockUserCommand;
+use App\Identity\Application\Command\UnlockUser\UnlockUserHandler;
 use App\Identity\Application\Command\VerifyUser\VerifyUserCommand;
 use App\Identity\Application\Command\VerifyUser\VerifyUserHandler;
 use App\Identity\Application\Command\GenerateActivationToken\GenerateActivationTokenCommand;
@@ -20,6 +26,8 @@ use App\Identity\Application\Command\ChangePassword\ChangePasswordCommand;
 use App\Identity\Application\Command\ChangePassword\ChangePasswordHandler;
 use App\Identity\Application\Command\AssignRoleToUser\AssignRoleToUserCommand;
 use App\Identity\Application\Command\AssignRoleToUser\AssignRoleToUserHandler;
+use App\Identity\Application\Exception\UsernameAlreadyExistsException;
+use App\Identity\Application\Exception\RoleNotFoundException;
 use App\Identity\Application\Query\FindUserById\FindUserByIdHandler;
 use App\Identity\Application\Query\FindUserById\FindUserByIdQuery;
 use App\Identity\Application\Query\ListRoles\ListRolesHandler;
@@ -52,6 +60,64 @@ final class UserController extends AbstractController
             'users'    => $users,
             'rolesById' => $rolesById,
         ]);
+    }
+
+    #[IsGranted('user.create')]
+    #[Route('/new', name: 'user_new', methods: ['GET'])]
+    public function newForm(ListRolesHandler $listRoles): Response
+    {
+        $roles = $listRoles(new ListRolesQuery());
+
+        return $this->render('user/form.html.twig', [
+            'roles'  => $roles,
+            'input'  => [],
+        ]);
+    }
+
+    #[IsGranted('user.create')]
+    #[Route('', name: 'user_create', methods: ['POST'])]
+    public function create(Request $request, RegisterUserHandler $registerUser, ListRolesHandler $listRoles): Response
+    {
+        $username        = trim((string) $request->request->get('username', ''));
+        $password        = (string) $request->request->get('password', '');
+        $passwordConfirm = (string) $request->request->get('password_confirm', '');
+        $roleId          = trim((string) $request->request->get('role_id', ''));
+
+        if ($password !== $passwordConfirm) {
+            $roles = $listRoles(new ListRolesQuery());
+
+            return $this->render('user/form.html.twig', [
+                'roles'  => $roles,
+                'input'  => $request->request->all(),
+                'errors' => ['Las contraseñas no coinciden.'],
+            ], new Response(null, Response::HTTP_UNPROCESSABLE_ENTITY));
+        }
+
+        try {
+            ($registerUser)(new RegisterUserCommand(
+                username:    $username,
+                rawPassword: $password,
+                roleId:      $roleId,
+            ));
+
+            $this->addFlash('success', 'Usuario creado correctamente.');
+
+            return $this->redirectToRoute('user_list');
+        } catch (UsernameAlreadyExistsException $e) {
+            $errors = [$e->getMessage()];
+        } catch (RoleNotFoundException $e) {
+            $errors = [$e->getMessage()];
+        } catch (DomainException $e) {
+            $errors = [$e->getMessage()];
+        }
+
+        $roles = $listRoles(new ListRolesQuery());
+
+        return $this->render('user/form.html.twig', [
+            'roles'  => $roles,
+            'input'  => $request->request->all(),
+            'errors' => $errors ?? [],
+        ], new Response(null, Response::HTTP_UNPROCESSABLE_ENTITY));
     }
 
     #[IsGranted('user.view')]
@@ -196,6 +262,38 @@ final class UserController extends AbstractController
         try {
             ($reactivateUser)(new ReactivateUserCommand($id));
             $this->addFlash('success', 'Usuario reactivado.');
+        } catch (\App\Identity\Application\Exception\UserNotFoundException) {
+            throw $this->createNotFoundException('Usuario no encontrado.');
+        } catch (DomainException $e) {
+            $this->addFlash('warning', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('user_show', ['id' => $id]);
+    }
+
+    #[IsGranted('user.activate')]
+    #[Route('/{id}/activate', name: 'user_activate', methods: ['POST'])]
+    public function activate(string $id, ActivateUserHandler $activateUser): Response
+    {
+        try {
+            ($activateUser)(new ActivateUserCommand($id));
+            $this->addFlash('success', 'Usuario activado.');
+        } catch (\App\Identity\Application\Exception\UserNotFoundException) {
+            throw $this->createNotFoundException('Usuario no encontrado.');
+        } catch (DomainException $e) {
+            $this->addFlash('warning', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('user_show', ['id' => $id]);
+    }
+
+    #[IsGranted('user.unlock')]
+    #[Route('/{id}/unlock', name: 'user_unlock', methods: ['POST'])]
+    public function unlock(string $id, UnlockUserHandler $unlockUser): Response
+    {
+        try {
+            ($unlockUser)(new UnlockUserCommand($id));
+            $this->addFlash('success', 'Usuario desbloqueado.');
         } catch (\App\Identity\Application\Exception\UserNotFoundException) {
             throw $this->createNotFoundException('Usuario no encontrado.');
         } catch (DomainException $e) {

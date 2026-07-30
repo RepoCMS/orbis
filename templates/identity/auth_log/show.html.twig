@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+{% import 'components/_macros.html.twig' as ui %}
+
+{% block title %}Registro de autenticación{% endblock %}
+{% block page_title %}Registro de autenticación{% endblock %}
+
+{% block header_actions %}
+    <div class="flex items-center gap-3">
+        <a href="{{ path('auth_log_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Volver
+        </a>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="w-full max-w-3xl mx-auto">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                <h2 class="text-sm font-semibold text-gray-700">Detalle del evento de autenticación</h2>
+            </div>
+
+            <dl class="divide-y divide-gray-100">
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">ID</dt>
+                    <dd class="text-gray-800 font-mono text-xs">{{ log.id }}</dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Usuario</dt>
+                    <dd class="text-gray-800 font-mono text-xs">{{ log.userId }}</dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Evento</dt>
+                    <dd>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                            {% if log.event == 'login_success' %}bg-green-100 text-green-700
+                            {% elseif log.event == 'login_failed' %}bg-red-100 text-red-700
+                            {% elseif log.event == 'logout' %}bg-gray-100 text-gray-600
+                            {% elseif log.event == 'mfa_challenge' %}bg-yellow-100 text-yellow-700
+                            {% else %}bg-blue-100 text-blue-700{% endif %}">
+                            {{ log.event|replace({'_': ' '})|capitalize }}
+                        </span>
+                    </dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Dirección IP</dt>
+                    <dd class="text-gray-800 font-mono text-xs">{{ log.ipAddress }}</dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">User-Agent</dt>
+                    <dd class="text-gray-600 text-xs max-w-md text-right break-words">{{ log.userAgent }}</dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Ocurrió</dt>
+                    <dd class="text-gray-800">{{ log.occurredAt|date('d/m/Y H:i:s') }}</dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+{% endblock %}

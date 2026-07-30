@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ticket {{ ticket.ticketNumber }} - Portal Cliente{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    <nav class="mb-6">
+        <a href="{{ path('portal_support_tickets_list') }}"
+           class="text-blue-600 hover:text-blue-900">
+            &larr; Volver a mis tickets
+        </a>
+    </nav>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex justify-between items-start mb-6">
+            <div>
+                <h1 class="text-2xl font-bold">Ticket {{ ticket.ticketNumber }}</h1>
+                <p class="text-gray-600 mt-1">
+                    Creado el {{ ticket.createdAt }}
+                </p>
+            </div>
+            <span class="px-3 py-1 text-sm font-semibold rounded-full
+                {% if ticket.status == 'closed' %}bg-green-100 text-green-800
+                {% elseif ticket.status == 'cancelled' %}bg-red-100 text-red-800
+                {% elseif ticket.status == 'created' or ticket.status == 'assigned' %}bg-blue-100 text-blue-800
+                {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                {{ ticket.statusLabel ?? ticket.status }}
+            </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <h2 class="text-lg font-semibold mb-3">Detalles del Servicio</h2>
+                <dl class="space-y-2">
+                    <div class="flex justify-between">
+                        <dt class="text-gray-600">Tipo de servicio:</dt>
+                        <dd class="font-medium">{{ ticket.serviceType }}</dd>
+                    </div>
+                    <div class="flex justify-between">
+                        <dt class="text-gray-600">Estado:</dt>
+                        <dd class="font-medium">{{ ticket.statusLabel ?? ticket.status }}</dd>
+                    </div>
+                    {% if ticket.slaDeadlineAt %}
+                    <div class="flex justify-between">
+                        <dt class="text-gray-600">SLA límite:</dt>
+                        <dd class="font-medium">{{ ticket.slaDeadlineAt }}</dd>
+                    </div>
+                    {% endif %}
+                </dl>
+            </div>
+
+            <div>
+                <h2 class="text-lg font-semibold mb-3">Descripción</h2>
+                <p class="text-gray-700">{{ ticket.description }}</p>
+            </div>
+        </div>
+
+        {% if ticket.finding %}
+        <div class="mt-8 border-t pt-6">
+            <h2 class="text-lg font-semibold mb-3">Diagnóstico</h2>
+            <dl class="space-y-2">
+                <div class="flex justify-between">
+                    <dt class="text-gray-600">Problema encontrado:</dt>
+                    <dd class="font-medium">{{ ticket.finding.problemTypeFound }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-gray-600">Detalle:</dt>
+                    <dd class="font-medium">{{ ticket.finding.problemDetail }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-gray-600">Solución aplicada:</dt>
+                    <dd class="font-medium">{{ ticket.finding.solution }}</dd>
+                </div>
+            </dl>
+        </div>
+        {% endif %}
+
+        {% if ticket.spareParts is defined and ticket.spareParts is not empty %}
+        <div class="mt-8 border-t pt-6">
+            <h2 class="text-lg font-semibold mb-3">Repuestos Utilizados</h2>
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Producto</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for part in ticket.spareParts %}
+                    <tr>
+                        <td class="px-4 py-2 text-sm">{{ part.productCode }}</td>
+                        <td class="px-4 py-2 text-sm">{{ part.quantity }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        {% if ticket.evidences is defined and ticket.evidences is not empty %}
+        <div class="mt-8 border-t pt-6">
+            <h2 class="text-lg font-semibold mb-3">Evidencias</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {% for evidence in ticket.evidences %}
+                <div class="border rounded p-2">
+                    <p class="text-sm text-gray-600">{{ evidence.filename }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -7,7 +7,7 @@
     <div class="flex items-center gap-2">
         {% if is_granted('inventory.update') %}
         <a href="{{ path('inventory_location_edit', {id: location.id}) }}"
-           class="inline-flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-lg border border-slate-200 text-gray-600 hover:bg-slate-50 transition-colors">
+           class="inline-flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
             Editar
         </a>
         {% endif %}
@@ -21,7 +21,7 @@
 {% endblock %}
 
 {% block body %}
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div>
                 <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Nombre</dt>

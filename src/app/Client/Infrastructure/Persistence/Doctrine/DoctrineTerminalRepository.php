@@ -6,6 +6,7 @@ namespace App\Client\Infrastructure\Persistence\Doctrine;
 
 use App\Client\Domain\Entities\Terminal;
 use App\Client\Domain\Repositories\TerminalRepositoryInterface;
+use App\Client\Domain\ValueObjects\SerialNumberValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,9 +36,21 @@ final class DoctrineTerminalRepository implements TerminalRepositoryInterface
             ->from(Terminal::class, 't')
             ->where('t.clientId = :clientId')
             ->andWhere('t.deletedAt IS NULL')
-            ->setParameter('clientId', $clientId)
+            ->setParameter('clientId', $clientId, 'client_id')
             ->getQuery()
             ->getResult();
+    }
+
+    public function findBySerial(SerialNumberValueObject $serial): ?Terminal
+    {
+        return $this->em->createQueryBuilder()
+            ->select('t')
+            ->from(Terminal::class, 't')
+            ->where('t.serial = :serial')
+            ->andWhere('t.deletedAt IS NULL')
+            ->setParameter('serial', $serial, 'terminal_serial')
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     public function save(Terminal $terminal): void

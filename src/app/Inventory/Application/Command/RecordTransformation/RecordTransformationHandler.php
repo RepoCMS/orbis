@@ -40,6 +40,13 @@ final readonly class RecordTransformationHandler
             );
         }
 
+        if (!$stock->isVandalism()) {
+            throw new \LogicException(
+                'Solo stock marcado como vandalismo puede ser transformado. ' .
+                'Para cambios de producto o serial, use el flujo de reparación.',
+            );
+        }
+
         $newProductId     = $command->newProductId !== null
             ? new ProductIdValueObject($command->newProductId)
             : null;

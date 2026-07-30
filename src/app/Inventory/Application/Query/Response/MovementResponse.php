@@ -24,6 +24,10 @@ final readonly class MovementResponse
         public ?string $notes,
         public string  $createdAt,
         public ?string $completedAt,
+        public ?string $createdByUserId = null,
+        public ?string $assignedToUserId = null,
+        public ?string $rejectedAt = null,
+        public ?string $rejectionReason = null,
     ) {
     }
 
@@ -40,6 +44,7 @@ final readonly class MovementResponse
             MovementStatus::IN_TRANSIT => 'En tránsito',
             MovementStatus::COMPLETED => 'Completado',
             MovementStatus::CANCELLED => 'Cancelado',
+            MovementStatus::REJECTED  => 'Rechazado',
         };
 
         return new self(
@@ -56,6 +61,10 @@ final readonly class MovementResponse
             notes:                $movement->notes(),
             createdAt:            $movement->createdAt()->format('Y-m-d H:i:s'),
             completedAt:          $movement->completedAt()?->format('Y-m-d H:i:s'),
+            createdByUserId:      $movement->createdByUserId(),
+            assignedToUserId:    $movement->assignedToUserId(),
+            rejectedAt:          $movement->rejectedAt()?->format('Y-m-d H:i:s'),
+            rejectionReason:     $movement->rejectionReason(),
         );
     }
 }

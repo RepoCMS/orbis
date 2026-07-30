@@ -113,6 +113,11 @@ final class Contact
         return $this->status;
     }
 
+    public function linkToUser(string $userId): void
+    {
+        $this->userId = new UserIdValueObject($userId);
+    }
+
     public function hasUser(): bool
     {
         return $this->userId !== null;

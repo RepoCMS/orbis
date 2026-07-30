@@ -6,16 +6,17 @@ namespace App\Support\Domain\Enums;
 
 enum TicketStatus: string
 {
-    case CREATED          = 'CREATED';
-    case ASSIGNED         = 'ASSIGNED';
-    case IN_TRANSIT_OUT   = 'IN_TRANSIT_OUT';
-    case WAITING          = 'WAITING';
-    case IN_ASSISTANCE    = 'IN_ASSISTANCE';
-    case PAUSED           = 'PAUSED';
-    case IN_TRANSIT_BACK  = 'IN_TRANSIT_BACK';
-    case PENDING_CLOSURE  = 'PENDING_CLOSURE';
-    case CLOSED           = 'CLOSED';
-    case CANCELLED        = 'CANCELLED';
+    case CREATED          = 'created';
+    case ASSIGNED         = 'assigned';
+    case IN_TRANSIT_OUT   = 'in_transit_out';
+    case WAITING          = 'waiting';
+    case IN_ASSISTANCE    = 'in_assistance';
+    case PAUSED           = 'paused';
+    case IN_TRANSIT_BACK  = 'in_transit_back';
+    case PENDING_CLOSURE  = 'pending_closure';
+    case CLOSED           = 'closed';
+    case CANCELLED        = 'cancelled';
+    case REOPENED         = 'reopened';
 
     public function label(): string
     {
@@ -30,6 +31,7 @@ enum TicketStatus: string
             self::PENDING_CLOSURE => 'Pendiente Cierre',
             self::CLOSED          => 'Cerrado',
             self::CANCELLED       => 'Cancelado',
+            self::REOPENED        => 'Reabierto',
         };
     }
 

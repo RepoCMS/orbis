@@ -7,7 +7,7 @@
     <div class="flex items-center gap-2">
         {% if is_granted('inventory.update') %}
         <a href="{{ path('inventory_product_edit', {id: product.id}) }}"
-           class="inline-flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-lg border border-slate-200 text-gray-600 hover:bg-slate-50 transition-colors">
+           class="inline-flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
             Editar
         </a>
         {% endif %}
@@ -23,7 +23,7 @@
 {% block body %}
     <div class="space-y-6">
         {# Datos del producto #}
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Código</dt>
@@ -54,8 +54,8 @@
 
         {# Stock serializado — solo si el producto es de tipo serializado #}
         {% if product.trackingType == 'serialized' %}
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
-            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                 <h2 class="text-sm font-semibold text-gray-700">Stock serializado</h2>
                 <span class="text-xs text-gray-400">{{ serializedStock | length }} unidades</span>
             </div>
@@ -65,7 +65,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
-                        <tr class="border-b border-slate-100 text-left">
+                        <tr class="border-b border-gray-100 text-left">
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">N.º Serie</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Ubicación</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Estado</th>
@@ -73,7 +73,7 @@
                     </thead>
                     <tbody class="divide-y divide-slate-50">
                         {% for s in serializedStock %}
-                        <tr class="hover:bg-slate-50/60">
+                        <tr class="hover:bg-gray-50/60">
                             <td class="px-4 py-2.5 font-mono text-xs">{{ s.serialNumber }}</td>
                             <td class="px-4 py-2.5 text-gray-600 text-xs">{{ s.locationName }}</td>
                             <td class="px-4 py-2.5">
@@ -96,8 +96,8 @@
 
         {# Stock no serializado — solo si el producto es de tipo no serializado #}
         {% if product.trackingType == 'non_serialized' %}
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
-            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                 <h2 class="text-sm font-semibold text-gray-700">Stock</h2>
                 <span class="text-xs text-gray-400">{{ nonserializedStock | length }} lotes</span>
             </div>
@@ -107,7 +107,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
-                        <tr class="border-b border-slate-100 text-left">
+                        <tr class="border-b border-gray-100 text-left">
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Ubicación</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Cantidad</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Estado</th>
@@ -118,35 +118,25 @@
                     </thead>
                     <tbody class="divide-y divide-slate-50">
                         {% for s in nonserializedStock %}
-                        <tr class="hover:bg-slate-50/60">
+                        <tr class="hover:bg-gray-50/60">
                             <td class="px-4 py-2.5 text-gray-600 text-xs">{{ s.locationName }}</td>
                             <td class="px-4 py-2.5 font-semibold">{{ s.quantity }}</td>
                             <td class="px-4 py-2.5">
-                                <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                                <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
                                     {{ s.status }}
                                 </span>
                             </td>
                             {% if is_granted('inventory.update') and s.status == 'AVAILABLE' %}
                             <td class="px-4 py-2.5 text-right">
                                 <div class="flex justify-end gap-2">
-                                    <form method="POST"
-                                          action="{{ path('inventory_stock_write_off', {productId: product.id, stockId: s.id}) }}"
-                                          onsubmit="return confirm('¿Marcar este lote como DAÑADO?')">
-                                        <input type="hidden" name="action" value="damage">
-                                        <button type="submit"
-                                                class="text-xs font-medium px-2.5 py-1 rounded-full bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition-colors">
-                                            Dañado
-                                        </button>
-                                    </form>
-                                    <form method="POST"
-                                          action="{{ path('inventory_stock_write_off', {productId: product.id, stockId: s.id}) }}"
-                                          onsubmit="return confirm('¿Dar de baja este lote como DESCARTADO?')">
-                                        <input type="hidden" name="action" value="decommission">
-                                        <button type="submit"
-                                                class="text-xs font-medium px-2.5 py-1 rounded-full bg-red-100 text-red-700 hover:bg-red-200 transition-colors">
-                                            Dar de baja
-                                        </button>
-                                    </form>
+                                    <button type="button" onclick="openModal('modal-damage-{{ s.id }}')"
+                                            class="text-xs font-medium px-2.5 py-1 rounded-full bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition-colors">
+                                        Dañado
+                                    </button>
+                                    <button type="button" onclick="openModal('modal-decommission-{{ s.id }}')"
+                                            class="text-xs font-medium px-2.5 py-1 rounded-full bg-red-100 text-red-700 hover:bg-red-200 transition-colors">
+                                        Dar de baja
+                                    </button>
                                 </div>
                             </td>
                             {% elseif is_granted('inventory.update') %}
@@ -163,8 +153,8 @@
 
         {# ── Cargar stock directamente ──────────────────────────────────────── #}
         {% if is_granted('inventory.create') %}
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
-            <div class="px-6 py-4 border-b border-slate-100">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-100">
                 <h2 class="text-sm font-semibold text-gray-700">Cargar stock</h2>
                 <p class="text-xs text-gray-400 mt-0.5">Registra unidades directamente sin crear una Entrada formal.</p>
             </div>
@@ -179,7 +169,7 @@
                             Ubicación destino <span class="text-red-500">*</span>
                         </label>
                         <select name="location_id" required
-                                class="text-sm rounded-lg border border-slate-200 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30 min-w-[180px]">
+                                class="text-sm rounded-lg border border-gray-200 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30 min-w-[180px]">
                             <option value="">— Seleccionar —</option>
                             {% for loc in locations %}
                             <option value="{{ loc.id }}">{{ loc.name }}</option>
@@ -194,7 +184,7 @@
                             Número de serie <span class="text-red-500">*</span>
                         </label>
                         <input type="text" name="serial_number" required
-                               class="text-sm rounded-lg border border-slate-200 px-3 py-2 font-mono w-48 focus:outline-none focus:ring-2 focus:ring-blue-400/30"
+                               class="text-sm rounded-lg border border-gray-200 px-3 py-2 font-mono w-48 focus:outline-none focus:ring-2 focus:ring-blue-400/30"
                                placeholder="SN-XXXXXXXX"
                                autocomplete="off">
                     </div>
@@ -206,7 +196,7 @@
                         </label>
                         <input type="number" name="quantity" required
                                min="1" value="1"
-                               class="text-sm rounded-lg border border-slate-200 px-3 py-2 w-24 focus:outline-none focus:ring-2 focus:ring-blue-400/30">
+                               class="text-sm rounded-lg border border-gray-200 px-3 py-2 w-24 focus:outline-none focus:ring-2 focus:ring-blue-400/30">
                     </div>
                     {% endif %}
 
@@ -221,5 +211,28 @@
         {% endif %}
 
     </div>
+
+    {% if product.trackingType == 'non_serialized' and nonserializedStock is not empty and is_granted('inventory.update') %}
+    {% for s in nonserializedStock %}
+    {% if s.status == 'AVAILABLE' %}
+    {% include 'components/_confirm_modal.html.twig' with {
+        id: 'modal-damage-' ~ s.id,
+        title: 'Marcar como DAÑADO',
+        message: '¿Marcar este lote como DAÑADO?',
+        action: path('inventory_stock_write_off', {productId: product.id, stockId: s.id}) ~ '?action=damage',
+        confirmText: 'Marcar dañado',
+        confirmStyle: 'amber',
+    } %}
+    {% include 'components/_confirm_modal.html.twig' with {
+        id: 'modal-decommission-' ~ s.id,
+        title: 'Dar de baja',
+        message: '¿Dar de baja este lote como DESCARTADO?',
+        action: path('inventory_stock_write_off', {productId: product.id, stockId: s.id}) ~ '?action=decommission',
+        confirmText: 'Dar de baja',
+        confirmStyle: 'red',
+    } %}
+    {% endif %}
+    {% endfor %}
+    {% endif %}
 {% endblock %}
 

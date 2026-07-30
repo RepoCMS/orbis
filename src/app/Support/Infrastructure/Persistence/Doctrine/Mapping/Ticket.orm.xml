@@ -31,6 +31,8 @@
         <field name="cancelledAt"          type="datetime_immutable" column="cancelled_at"         nullable="true" />
         <field name="cancellationReason"   type="text"     column="cancellation_reason"    nullable="true" />
         <field name="deletedAt"            type="datetime_immutable" column="deleted_at"           nullable="true" />
+        <field name="reopenedAt"           type="datetime_immutable" column="reopened_at"          nullable="true" />
+        <field name="reopenedReason"       type="text"               column="reopened_reason"      nullable="true" />
 
         <indexes>
             <index name="idx_tickets_client_id"              columns="client_id" />

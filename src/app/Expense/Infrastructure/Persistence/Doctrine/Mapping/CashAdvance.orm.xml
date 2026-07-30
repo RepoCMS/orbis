@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <!--
+        Adelanto de efectivo (viático) entregado a un técnico para gastos de campo.
+        advance_number debe ser único (número de documento interno).
+        settlement_direction indica si el técnico devolvió saldo o la empresa pagó reembolso.
+    -->
+    <entity name="App\Expense\Domain\Entities\CashAdvance" table="cash_advances">
+
+        <id name="id" type="expense_cash_advance_id" column="id" length="26" />
+
+        <field name="advanceNumber"         type="string"                       column="advance_number"           length="50" />
+        <field name="employeeId"            type="string"                       column="employee_id"              length="26" />
+        <field name="givenBy"               type="string"                       column="given_by"                 length="26" />
+        <field name="amount"                type="float"                        column="amount" />
+        <field name="givenAt"               type="datetime_immutable"           column="given_at" />
+        <field name="status"                type="expense_cash_advance_status"  column="status"                   length="20" />
+        <field name="voucherPath"           type="string"                       column="voucher_path"             length="500" nullable="true" />
+        <field name="settlementConfirmedBy" type="string"                       column="settlement_confirmed_by"  length="26" nullable="true" />
+        <field name="settlementConfirmedAt" type="datetime_immutable"           column="settlement_confirmed_at"  nullable="true" />
+        <field name="settlementDirection"   type="expense_settlement_direction" column="settlement_direction"     length="25" nullable="true" />
+        <field name="createdAt"             type="datetime_immutable"           column="created_at" />
+        <field name="updatedAt"             type="datetime_immutable"           column="updated_at"               nullable="true" />
+        <field name="deletedAt"             type="datetime_immutable"           column="deleted_at"               nullable="true" />
+
+        <unique-constraints>
+            <unique-constraint name="uq_cash_advances_advance_number" columns="advance_number" />
+        </unique-constraints>
+
+        <indexes>
+            <index name="idx_cash_advances_employee_id" columns="employee_id" />
+            <index name="idx_cash_advances_given_by"    columns="given_by" />
+            <index name="idx_cash_advances_status"      columns="status" />
+            <index name="idx_cash_advances_deleted_at"  columns="deleted_at" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

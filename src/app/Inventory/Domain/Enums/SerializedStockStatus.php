@@ -9,5 +9,6 @@ enum SerializedStockStatus: string
     case AVAILABLE    = 'disponible';
     case RESERVED     = 'reservado';
     case DAMAGED      = 'dañado';
+    case SUSPECT      = 'sospechoso';
     case DECOMMISSIONED = 'dado de baja';
 }

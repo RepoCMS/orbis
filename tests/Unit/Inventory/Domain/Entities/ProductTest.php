@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Inventory\Domain\Entities;
 
 use App\Inventory\Domain\Entities\Product;
+use App\Inventory\Domain\Enums\ProductTrackingType;
 use App\Inventory\Domain\ValueObjects\ProductCodeAssignedBySupplierValueObject;
 use App\Inventory\Domain\ValueObjects\ProductIdValueObject;
 use App\Inventory\Domain\ValueObjects\ProductNameValueObject;
@@ -27,7 +28,7 @@ final class ProductTest extends TestCase
     private function makeProduct(
         string $name = 'ATM Display',
         string $description = 'Pantalla principal 12"',
-        string $trackingType = 'serialized',
+        ProductTrackingType $trackingType = ProductTrackingType::SERIALIZED,
     ): Product {
         return Product::add($this->makeId(), $this->makeCode(), new ProductNameValueObject($name), $description, $trackingType);
     }
@@ -41,7 +42,7 @@ final class ProductTest extends TestCase
         self::assertSame('ATM Display', (string) $product->name());
         self::assertSame('Pantalla principal', $product->description());
         self::assertSame('SUPPLIER-001', (string) $product->productCode());
-        self::assertSame('serialized', $product->trackingType());
+        self::assertSame(ProductTrackingType::SERIALIZED, $product->trackingType());
         self::assertTrue($product->isSerialized());
         self::assertFalse($product->isDeleted());
     }
@@ -49,22 +50,22 @@ final class ProductTest extends TestCase
     public function testAddStoresId(): void
     {
         $id      = $this->makeId();
-        $product = Product::add($id, $this->makeCode(), new ProductNameValueObject('Name'), 'Desc', 'serialized');
+        $product = Product::add($id, $this->makeCode(), new ProductNameValueObject('Name'), 'Desc', ProductTrackingType::SERIALIZED);
 
         self::assertSame($id, $product->id());
     }
 
     public function testNonSerializedProduct(): void
     {
-        $product = $this->makeProduct(trackingType: 'non_serialized');
+        $product = $this->makeProduct(trackingType: ProductTrackingType::NON_SERIALIZED);
 
-        self::assertSame('non_serialized', $product->trackingType());
+        self::assertSame(ProductTrackingType::NON_SERIALIZED, $product->trackingType());
         self::assertFalse($product->isSerialized());
     }
 
     public function testInvalidTrackingTypeThrows(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\TypeError::class);
         $this->makeProduct(trackingType: 'invalid');
     }
 

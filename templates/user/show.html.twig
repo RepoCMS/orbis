@@ -1,15 +1,16 @@
 {% extends 'base.html.twig' %}
+{% import 'components/_macros.html.twig' as ui %}
 
 {% block title %}{{ user.username }}{% endblock %}
+{% block page_title %}{{ user.username }}{% endblock %}
 
-{% block page_title %}Usuario: {{ user.username }}{% endblock %}
 
 {% block header_actions %}
     <div class="flex items-center gap-3">
         {% if user.status == 'unverified' %}
             <form method="POST" action="{{ path('user_verify', {id: user.id}) }}">
                 <button type="submit"
-                        class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm"
+                        class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-all hover:shadow-md"
                         style="background: #00a86b;"
                         onmouseover="this.style.background='#008a56'"
                         onmouseout="this.style.background='#00a86b'">
@@ -19,39 +20,42 @@
                     Verificar
                 </button>
             </form>
-                        <form method="POST" action="{{ path('user_resend_verification', {id: user.id}) }}">
-                    <button type="submit"
-                            class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-blue-300 text-blue-700 hover:bg-blue-50">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                        </svg>
-                        Reenviar email
-                    </button>
-                </form>
-        {% endif %}
-        {% if user.status == 'active' and is_granted('user.deactivate') %}
-            <form method="POST" action="{{ path('user_deactivate', {id: user.id}) }}">
+            <form method="POST" action="{{ path('user_resend_verification', {id: user.id}) }}">
                 <button type="submit"
-                        class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-amber-300 text-amber-700 hover:bg-amber-50">
-                    Desactivar
+                        class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-blue-300 text-blue-700 hover:bg-blue-50 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    Reenviar email
                 </button>
             </form>
-        {% elseif user.status == 'inactive' and is_granted('user.activate') %}
+        {% endif %}
+        {% if user.isLocked and is_granted('user.unlock') %}
+            <form method="post" action="{{ path('user_unlock', {id: user.id}) }}">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-amber-300 text-amber-700 hover:bg-amber-50 transition-colors">
+                    Desbloquear
+                </button>
+            </form>
+        {% endif %}
+        {% if is_granted('user.deactivate') and user.status == 'active' %}
+            <button type="button" onclick="openModal('modal-confirm-deactivate-user')"
+                    class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-amber-300 text-amber-700 hover:bg-amber-50 transition-colors">
+                Desactivar
+            </button>
+        {% elseif is_granted('user.activate') and user.status == 'inactive' %}
             <form method="POST" action="{{ path('user_reactivate', {id: user.id}) }}">
                 <button type="submit"
-                        class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-emerald-300 text-emerald-700 hover:bg-emerald-50">
+                        class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-emerald-300 text-emerald-700 hover:bg-emerald-50 transition-colors">
                     Reactivar
                 </button>
             </form>
         {% endif %}
         {% if is_granted('user.delete') %}
-        <form method="POST" action="{{ path('user_delete', {id: user.id}) }}">
-            <button type="submit"
-                    class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-red-300 text-red-700 hover:bg-red-50"
-                    onclick="return confirm('¿Eliminar lógicamente este usuario?')">
+            <button type="button" onclick="openModal('modal-confirm-delete-user')"
+                    class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-red-300 text-red-700 hover:bg-red-50 transition-colors">
                 Eliminar
             </button>
-        </form>
         {% endif %}
         <a href="{{ path('user_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -63,9 +67,9 @@
 {% endblock %}
 
 {% block body %}
-    <div class="max-w-2xl space-y-6">
+    <div class="w-full max-w-4xl mx-auto space-y-6">
 
-        {# Errores #}
+        {# ── Errors ───────────────────────────────────────────── #}
         {% if errors is defined and errors|length > 0 %}
             <div class="bg-red-50 border border-red-200 rounded-xl px-5 py-4">
                 {% for error in errors %}
@@ -74,12 +78,45 @@
             </div>
         {% endif %}
 
-        {# Info card / form de edición #}
+        {# ── Profile header ───────────────────────────────────── #}
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    {{ ui.avatar_initials(user.username|slice(0,1), user.username|slice(1,1)) }}
+                    <div>
+                        <h1 class="text-lg font-semibold text-gray-900">{{ user.username }}</h1>
+                        <div class="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                            <span>{{ roleName }}</span>
+                            <span class="text-gray-300">|</span>
+                            <span>{{ ui.status_badge(user.status) }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# ── Tabs ─────────────────────────────────────────── #}
+            <div class="border-t border-gray-100">
+                <nav class="flex px-6" role="tablist">
+                    <button type="button" role="tab" data-tab="info"
+                            class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 transition-all"
+                            onclick="switchTab('info')">
+                        Información
+                    </button>
+                    <button type="button" role="tab" data-tab="security"
+                            class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 transition-all"
+                            onclick="switchTab('security')">
+                        Seguridad
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        {# ── Tab: Información ─────────────────────────────────── #}
+        <div id="tab-info" class="tab-content bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
                 <h2 class="text-sm font-semibold text-gray-700">Información del usuario</h2>
                 <button type="button" id="toggle-edit-user"
-                        class="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 shadow-sm transition-colors">
+                        class="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 shadow-sm transition-colors">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 012.828 2.828L11.828 15.828a4 4 0 01-1.414.828l-3 1 1-3a4 4 0 01.828-1.414z"/>
                     </svg>
@@ -87,7 +124,6 @@
                 </button>
             </div>
 
-            {# Vista normal #}
             <div id="view-user">
                 <dl class="divide-y divide-gray-100">
                     <div class="px-6 py-4 flex justify-between text-sm">
@@ -99,26 +135,12 @@
                         <dd class="text-gray-900 font-medium">{{ user.username }}</dd>
                     </div>
                     <div class="px-6 py-4 flex justify-between text-sm">
-                        <dt class="text-gray-500">Email</dt>
-                        <dd class="text-gray-800">—</dd>
-                    </div>
-                    <div class="px-6 py-4 flex justify-between text-sm">
                         <dt class="text-gray-500">Rol</dt>
                         <dd class="text-gray-800">{{ roleName }}</dd>
                     </div>
                     <div class="px-6 py-4 flex justify-between text-sm">
                         <dt class="text-gray-500">Estado</dt>
-                        <dd>
-                            {% if user.status == 'active' %}
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Activo</span>
-                            {% elseif user.status == 'unverified' %}
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Sin verificar</span>
-                            {% elseif user.status == 'inactive' %}
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">Inactivo</span>
-                            {% else %}
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ user.status }}</span>
-                            {% endif %}
-                        </dd>
+                        <dd>{{ ui.status_badge(user.status) }}</dd>
                     </div>
                     <div class="px-6 py-4 flex justify-between text-sm">
                         <dt class="text-gray-500">Intentos fallidos</dt>
@@ -126,18 +148,28 @@
                             {{ user.failedLoginAttempts }}
                         </dd>
                     </div>
-                    {% if user.isLocked %}
+                    {% if user.lockedUntil is not null %}
                         <div class="px-6 py-4 flex justify-between text-sm">
-                            <dt class="text-gray-500">Bloqueado hasta</dt>
-                            <dd class="text-red-600">{{ user.lockedUntil|date('d/m/Y H:i') }}</dd>
+                            {% if user.isLocked %}
+                                <dt class="text-gray-500">Bloqueado hasta</dt>
+                                <dd class="text-red-600 font-medium" title="UTC: {{ user.lockedUntil|date('Y-m-d H:i:s') }}">
+                                    {{ user.lockedUntil|date('d/m/Y H:i:s', 'America/Guayaquil') }}
+                                </dd>
+                            {% else %}
+                                <dt class="text-gray-500">Bloqueo expiró el</dt>
+                                <dd class="text-orange-600" title="UTC: {{ user.lockedUntil|date('Y-m-d H:i:s') }}">
+                                    {{ user.lockedUntil|date('d/m/Y H:i:s', 'America/Guayaquil') }}
+                                </dd>
+                            {% endif %}
                         </div>
                     {% endif %}
                 </dl>
             </div>
 
-            {# Formulario de edición (oculto por defecto) #}
+            {# Edit form #}
             <form id="form-edit-user" method="POST" action="{{ path('user_edit', {id: user.id}) }}"
-                  class="hidden px-6 py-5 space-y-4">
+                  data-turbo="false"
+                  class="hidden px-6 py-5 space-y-4 border-t border-gray-100">
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Username</label>
                     <input type="text" name="username" value="{{ user.username }}"
@@ -174,18 +206,124 @@
             </form>
         </div>
 
+        {# ── Tab: Seguridad ─────────────────────────────────── #}
+        <div id="tab-security" class="tab-content hidden bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                <h2 class="text-sm font-semibold text-gray-700">Seguridad de la cuenta</h2>
+                <p class="text-xs text-gray-400 mt-0.5">Información de acceso y estado de la cuenta.</p>
+            </div>
+            <dl class="divide-y divide-gray-100">
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">MFA habilitado</dt>
+                    <dd class="flex items-center gap-3">
+                        {% if user.mfaEnabled %}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Sí</span>
+                            {% if is_granted('user.manage') %}
+                                <button type="button" id="btn-revoke-mfa"
+                                        class="text-xs text-red-600 hover:text-red-800 hover:underline"
+                                        onclick="revokeMfa('{{ path('api_identity_users_revoke_mfa', {id: user.id}) }}')">
+                                    Revocar MFA
+                                </button>
+                            {% endif %}
+                        {% else %}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">No</span>
+                        {% endif %}
+                    </dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Último acceso</dt>
+                    <dd class="text-gray-800">{{ user.lastLoginAt ?? '—' }}</dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Cambio de contraseña</dt>
+                    <dd class="text-gray-800">{{ user.passwordChangedAt ?? '—' }}</dd>
+                </div>
+            </dl>
+        </div>
     </div>
 
+    {# ── Confirmation modals ────────────────────────────── #}
+    {% include 'components/_confirm_modal.html.twig' with {
+        id: 'modal-confirm-delete-user',
+        title: 'Eliminar usuario',
+        message: '¿Está seguro de eliminar este usuario?',
+        action: path('user_delete', {id: user.id}),
+        confirmText: 'Eliminar',
+        confirmStyle: 'red',
+    } %}
+
+    {% include 'components/_confirm_modal.html.twig' with {
+        id: 'modal-confirm-deactivate-user',
+        title: 'Desactivar usuario',
+        message: '¿Está seguro de desactivar este usuario?',
+        action: path('user_deactivate', {id: user.id}),
+        confirmText: 'Desactivar',
+        confirmStyle: 'amber',
+    } %}
+
     <script>
-        document.getElementById('toggle-edit-user').addEventListener('click', function() {
-            document.getElementById('view-user').classList.add('hidden');
-            document.getElementById('form-edit-user').classList.remove('hidden');
-            this.classList.add('hidden');
-        });
-        document.getElementById('cancel-edit-user').addEventListener('click', function() {
-            document.getElementById('view-user').classList.remove('hidden');
-            document.getElementById('form-edit-user').classList.add('hidden');
-            document.getElementById('toggle-edit-user').classList.remove('hidden');
-        });
+        async function revokeMfa(url) {
+            if (!confirm('¿Está seguro de revocar MFA para este usuario?')) return;
+            try {
+                var resp = await fetch(url, { method: 'POST' });
+                if (!resp.ok) { alert('Error al revocar MFA'); return; }
+                var data = await resp.json();
+                if (data.data && data.data.mfaEnabled === false) {
+                    var badge = document.querySelector('#tab-security dt:first-child + dd');
+                    if (badge) {
+                        badge.innerHTML = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">No</span>';
+                    }
+                    var btn = document.getElementById('btn-revoke-mfa');
+                    if (btn) btn.remove();
+                }
+            } catch (e) {
+                alert('Error de conexión al revocar MFA.');
+            }
+        }
+
+        function switchTab(name) {
+            document.querySelectorAll('.tab-content').forEach(function(el) { el.classList.add('hidden'); });
+            document.querySelectorAll('.tab-btn').forEach(function(el) {
+                el.classList.remove('text-blue-600', 'border-blue-600', 'text-gray-900');
+                el.classList.add('text-gray-500', 'border-transparent');
+            });
+            var content = document.getElementById('tab-' + name);
+            if (content) content.classList.remove('hidden');
+            var btn = document.querySelector('[data-tab="' + name + '"]');
+            if (btn) {
+                btn.classList.remove('text-gray-500', 'border-transparent');
+                btn.classList.add('text-blue-600', 'border-blue-600');
+            }
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        (function() {
+            var toggle = document.getElementById('toggle-edit-user');
+            var view   = document.getElementById('view-user');
+            var form   = document.getElementById('form-edit-user');
+            var cancel = document.getElementById('cancel-edit-user');
+            if (form && !form.classList.contains('hidden')) {
+                toggle && toggle.classList.add('hidden');
+            }
+            toggle && toggle.addEventListener('click', function() {
+                view.classList.add('hidden');
+                form.classList.remove('hidden');
+                toggle.classList.add('hidden');
+            });
+            cancel && cancel.addEventListener('click', function() {
+                view.classList.remove('hidden');
+                form.classList.add('hidden');
+                toggle.classList.remove('hidden');
+            });
+
+            switchTab('info');
+        })();
     </script>
 {% endblock %}

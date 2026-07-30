@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Organization\Application\Command\SoftDeleteEmployee;
 
+use App\Identity\Domain\Repositories\UserRepositoryInterface;
+use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Organization\Application\Exception\EmployeeNotFoundException;
 use App\Organization\Domain\Events\EmployeeDeleted;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
@@ -14,6 +16,7 @@ final readonly class SoftDeleteEmployeeHandler
 {
     public function __construct(
         private EmployeeRepositoryInterface $employeeRepository,
+        private UserRepositoryInterface $userRepository,
         private DomainEventPublisherInterface $publisher,
     ) {
     }
@@ -25,6 +28,15 @@ final readonly class SoftDeleteEmployeeHandler
             ?? throw EmployeeNotFoundException::withId($command->employeeId);
 
         $userId = $employee->userId() !== null ? (string) $employee->userId() : null;
+
+        if ($userId !== null) {
+            $user = $this->userRepository->findById(new UserIdValueObject($userId));
+            $employee->unlinkUser();
+            if ($user !== null) {
+                $user->unlinkEmployee();
+                $this->userRepository->save($user);
+            }
+        }
 
         $employee->softDelete();
 

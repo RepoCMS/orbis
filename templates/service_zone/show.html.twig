@@ -29,7 +29,7 @@
     <div class="lg:col-span-1 space-y-5">
 
         {# Card: Detalles #}
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
             <div class="flex items-start justify-between mb-4">
                 <div>
                     <h2 class="text-lg font-semibold text-gray-900">{{ zone.name }}</h2>
@@ -62,7 +62,7 @@
 
         {# Card: Editar nombre #}
         {% if is_granted('service_zone.update') %}
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
             <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Editar nombre</p>
 
             {% if errors is defined and errors is not empty and editMode is defined %}
@@ -94,7 +94,7 @@
         </div>
 
         {# Card: Cambiar estado #}
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
             <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Estado</p>
             {% if zone.status == 'active' %}
                 <form method="POST" action="{{ path('service_zone_deactivate', {id: zone.id}) }}">
@@ -121,8 +121,8 @@
     <div class="lg:col-span-2 space-y-5">
 
         {# Técnicos asignados #}
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm">
-            <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+            <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
                 <h3 class="font-semibold text-gray-800 text-sm">Técnicos asignados</h3>
                 <span class="text-xs font-medium px-2 py-0.5 rounded-full" style="background: #eef1f9; color: #1e3585;">
                     {{ assignedTechnicians|length }}
@@ -157,9 +157,10 @@
         </div>
 
         {# Asignar técnico #}
-        {% if is_granted('service_zone.assign_technician') and availableTechnicians is not empty %}
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+        {% if is_granted('service_zone.assign_technician') %}
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
             <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Asignar técnico</p>
+            {% if availableTechnicians is not empty %}
             <form method="POST" action="{{ path('service_zone_assign_technician', {id: zone.id}) }}" class="flex gap-3">
                 <select name="technician_id"
                         class="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
@@ -176,6 +177,9 @@
                     Asignar
                 </button>
             </form>
+            {% else %}
+            <p class="text-sm text-gray-400">No hay técnicos disponibles. Cree nuevos empleados con perfil de técnico desde el módulo de empleados.</p>
+            {% endif %}
         </div>
         {% endif %}
 
@@ -184,8 +188,8 @@
         {% set assignedCities = allCities|filter(c => c.id in zoneCityIds) %}
         {% set availableCities = allCities|filter(c => c.id not in zoneCityIds) %}
 
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm">
-            <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+            <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
                 <h3 class="font-semibold text-gray-800 text-sm">Ciudades asignadas</h3>
                 <span class="text-xs font-medium px-2 py-0.5 rounded-full" style="background: #eef1f9; color: #1e3585;">
                     {{ assignedCities|length }}
@@ -215,7 +219,7 @@
 
         {# Asignar ciudad #}
         {% if is_granted('service_zone.update') and availableCities|length > 0 %}
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
             <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Asignar ciudad</p>
             <form method="POST" action="{{ path('service_zone_add_city', {id: zone.id}) }}" class="flex gap-3">
                 <select name="city_id"

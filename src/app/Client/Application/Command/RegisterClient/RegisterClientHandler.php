@@ -10,31 +10,40 @@ use App\Client\Domain\Repositories\ClientRepositoryInterface;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
 use App\Client\Domain\ValueObjects\ClientNameValueObject;
 use App\Client\Domain\ValueObjects\ClientRucValueObject;
+use App\Shared\Application\Service\TransactionManagerInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 
 final readonly class RegisterClientHandler
 {
     public function __construct(
         private ClientRepositoryInterface $clientRepository,
+        private TransactionManagerInterface $transactionManager,
         private IdGeneratorInterface $idGenerator,
     ) {
     }
 
     public function __invoke(RegisterClientCommand $command): void
     {
-        $ruc = new ClientRucValueObject($command->ruc);
+        $this->transactionManager->begin();
+        try {
+            $ruc = new ClientRucValueObject($command->ruc);
 
-        if ($this->clientRepository->findByRuc($ruc) !== null) {
-            throw ClientRucAlreadyExistsException::withRuc($command->ruc);
+            if ($this->clientRepository->findByRuc($ruc) !== null) {
+                throw ClientRucAlreadyExistsException::withRuc($command->ruc);
+            }
+
+            $client = Client::register(
+                id:      new ClientIdValueObject($this->idGenerator->generate()),
+                name:    new ClientNameValueObject($command->name),
+                ruc:     $ruc,
+                address: $command->address,
+            );
+
+            $this->clientRepository->save($client);
+            $this->transactionManager->commit();
+        } catch (\Throwable $e) {
+            $this->transactionManager->rollback();
+            throw $e;
         }
-
-        $client = Client::register(
-            id:      new ClientIdValueObject($this->idGenerator->generate()),
-            name:    new ClientNameValueObject($command->name),
-            ruc:     $ruc,
-            address: $command->address,
-        );
-
-        $this->clientRepository->save($client);
     }
 }

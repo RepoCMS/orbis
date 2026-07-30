@@ -13,6 +13,8 @@ interface TerminalRepositoryInterface
 {
     public function findById(TerminalIdValueObject $id): ?Terminal;
 
+    public function findBySerial(SerialNumberValueObject $serial): ?Terminal;
+
     /**
      * @return Terminal[]
      */

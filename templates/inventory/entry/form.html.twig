@@ -14,7 +14,7 @@
 
 {% block body %}
     <div class="max-w-lg">
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
 
             {% if errors is not empty %}
                 <div class="mb-5 bg-red-50 border border-red-200 rounded-lg p-4 space-y-1">
@@ -25,6 +25,13 @@
             {% endif %}
 
             <form method="POST" action="{{ path('inventory_entry_create') }}" novalidate>
+
+                {% if purchaseOrderId %}
+                <input type="hidden" name="purchase_order_id" value="{{ purchaseOrderId }}">
+                <div class="mb-5 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p class="text-sm text-blue-700">Esta entrada se crear&aacute; vinculada a la orden de compra.</p>
+                </div>
+                {% endif %}
 
                 <div class="space-y-5">
 
@@ -51,6 +58,15 @@
                                   placeholder="Observaciones...">{{ input.notes ?? '' }}</textarea>
                     </div>
 
+                    <div>
+                        <label for="total_cost" class="block text-sm font-medium text-gray-700 mb-1">Costo total de entrada ($)</label>
+                        <input type="number" id="total_cost" name="total_cost" step="0.01" min="0"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none"
+                               onfocus="this.style.borderColor='#1e3585'" onblur="this.style.borderColor=''"
+                               style="transition: border-color .15s;"
+                               placeholder="0.00">
+                    </div>
+
                 </div>
 
                 <div class="mt-6 flex items-center gap-3">
@@ -60,7 +76,7 @@
                         Crear entrada
                     </button>
                     <a href="{{ path('inventory_entry_list') }}"
-                       class="px-4 py-2 text-sm font-medium text-gray-600 rounded-lg border border-slate-200 hover:bg-slate-50">
+                       class="px-4 py-2 text-sm font-medium text-gray-600 rounded-lg border border-gray-200 hover:bg-gray-50">
                         Cancelar
                     </a>
                 </div>

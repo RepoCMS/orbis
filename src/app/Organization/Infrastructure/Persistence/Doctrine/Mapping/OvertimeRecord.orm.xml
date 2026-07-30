@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Organization\Domain\Entities\OvertimeRecord" table="org_overtime_records">
+
+        <id name="id" type="overtime_record_id" column="id" length="26" />
+
+        <field name="employeeId"     type="employee_id"        column="employee_id"      length="26" />
+        <field name="workedAt"       type="datetime_immutable" column="worked_at" />
+        <field name="startTime"      type="datetime_immutable" column="start_time" />
+        <field name="endTime"        type="datetime_immutable" column="end_time" />
+        <field name="reason"         type="text"               column="reason" />
+        <field name="status"         type="overtime_status"    column="status"           length="15" />
+        <field name="evidenceUrl"    type="string"             column="evidence_url"     length="500" nullable="true" />
+        <field name="reviewedBy"     type="employee_id"        column="reviewed_by"      length="26" nullable="true" />
+        <field name="rejectionReason" type="text"              column="rejection_reason" nullable="true" />
+        <field name="reviewedAt"     type="datetime_immutable" column="reviewed_at"      nullable="true" />
+        <field name="createdAt"      type="datetime_immutable" column="created_at" />
+        <field name="updatedAt"      type="datetime_immutable" column="updated_at"       nullable="true" />
+
+        <indexes>
+            <index name="idx_or_employee_id" columns="employee_id" />
+            <index name="idx_or_status"      columns="status" />
+            <index name="idx_or_reviewed_by" columns="reviewed_by" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

@@ -8,23 +8,32 @@ use App\Client\Application\Exception\ClientNotFoundException;
 use App\Client\Domain\Repositories\ClientRepositoryInterface;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
 use App\Client\Domain\ValueObjects\ClientNameValueObject;
+use App\Shared\Application\Service\TransactionManagerInterface;
 
 final readonly class UpdateClientHandler
 {
     public function __construct(
         private ClientRepositoryInterface $clientRepository,
+        private TransactionManagerInterface $transactionManager,
     ) {
     }
 
     public function __invoke(UpdateClientCommand $command): void
     {
-        $clientId = new ClientIdValueObject($command->clientId);
-        $client   = $this->clientRepository->findById($clientId)
-            ?? throw ClientNotFoundException::withId($command->clientId);
+        $this->transactionManager->begin();
+        try {
+            $clientId = new ClientIdValueObject($command->clientId);
+            $client   = $this->clientRepository->findById($clientId)
+                ?? throw ClientNotFoundException::withId($command->clientId);
 
-        $client->rename(new ClientNameValueObject($command->name));
-        $client->changeAddress($command->address);
+            $client->changeName(new ClientNameValueObject($command->name));
+            $client->changeAddress($command->address);
 
-        $this->clientRepository->save($client);
+            $this->clientRepository->save($client);
+            $this->transactionManager->commit();
+        } catch (\Throwable $e) {
+            $this->transactionManager->rollback();
+            throw $e;
+        }
     }
 }

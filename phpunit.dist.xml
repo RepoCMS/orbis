@@ -18,8 +18,32 @@
     </php>
 
     <testsuites>
-        <testsuite name="Project Test Suite">
-            <directory>tests</directory>
+        <testsuite name="Client">
+            <directory>tests/Unit/Client</directory>
+        </testsuite>
+        <testsuite name="Expense">
+            <directory>tests/Unit/Expense</directory>
+        </testsuite>
+        <testsuite name="Identity">
+            <directory>tests/Unit/Identity</directory>
+        </testsuite>
+        <testsuite name="Inventory">
+            <directory>tests/Unit/Inventory</directory>
+        </testsuite>
+        <testsuite name="Location">
+            <directory>tests/Unit/Location</directory>
+        </testsuite>
+        <testsuite name="Notification">
+            <directory>tests/Unit/Notification</directory>
+        </testsuite>
+        <testsuite name="Organization">
+            <directory>tests/Unit/Organization</directory>
+        </testsuite>
+        <testsuite name="Support">
+            <directory>tests/Unit/Support</directory>
+        </testsuite>
+        <testsuite name="Integration">
+            <directory>tests/Integration</directory>
         </testsuite>
     </testsuites>
 

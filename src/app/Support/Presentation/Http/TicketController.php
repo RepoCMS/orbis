@@ -10,6 +10,8 @@ use App\Organization\Application\Query\ListEmployees\ListEmployeesHandler;
 use App\Organization\Application\Query\ListEmployees\ListEmployeesQuery;
 use App\Support\Application\Command\CreateTicket\CreateTicketCommand;
 use App\Support\Application\Command\CreateTicket\CreateTicketHandler;
+use App\Support\Application\Command\UpdateTicket\UpdateTicketCommand;
+use App\Support\Application\Command\UpdateTicket\UpdateTicketHandler;
 use App\Support\Application\Query\GetTicketDetail\GetTicketDetailHandler;
 use App\Support\Application\Query\GetTicketDetail\GetTicketDetailQuery;
 use App\Support\Application\Query\ListTickets\ListTicketsHandler;
@@ -142,5 +144,64 @@ final class TicketController extends AbstractController
             'employees' => $employees,
             'statuses'  => TicketStatus::cases(),
         ]);
+    }
+
+    #[IsGranted('ticket.update')]
+    #[Route('/{id}/edit', name: 'edit', methods: ['GET'])]
+    public function edit(
+        string $id,
+        GetTicketDetailHandler $handler,
+        ListClientsHandler $clientsHandler,
+        Connection $connection,
+    ): Response {
+        try {
+            $ticket = $handler(new GetTicketDetailQuery($id));
+        } catch (\InvalidArgumentException) {
+            throw $this->createNotFoundException('Ticket no encontrado.');
+        }
+
+        $clients   = $clientsHandler(new ListClientsQuery(limit: 200));
+        $terminals = $connection->fetchAllAssociative(
+            "SELECT ta.id, ta.name AS assignment_name, ta.id_assigned_by_client, s.name AS site_name
+             FROM terminal_assignments ta
+             INNER JOIN sites s ON s.id = ta.site_id AND s.deleted_at IS NULL
+             INNER JOIN terminals t ON t.id = ta.terminal_id AND t.deleted_at IS NULL AND t.client_id = :clientId
+             WHERE ta.status = 'active' AND ta.deleted_at IS NULL
+             ORDER BY s.name, ta.name",
+            ['clientId' => $ticket->clientId],
+        );
+
+        return $this->render('support/ticket/edit.html.twig', [
+            'ticket'         => $ticket,
+            'clients'        => $clients,
+            'terminals'      => $terminals,
+            'serviceTypes'   => ServiceType::cases(),
+        ]);
+    }
+
+    #[IsGranted('ticket.update')]
+    #[Route('/{id}/update', name: 'update', methods: ['POST'])]
+    public function update(
+        string $id,
+        Request $request,
+        UpdateTicketHandler $handler,
+    ): Response {
+        try {
+            $serviceType = $request->request->get('serviceType')
+                ? ServiceType::tryFrom((string) $request->request->get('serviceType'))
+                : null;
+
+            $handler(new UpdateTicketCommand(
+                ticketId:    $id,
+                description: $request->request->get('description') ?: null,
+                serviceType: $serviceType,
+            ));
+
+            $this->addFlash('success', 'Ticket actualizado correctamente.');
+        } catch (\DomainException $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('support_ticket_show', ['id' => $id]);
     }
 }

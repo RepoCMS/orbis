@@ -7,6 +7,7 @@ namespace App\Identity\Domain\Repositories;
 use App\Identity\Domain\Entities\AuthLog;
 use App\Identity\Domain\ValueObjects\AuthLogIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
+use DateTimeImmutable;
 
 interface AuthLogRepositoryInterface
 {
@@ -23,4 +24,21 @@ interface AuthLogRepositoryInterface
     public function findByUserId(UserIdValueObject $userId, int $limit, int $offset): array;
 
     public function countByUserId(UserIdValueObject $userId): int;
+
+    /**
+     * @param UserIdValueObject|null $userId
+     * @param DateTimeImmutable|null $dateFrom
+     * @param DateTimeImmutable|null $dateTo
+     * @param int $page
+     * @param int $limit
+     * @return AuthLog[]
+     */
+    public function findByFilters(?UserIdValueObject $userId, ?DateTimeImmutable $dateFrom, ?DateTimeImmutable $dateTo, int $page, int $limit): array;
+
+    public function countByFilters(?UserIdValueObject $userId, ?DateTimeImmutable $dateFrom, ?DateTimeImmutable $dateTo): int;
+
+    /**
+     * Cuenta intentos de login fallidos desde una IP en los últimos N minutos.
+     */
+    public function countRecentFailedByIp(string $ipAddress, int $minutes): int;
 }

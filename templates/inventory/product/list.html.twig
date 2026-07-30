@@ -19,7 +19,7 @@
 {% block body %}
     {% if products is empty %}
         <div class="flex flex-col items-center justify-center py-20 text-gray-400">
-            <svg class="w-12 h-12 mb-3 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <svg class="w-12 h-12 mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
             </svg>
             <p class="text-sm font-medium text-gray-600">No hay productos registrados.</p>
@@ -30,28 +30,54 @@
             {% endif %}
         </div>
     {% else %}
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200"
+             data-controller="table-filter">
+
+            {% include 'components/_table_toolbar.html.twig' with {
+                placeholder: 'Buscar producto por código, nombre o descripción...'
+            } %}
+
+            <div class="px-4 py-2 border-b border-gray-100 hidden gap-4"
+                 data-table-filter-target="panel">
+                <div class="flex items-center gap-2">
+                    <label class="text-xs font-medium text-gray-500">Tipo de seguimiento</label>
+                    <select data-table-filter-target="filterSelect"
+                            data-col="1"
+                            data-match="exact"
+                            data-action="change->table-filter#filterRows"
+                            class="text-sm rounded-lg border border-gray-200 px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400/30 focus:border-blue-400 bg-gray-50/50">
+                        <option value="">Todos</option>
+                        <option value="Serializado">Serializado</option>
+                        <option value="No serializado">No serializado</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
-                        <tr class="border-b border-slate-100 text-left">
+                        <tr class="border-b border-gray-100 text-left">
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">ID</th>
-                        
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden md:table-cell">Tipo de seguimiento</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Código</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Nombre</th>
+                            <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide text-right hidden md:table-cell">Últ. precio</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide hidden md:table-cell">Descripción</th>
                             <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide text-right">Acciones</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-50">
                         {% for product in products %}
-                        <tr class="hover:bg-slate-50/60 transition-colors">
+                        <tr data-table-filter-target="row"
+                            class="hover:bg-gray-50/60 transition-colors">
                             <td class="px-4 py-3 font-mono text-xs text-gray-600">{{ product.id }}</td>
                             <td class="px-4 py-3 text-gray-500 hidden md:table-cell truncate max-w-xs">{{ product.trackingType == 'serialized' ? 'Serializado' : 'No serializado' }}</td>
                             <td class="px-4 py-3 font-mono text-xs text-gray-600">{{ product.code }}</td>
                             <td class="px-4 py-3 font-medium text-gray-900">
                                 {{ product.name }}
+                            </td>
+                            <td class="px-4 py-3 text-right text-xs font-mono text-gray-600 hidden md:table-cell">
+                                {{ product.lastPurchasePrice is not null ? '$ ' ~ product.lastPurchasePrice : '&mdash;' }}
                             </td>
                             <td class="px-4 py-3 text-gray-500 hidden md:table-cell truncate max-w-xs">{{ product.description | slice(0, 80) }}{% if product.description | length > 80 %}…{% endif %}</td>
                             <td class="px-4 py-3 text-right">
@@ -62,18 +88,15 @@
                                     </a>
                                     {% if is_granted('inventory.update') %}
                                     <a href="{{ path('inventory_product_edit', {id: product.id}) }}"
-                                       class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 text-gray-600 hover:bg-slate-100 transition-colors">
+                                       class="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-100 transition-colors">
                                         Editar
                                     </a>
                                     {% endif %}
                                     {% if is_granted('inventory.delete') %}
-                                    <form method="POST" action="{{ path('inventory_product_delete', {id: product.id}) }}"
-                                          onsubmit="return confirm('¿Eliminar este producto?')">
-                                        <button type="submit"
-                                                class="text-xs px-3 py-1.5 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 transition-colors">
-                                            Eliminar
-                                        </button>
-                                    </form>
+                                    <button type="button" onclick="openModal('modal-delete-{{ product.id }}')"
+                                            class="text-xs px-3 py-1.5 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 transition-colors">
+                                        Eliminar
+                                    </button>
                                     {% endif %}
                                 </div>
                             </td>
@@ -82,6 +105,29 @@
                     </tbody>
                 </table>
             </div>
+
+            <div data-table-filter-target="noResults"
+                 class="hidden flex flex-col items-center justify-center py-16 text-gray-400">
+                <svg class="w-10 h-10 mb-2 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <p class="text-sm font-medium text-gray-600">Ningún producto coincide con los filtros.</p>
+            </div>
         </div>
+    {% endif %}
+
+    {% if products is not empty %}
+    {% for product in products %}
+    {% if is_granted('inventory.delete') %}
+    {% include 'components/_confirm_modal.html.twig' with {
+        id: 'modal-delete-' ~ product.id,
+        title: 'Eliminar producto',
+        message: '¿Eliminar este producto?',
+        action: path('inventory_product_delete', {id: product.id}),
+        confirmText: 'Eliminar',
+        confirmStyle: 'red',
+    } %}
+    {% endif %}
+    {% endfor %}
     {% endif %}
 {% endblock %}

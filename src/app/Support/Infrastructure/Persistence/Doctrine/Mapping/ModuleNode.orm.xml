@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Support\Domain\Entities\ModuleNode" table="module_nodes">
+
+        <id name="id" type="module_node_id" column="id" length="26" />
+
+        <field name="model"     type="string" column="model" length="20" />
+        <field name="code"      type="string" column="code" length="50" />
+        <field name="label"     type="string" column="label" length="200" />
+        <field name="components" type="json"  column="components" />
+        <field name="position"  type="integer" column="position" />
+        <field name="createdAt" type="datetime_immutable" column="created_at" />
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true" />
+
+        <many-to-one field="parent" target-entity="App\Support\Domain\Entities\ModuleNode" inversed-by="children">
+            <join-column name="parent_id" referenced-column-name="id" nullable="true" on-delete="CASCADE" />
+        </many-to-one>
+
+        <one-to-many field="children" target-entity="App\Support\Domain\Entities\ModuleNode" mapped-by="parent">
+            <cascade>
+                <cascade-persist />
+                <cascade-remove />
+            </cascade>
+            <order-by>
+                <order-by-field name="position" direction="ASC" />
+            </order-by>
+        </one-to-many>
+
+        <indexes>
+            <index name="idx_module_node_model"       columns="model" />
+            <index name="idx_module_node_parent"       columns="parent_id" />
+            <index name="idx_module_node_model_code"   columns="model,code" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

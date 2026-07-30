@@ -8,6 +8,7 @@ use App\Client\Domain\Enums\TerminalFunctionality;
 use App\Client\Domain\Enums\TerminalStatus;
 use App\Client\Domain\Enums\TerminalType;
 use App\Client\Domain\Enums\TerminalVendor;
+use App\Client\Domain\ValueObjects\AtmModelCodeValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
 use App\Client\Domain\ValueObjects\SerialNumberValueObject;
@@ -30,6 +31,7 @@ final class Terminal
         private TerminalFunctionality $funcionality,
         private TerminalType $type,
         private TerminalStatus $status,
+        private ?AtmModelCodeValueObject $atmModelCode = null,
     ) {
     }
 
@@ -113,6 +115,11 @@ final class Terminal
     public function changeType(TerminalType $type): void
     {
         $this->type = $type;
+    }
+
+    public function changeAtmModel(?AtmModelCodeValueObject $atmModelCode): void
+    {
+        $this->atmModelCode = $atmModelCode;
     }
 
     public function deletedAt(): ?\DateTimeImmutable

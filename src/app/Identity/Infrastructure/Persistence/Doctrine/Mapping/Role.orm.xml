@@ -10,7 +10,7 @@
         El DoctrineRoleRepository gestiona la tabla role_permissions manualmente
         para mantener el dominio libre de dependencias de Doctrine.
     -->
-    <entity name="App\Identity\Domain\Entities\Role" table="roles">
+    <entity name="App\Identity\Domain\Entities\Role" table="identity_roles">
 
         <id name="id" type="role_id" column="id" length="26" />
 

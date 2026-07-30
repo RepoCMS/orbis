@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nuevo pr&eacute;stamo{% endblock %}
+{% block page_title %}Registrar pr&eacute;stamo{% endblock %}
+
+{% block body %}
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            {% if errors is defined and errors is not empty %}
+                <div class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+                    {% for error in errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" action="{{ path('inventory_loan_create') }}">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Stock serializado</label>
+                        <input type="text" name="serialized_stock_id" value="{{ input.serializedStockId ?? '' }}" required
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">T&eacute;cnico origen</label>
+                        <input type="text" name="from_technician_id" value="{{ input.fromTechnicianId ?? '' }}" required
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">T&eacute;cnico destino</label>
+                        <input type="text" name="to_technician_id" value="{{ input.toTechnicianId ?? '' }}" required
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Ticket (opcional)</label>
+                        <input type="text" name="ticket_id" value="{{ input.ticketId ?? '' }}"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Notas</label>
+                        <textarea name="notes" rows="3" maxlength="500"
+                                  class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">{{ input.notes ?? '' }}</textarea>
+                    </div>
+                    <div class="flex items-center gap-3 pt-2">
+                        <button type="submit"
+                                class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-all hover:shadow-md"
+                                style="background: #1e3585;">
+                            Crear pr&eacute;stamo
+                        </button>
+                        <a href="{{ path('inventory_loan_list') }}" class="text-sm text-gray-500 hover:underline">Cancelar</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

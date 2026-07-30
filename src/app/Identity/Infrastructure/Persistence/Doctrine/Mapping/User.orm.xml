@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                         https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="App\Identity\Domain\Entities\User" table="users">
+    <entity name="App\Identity\Domain\Entities\User" table="identity_users">
 
         <id name="id" type="user_id" column="id" length="26" />
 
@@ -16,6 +16,7 @@
         <field name="failedLoginAttempts" type="integer"            column="failed_login_attempts"             nullable="false" />
         <field name="lockedUntil"         type="datetime_immutable" column="locked_until"          nullable="true" />
         <field name="deletedAt"           type="datetime_immutable" column="deleted_at"            nullable="true" />
+        <field name="linkedEmployeeId"    type="string"             column="linked_employee_id"    length="26"    nullable="true" />
 
         <lifecycle-callbacks>
             <!-- Doctrine lifecycle callbacks can be registered here if needed -->

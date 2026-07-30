@@ -1,0 +1,149 @@
+{% extends 'base.html.twig' %}
+{% import 'components/_macros.html.twig' as ui %}
+
+{% block title %}Terminales{% endblock %}
+{% block page_title %}Terminales del Cliente{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('client_terminal_new', {clientId: clientId}) }}"
+       class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-all hover:shadow-md"
+       style="background: #1e3585;" onmouseover="this.style.background='#152970'" onmouseout="this.style.background='#1e3585'">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+        </svg>
+        Nuevo terminal
+    </a>
+    <a href="{{ path('client_show', {id: clientId}) }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1 ml-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Volver al cliente
+    </a>
+{% endblock %}
+
+{% block body %}
+    {% for message in app.flashes('success') %}
+        <div class="mb-4 bg-green-50 border border-green-200 rounded-xl px-5 py-3">
+            <p class="text-sm text-green-700">{{ message }}</p>
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="mb-4 bg-red-50 border border-red-200 rounded-xl px-5 py-3">
+            <p class="text-sm text-red-700">{{ message }}</p>
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('warning') %}
+        <div class="mb-4 bg-amber-50 border border-amber-200 rounded-xl px-5 py-3">
+            <p class="text-sm text-amber-700">{{ message }}</p>
+        </div>
+    {% endfor %}
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        {% if terminals is empty %}
+            <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+                <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4" style="background: #eef1f9;">
+                    <svg class="w-8 h-8" fill="none" stroke="#1e3585" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                </div>
+                <p class="text-sm font-medium text-gray-600">No hay terminales registrados para este cliente.</p>
+                <a href="{{ path('client_terminal_new', {clientId: clientId}) }}"
+                   class="mt-4 inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg"
+                   style="background: #1e3585;">Registrar terminal</a>
+            </div>
+        {% else %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="text-xs uppercase tracking-wide text-white" style="background: #1e3585;">
+                        <tr>
+                            <th class="px-6 py-3.5 text-left font-semibold">Serial</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Tipo</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Fabricante</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Funcionalidad</th>
+                            <th class="px-6 py-3.5 text-left font-semibold">Estado</th>
+                            <th class="px-6 py-3.5 text-right font-semibold">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for terminal in terminals %}
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <a href="{{ path('client_terminal_show', {clientId: clientId, id: terminal.id}) }}"
+                                       class="font-mono font-medium text-blue-700 hover:text-blue-900 hover:underline">
+                                        {{ terminal.serial }}
+                                    </a>
+                                </td>
+                                <td class="px-6 py-4 text-gray-600">
+                                    {% if terminal.type == 'lobby' %}
+                                        ATM Lobby
+                                    {% elseif terminal.type == 'ttw' %}
+                                        ATM TTW
+                                    {% else %}
+                                        {{ terminal.type }}
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 text-gray-600">
+                                    {% if terminal.vendor == 'hyosung' %}
+                                        Hyosung
+                                    {% elseif terminal.vendor == 'diebold' %}
+                                        Diebold Nixdorf
+                                    {% elseif terminal.vendor == 'ncr' %}
+                                        NCR
+                                    {% elseif terminal.vendor == 'grg' %}
+                                        GRG
+                                    {% else %}
+                                        {{ terminal.vendor }}
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 text-gray-600">
+                                    {% if terminal.funcionality == 'dispenser' %}
+                                        Dispensador
+                                    {% elseif terminal.funcionality == 'recycler' %}
+                                        Reciclador
+                                    {% elseif terminal.funcionality == 'multinfunction' %}
+                                        Multifunción
+                                    {% elseif terminal.funcionality == 'counter' %}
+                                        Contador (TCR)
+                                    {% else %}
+                                        {{ terminal.funcionality }}
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4">{{ ui.status_badge(terminal.status) }}</td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        {{ ui.btn_view(path('client_terminal_show', {clientId: clientId, id: terminal.id})) }}
+                                        {% if terminal.status == 'active' and is_granted('terminal.update') %}
+                                            <form method="POST" action="{{ path('client_terminal_deactivate', {clientId: clientId, id: terminal.id}) }}">
+                                                <button type="submit"
+                                                        class="inline-flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-md border border-amber-200 text-amber-700 bg-amber-50 hover:bg-amber-100 transition-colors">
+                                                    Desactivar
+                                                </button>
+                                            </form>
+                                        {% elseif terminal.status != 'active' and is_granted('terminal.update') %}
+                                            <form method="POST" action="{{ path('client_terminal_reactivate', {clientId: clientId, id: terminal.id}) }}">
+                                                <button type="submit"
+                                                        class="inline-flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-md border border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-colors">
+                                                    Reactivar
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                        {% if is_granted('terminal.delete') %}
+                                            <form method="POST" action="{{ path('client_terminal_delete', {clientId: clientId, id: terminal.id}) }}"
+                                                  onsubmit="return confirm('¿Está seguro de eliminar este terminal?');">
+                                                <button type="submit"
+                                                        class="inline-flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-md border border-red-200 text-red-700 bg-red-50 hover:bg-red-100 transition-colors">
+                                                    Eliminar
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

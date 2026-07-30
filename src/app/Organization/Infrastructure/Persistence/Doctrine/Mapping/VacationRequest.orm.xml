@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Organization\Domain\Entities\VacationRequest" table="org_vacation_requests">
+
+        <id name="id" type="vacation_request_id" column="id" length="26" />
+
+        <field name="employeeId"      type="employee_id"            column="employee_id"       length="26" />
+        <field name="startDate"       type="datetime_immutable"     column="start_date" />
+        <field name="endDate"         type="datetime_immutable"     column="end_date" />
+        <field name="status"          type="vacation_request_status" column="status"           length="12" />
+        <field name="reviewedBy"      type="employee_id"            column="reviewed_by"       length="26" nullable="true" />
+        <field name="rejectionReason" type="text"                   column="rejection_reason"  nullable="true" />
+        <field name="reviewedAt"      type="datetime_immutable"     column="reviewed_at"       nullable="true" />
+        <field name="createdAt"       type="datetime_immutable"     column="created_at" />
+        <field name="updatedAt"       type="datetime_immutable"     column="updated_at"        nullable="true" />
+
+        <indexes>
+            <index name="idx_vr_employee_id" columns="employee_id" />
+            <index name="idx_vr_status"      columns="status" />
+            <index name="idx_vr_reviewed_by" columns="reviewed_by" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

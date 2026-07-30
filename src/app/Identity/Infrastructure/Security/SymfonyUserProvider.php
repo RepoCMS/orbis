@@ -56,6 +56,12 @@ final class SymfonyUserProvider implements UserProviderInterface
             );
         }
 
+        if ($user->isLocked()) {
+            throw new CustomUserMessageAccountStatusException(
+                'Tu cuenta está bloqueada temporalmente por múltiples intentos fallidos. Intenta de nuevo más tarde.'
+            );
+        }
+
         return new SymfonySecurityUser($user, $this->loadPermissionKeys($user->roleId()));
     }
 

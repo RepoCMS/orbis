@@ -20,7 +20,12 @@
         <field name="locationId" type="location_id"                column="location_id" length="26" />
         <field name="quantity"   type="integer"                    column="quantity" />
         <field name="status"     type="inventory_nonserialized_stock_status" column="status" length="20" />
-        <field name="deletedAt"  type="datetime_immutable"         column="deleted_at"  nullable="true" />
+        <field name="createdAt"  type="datetime_immutable"         column="created_at" />
+        <field name="updatedAt"  type="datetime_immutable"         column="updated_at"   nullable="true" />
+        <field name="deletedAt"  type="datetime_immutable"         column="deleted_at"   nullable="true" />
+        <field name="createdBy"  type="string"                     column="created_by"   length="26" nullable="true" />
+        <field name="updatedBy"  type="string"                     column="updated_by"   length="26" nullable="true" />
+        <field name="deletedBy"  type="string"                     column="deleted_by"   length="26" nullable="true" />
 
         <unique-constraints>
             <unique-constraint name="uq_nonserialized_stock_product_location_status" columns="product_id,location_id,status" />

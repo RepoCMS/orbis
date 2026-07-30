@@ -1,0 +1,89 @@
+# ADR-013: Table Prefixes
+
+## Status
+Accepted
+
+## Context
+Las tablas de base de datos no seguían un esquema de nomenclatura uniforme entre Bounded Contexts. Algunos BCs usaban prefijo de BC, otros usaban prefijos inconsistentes y otros no tenían prefijo:
+
+| BC | Tablas | Prefijo actual |
+|----|--------|----------------|
+| Identity | `users`, `roles`, `user_tokens`, `refresh_tokens`, `auth_logs`, `permissions`, `user_mfa_configs`, `user_mfa_backup_codes` | `identity_` |
+| Client | `clients`, `contacts`, `terminals`, `terminal_models`, `terminal_warranties`, `terminal_assignments`, `contracts` | `client_` |
+| Organization | `employees`, `service_zones`, `vacation_requests`, `overtime_records`, `employment_periods`, `employee_special_periods` | `org_` |
+| Support | `tickets`, `ticket_assignments`, `ticket_findings`, `ticket_evidences`, `ticket_audit_logs`, `ticket_pauses`, `ticket_waitings`, `ticket_reschedules`, `ticket_journeys`, `ticket_spare_parts`, `ticket_pending_spare_parts`, `ticket_module_findings`, `quick_templates`, `quick_template_items`, `finding_evidences`, `finding_component` | `support_` |
+| Expense | `operating_expenses`, `expense_items`, `cash_advances` | `expense_` |
+| Location | `regions`, `provinces`, `cities` | `location_` |
+| Inventory | `entries`, `entry_items`, `locations`, `sub_locations`, `movements`, `requests`, `request_items`, `minimums`, `physical_counts`, `physical_count_items`, `technician_loans`, `transformations`, `serialized_stock`, `nonserialized_stock`, `serial_history`, `products`, `purchase_orders`, `purchase_order_items`, `repairs`, `repair_consumables`, `repair_evidences` | `inventory_` / `stock_` / `serial_` / sin prefijo |
+| Notification | `notification_log`, `notification_preference`, `notification_template` | `notification_` |
+| Shared | `processed_commands` | `processed_` |
+
+Esta inconsistencia generaba varios problemas:
+- **Legibilidad**: al ver una query SQL, no era evidente a qué BC pertenecía cada tabla.
+- **JOINs ambiguos**: tablas como `users` sin prefijo colisionaban conceptualmente con otros BCs.
+- **Migraciones**: scripts de migración y consultas ad-hoc requerían conocimiento tribal de los prefijos.
+- **Auto-descubrimiento**: herramientas de generación de esquemas no podían inferir la agrupación por BC.
+
+## Decision
+Unificar todos los ORM mappings de Doctrine usando el prefijo `{bc}_` para cada Bounded Context, donde `{bc}` es el identificador corto del BC:
+
+| BC | Prefijo | Ejemplo |
+|----|---------|---------|
+| Identity | `identity_` | `identity_users` |
+| Client | `client_` | `client_clients` |
+| Organization | `org_` | `org_employees` |
+| Support | `support_` | `support_tickets` |
+| Expense | `expense_` | `expense_cash_advances` |
+| Location | `location_` | `location_cities` |
+| Inventory | `inventory_` | `inventory_products` |
+| Notification | `notification_` | `notification_log` |
+| Shared | `shared_` | `shared_processed_commands` |
+
+Para Inventory BC, que actualmente usa múltiples prefijos (`stock_`, `serial_`, `inventory_`, y tablas sin prefijo), se unificará bajo `inventory_`:
+
+| Actual | Nuevo |
+|--------|-------|
+| `stock_locations` | `inventory_locations` |
+| `stock_sub_locations` | `inventory_sub_locations` |
+| `stock_movements` | `inventory_movements` |
+| `stock_requests` | `inventory_requests` |
+| `stock_request_items` | `inventory_request_items` |
+| `stock_minimums` | `inventory_stock_minimums` |
+| `stock_physical_counts` | `inventory_physical_counts` |
+| `stock_physical_count_items` | `inventory_physical_count_items` |
+| `stock_technician_loans` | `inventory_technician_loans` |
+| `stock_transformations` | `inventory_transformations` |
+| `serialized_stock` | `inventory_serialized_stock` |
+| `nonserialized_stock` | `inventory_nonserialized_stock` |
+| `serial_history` | `inventory_serial_history` |
+| `repairs` | `inventory_repairs` |
+| `repair_consumables` | `inventory_repair_consumables` |
+| `repair_evidences` | `inventory_repair_evidences` |
+| `products` | `inventory_products` |
+| `purchase_orders` | `inventory_purchase_orders` |
+| `purchase_order_items` | `inventory_purchase_order_items` |
+
+## Consequences
+
+### Positive
+- **Consistencia global**: cualquier tabla es inmediatamente identificable por BC.
+- **Claridad en JOINs**: las queries entre BCs muestran explícitamente qué tablas se cruzan.
+- **Auto-documentación**: el nombre de tabla es un mapa mental del esquema.
+- **Migraciones más seguras**: los scripts de migración tienen naming predecible.
+
+### Negative
+- **Migración de datos**: requiere `ALTER TABLE` + `RENAME TABLE` para las tablas afectadas (principalmente Inventory BC). Esto implica:
+  - Actualizar todos los ORM mappings (`*.orm.xml`)
+  - Actualizar queries nativas (DBAL, reportes, dashboards)
+  - Coordinar downtime para evitar race conditions
+  - Verificar foreign keys y sus nombres
+- **Riesgo de breaking changes**: código legacy con queries hardcodeadas puede fallar hasta ser actualizado.
+- **Inventario mixto**: el prefijo `inventory_` es más largo que los prefijos actuales, lo que puede requerir ajustar el límite de 64 caracteres para nombres de tabla en MySQL (límite: 64, holgura suficiente).
+
+### Migration plan
+1. Actualizar todos los `*.orm.xml` con los nuevos nombres de tabla
+2. Generar migración Doctrine con `RENAME TABLE` statements
+3. Buscar y actualizar queries nativas (DBAL) que referencien tablas por su nombre antiguo
+4. Actualizar reportes, dashboards e importers que usen SQL directo
+5. Desplegar en ambiente de staging para verificar integridad referencial
+6. Ejecutar migración en producción con ventana de mantenimiento

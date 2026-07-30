@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Preferencias de notificación{% endblock %}
+{% block page_title %}Preferencias de notificación{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('notification_admin') }}"
+       class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+        ← Volver
+    </a>
+{% endblock %}
+
+{% block body %}
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+    <form method="GET" action="{{ path('notification_preference_list') }}">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs font-medium text-gray-500 mb-1">Tipo de destinatario</label>
+                <select name="recipientType"
+                        class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    {% for rt in recipientTypes %}
+                    <option value="{{ rt.value }}" {% if filters.recipientType == rt.value %}selected{% endif %}>
+                        {{ rt.label }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-gray-500 mb-1">ID del destinatario</label>
+                <div class="flex gap-2">
+                    <input type="text" name="recipientId" value="{{ filters.recipientId }}"
+                           placeholder="Ingrese el ID del destinatario..."
+                           class="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <button type="submit"
+                            class="px-4 py-2 rounded-lg text-sm font-medium text-white shadow-sm"
+                            style="background: #1e3585;">
+                        Buscar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% if message %}
+    <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+        <svg class="w-12 h-12 mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.073.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/>
+        </svg>
+        <p class="text-sm font-medium text-gray-600">{{ message }}</p>
+    </div>
+{% elseif preferences is empty %}
+    <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+        <svg class="w-12 h-12 mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/>
+        </svg>
+        <p class="text-sm font-medium text-gray-600">No hay preferencias configuradas para este destinatario.</p>
+    </div>
+{% else %}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-100">
+            <h2 class="text-sm font-semibold text-gray-700">
+                Preferencias para {{ filters.recipientType|replace({'_': ' '})|title }}
+                <span class="font-mono text-xs text-gray-400 ml-2">{{ filters.recipientId }}</span>
+            </h2>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-gray-100 text-left">
+                        <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Evento</th>
+                        <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide">Canal</th>
+                        <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wide text-center">Habilitado</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    {% for pref in preferences %}
+                    <tr class="hover:bg-gray-50/60 transition-colors">
+                        <td class="px-4 py-3 text-gray-700">
+                            {% set eventLabel = pref.eventType|replace({'_': ' '})|title %}
+                            {% for et in eventTypes|default([]) %}
+                                {% if et.value == pref.eventType %}
+                                    {% set eventLabel = et.label %}
+                                {% endif %}
+                            {% endfor %}
+                            {{ eventLabel }}
+                        </td>
+                        <td class="px-4 py-3">
+                            <span class="text-xs font-medium px-2 py-0.5 rounded-full
+                                {% if pref.channel == 'email' %}bg-blue-100 text-blue-700
+                                {% elseif pref.channel == 'in_app' %}bg-green-100 text-green-700
+                                {% elseif pref.channel == 'whatsapp' %}bg-emerald-100 text-emerald-700
+                                {% else %}bg-gray-100 text-gray-600{% endif %}">
+                                {% set channelLabel = pref.channel|replace({'_': ' '})|title %}
+                                {% for ch in channels|default([]) %}
+                                    {% if ch.value == pref.channel %}
+                                        {% set channelLabel = ch.label %}
+                                    {% endif %}
+                                {% endfor %}
+                                {{ channelLabel }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <form method="POST" action="{{ path('notification_preference_toggle', {id: pref.id}) }}">
+                                <input type="hidden" name="isEnabled" value="{{ pref.isEnabled ? '0' : '1' }}">
+                                <button type="submit"
+                                        class="relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none"
+                                        {% if pref.isEnabled %}style="background: #1e3585;"{% else %}style="background: #d1d5db;"{% endif %}>
+                                    <span class="inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform
+                                        {% if pref.isEnabled %}translate-x-[18px]{% else %}translate-x-[3px]{% endif %}">
+                                    </span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

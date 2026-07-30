@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                         https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="App\Identity\Domain\Entities\Permission" table="permissions">
+    <entity name="App\Identity\Domain\Entities\Permission" table="identity_permissions">
 
         <id name="id" type="permission_id" column="id" length="26" />
 

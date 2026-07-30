@@ -33,4 +33,10 @@ final class DoctrineEntryItemRepository implements EntryItemRepositoryInterface
         $this->em->persist($item);
         $this->em->flush();
     }
+
+    public function delete(EntryItem $item): void
+    {
+        $this->em->remove($item);
+        $this->em->flush();
+    }
 }

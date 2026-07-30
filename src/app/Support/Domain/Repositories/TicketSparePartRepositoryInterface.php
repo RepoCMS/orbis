@@ -19,6 +19,9 @@ interface TicketSparePartRepositoryInterface
     /** @return TicketSparePart[] */
     public function findByFinding(TicketFindingIdValueObject $findingId): array;
 
+    /** @return TicketSparePart[] */
+    public function findByEmployeeId(string $employeeId): array;
+
     public function save(TicketSparePart $sparePart): void;
 
     public function delete(TicketSparePartIdValueObject $id): void;

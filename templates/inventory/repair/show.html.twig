@@ -15,7 +15,7 @@
 {% block body %}
     <div class="space-y-6">
         {# Info #}
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <dl class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                 <div>
                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Estado</dt>
@@ -30,20 +30,33 @@
                     </dd>
                 </div>
                 <div>
-                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Stock (ID)</dt>
-                    <dd class="text-xs font-mono text-gray-700 break-all">{{ repair.serializedStockId }}</dd>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Stock</dt>
+                    <dd class="text-sm text-gray-700">
+                        {% if stockProductName %}
+                            <span class="font-medium">{{ stockProductName }}</span>
+                            <span class="text-xs text-gray-400 font-mono ml-1">#{{ stockSerial }}</span>
+                        {% else %}
+                            <span class="text-xs font-mono text-gray-400">{{ repair.serializedStockId }}</span>
+                        {% endif %}
+                    </dd>
                 </div>
                 <div>
                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Laboratorio</dt>
-                    <dd class="text-xs font-mono text-gray-700 break-all">{{ repair.laboratoryId }}</dd>
+                    <dd class="text-sm text-gray-700">
+                        {% if laboratoryName %}
+                            {{ laboratoryName }}
+                        {% else %}
+                            <span class="text-xs font-mono text-gray-400">{{ repair.laboratoryId }}</span>
+                        {% endif %}
+                    </dd>
                 </div>
                 <div>
                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Asignado por</dt>
-                    <dd class="text-xs font-mono text-gray-700 break-all">{{ repair.assignedById }}</dd>
+                    <dd class="text-sm text-gray-700">{{ assignedByName ?: repair.assignedById }}</dd>
                 </div>
                 <div>
                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Técnico</dt>
-                    <dd class="text-xs font-mono text-gray-700">{{ repair.technicianId ?: '—' }}</dd>
+                    <dd class="text-sm text-gray-700">{{ technicianName ?: (repair.technicianId ?: '—') }}</dd>
                 </div>
                 <div>
                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Creado</dt>
@@ -59,7 +72,7 @@
                 </div>
             </dl>
             {% if repair.notes %}
-            <div class="mt-4 pt-4 border-t border-slate-100">
+            <div class="mt-4 pt-4 border-t border-gray-100">
                 <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Notas</dt>
                 <dd class="text-sm text-gray-600">{{ repair.notes }}</dd>
             </div>
@@ -72,24 +85,21 @@
 
             {# Iniciar #}
             {% if repair.status == 'pending' %}
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex-1 min-w-[260px]">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 flex-1 min-w-[260px]">
                 <h3 class="text-sm font-semibold text-gray-700 mb-3">Iniciar reparación</h3>
-                <form method="POST" action="{{ path('inventory_repair_start', {id: repair.id}) }}"
-                      onsubmit="return confirm('¿Iniciar la reparación?')">
-                    <button type="submit"
-                            class="px-4 py-2 text-sm font-medium text-white rounded-lg"
-                            style="background: #1e3585;">Iniciar</button>
-                </form>
+                <button type="button" onclick="openModal('modal-start-repair')"
+                        class="px-4 py-2 text-sm font-medium text-white rounded-lg"
+                        style="background: #1e3585;">Iniciar</button>
             </div>
             {% endif %}
 
             {# Completar #}
             {% if repair.status == 'in_progress' %}
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex-1 min-w-[260px]">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 flex-1 min-w-[260px]">
                 <h3 class="text-sm font-semibold text-gray-700 mb-3">Completar reparación</h3>
                 <form method="POST" action="{{ path('inventory_repair_complete', {id: repair.id}) }}" novalidate>
                     <textarea name="notes" rows="2"
-                              class="w-full mb-3 text-sm rounded-lg border border-slate-200 px-3 py-1.5 resize-none outline-none focus:ring-2 focus:ring-blue-400/30"
+                              class="w-full mb-3 text-sm rounded-lg border border-gray-200 px-3 py-1.5 resize-none outline-none focus:ring-2 focus:ring-blue-400/30"
                               placeholder="Notas de resolución (opcional)"></textarea>
                     <button type="submit"
                             class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700">
@@ -103,16 +113,11 @@
             {% if repair.status in ['pending', 'in_progress'] %}
             <div class="bg-white rounded-xl shadow-sm border border-red-100 p-5 flex-1 min-w-[260px]">
                 <h3 class="text-sm font-semibold text-red-600 mb-3">Marcar como irreparable</h3>
-                <form method="POST" action="{{ path('inventory_repair_unrepairable', {id: repair.id}) }}" novalidate>
-                    <textarea name="notes" rows="2"
-                              class="w-full mb-3 text-sm rounded-lg border border-red-200 px-3 py-1.5 resize-none outline-none focus:ring-2 focus:ring-red-400/30"
-                              placeholder="Motivo..."></textarea>
-                    <button type="submit"
-                            onclick="return confirm('¿Marcar como irreparable? El stock será dado de baja.')"
-                            class="px-4 py-2 text-sm font-medium rounded-lg border border-red-200 text-red-600 hover:bg-red-50">
-                        Marcar irreparable
-                    </button>
-                </form>
+                <p class="text-sm text-gray-500 mb-3">El equipo será dado de baja del inventario. Indique el motivo en la confirmación.</p>
+                <button type="button" onclick="openModal('modal-confirm-unrepairable')"
+                        class="px-4 py-2 text-sm font-medium rounded-lg border border-red-200 text-red-600 hover:bg-red-50">
+                    Marcar irreparable
+                </button>
             </div>
             {% endif %}
 
@@ -120,4 +125,22 @@
         {% endif %}
 
     </div>
+
+    {% include 'components/_confirm_modal.html.twig' with {
+        id: 'modal-confirm-unrepairable',
+        title: 'Marcar como irreparable',
+        message: '¿Está seguro de marcar esta reparación como irreparable? El stock será dado de baja.',
+        action: path('inventory_repair_unrepairable', {id: repair.id}),
+        confirmText: 'Marcar irreparable',
+        confirmStyle: 'red',
+    } %}
+
+    {% include 'components/_confirm_modal.html.twig' with {
+        id: 'modal-start-repair',
+        title: 'Iniciar reparación',
+        message: '¿Iniciar la reparación?',
+        action: path('inventory_repair_start', {id: repair.id}),
+        confirmText: 'Iniciar',
+        confirmStyle: 'blue',
+    } %}
 {% endblock %}

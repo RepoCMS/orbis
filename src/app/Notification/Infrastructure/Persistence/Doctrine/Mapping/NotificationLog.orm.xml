@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <!--
+        Registro de envío de notificación (fire-and-forget).
+        reference_type + reference_id permiten vincular a cualquier entidad (ticket, expense, etc.).
+        status: pending → sent / failed (máx 3 intentos).
+    -->
+    <entity name="App\Notification\Domain\Entities\NotificationLog" table="notification_logs">
+
+        <id name="id" type="notification_log_id" column="id" length="26" />
+
+        <field name="recipientType" type="notification_recipient_type" column="recipient_type" length="20" />
+        <field name="recipientId"   type="string"                      column="recipient_id"   length="26" />
+        <field name="channel"       type="notification_channel"        column="channel"        length="20" />
+        <field name="eventType"     type="notification_event_type"     column="event_type"     length="50" />
+        <field name="subject"       type="string"                      column="subject"        length="255" nullable="true" />
+        <field name="body"          type="text"                        column="body" />
+        <field name="referenceType" type="string"                      column="reference_type" length="50"  nullable="true" />
+        <field name="referenceId"   type="string"                      column="reference_id"   length="26"  nullable="true" />
+        <field name="status"        type="notification_status"         column="status"         length="20" />
+        <field name="attemptCount"  type="integer"                     column="attempt_count" />
+        <field name="lastAttemptAt" type="datetime_immutable"          column="last_attempt_at" nullable="true" />
+        <field name="sentAt"        type="datetime_immutable"          column="sent_at"         nullable="true" />
+        <field name="failureReason" type="text"                        column="failure_reason"  nullable="true" />
+        <field name="readAt"        type="datetime_immutable"          column="read_at"         nullable="true" />
+        <field name="createdAt"     type="datetime_immutable"          column="created_at" />
+        <field name="updatedAt"     type="datetime_immutable"          column="updated_at"      nullable="true" />
+
+        <indexes>
+            <index name="idx_notification_logs_recipient"   columns="recipient_type,recipient_id" />
+            <index name="idx_notification_logs_status"      columns="status" />
+            <index name="idx_notification_logs_event_type"  columns="event_type" />
+            <index name="idx_notification_logs_reference"   columns="reference_type,reference_id" />
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

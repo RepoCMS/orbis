@@ -26,15 +26,21 @@ use DateTimeImmutable;
  */
 final class NonserializedStock
 {
+    private DateTimeImmutable $createdAt;
+    private ?DateTimeImmutable $updatedAt = null;
     private ?DateTimeImmutable $deletedAt = null;
+    private ?string $createdBy = null;
+    private ?string $updatedBy = null;
+    private ?string $deletedBy = null;
 
-    public function __construct(
+    private function __construct(
         private NonserializedStockIdValueObject $id,
         private ProductIdValueObject $productId,
         private LocationIdValueObject $locationId,
         private int $quantity,
         private NonserializedStockStatus $status,
     ) {
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public static function initialize(
@@ -95,6 +101,44 @@ final class NonserializedStock
         return $this->status === NonserializedStockStatus::DECOMMISSIONED;
     }
 
+    // ─── Audit fields ─────────────────────────────────────────────────────────
+
+    public function createdAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function updatedAt(): ?DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function createdBy(): ?string
+    {
+        return $this->createdBy;
+    }
+
+    public function updatedBy(): ?string
+    {
+        return $this->updatedBy;
+    }
+
+    public function deletedBy(): ?string
+    {
+        return $this->deletedBy;
+    }
+
+    public function setCreatedBy(string $userId): void
+    {
+        $this->createdBy = $userId;
+    }
+
+    public function setUpdatedBy(string $userId): void
+    {
+        $this->updatedBy = $userId;
+        $this->updatedAt = new DateTimeImmutable();
+    }
+
     // ─── Commands ────────────────────────────────────────────────────────────
 
     /**
@@ -113,6 +157,26 @@ final class NonserializedStock
         }
 
         $this->quantity += $amount;
+        $this->updatedAt = new DateTimeImmutable();
+    }
+
+    /**
+     * Incrementa la cantidad de un lote RESERVED (ej. reserva adicional).
+     */
+    public function increaseReserved(int $amount): void
+    {
+        if ($amount <= 0) {
+            throw new \InvalidArgumentException('La cantidad a incrementar debe ser mayor a cero.');
+        }
+
+        if (!$this->isReserved()) {
+            throw new StockReservedException(
+                sprintf('Solo se puede incrementar un lote RESERVED, estado actual: "%s".', $this->status->value)
+            );
+        }
+
+        $this->quantity += $amount;
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     /**
@@ -136,6 +200,7 @@ final class NonserializedStock
         }
 
         $this->quantity -= $amount;
+        $this->updatedAt = new DateTimeImmutable();
 
         if ($this->quantity === 0) {
             $this->deletedAt = new DateTimeImmutable();
@@ -154,7 +219,8 @@ final class NonserializedStock
             );
         }
 
-        $this->status = NonserializedStockStatus::RESERVED;
+        $this->status   = NonserializedStockStatus::RESERVED;
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     /**
@@ -168,7 +234,8 @@ final class NonserializedStock
             );
         }
 
-        $this->status = NonserializedStockStatus::AVAILABLE;
+        $this->status   = NonserializedStockStatus::AVAILABLE;
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     /**
@@ -176,7 +243,8 @@ final class NonserializedStock
      */
     public function markDamaged(): void
     {
-        $this->status = NonserializedStockStatus::DAMAGED;
+        $this->status    = NonserializedStockStatus::DAMAGED;
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     /**
@@ -184,7 +252,8 @@ final class NonserializedStock
      */
     public function decommission(): void
     {
-        $this->status = NonserializedStockStatus::DECOMMISSIONED;
+        $this->status    = NonserializedStockStatus::DECOMMISSIONED;
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     /**
@@ -198,7 +267,8 @@ final class NonserializedStock
             );
         }
 
-        $this->status = NonserializedStockStatus::AVAILABLE;
+        $this->status   = NonserializedStockStatus::AVAILABLE;
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     // ─── Soft delete ─────────────────────────────────────────────────────────
@@ -208,8 +278,10 @@ final class NonserializedStock
         return $this->deletedAt !== null;
     }
 
-    public function delete(): void
+    public function delete(?string $deletedBy = null): void
     {
         $this->deletedAt = new DateTimeImmutable();
+        $this->deletedBy = $deletedBy;
+        $this->updatedAt = new DateTimeImmutable();
     }
 }

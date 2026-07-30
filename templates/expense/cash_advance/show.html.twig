@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+{% import 'components/_macros.html.twig' as ui %}
+
+{% block title %}Adelanto {{ advance.advanceNumber }}{% endblock %}
+{% block page_title %}Adelanto {{ advance.advanceNumber }}{% endblock %}
+
+{% block header_actions %}
+    <div class="flex items-center gap-3">
+        {% if advance.isEditable and is_granted('expense.create') %}
+            <a href="{{ path('expense_ca_edit', {id: advance.id}) }}"
+               class="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 012.828 2.828L11.828 15.828a4 4 0 01-1.414.828l-3 1 1-3a4 4 0 01.828-1.414z"/>
+                </svg>
+                Editar
+            </a>
+        {% endif %}
+        {% if advance.isEditable and is_granted('expense.create') %}
+            <form method="POST" action="{{ path('expense_ca_settle', {id: advance.id}) }}" class="inline">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-all hover:shadow-md"
+                        style="background: #1e3585;"
+                        onmouseover="this.style.background='#152970'"
+                        onmouseout="this.style.background='#1e3585'">
+                    Liquidar
+                </button>
+            </form>
+        {% endif %}
+        <a href="{{ path('expense_ca_list') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Volver
+        </a>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="w-full max-w-3xl mx-auto space-y-6">
+
+        {% for message in app.flashes('success') %}
+            <div class="bg-green-50 border border-green-200 rounded-xl px-5 py-3">
+                <p class="text-sm text-green-700">{{ message }}</p>
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="bg-red-50 border border-red-200 rounded-xl px-5 py-3">
+                <p class="text-sm text-red-700">{{ message }}</p>
+            </div>
+        {% endfor %}
+
+        {% if advance.isOverdue %}
+            <div class="bg-red-50 border border-red-200 rounded-xl px-5 py-3">
+                <p class="text-sm font-medium text-red-700">Este adelanto tiene más de 30 días sin liquidar.</p>
+            </div>
+        {% endif %}
+
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                <h2 class="text-sm font-semibold text-gray-700">Información del adelanto</h2>
+            </div>
+            <dl class="divide-y divide-gray-100">
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">N° Adelanto</dt>
+                    <dd class="text-gray-900 font-mono text-xs">{{ advance.advanceNumber }}</dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Empleado</dt>
+                    <dd class="text-gray-900 font-medium">{{ employeeName }}</dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Entregado por</dt>
+                    <dd class="text-gray-800">{{ givenByName }}</dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Monto</dt>
+                    <dd class="font-bold text-gray-900 text-lg">${{ advance.amount|number_format(2) }}</dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Estado</dt>
+                    <dd>{{ ui.status_badge(advance.status) }}</dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Fecha de entrega</dt>
+                    <dd class="text-gray-800">{{ advance.givenAtFormatted ?? (advance.givenAt|date('d/m/Y')) }}</dd>
+                </div>
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Días transcurridos</dt>
+                    <dd class="{{ advance.isOverdue ? 'text-red-600 font-medium' : 'text-gray-600' }}">{{ advance.daysSinceGiven }} días</dd>
+                </div>
+                {% if advance.settlementDirection %}
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Dirección liquidación</dt>
+                        <dd class="text-gray-800 capitalize">{{ advance.settlementDirection|replace({'_': ' '}) }}</dd>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Liquidado por</dt>
+                        <dd class="text-gray-800">{{ advance.settlementConfirmedBy|slice(0, 8) ~ '...' }}</dd>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Liquidado el</dt>
+                        <dd class="text-gray-600">{{ advance.settlementConfirmedAt|date('d/m/Y H:i:s') }}</dd>
+                    </div>
+                {% endif %}
+                {% if advance.voucherPath %}
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Comprobante</dt>
+                        <dd class="text-blue-600 hover:underline">
+                            <a href="{{ advance.voucherPath }}" target="_blank">Ver comprobante</a>
+                        </dd>
+                    </div>
+                {% endif %}
+                <div class="px-6 py-4 flex justify-between text-sm">
+                    <dt class="text-gray-500">Creado</dt>
+                    <dd class="text-gray-600 text-xs">{{ advance.createdAt|date('d/m/Y H:i:s') }}</dd>
+                </div>
+                {% if advance.updatedAt %}
+                    <div class="px-6 py-4 flex justify-between text-sm">
+                        <dt class="text-gray-500">Actualizado</dt>
+                        <dd class="text-gray-600 text-xs">{{ advance.updatedAt|date('d/m/Y H:i:s') }}</dd>
+                    </div>
+                {% endif %}
+            </dl>
+        </div>
+    </div>
+{% endblock %}

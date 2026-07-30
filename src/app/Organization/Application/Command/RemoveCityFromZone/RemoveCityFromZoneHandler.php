@@ -18,7 +18,7 @@ final readonly class RemoveCityFromZoneHandler
     public function __invoke(RemoveCityFromZoneCommand $command): void
     {
         $zone = $this->serviceZoneRepository->findById(
-            ServiceZoneIdValueObject::from($command->serviceZoneId),
+            ServiceZoneIdValueObject::fromString($command->serviceZoneId),
         );
 
         if ($zone === null) {

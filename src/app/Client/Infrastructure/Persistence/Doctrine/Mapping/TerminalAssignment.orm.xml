@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                         https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="App\Client\Domain\Entities\TerminalAssignment" table="terminal_assignments">
+    <entity name="App\Client\Domain\Entities\TerminalAssignment" table="client_terminal_assignments">
 
         <id name="id" type="terminal_assignment_id" column="id" length="26" />
 
@@ -13,8 +13,7 @@
         <field name="name"                 type="terminal_name"                    column="name"                  length="100" />
         <field name="idAssingedByClient"   type="terminal_id_assigned_by_client"   column="id_assigned_by_client" length="25" />
         <field name="siteId"               type="site_id"                          column="site_id"               length="26" />
-        <field name="status"               type="string"                           column="status"                length="20"
-               enumType="App\Client\Domain\Enums\TerminalAssignmentStatus" />
+        <field name="status"               type="terminal_assignment_status"       column="status"                length="20" />
         <field name="deletedAt"            type="datetime_immutable"               column="deleted_at"            nullable="true" />
 
         <indexes>

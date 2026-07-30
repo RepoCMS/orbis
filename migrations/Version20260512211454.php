@@ -20,6 +20,9 @@ final class Version20260512211454 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // Phase 1 – drop all existing FKs first (before CHANGE on referenced columns)
+        $this->addSql('ALTER TABLE ticket_assignments DROP FOREIGN KEY `fk_ticket_assignments_ticket`');
+        $this->addSql('ALTER TABLE ticket_evidences DROP FOREIGN KEY `fk_ticket_evidences_ticket`');
+        $this->addSql('ALTER TABLE ticket_findings DROP FOREIGN KEY `fk_ticket_findings_ticket`');
         $this->addSql('ALTER TABLE ticket_journeys DROP FOREIGN KEY `fk_ticket_journeys_ticket`');
         $this->addSql('ALTER TABLE ticket_pauses DROP FOREIGN KEY `fk_ticket_pauses_ticket`');
         $this->addSql('ALTER TABLE ticket_pending_spare_parts DROP FOREIGN KEY `fk_ticket_pending_spare_parts_finding`');

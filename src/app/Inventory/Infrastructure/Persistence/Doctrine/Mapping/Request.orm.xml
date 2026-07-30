@@ -5,19 +5,12 @@
     xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                         https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <!--
-        Solicitud formal de movimiento de stock entre ubicaciones.
-        Requiere aprobaciÃ³n antes de generar un Movement.
-    -->
     <entity name="App\Inventory\Domain\Entities\Request" table="stock_requests">
 
         <id name="id" type="request_id" column="id" length="26" />
 
         <field name="reference"             type="string"             column="reference"               length="30"  unique="true" />
         <field name="requestedBy"           type="user_id"            column="requested_by_id"         length="26" />
-        <field name="productId"             type="product_id"         column="product_id"              length="26" />
-        <field name="serializedStockId"     type="serialized_stock_id" column="serialized_stock_id"   length="26"  nullable="true" />
-        <field name="quantity"              type="integer"            column="quantity" />
         <field name="sourceLocationId"      type="location_id"        column="source_location_id"      length="26" />
         <field name="destinationLocationId" type="location_id"        column="destination_location_id" length="26" />
         <field name="status"                type="inventory_request_status" column="status" length="20" />
@@ -27,14 +20,18 @@
         <field name="rejectedBy"            type="user_id"            column="rejected_by_id"          length="26"  nullable="true" />
         <field name="rejectedAt"            type="datetime_immutable" column="rejected_at"             nullable="true" />
         <field name="rejectionReason"       type="text"               column="rejection_reason"        nullable="true" />
-        <field name="fulfilledMovementId"   type="movement_id"        column="fulfilled_movement_id"   length="26"  nullable="true" />
         <field name="cancelledBy"           type="user_id"            column="cancelled_by_id"         length="26"  nullable="true" />
         <field name="createdAt"             type="datetime_immutable" column="created_at" />
+
+        <one-to-many field="items" target-entity="App\Inventory\Domain\Entities\RequestItem" mapped-by="request" fetch="EAGER">
+            <cascade>
+                <cascade-persist />
+            </cascade>
+        </one-to-many>
 
         <indexes>
             <index name="idx_stock_requests_status"       columns="status" />
             <index name="idx_stock_requests_requested_by" columns="requested_by_id" />
-            <index name="idx_stock_requests_product_id"   columns="product_id" />
         </indexes>
 
     </entity>
