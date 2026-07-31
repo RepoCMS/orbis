@@ -22,3 +22,8 @@
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
+
+###> local tool config ###
+/.claude/
+/opencode.local.json
+###< local tool config ###
