@@ -18,7 +18,7 @@
 | Specs existentes | 14 |
 | Specs con discrepancia vs AGENTS.md | **5** (ver §3) |
 | Reportes implementados | 14 |
-| Importers implementados | 8 |
+| Importers implementados | 11 |
 | Comandos huérfagos conocidos | 0 (todos wireados) |
 
 ---
@@ -117,6 +117,7 @@ TODOS.md referencia `ClientContractExpiringReportGenerator` pero el nombre real 
 | Import Usuarios | Identity | ✅ | ✅ |
 | Import Órdenes de Compra | Inventory | ✅ | ✅ |
 | Import Gastos Operativos | Expense | ✅ | ✅ |
+| Import Partes de Modelo | Client | 10+ archivos | ✅ |
 
 ---
 

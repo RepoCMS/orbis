@@ -6,7 +6,14 @@ Se aplica **Spec Driven Development**: spec primero (`specs/`), implementación 
 
 ## Stack
 
-**Backend:** Symfony 8.0 / PHP 8.4, MySQL 8+, PHPUnit 11 (447 test files)
+**Backend:** Symfony 8.0 / PHP 8.4, MySQL 8+, PHPUnit 11 (452 test files — verificado 2026-08-05)
+**Frontend:** Turbo + TailwindCSS + Stimulus
+**Auth:** JWT (API-first for mobile), Symfony Security + #[IsGranted]
+**Architecture:** DDD + Hexagonal + CQRS ligero, ULIDs, soft-deletes, XML Doctrine mappings
+**IDs:** ULID 26 chars (VARCHAR), `AbstractUlid` en Shared Kernel
+**Events:** Domain Events internos (array + pullDomainEvents) + Symfony Messenger async
+
+> ⚠️ **IMPORTANTE:** Este archivo AHORA es de solo-lectura y backup. La **"verdad única"** vive en [`CONTEXT.md`](./CONTEXT.md). AGENTS.md conserva su contenido histórico para referencia de patrones, pero **usa CONTEXT.md como fuente primaria** para status, porcentajes y progreso.
 **Frontend:** Turbo + TailwindCSS + Stimulus
 **Auth:** JWT (API-first for mobile), Symfony Security + #[IsGranted]
 **Architecture:** DDD + Hexagonal + CQRS ligero, ULIDs, soft-deletes, XML Doctrine mappings
@@ -17,17 +24,17 @@ Se aplica **Spec Driven Development**: spec primero (`specs/`), implementación 
 
 | BC | Path | Spec | Tests | Est. % | P0s |
 |---|---|---|---|---|---|---|---|---|
-| Identity | `src/app/Identity/` | `specs/001-identity-spec/` | 77 files | **~97%** | ✅ 32 commands, 13 queries, tests completos, Scheduler cleanup, rate limiting IP, MFA recovery route + JWT backupCode. ✅ Import Usuarios. ✅ RevokePermissionFromRole, ActivateUser, ChangePermissionDescription wired. ✅ Dashboard KPIs completos |
-| Client | `src/app/Client/` | `specs/002-client/` | 80 files | **~96%** | ✅ 34 commands (36 handlers), 16 queries. ✅ Import Clientes + Terminales + Modelos de Terminal + Model Parts. ✅ UI templates completos (13 templates). ✅ 29/29 eventos conectados a Notification BC. ✅ Dashboard KPIs completos. ✅ Reporte Contratos por Vencer |
-| Organization | `src/app/Organization/` | `specs/001-organization-spec/` | 60 tests | **~99%** | ✅ 33 commands, 8 queries, todos con tests. ✅ Reportes: Personal Activo, Vacaciones Programadas, Horas Extras. ✅ Dashboard expandido (4 KPIs). ✅ Dual cascade unificado. ✅ Import Employees |
-| Support | `src/app/Support/` | `specs/003-support/` | 89 files | **~98%** | ✅ 35 commands, 20 queries. ✅ ATM Module Tree admin CRUD. ✅ MonitorSla + EvaluateScheduledMaintenance scheduler. ✅ Dashboard expandido (avg time by tech). ✅ Reporte Tickets por Cliente. ✅ Scoping en spare parts |
-| Inventory | `src/app/Inventory/` | `specs/004-inventory/` | 96 files | **~96%** | ✅ 60 commands, 29 queries. ✅ Import Products + Serialized + NonSerialized + PurchaseOrders. ✅ Reportes: Valorizado, Movimientos, Devolución, Conteos. ✅ Dashboard expandido. ✅ RegisterEmergencyPartUsage wired |
+| Identity | `src/app/Identity/` | `specs/001-identity-spec/` | 77 files | **~85%** | ✅ 32 commands, 13 queries, tests completos. Scheduler cleanup, rate limiting IP, MFA recovery route + JWT backupCode. ✅ Import Usuarios. ✅ RevokePermissionFromRole, ActivateUser, ChangePermissionDescription wired. ⚠️ Dashboard KPIs parciales (ver TODOS.md #5) |
+| Client | `src/app/Client/` | `specs/002-client/` | 79 files | **~70%** | ✅ 37 commands (39 handlers), 16 queries. ✅ Import Clientes + Terminales + Modelos de Terminal. ✅ UI templates (13 templates). ✅ 29/29 eventos conectados. ⚠️ Dashboard KPIs parciales, Reportes P2 pendientes |
+| Organization | `src/app/Organization/` | `specs/001-organization-spec/` | 61 tests | **~67%** | ✅ 33 commands, 8 queries. ✅ Reportes: Personal Activo, Vacaciones Programadas, Horas Extras. Dashboard expandido. ✅ Dual cascade unificado. ✅ Import Employees |
+| Support | `src/app/Support/` | `specs/003-support/` | 93 files | **~85%** | ✅ 35 commands, 20 queries. ✅ ATM Module Tree admin CRUD. ✅ MonitorSla + EvaluateScheduledMaintenance scheduler. ✅ Dashboard expandido (avg time by tech). ✅ Reporte Tickets por Cliente. ✅ Scoping en spare parts |
+| Inventory | `src/app/Inventory/` | `specs/004-inventory/` | 96 files | **~95%** | ✅ 60 commands, 29 queries. ✅ Import Products + Serialized + NonSerialized + PurchaseOrders. ✅ Reportes: Valorizado, Movimientos, Devolución, Conteos. ✅ Dashboard expandido. ✅ RegisterEmergencyPartUsage wired |
 | Expense | `src/app/Expense/` | `specs/007-expense/` | 30 files | **100%** | ✅ Cerrado, dashboard template + KPI gastos aprobados. ✅ 156 tests (289 assertions). ✅ Reportes: Gastos Período, Adelantos Pendientes. ✅ CheckOverdueCashAdvances scheduler. ✅ Import Operating Expenses |
-| Location | `src/app/Location/` | `specs/005-location/` | 7 files | **100%** | ✅ Cerrado (spec, read-only, tests mínimos) |
-| Notification | `src/app/Notification/` | `specs/006-notification/` | 8 files | **~95%** | ✅ Cross-BC wiring (+40 handlers). ✅ 9 Twig templates. ✅ Canales IN_APP/EMAIL. ✅ 87/87 event types mapeados. ✅ User preferences UI. ✅ SendNotificationCommand wired via NotificationDispatcher |
-| Cross-BC | — | `specs/009-cross-bc/` | — | **~98%** | ✅ 21/21 tareas completadas. ✅ Integration tests: EmployeeDeactivationCascade + ClientDeactivationCascade |
-| Employee-User Invariant | — | `specs/010a-employee-user-invariant/` | 3 tests | **~98%** | ✅ Invariantes + unlink en deactivate + scheduler + DetectOrphanUsers. ✅ Stimulus modal confirm component |
-| SparePart Request Scope | — | `specs/010b-sparepart-request-scope/` | 1 test | **~98%** | ✅ ViewScopeResolver + scoping en commands + list queries |
+| Location | `src/app/Location/` | `specs/005-location/` | 7 files | **~95%** | ✅ Cerrado (spec, read-only, tests mínimos) |
+| Notification | `src/app/Notification/` | `specs/006-notification/` | 8 files | **~60%** | ✅ Cross-BC wiring (+40 handlers). ⚠️ Scoping parcial. 9 Twig templates. ✅ Canales IN_APP/EMAIL. 87/87 event types mapeados. User preferences UI. ✅ SendNotificationCommand wired |
+| Cross-BC | — | `specs/009-cross-bc/` | — | **~90%** | ✅ 21/21 tareas completadas. ✅ Integration tests: EmployeeDeactivationCascade + ClientDeactivationCascade |
+| Employee-User Invariant | — | `specs/010a-employee-user-invariant/` | 3 tests | **~95%** | ✅ Invariantes + unlink en deactivate + scheduler + DetectOrphanUsers. ⚠️ Stimulus modal pending |
+| SparePart Request Scope | — | `specs/010b-sparepart-request-scope/` | 1 test | **~95%** | ✅ ViewScopeResolver + scoping en commands + list queries |
 | Notifications Stock Requests | — | `specs/011-notifications-stock-requests/` | — | **100%** | ✅ Eventos, handler cross-BC, templates seedeados, tests |
 | Multi-Item Request | `src/app/Inventory/` | `specs/012-multi-item-request/` | 75 (Request tests) | **100%** | ✅ Implementado completo (ORM, entity, handlers, tests, Stimulus) |
 | ATM Module Tree | `src/app/Support/` | `specs/013-atm-module-tree/` | 18 files | **100%** | ✅ Backend + web + Stimulus tree + admin CRUD completo |

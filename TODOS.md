@@ -39,7 +39,7 @@ cat TODOS.md
 
 | # | Task | Owner | Status | Tool |
 |---|------|-------|--------|------|
-| 1 | Create `ClientContractExpiringReportGenerator` | Reporting Agent | ✅ done | opencode |
+| 1 | Create `ContractsExpiringReportGenerator` | Reporting Agent | ✅ done | opencode |
 | 2 | Create `ClientTerminalByClientReportGenerator` | Reporting Agent | ✅ done | opencode |
 | 3 | Implement download endpoint for both reports | Backend Agent | ✅ done | Both |
 

@@ -7,6 +7,10 @@
 /public/bundles/
 /var/
 /vendor/
+/node_modules/
+/.env
+/.env.dev
+/.env.test
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
