@@ -27,6 +27,10 @@ final class MfaSubscriber implements EventSubscriberInterface
         'mfa_check',
         'mfa_setup',
         'mfa_setup_confirm',
+        'mfa_backup_codes',
+        'mfa_backup_codes_confirm',
+        'mfa_recovery',
+        'mfa_recovery_submit',
         'verification_verify',
     ];
     private const EXEMPT_PREFIXES = ['/_', '/css/', '/js/', '/images/'];

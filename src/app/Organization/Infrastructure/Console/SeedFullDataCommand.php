@@ -25,6 +25,7 @@ use App\Client\Domain\ValueObjects\ContactIdValueObject;
 use App\Client\Domain\ValueObjects\ContactPhoneNumberValueObject;
 use App\Client\Domain\ValueObjects\ContactRoleValueObject;
 use App\Client\Domain\ValueObjects\SerialNumberValueObject;
+use App\Client\Domain\ValueObjects\SiteIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalAssignmentIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdAssignedByClientValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdValueObject;
@@ -247,7 +248,7 @@ HELP);
     {
         $user = $this->userRepo->findByUsername(new \App\Identity\Domain\ValueObjects\UsernameValueObject($username));
         if ($user === null) return null;
-        $employee = $this->employeeRepo->findByUserId((string) $user->id());
+        $employee = $this->employeeRepo->findByUserId($user->id());
         return $employee !== null ? (string) $employee->id() : null;
     }
 
@@ -434,7 +435,7 @@ HELP);
                 terminalId: new TerminalIdValueObject($termId),
                 name: new TerminalNameValueObject($ad['name']),
                 idAssingedByClient: new TerminalIdAssignedByClientValueObject($ad['id_by_client']),
-                locationId: $cityId ?? '',
+                siteId: new SiteIdValueObject($cityId ?? ''),
                 status: TerminalAssignmentStatus::OPERATIVE,
             );
             $this->terminalAssignmentRepo->save($assignment);
@@ -589,11 +590,11 @@ HELP);
         $mariaId = $maria !== null ? (string) $maria->id() : null;
 
         $zones = [
-            ['name' => 'Zona Norte Quito', 'desc' => 'Cubre Quito y valles', 'cities' => array_filter([$quitoId, $sangolquiId]), 'empId' => $carlosId],
-            ['name' => 'Zona Sur Quito', 'desc' => 'Cubre sur de Quito y alrededores', 'cities' => array_filter([$quitoId]), 'empId' => $adminId],
-            ['name' => 'Zona Guayaquil', 'desc' => 'Cubre Guayaquil y Durán', 'cities' => array_filter([$guayaquilId, $duránId]), 'empId' => $mariaId],
-            ['name' => 'Zona Cuenca', 'desc' => 'Cubre Cuenca y Azuay', 'cities' => array_filter([$cuencaId]), 'empId' => null],
-            ['name' => 'Zona Manta', 'desc' => 'Cubre Manta y Portoviejo', 'cities' => array_filter([$mantaId]), 'empId' => null],
+            ['name' => 'Zona Norte Quito', 'cities' => array_filter([$quitoId, $sangolquiId]), 'empId' => $carlosId],
+            ['name' => 'Zona Sur Quito', 'cities' => array_filter([$quitoId]), 'empId' => $adminId],
+            ['name' => 'Zona Guayaquil', 'cities' => array_filter([$guayaquilId, $duránId]), 'empId' => $mariaId],
+            ['name' => 'Zona Cuenca', 'cities' => array_filter([$cuencaId]), 'empId' => null],
+            ['name' => 'Zona Manta', 'cities' => array_filter([$mantaId]), 'empId' => null],
         ];
 
         $allZones = $this->serviceZoneRepo->findAll();
@@ -606,7 +607,6 @@ HELP);
             $zone = ServiceZone::create(
                 id: new ServiceZoneIdValueObject($this->idGenerator->generate()),
                 name: $z['name'],
-                description: $z['desc'],
             );
             foreach ($z['cities'] as $cityId) {
                 if ($cityId !== null) {
@@ -687,6 +687,11 @@ HELP);
         // First pass: persist all tickets via ORM
         $createdTicketData = [];
         foreach ($ticketDefs as $i => $def) {
+            $ticketNumber = sprintf('TK-2026-%05d', $i + 2);
+            if ($this->ticketRepo->findByTicketNumber($ticketNumber) !== null) {
+                continue;
+            }
+
             $clientId = $clientIdKeys[$def['client_idx']] ?? $clientIdKeys[0];
 
             $termAssignments = $clientTerminals[$clientId] ?? $firstClientTerminals;
@@ -696,7 +701,7 @@ HELP);
             $ticketId = new TicketIdValueObject($this->idGenerator->generate());
             $ticket = Ticket::create(
                 id: $ticketId,
-                ticketNumber: sprintf('TK-2026-%05d', $i + 2),
+                ticketNumber: $ticketNumber,
                 clientId: $clientId,
                 terminalAssignmentId: $termAssignmentId,
                 serviceType: ServiceType::from($def['type']),

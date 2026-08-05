@@ -35,8 +35,9 @@ final class Location
         string $city,
         string $address,
         LocationType $type,
+        ?string $employeeId = null,
     ): self {
-        return new self($id, $name, $type, $city, $address);
+        return new self($id, $name, $type, $city, $address, $employeeId);
     }
 
     public function id(): LocationIdValueObject

@@ -14,9 +14,9 @@ use App\Identity\Domain\Enums\UserStatus;
 use App\Identity\Domain\Repositories\PermissionRepositoryInterface;
 use App\Identity\Domain\Repositories\RoleRepositoryInterface;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;
-use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Identity\Domain\ValueObjects\UsernameValueObject;
+use App\Identity\Domain\ValueObjects\RoleNameValueObject;
 use App\Organization\Application\Command\CreateEmployee\CreateEmployeeCommand;
 use App\Organization\Application\Command\CreateEmployee\CreateEmployeeHandler;
 use App\Organization\Application\Command\LinkUserToEmployee\LinkUserToEmployeeCommand;
@@ -70,20 +70,19 @@ final class SeedAdminCommand extends Command
 
         $io->title('Seed: Admin Role + Employee + User');
 
-        if ($this->roleRepo->findBySlug(new RoleSlugValueObject('admin')) === null) {
+        if ($this->roleRepo->findByName(new RoleNameValueObject('Administrador')) === null) {
             $io->section('Creando rol Administrador...');
             $allPermissions = $this->permissionRepo->findAll();
             $allPermissionIds = array_map(static fn($p) => (string) $p->id(), $allPermissions);
 
             ($this->createRoleHandler)(new CreateRoleCommand(
                 name: 'Administrador',
-                slug: 'admin',
                 permissionIds: $allPermissionIds,
             ));
             $io->success('Rol Administrador creado con ' . count($allPermissionIds) . ' permisos.');
         } else {
             $io->note('Rol Administrador ya existe — sincronizando permisos...');
-            $adminRole = $this->roleRepo->findBySlug(new RoleSlugValueObject('admin'));
+            $adminRole = $this->roleRepo->findByName(new RoleNameValueObject('Administrador'));
             $allPermissions = $this->permissionRepo->findAll();
             $allPermissionIds = array_map(static fn($p) => (string) $p->id(), $allPermissions);
             ($this->syncRolePermissionsHandler)(new SyncRolePermissionsCommand(
@@ -93,7 +92,7 @@ final class SeedAdminCommand extends Command
             $io->success('Permisos sincronizados (' . count($allPermissionIds) . ').');
         }
 
-        $adminRole = $this->roleRepo->findBySlug(new RoleSlugValueObject('admin'));
+        $adminRole = $this->roleRepo->findByName(new RoleNameValueObject('Administrador'));
         if ($adminRole === null) {
             $io->error('No se pudo encontrar el rol admin.');
             return Command::FAILURE;

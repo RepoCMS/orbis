@@ -16,6 +16,8 @@ interface EmployeeRepositoryInterface
 
     public function findByUserId(UserIdValueObject $userId): ?Employee;
 
+    public function findByEmail(string $email): ?Employee;
+
     /**
      * @return Employee[]
      */

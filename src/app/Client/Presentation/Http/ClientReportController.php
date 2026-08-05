@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Client\Presentation\Http;
 
 use App\Client\Application\Report\ContractsExpiring\ContractsExpiringReportGenerator;
+use App\Client\Application\Report\TerminalsByClient\TerminalsByClientReportGenerator;
 use App\Shared\Infrastructure\Export\ExcelExportService;
 use App\Shared\Infrastructure\Export\PdfExportService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,6 +20,7 @@ final class ClientReportController extends AbstractController
 {
     public function __construct(
         private readonly ContractsExpiringReportGenerator $contractsExpiringReportGenerator,
+        private readonly TerminalsByClientReportGenerator $terminalsByClientReportGenerator,
         private readonly ExcelExportService $excelExport,
         private readonly PdfExportService $pdfExport,
     ) {}
@@ -29,6 +31,19 @@ final class ClientReportController extends AbstractController
         $data = $this->contractsExpiringReportGenerator->generate($request->query->all());
         $title = $this->contractsExpiringReportGenerator->getTitle();
         $headers = $this->contractsExpiringReportGenerator->getHeaders();
+
+        return match ($_format) {
+            'pdf' => $this->pdfExport->export($title, $headers, $data),
+            default => $this->excelExport->export($title, $headers, $data),
+        };
+    }
+
+    #[Route('/terminals-by-client.{_format}', name: 'client_report_terminals_by_client', methods: ['GET'], requirements: ['_format' => 'xlsx|pdf'])]
+    public function terminalsByClient(Request $request, string $_format = 'xlsx'): Response
+    {
+        $data = $this->terminalsByClientReportGenerator->generate($request->query->all());
+        $title = $this->terminalsByClientReportGenerator->getTitle();
+        $headers = $this->terminalsByClientReportGenerator->getHeaders();
 
         return match ($_format) {
             'pdf' => $this->pdfExport->export($title, $headers, $data),

@@ -43,6 +43,18 @@ final class DoctrineEmployeeRepository implements EmployeeRepositoryInterface
             ->getOneOrNullResult();
     }
 
+    public function findByEmail(string $email): ?Employee
+    {
+        return $this->em->createQueryBuilder()
+            ->select('e')
+            ->from(Employee::class, 'e')
+            ->where('e.email = :email')
+            ->andWhere('e.deletedAt IS NULL')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     /**
      * @return Employee[]
      */
