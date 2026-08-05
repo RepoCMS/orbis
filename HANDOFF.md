@@ -29,3 +29,29 @@ Tags relacionadas: `handoff`, `checkpoint`, `progreso ciclo de vida`
    - Verificación automática de integridad del proyecto mediante scripts de validación antes de cualquier commit.
    - Notificación inmediata si faltan archivos requeridos en CONTEXT.md.
 6. Corrección TODOS.md: nombre correcto `ContractsExpiringReportGenerator` (antes `ClientContractExpiringReportGenerator`).
+7. **CLAUDE.md raíz creado** (2026-08-05): Claude Code ahora arranca leyendo CONTEXT.md → HANDOFF.md → TODOS.md → AGENTS.md, con el mismo protocolo de checkpoint que opencode. Sin este archivo, Claude Code no sabía que existía la fuente de verdad.
+8. **Limpieza de secrets**: `.env`, `.env.dev`, `.env.test` salieron del tracking (contenían JWT_PASSPHRASE, MAILER_DSN reales). Creadas plantillas `.env.example`, `.env.dev.example`, `.env.test.example`. Los `.env` reales siguen en disco local (no borrados). `node_modules/` fuera del tracking y en `.gitignore`.
+9. **Agent configs de opencode** (`.opencode/agent/`): roles del workflow multi-agente disponibles para opencode: planner, qa-reviewer, developer, test-engineer, frontend, security-reviewer, docs. Claude Code usa sus worktrees (`.claude/worktrees/`) con la misma división de roles.
+
+## 13. Remote GitHub (pendiente de configurar)
+
+El protocolo de handoff requiere push/pull (`git push origin 001-identity-spec`). Aún NO hay remote configurado.
+
+```bash
+# 1. Crear repo vacío en GitHub (sin README/license para evitar conflicto):
+#    https://github.com/new → nombre: orbis → Public/Private → Create repository
+
+# 2. Desde la raíz del proyecto:
+git remote add origin https://github.com/<tu-usuario>/orbis.git
+
+# 3. Verificar + push inicial:
+git remote -v
+git push -u origin 001-identity-spec
+
+# 4. Después del push inicial, cada handoff es:
+git add -A && git commit -m "WIP: checkpoint before tool switch - $(date +%H:%M)"
+git push origin 001-identity-spec
+```
+
+> ⚠️ Si el repo remoto se crea con README/license, usar: `git pull origin main --allow-unrelated-histories` antes del push, o recrear el repo vacío.
+> ⚠️ Los `.env*` ya no se versionan — al clonar en otra máquina, copiar `.env.example` → `.env.local` y ajustar credenciales.

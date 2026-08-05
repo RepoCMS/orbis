@@ -247,11 +247,11 @@ src/app/{BC}/
 
 ## 10. Próximos Pasos Recomendados
 
-1. **[URGENTE]** Corregir AGENTS.md — actualizar porcentajes de 5 BCs con discrepancia.
-2. **[URGENTE]** Corregir nombre `ClientContractExpiringReportGenerator` → `ContractsExpiringReportGenerator` en TODOS.md.
-3. **[ALTA]** Completar specs de Notification BC (~60% → objetivo 95%).
-4. **[ALTA]** Completar specs de Organization BC (~67% → objetivo 95%).
-5. **[ALTA]** Completar specs de Client BC (~70% → objetivo 95%).
-6. **[MEDIA]** Implementar Identity Dashboard KPIs (pendientes según TODOS.md).
-7. **[MEDIA]** Crear `HANDOFF.md` con historial de cambios entre agentes.
-8. **[BAJA]** Actualizar `.opencode/opencode.jsonc` con roles de agentes si se expande.
+1. **[URGENTE]** Corregir AGENTS.md — actualizar porcentajes de 5 BCs con discrepancia. ✅ Verificado 2026-08-05
+2. **[URGENTE]** Corregir nombre `ClientContractExpiringReportGenerator` → `ContractsExpiringReportGenerator` en TODOS.md. ✅ Corregido 2026-08-05
+3. **[ALTA]** Configurar remote GitHub (sin él, el handoff push/pull no funciona). Ver HANDOFF.md §13.
+4. **[ALTA]** Completar specs de Notification BC (~60% → objetivo 95%).
+5. **[ALTA]** Completar specs de Organization BC (~67% → objetivo 95%).
+6. **[ALTA]** Completar specs de Client BC (~70% → objetivo 95%).
+7. **[MEDIA]** Implementar Identity Dashboard KPIs (pendientes según TODOS.md).
+8. **[BAJA]** Actualizar `.opencode/opencode.jsonc` con roles de agentes si se expande. ✅ Hecho 2026-08-05: `.opencode/agent/{planner,qa-reviewer,developer,test-engineer,frontend,security-reviewer,docs}.md`

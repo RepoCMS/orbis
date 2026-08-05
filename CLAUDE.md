@@ -21,6 +21,7 @@
   - Windows: `& .\validate_project.ps1` (valida reportes + importers + archivos esenciales)
   - Git-bash/WSL: `./validate_reports.sh` y `./validate_importers.sh`
 - **No trabajar sobre worktrees aislados** salvo aprobación; la única fuente de verdad de contexto vive en la raíz del repo (CONTEXT.md, TODOS.md, HANDOFF.md).
+- **Roles de agentes en opencode**: `.opencode/agent/*.md` (planner, qa-reviewer, developer, test-engineer, frontend, security-reviewer, docs) — misma división de roles que los worktrees de Claude Code. Coordinar trabajo delegado a esos roles leyendo CONTEXT.md + el spec del BC.
 - **Siempre** correr `php vendor/bin/phpunit` después de cambios de código (requiere `composer install` si vendor/ no existe).
 
 ## Contexto rápido
