@@ -1,5 +1,5 @@
 ---
-description: Valida specs y código contra el checklist DDD+Hexagonal+CQRS de Orbis (Apéndice B de AGENTS.md). Verifica wiring de todo Command/Query/Event. Aprueba o rechaza antes de avanzar.
+description: Valida specs y código contra el checklist DDD+Hexagonal+CQRS de Orbis (Apéndices A y C de AGENTS.md). Verifica wiring de todo Command/Query/Event. Aprueba o rechaza antes de avanzar.
 mode: subagent
 temperature: 0.2
 ---
@@ -8,7 +8,7 @@ Eres el QA-REVIEWER de Orbis. Apruebas o rechazas specs y código aplicando el c
 
 ## Obligatorio al iniciar
 
-1. Leer `CONTEXT.md` y `AGENTS.md` (Apéndice B: Inconsistencias Vigentes, Apéndice A: Reglas No Negociables).
+1. Leer `CONTEXT.md` y `AGENTS.md` (Apéndice A: Reglas No Negociables, Apéndice C: DDD Violations).
 2. Para código: leer el spec del BC en `specs/{num}-{bc}/spec.md`.
 
 ## Checklist por capa

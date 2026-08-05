@@ -1,6 +1,6 @@
 # Orbis — Contexto Maestro (fuente única de verdad)
 
-> **Propósito:** Este documento es la referencia que toda IA, agente o desarrollador debe consultar antes de actuar. Contiene el estado REAL del proyecto, no el optimista de AGENTS.md.
+> **Propósito:** Este documento es la referencia que toda IA, agente o desarrollador debe consultar antes de actuar. Contiene el estado REAL del proyecto. AGENTS.md (reglas de código) ya no publica % de BCs — esta es la única tabla de estado.
 >
 > **Actualizado:** 2026-08-05
 > **Rama activa:** `001-identity-spec`
@@ -27,7 +27,7 @@
 
 ### Tabla maestra
 
-| BC | Spec Status (real) | AGENTS.md dice | Tests reales | Commands (reales) | Queries (reales) | Controllers (reales) | Reportes | Importers | Dashboard |
+| BC | Spec Status (real) | AGENTS.md decía (pre-refactor 2026-08-05) | Tests reales | Commands (reales) | Queries (reales) | Controllers (reales) | Reportes | Importers | Dashboard |
 |----|--------------------|----------------|-------------|-------------------|------------------|---------------------|----------|-----------|-----------|
 | **Identity** | ~85% | ~97% | 77 | 32 | 13 | 15 | 1 (SecurityEvents) | 1 (Import Users) | ✅ Web + API |
 | **Client** | ~70% | ~96% | 79 | 37 | 16 | 18 | 2 (ContractsExpiring, TerminalsByClient) | 3 (Clientes, Terminales, Modelos) | ✅ Web + API |
@@ -44,7 +44,7 @@
 | **012 Multi-Item Request** | 100% | 100% | 75 | — | — | — | — | — | — |
 | **013 ATM Module Tree** | 100% | 100% | 18 | — | — | — | — | — | ✅ Web |
 
-### Discrepancias críticas (AGENTS.md vs realidad)
+### Discrepancias históricas (AGENTS.md pre-refactor vs realidad)
 
 | # | BC | AGENTS.md dice | Real | Impacto |
 |---|----|----------------|------|---------|

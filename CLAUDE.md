@@ -9,12 +9,12 @@
 1. cat CONTEXT.md   # ÚNICA FUENTE DE VERDAD — estado real del proyecto, % por BC, reportes, importers
 2. cat HANDOFF.md   # Protocolo de handoff entre Claude Code y herramientas locales
 3. cat TODOS.md     # Tareas en progreso y prioridades actuales
-4. cat AGENTS.md    # Patrones históricos y reglas de código (solo lectura, ver §1)
+4. cat AGENTS.md    # Reglas de código vigentes (compacto, ~250 líneas). Apéndice F movido a docs/analytics.md
 ```
 
 ## Reglas de coordinación con opencode
 
-- **CONTEXT.md es la verdad única** para status, porcentajes y progreso. AGENTS.md es histórico/backup (no actualizarlo como fuente de verdad).
+- **CONTEXT.md es la verdad única** para status, porcentajes y progreso. AGENTS.md contiene reglas de código vigentes (estable, no es fuente de estado).
 - **Antes de cambiar de herramienta** (Claude Code ↔ opencode): `git add -A && git commit -m "WIP: checkpoint before tool switch - $(date +%H:%M)"` y si hay remote, `git push origin <branch>`.
 - **Después de volver**: `git pull origin <branch>`, luego leer CONTEXT.md y TODOS.md de nuevo (pueden haber cambiado).
 - **Verificación de integridad** antes de commits grandes:
@@ -38,7 +38,9 @@
 CONTEXT.md    → Verdad única (status, %, reportes, importers)
 HANDOFF.md    → Protocolo de handoff entre herramientas
 TODOS.md      → Tareas y prioridades
-AGENTS.md     → Patrones históricos + reglas de código + apéndices (A–F)
+AGENTS.md     → Reglas de código vigentes (Apéndices A, C, D, E)
+docs/analytics.md → Estrategia dashboards/reportes/importers (bajo demanda)
+docs/history.md   → Issues y deuda técnica (bajo demanda)
 specs/{num}-{bc}/ → Specs, planes y tasks por BC
 validate_*.ps1 / validate_*.sh → Scripts de validación de integridad
 ```

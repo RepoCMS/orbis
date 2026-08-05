@@ -33,7 +33,7 @@ cat TODOS.md
 | 2 | Create `templates/identity/dashboard/index.html.twig` | UI Agent | ⏳ pending | Claude Code |
 | 3 | Implement `IdentityDashboardMetricsHandler` with KPIs | Analytics Agent | ⏳ pending | Claude Code |
 | 4 | Seed permissions: `identity.view_dashboard` | Auth Agent | ⏳ pending | Claude Code |
-| 5 | Add 6 KPIs for Identity BC (see AGENTS.md F.1.1) | Analytics Agent | ⏳ pending | Claude Code |
+| 5 | Add 6 KPIs for Identity BC (see docs/analytics.md F.1.2 Identity) | Analytics Agent | ⏳ pending | Claude Code |
 
 ### Priority 2 (P2) — Reports P1
 
@@ -105,9 +105,9 @@ cat TODOS.md
 ## 📝 Next Actions
 
 1. **[BACKEND AGENT]** Verificar wiring: `TerminalsByClientReportGenerator` tiene caller (`ClientReportController::terminalsByClient`) ✅
-2. **[QA-REVIEWER]** Commit del estado actual (WIP seeds + report) y actualizar AGENTS.md counts
+2. **[QA-REVIEWER]** Commit del estado actual (WIP seeds + report) y actualizar CONTEXT.md counts
 3. **[AUTH AGENT]** Revisar flujo MFA recovery con backup codes (route `mfa_recovery`)
-4. **[ANALYTICS AGENT]** Reportes restantes por prioridad según AGENTS.md F.2.2
+4. **[ANALYTICS AGENT]** Reportes restantes por prioridad según docs/analytics.md F.2.2
 
 ---
 
@@ -123,7 +123,9 @@ cat TODOS.md
 
 ## 🔗 Related References
 
-- `AGENTS.md` — Agent roles, conventions, patterns
+- `CONTEXT.md` — Verdad única de estado (%, reportes, importers)
+- `AGENTS.md` — Reglas de código, conventions, patterns (Apéndices A, C, D, E)
+- `docs/analytics.md` — Estrategia dashboards/reportes/importers
 - `specs/001-identity-spec/` — Identity BC specifications
 - `specs/007-expense/` — Expense reports P1
 - `specs/009-cross-bc/` — Cross-BC integration tests

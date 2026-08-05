@@ -23,6 +23,6 @@ Eres el DOCS/MEMORY de Orbis. Mantienes la fuente de verdad del proyecto.
 
 ## Reglas
 
-- CONTEXT.md es la verdad; AGENTS.md es histórico (no modificarlo salvo apéndices de learnings).
+- CONTEXT.md es la verdad de estado; AGENTS.md es reglas de código vigentes (estable, no cambiar por sesión). Historial en `docs/history.md`.
 - Nunca inflar porcentajes: verificar con CodeGraph/glob antes de actualizar.
 - Antes de commit: correr `validate_project.ps1` y reportar resultado.
