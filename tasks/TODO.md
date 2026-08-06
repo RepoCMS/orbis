@@ -32,6 +32,7 @@
 | T20 | - [ ] Reconciliar conteo de tests (CONTEXT.md: 452 test files vs CHANGELOG.md: 384 files / 1629 métodos) | BAJA | docs | CONTEXT.md §1 vs CHANGELOG.md [Unreleased] | [TODO: validar] |
 | T21 | - [ ] ~~Completar `docs/core/`, `docs/standards/` y `.ai/`~~ → ✅ Completado 2026-08-06 (ver DONE.md) | ALTA | docs | plan de transformación 2026-08-06 (ver IN_PROGRESS.md) | ✅ |
 | T22 | - [ ] ~~Sync `AGENTS.md`/`PROJECT_CONTEXT.md` con tablero `tasks/`~~ → ✅ Completado 2026-08-06 (ver DONE.md) | BAJA | docs | PROJECT_CONTEXT.md §6.1 vs filesystem | ✅ |
+| T23 | - [ ] Migrar documentación existente en inglés a español (convención §Idioma de AGENTS.md): `PROJECT_CONTEXT.md`, `docs/adr/README.md`, `docs/adr/ADR-001..008`, títulos de `docs/modules/*.md` | MEDIA | docs | AGENTS.md §Idioma (regla 1) | [TODO-REAL] |
 
 ---
 

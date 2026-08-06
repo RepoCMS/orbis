@@ -35,6 +35,7 @@
 - **Stack:** Symfony 8.0 / PHP 8.4, MySQL 8+, PHPUnit 11. DDD + Hexagonal + CQRS, ULIDs, soft-deletes.
 - **BCs (13 + Shared Kernel):** Identity (~85%), Client (~70%), Organization (~67%), Support (~85%), Inventory (~95%), Expense (100%), Location (~95%), Notification (~60%), Cross-BC (~90%), 010a (~95%), 010b (~95%), 011 (100%), 012 (100%), 013 (100%). Ver CONTEXT.md §2 para la tabla maestra.
 - **Workflow:** Spec Driven Development — spec primero (`specs/{num}-{bc}/`), implementación después.
+- **Idioma (convención):** código (PHP/JS/Twig) SIEMPRE en inglés; **toda documentación Markdown (docs/, specs/, tasks/, .ai/, ADRs, commits) en español**. Mensajes al usuario final en español. Regla completa en AGENTS.md §Idioma.
 - **Prohibido:** modificar BCs no relacionados, framework leakage en Domain, código huérfano (todo Command/Query debe tener caller real).
 - **Reglas no negociables:** ver AGENTS.md Apéndice A (strict_types, enums lowercase, accessors sin get, etc.).
 

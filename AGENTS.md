@@ -81,6 +81,20 @@ DEVELOPER ──► FRONTEND ──► SECURITY-REVIEWER ──► QA-REVIEWER F
 - **Cross-BC: solo IDs entre BCs, nunca instanciar entidades de otro BC**
 - **Async para eventos cross-BC** (Messenger), sync solo para intra-BC
 
+## Idioma (convención de contenido)
+
+| Contexto | Idioma | Ejemplos |
+|----------|--------|----------|
+| **Código** (PHP, JS, Twig, SQL, identificadores, clases, métodos, variables, mensajes de log) | **Inglés** | `CreateUserCommand`, `StockViewScopeResolver`, `findOpen()` |
+| **Documentación** (Markdown: AGENTS.md, CONTEXT.md, docs/, specs/, tasks/, .ai/, ADRs, README, comentarios de commits) | **Español** | este archivo, `CONTEXT.md`, `docs/architecture.md` |
+| Mensajes visibles al usuario final (UI, validaciones) | Español (producto) | "Stock insuficiente", "Ticket no encontrado" |
+
+Reglas:
+1. **Todo archivo Markdown nuevo o editado se escribe en español** (los existentes en inglés migran progresivamente — ver `tasks/`).
+2. Código nuevo SIEMPRE en inglés (identificadores y strings de log). Nunca mezclar idiomas en un mismo archivo.
+3. Los ADRs existentes en inglés (ADR-001..008) se pueden migrar al español al editarlos; los nuevos se escriben en español (mantener el formato/template).
+4. `AGENTS.md` y `CLAUDE.md` se mantienen en español permanentemente (son la puerta de entrada de toda IA).
+
 ## Reglas de Uso para Agentes
 
 1. Usar CodeGraph (`codegraph_explore`, `codegraph_search`) antes de leer archivos aleatorios
