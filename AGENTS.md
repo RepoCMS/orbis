@@ -97,7 +97,7 @@ Reglas:
 
 ## Reglas de Uso para Agentes
 
-1. Usar CodeGraph (`codegraph_explore`, `codegraph_search`) antes de leer archivos aleatorios
+1. Usar CodeGraph (`codegraph_explore`, `codegraph_search`) antes de leer archivos aleatorios — guía completa y cuándo usarla en `docs/codegraph.md` (obligatorio para verificación de wiring)
 2. Guiarse siempre por `specs/{num}-{bc}/` primero, luego código
 3. **Seguir las convenciones de este archivo** (Principios, Arquitectura, Apéndice A) para todo código generado
 4. **Cumplir `specs/*/tasks.md`** — checklist de implementación
