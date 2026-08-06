@@ -25,6 +25,15 @@ Referencia bajo demanda: `docs/analytics.md` (dashboards/reportes/importers), `d
 
 **Regla no negociable:** Ningún agente puede tomar una decisión arquitectónica sin crear/actualizar un ADR en `docs/adr/` y actualizar `PROJECT_CONTEXT.md`. Si existe una contradicción entre el código y la documentación, debe reportarla ANTES de continuar.
 
+## Configuración global vs repo (no duplicar)
+
+1. **Agentes y skills son GLOBALES**: fuente única en `~/.agents/` (agentes en `agents/`, skills en `skills/`). Las herramientas los descubren vía junctions (`~/.claude/agents|skills`, `~/.config/opencode/agent(s)|skills`, `~/.codex/skills`) — ver `~/.agents/README.md`.
+2. **PROHIBIDO versionar o crear agentes/skills en el repo** (`.opencode/agent/`, `.claude/skills/`, copias de `~/.agents/`, etc.). Si un agente los crea, son duplicados huérfanos: borrarlos y usar la fuente global.
+3. **Excepciones permitidas** (por limitación/rol de formato):
+   - `.codex/agents/*.toml` — Codex no soporta agentes globales Markdown (cargar `.ai/{rol}.md`).
+   - `.ai/*.md` — prompts de rol por proyecto (fuente única de prompts).
+4. **Editar agentes/skills** SOLO en `~/.agents/` y correr `& ~/.agents/sync.ps1` (idempotente, repara junctions). Reiniciar la herramienta después de agregar skills nuevos (no hay hot-reload).
+
 ## Stack
 
 **Backend:** Symfony 8.0 / PHP 8.4, MySQL 8+, PHPUnit 11

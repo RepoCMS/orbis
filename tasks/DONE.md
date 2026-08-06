@@ -9,6 +9,7 @@
 
 | Fecha | Tarea | Fuente |
 |-------|-------|--------|
+| 2026-08-06 | **Regla global vs repo**: AGENTS.md §Configuración global vs repo (agentes/skills globales en `~/.agents/`, prohibido duplicar en repo; excepciones `.codex/agents/*.toml` + `.ai/*.md`) + regla universal en `~/.agents/context/AGENTS.md`. Limpieza: `.claude/skills/` y `.opencode/agent/` sobrantes del repo eliminados | git, CHANGELOG_AI v1.2.0 |
 | 2026-08-06 | **Hub global de agentes/skills (`~/.agents/`)**: fuente única multi-herramienta (opencode, Claude Code, Codex) con junctions (planner, qa-reviewer, developer, test-engineer, frontend, security-reviewer, docs + skills find-skills/frontend-design/caveman + context). `~/.agents/sync.ps1` idempotente. Wrappers `.opencode/agent/` y `.claude/skills/` del repo movidos a global; `.codex/agents/*.toml` generados por proyecto (cargar `.ai/{rol}.md`) | filesystem (junctions), git (deletions) |
 | 2026-08-06 | **Consolidación configs de agentes**: `.ai/` como única fuente de prompts (README + planner.md + docs.md), 7 wrappers `.opencode/agent/*.md`, worktree huérfano `.claude/worktrees/` eliminado, token OpenRouter → `${OPENROUTER_API_KEY}` | filesystem (editado), CHANGELOG_AI v1.1.0 |
 | 2026-08-06 | **T04/T05 — Remote GitHub configurado**: `https://github.com/RepoCMS/orbis.git`, rama `main` renombrada, push inicial + handoff operativo | git `4413faa`, HANDOFF.md §13 (actualizado) |

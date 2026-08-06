@@ -2,7 +2,21 @@
 
 > **Propósito:** Registro específico de la evolución de Orbis como **AI-Native Repository** — documentación arquitectónica, contexto para agentes, estructura de tablero y convenciones.
 > **Diferencia con CHANGELOG.md:** `CHANGELOG.md` registra cambios de producto/código (features, BCs, tests). Este changelog registra cambios de **documentación arquitectónica y de gobernanza de IA**.
-> **Versión actual:** v1.1.0
+> **Versión actual:** v1.2.0
+
+---
+
+## [v1.2.0] — 2026-08-06 — Regla global vs repo (hub `~/.agents/` como única fuente)
+
+### Changed
+
+- **AGENTS.md** — Nueva sección "Configuración global vs repo (no duplicar)": agentes y skills son GLOBALES (`~/.agents/`), prohibido versionar/crear copias en el repo; excepciones solo `.codex/agents/*.toml` (formato Codex) y `.ai/*.md` (prompts de rol).
+- **`~/.agents/context/AGENTS.md`** (global, fuera del repo) — Regla universal #6: ningún repo duplica agentes/skills; duplicados creados por agentes se borran y se usa el hub.
+
+### Removed
+
+- **`.claude/skills/`** (repo) — Copia física sobrante de la era pre-hub (ignorada por git, sin trackear): eliminada. La fuente real es `~/.agents/skills/`.
+- **`.opencode/agent/`** (repo) — Directorio vacío sobrante de los wrappers movidos al hub: eliminado.
 
 ---
 
