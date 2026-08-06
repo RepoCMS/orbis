@@ -9,6 +9,7 @@
 
 | Fecha | Tarea | Fuente |
 |-------|-------|--------|
+| 2026-08-06 | **Consolidación configs de agentes**: `.ai/` como única fuente de prompts (README + planner.md + docs.md), 7 wrappers `.opencode/agent/*.md`, worktree huérfano `.claude/worktrees/` eliminado, token OpenRouter → `${OPENROUTER_API_KEY}` | filesystem (editado), CHANGELOG_AI v1.1.0 |
 | 2026-08-06 | **T04/T05 — Remote GitHub configurado**: `https://github.com/RepoCMS/orbis.git`, rama `main` renombrada, push inicial + handoff operativo | git `4413faa`, HANDOFF.md §13 (actualizado) |
 | 2026-08-06 | **Consolidación fuente de verdad**: TODOS.md deprecado → tablero `tasks/`; 7 agentes `.opencode` + CLAUDE.md con bootstrap AI-Native de 8 pasos; HANDOFF.md §13 actualizado | filesystem (editado) |
 | 2026-08-06 | **T21 — docs core + standards completados**: `docs/architecture.md`, `docs/folder-structure.md`, `docs/dependencies.md`, `docs/coding-standards.md`, `docs/conventions.md`, `docs/glossary.md` | filesystem (verificado contra disco) |

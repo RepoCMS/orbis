@@ -2,7 +2,24 @@
 
 > **Propósito:** Registro específico de la evolución de Orbis como **AI-Native Repository** — documentación arquitectónica, contexto para agentes, estructura de tablero y convenciones.
 > **Diferencia con CHANGELOG.md:** `CHANGELOG.md` registra cambios de producto/código (features, BCs, tests). Este changelog registra cambios de **documentación arquitectónica y de gobernanza de IA**.
-> **Versión actual:** v1.0.0
+> **Versión actual:** v1.1.0
+
+---
+
+## [v1.1.0] — 2026-08-06 — Fuente única de prompts (.ai/) + consolidación de configs
+
+### Added
+
+- **`.ai/README.md`** — Declara `.ai/` como **única fuente de prompts** para cualquier herramienta (opencode, Claude Code, etc.), con índice de 8 roles y reglas de uso.
+- **`.ai/planner.md`** y **`.ai/docs.md`** — Prompts de los 2 roles que faltaban (ahora los 8 roles del workflow multi-agente tienen prompt en `.ai/`).
+
+### Changed
+
+- **`.opencode/agent/*.md` (7)** — Convertidos de prompts completos (duplicados con `.ai/`) a **wrappers delgados** (~15 líneas: frontmatter de configuración nativa de opencode + referencia al prompt en `.ai/`). Elimina la duplicación: un cambio de checklist se hace solo en `.ai/`.
+- **`.claude/worktrees/`** — Eliminado el worktree huérfano de un agente (rama borrada, directorio físico sobrante). `.claude/` solo conserva settings locales (no versionados).
+- **`.claude/settings.json`** — Token de OpenRouter reemplazado por variable de entorno `${OPENROUTER_API_KEY}` (el token ya no queda en texto plano en disco).
+- **AGENTS.md / CLAUDE.md** — Referencias actualizadas: `.ai/` como fuente única, `.opencode/agent/*.md` como wrappers.
+- **TODOS.md deprecado** (v1.0.0 → v1.1.0, commit `c66d96a`): tablero de tareas consolidado en `tasks/`; `validate_project.ps1` valida `tasks/TODO.md`; 7 agentes + CLAUDE.md con bootstrap AI-Native de 8 pasos; HANDOFF.md §13 actualizado con remote real.
 
 ---
 

@@ -213,7 +213,7 @@ On CANCEL/REJECT:
 - **Docs:** `docs/architecture.md`, `docs/coding-standards.md`, `docs/conventions.md`, `docs/glossary.md`, `docs/dependencies.md`, `docs/folder-structure.md`, `docs/analytics.md`, `docs/history.md`
 - **ADRs:** `docs/adr/README.md` (índice), `docs/adr/ADR-001..011`; decisiones no arquitectónicas en `docs/decisions/`
 - **Modules:** `docs/modules/{bc}.md` (uno por Bounded Context)
-- **AI prompts por rol:** `.ai/{architect,backend,frontend,reviewer,security,qa}.md`
+- **AI prompts por rol (fuente única):** `.ai/README.md` (índice), `.ai/{architect,planner,backend,frontend,reviewer,security,qa,docs}.md`; `.opencode/agent/*.md` son wrappers delgados que los cargan
 - **Routes:** `config/routes/` (uno por BC)
 - **Services:** `config/services.yaml`
 - **Doctrine:** `config/packages/doctrine.yaml`
