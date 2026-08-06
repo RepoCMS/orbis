@@ -2,8 +2,8 @@
 
 > **Propósito:** Este documento es la referencia que toda IA, agente o desarrollador debe consultar antes de actuar. Contiene el estado REAL del proyecto. AGENTS.md (reglas de código) ya no publica % de BCs — esta es la única tabla de estado.
 >
-> **Actualizado:** 2026-08-05
-> **Rama activa:** `001-identity-spec`
+> **Actualizado:** 2026-08-06
+> **Rama activa:** `main` (remote: `https://github.com/RepoCMS/orbis.git`)
 > **Último commit:** `4cc2c35` — Checkpoint antes de estructurar
 
 ---
