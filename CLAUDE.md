@@ -29,6 +29,7 @@
 - **Roles de agentes en opencode**: `.opencode/agent/*.md` (planner, qa-reviewer, developer, test-engineer, frontend, security-reviewer, docs) — misma división de roles que los worktrees de Claude Code. Coordinar trabajo delegado a esos roles leyendo CONTEXT.md + el spec del BC.
 - **Guía de CodeGraph (MCP)**: versionada en `docs/codegraph.md` — leerla antes de explorar código (qué tool usar según la pregunta, verificación de wiring).
 - **Prompts especializados por rol (fuente única)**: `.ai/README.md` (índice) + `.ai/{architect,planner,backend,frontend,reviewer,security,qa,docs}.md`. Los agentes de opencode (`.opencode/agent/*.md`) son wrappers que cargan los mismos archivos — una sola fuente para ambas herramientas.
+- **Skills compartidos (fuente única)**: `.claude/skills/` versionados en el repo — Claude Code los lee nativo y opencode los descubre automáticamente (reiniciar opencode al agregar uno nuevo). Provenance y reglas en `.claude/skills/README.md`.
 - **Siempre** correr `php vendor/bin/phpunit` después de cambios de código (requiere `composer install` si vendor/ no existe).
 
 ## Contexto rápido

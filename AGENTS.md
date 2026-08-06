@@ -21,7 +21,7 @@ Este repositorio es **AI-Native**: Git es la única fuente de verdad. Ningún ag
 8. cat tasks/IN_PROGRESS.md     # tareas en curso
 ```
 
-Referencia bajo demanda: `docs/analytics.md` (dashboards/reportes/importers), `docs/history.md` (issues y deuda técnica), `docs/glossary.md` (términos), `docs/dependencies.md` (stack), `docs/conventions.md` (convenciones), `.ai/` (prompts especializados por rol).
+Referencia bajo demanda: `docs/analytics.md` (dashboards/reportes/importers), `docs/history.md` (issues y deuda técnica), `docs/glossary.md` (términos), `docs/dependencies.md` (stack), `docs/conventions.md` (convenciones), `.ai/` (prompts especializados por rol), `.claude/skills/` (skills compartidos versionados — frontend-design, caveman, find-skills; ver README del directorio).
 
 **Regla no negociable:** Ningún agente puede tomar una decisión arquitectónica sin crear/actualizar un ADR en `docs/adr/` y actualizar `PROJECT_CONTEXT.md`. Si existe una contradicción entre el código y la documentación, debe reportarla ANTES de continuar.
 
