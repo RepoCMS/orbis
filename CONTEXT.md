@@ -129,7 +129,7 @@ TODOS.md referencia `ClientContractExpiringReportGenerator` pero el nombre real 
 1. PLANNER
    → Lee CONTEXT.md + specs/{num}-{bc}/spec.md
    → Escribe/actualiza spec.md con sección "Wiring"
-   → Actualiza TODOS.md con estado real
+   → Actualiza `tasks/` (TODO/IN_PROGRESS/DONE) con estado real
    ↓
 2. QA-REVIEWER
    → Valida spec con checklist DDD (Apéndice A de AGENTS.md)
@@ -151,7 +151,7 @@ TODOS.md referencia `ClientContractExpiringReportGenerator` pero el nombre real 
 
 1. **Nunca avanzar sin verificar wiring** — `codegraph_callers` de cada Command/Query nuevo.
 2. **Nunca confiar en AGENTS.md como fuente de verdad** — usar CONTEXT.md como fuente primaria.
-3. **Siempre actualizar TODOS.md** con el estado real después de cada checkpoint.
+3. **Siempre actualizar `tasks/`** con el estado real después de cada checkpoint.
 4. **Nunca modificar dos BCs sin involucrar al Planner primero.**
 5. **Tests son obligatorios** — ningún Command/Query se entrega sin test.
 
@@ -168,7 +168,7 @@ git push origin 001-identity-spec
 # DESPUÉS de regresar:
 git pull origin 001-identity-spec
 cat CONTEXT.md
-cat TODOS.md
+cat tasks/IN_PROGRESS.md
 ```
 
 ---

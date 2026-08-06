@@ -13,8 +13,8 @@
 | T01 | - [ ] Completar spec de **Notification BC** (~60% → objetivo 95%) — cross-BC wiring pendiente | ALTA | Notification | CONTEXT.md §10 #4, §3 `006-notification` | [TODO-REAL] |
 | T02 | - [ ] Completar spec de **Organization BC** (~67% → objetivo 95%) — reportes P2 pendientes | ALTA | Organization | CONTEXT.md §10 #5, §3 `001-organization-spec` | [TODO-REAL] |
 | T03 | - [ ] Completar spec de **Client BC** (~70% → objetivo 95%) — importers P2/P3 pendientes | ALTA | Client | CONTEXT.md §10 #6, §3 `002-client` | [TODO-REAL] |
-| T04 | - [ ] Configurar **remote GitHub** (bloquea handoff push/pull; pasos en HANDOFF.md §13) | ALTA | infra | CONTEXT.md §10 #3, HANDOFF.md §13 | [TODO-REAL] |
-| T05 | - [ ] Verificar si remote GitHub ya fue configurado (si T04 se completó, mover a DONE.md) | MEDIA | infra | HANDOFF.md §13 ("Aún NO hay remote configurado", 2026-08-05) | [TODO: validar] |
+| T04 | - [ ] ~~Configurar **remote GitHub**~~ → ✅ Completado 2026-08-06: `https://github.com/RepoCMS/orbis.git`, rama `main` (ver DONE.md) | ALTA | infra | HANDOFF.md §13 (actualizado) | ✅ |
+| T05 | - [ ] ~~Verificar si remote GitHub ya fue configurado~~ → ✅ Verificado 2026-08-06: sí (T04 cerrado) | MEDIA | infra | HANDOFF.md §13 (actualizado) | ✅ |
 | T06 | - [ ] Decidir **bcrypt vs argon2** para password hashing (issue #42) | MEDIA | Identity | CONTEXT.md §7, TODOS.md blockers | [TODO-REAL] |
 | T07 | - [ ] Implementar **Identity Dashboard KPIs** (6 KPIs, docs/analytics.md F.1.2) + `IdentityDashboardController` + template + `IdentityDashboardMetricsHandler` | MEDIA | Identity | CONTEXT.md §10 #7, TODOS.md P1 (tareas 1-3, 5) | [TODO-REAL] |
 | T08 | - [ ] Escribir **tests para Location BC** (hoy 7 tests, API-only, sin interfaz web) | MEDIA | Location | CONTEXT.md §2/§3 `005-location`, docs/history.md #3 | [TODO-REAL] |

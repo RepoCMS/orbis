@@ -9,6 +9,8 @@
 
 | Fecha | Tarea | Fuente |
 |-------|-------|--------|
+| 2026-08-06 | **T04/T05 — Remote GitHub configurado**: `https://github.com/RepoCMS/orbis.git`, rama `main` renombrada, push inicial + handoff operativo | git `4413faa`, HANDOFF.md §13 (actualizado) |
+| 2026-08-06 | **Consolidación fuente de verdad**: TODOS.md deprecado → tablero `tasks/`; 7 agentes `.opencode` + CLAUDE.md con bootstrap AI-Native de 8 pasos; HANDOFF.md §13 actualizado | filesystem (editado) |
 | 2026-08-06 | **T21 — docs core + standards completados**: `docs/architecture.md`, `docs/folder-structure.md`, `docs/dependencies.md`, `docs/coding-standards.md`, `docs/conventions.md`, `docs/glossary.md` | filesystem (verificado contra disco) |
 | 2026-08-06 | **T22 — Sync AGENTS.md + PROJECT_CONTEXT.md**: bootstrap AI-Native de 8 pasos, regla ADR no negociable, `TASKS/`→`tasks/`, ORM 3.x, Alpine.js fuera | filesystem (editado) |
 | 2026-08-06 | **T12/T13 — ADRs normalizados**: legacy 011-013 migrados a `ADR-009..011` (formato estándar), README actualizado con índice completo | git (deletions stageados) |

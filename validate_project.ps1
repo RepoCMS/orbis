@@ -8,7 +8,7 @@ Write-Host ""
 
 # 1. Archivos esenciales
 Write-Host "1. Archivos esenciales..."
-$required = @('CONTEXT.md', 'TODOS.md', 'AGENTS.md', 'HANDOFF.md', 'composer.json')
+$required = @('CONTEXT.md', 'tasks/TODO.md', 'AGENTS.md', 'HANDOFF.md', 'composer.json')
 foreach ($f in $required) {
     if (Test-Path -LiteralPath $f) {
         Write-Host "   [OK] $f"

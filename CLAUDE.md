@@ -1,27 +1,33 @@
 # Orbis — CLAUDE.md (Claude Code)
 
-> **Fecha de verificación:** 2026-08-05
+> **Fecha de verificación:** 2026-08-06
 > **Propósito:** Este archivo es la puerta de entrada para Claude Code. Define qué leer al iniciar sesión para trabajar coordinadamente con opencode.
 
-## ⚠️ LEER ANTES DE TRABAJAR (obligatorio al iniciar sesión)
+## ⚠️ LEER ANTES DE TRABAJAR (bootstrap AI-Native — obligatorio al iniciar sesión)
 
 ```
-1. cat CONTEXT.md   # ÚNICA FUENTE DE VERDAD — estado real del proyecto, % por BC, reportes, importers
-2. cat HANDOFF.md   # Protocolo de handoff entre Claude Code y herramientas locales
-3. cat TODOS.md     # Tareas en progreso y prioridades actuales
-4. cat AGENTS.md    # Reglas de código vigentes (compacto, ~250 líneas). Apéndice F movido a docs/analytics.md
+1. cat AGENTS.md                # reglas y convenciones de código
+2. cat PROJECT_CONTEXT.md       # contexto general del proyecto
+3. cat docs/architecture.md     # arquitectura completa
+4. cat docs/coding-standards.md # reglas obligatorias de codificación
+5. cat docs/adr/README.md       # índice de decisiones arquitectónicas (ADRs)
+6. cat specs/{num}-{bc}/spec.md # spec correspondiente a tu tarea
+7. cat CONTEXT.md               # ÚNICA FUENTE DE VERDAD — estado real del proyecto, % por BC, reportes, importers
+8. cat tasks/IN_PROGRESS.md     # tareas en curso + tablero tasks/TODO.md
 ```
 
 ## Reglas de coordinación con opencode
 
 - **CONTEXT.md es la verdad única** para status, porcentajes y progreso. AGENTS.md contiene reglas de código vigentes (estable, no es fuente de estado).
-- **Antes de cambiar de herramienta** (Claude Code ↔ opencode): `git add -A && git commit -m "WIP: checkpoint before tool switch - $(date +%H:%M)"` y si hay remote, `git push origin <branch>`.
-- **Después de volver**: `git pull origin <branch>`, luego leer CONTEXT.md y TODOS.md de nuevo (pueden haber cambiado).
+- **Regla no negociable:** ninguna decisión arquitectónica sin ADR en `docs/adr/` + `PROJECT_CONTEXT.md` actualizados. Contradicción código-vs-docs → reportarla ANTES de continuar.
+- **Antes de cambiar de herramienta** (Claude Code ↔ opencode): `git add -A && git commit -m "WIP: checkpoint before tool switch - $(date +%H:%M)"` y push a `origin main`.
+- **Después de volver**: `git pull origin main`, luego leer CONTEXT.md y `tasks/IN_PROGRESS.md` de nuevo (pueden haber cambiado).
 - **Verificación de integridad** antes de commits grandes:
   - Windows: `& .\validate_project.ps1` (valida reportes + importers + archivos esenciales)
   - Git-bash/WSL: `./validate_reports.sh` y `./validate_importers.sh`
-- **No trabajar sobre worktrees aislados** salvo aprobación; la única fuente de verdad de contexto vive en la raíz del repo (CONTEXT.md, TODOS.md, HANDOFF.md).
+- **No trabajar sobre worktrees aislados** salvo aprobación; la única fuente de verdad de contexto vive en la raíz del repo (CONTEXT.md, tasks/, HANDOFF.md).
 - **Roles de agentes en opencode**: `.opencode/agent/*.md` (planner, qa-reviewer, developer, test-engineer, frontend, security-reviewer, docs) — misma división de roles que los worktrees de Claude Code. Coordinar trabajo delegado a esos roles leyendo CONTEXT.md + el spec del BC.
+- **Prompts especializados por rol**: `.ai/{architect,backend,frontend,reviewer,security,qa}.md`.
 - **Siempre** correr `php vendor/bin/phpunit` después de cambios de código (requiere `composer install` si vendor/ no existe).
 
 ## Contexto rápido
@@ -35,12 +41,13 @@
 ## Estructura clave
 
 ```
-CONTEXT.md    → Verdad única (status, %, reportes, importers)
+CONTEXT.md    → Verdad única de estado (status, %, reportes, importers)
+PROJECT_CONTEXT.md → Contexto general del proyecto (propósito, stack, principios)
+tasks/        → Tablero: TODO.md (backlog), IN_PROGRESS.md (en curso), DONE.md (cerrado)
 HANDOFF.md    → Protocolo de handoff entre herramientas
-TODOS.md      → Tareas y prioridades
 AGENTS.md     → Reglas de código vigentes (Apéndices A, C, D, E)
-docs/analytics.md → Estrategia dashboards/reportes/importers (bajo demanda)
-docs/history.md   → Issues y deuda técnica (bajo demanda)
+docs/         → architecture.md, coding-standards.md, conventions.md, glossary.md, dependencies.md, folder-structure.md, adr/, modules/, analytics.md, history.md, decisions/
+.ai/          → Prompts especializados por rol (architect, backend, frontend, reviewer, security, qa)
 specs/{num}-{bc}/ → Specs, planes y tasks por BC
 validate_*.ps1 / validate_*.sh → Scripts de validación de integridad
 ```

@@ -36,7 +36,7 @@ orbis/
 ├── CONTEXT.md                # ⚠️ ÚNICA fuente de verdad de estado
 ├── HANDOFF.md                # Protocolo handoff entre agentes
 ├── PROJECT_CONTEXT.md        # Contexto AI-native del repositorio
-├── TODOS.md                  # Tareas en progreso
+├── TODOS.md                  # ⚠️ DEPRECADO → tablero en tasks/ (TODO.md, IN_PROGRESS.md, DONE.md)
 ├── composer.json / composer.lock
 ├── importmap.php             # Importmap frontend (Stimulus, Turbo, app)
 ├── package.json / package-lock.json   # Solo better-sqlite3 (dev)

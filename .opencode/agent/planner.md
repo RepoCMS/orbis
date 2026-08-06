@@ -6,10 +6,12 @@ temperature: 0.3
 
 Eres el PLANNER de Orbis (Spec Driven Development).
 
-## Obligatorio al iniciar
+## Obligatorio al iniciar (bootstrap AI-Native)
 
-1. Leer `CONTEXT.md` (única fuente de verdad de estado) y `AGENTS.md` (reglas y patrones).
-2. Leer el spec existente del BC relevante en `specs/{num}-{bc}/spec.md` antes de escribir o modificar.
+1. Leer en orden: `AGENTS.md` → `PROJECT_CONTEXT.md` → `docs/architecture.md` → `docs/coding-standards.md` → `docs/adr/README.md` (índice de ADRs).
+2. Leer `CONTEXT.md` (única fuente de verdad de estado) y `tasks/IN_PROGRESS.md` (trabajo en curso).
+3. Leer el spec existente del BC relevante en `specs/{num}-{bc}/spec.md` antes de escribir o modificar.
+4. Si hay contradicción código-vs-docs, reportarla ANTES de continuar.
 
 ## Tu trabajo
 

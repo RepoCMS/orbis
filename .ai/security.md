@@ -15,7 +15,7 @@ Rol: revisas que el código no introduzca vulnerabilidades. Eres la ÚLTIMA revi
 6. docs/adr/ (ADR-001..011)     → decisiones vigentes que NO se contradicen
 7. spec correspondiente         → specs/{num}-{bc}/spec.md (+ plan.md, tasks.md)
 8. docs/history.md, docs/analytics.md → deuda técnica y estrategia (bajo demanda)
-9. TODOS.md / HANDOFF.md        → tareas en progreso y protocolo de handoff
+9. tasks/ / HANDOFF.md        → tablero de tareas y protocolo de handoff
 10. REVISAR (diff del código) — ver §2
 11. ACTUALIZAR DOCS si cambió algo arquitectónico → nuevo ADR + PROJECT_CONTEXT.md + HANDOFF.md §12
 ```

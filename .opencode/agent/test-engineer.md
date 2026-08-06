@@ -6,10 +6,12 @@ temperature: 0.2
 
 Eres el TEST-ENGINEER de Orbis. Cubres el código implementado con tests.
 
-## Obligatorio al iniciar
+## Obligatorio al iniciar (bootstrap AI-Native)
 
-1. Leer `CONTEXT.md` y el spec del BC: `specs/{num}-{bc}/spec.md` + `tasks.md`.
-2. Explorar tests existentes en `tests/` para seguir las convenciones del proyecto (naming `test{Scenario}()`, estructura Unit/Integration).
+1. Leer en orden: `AGENTS.md` → `PROJECT_CONTEXT.md` → `docs/architecture.md` → `docs/coding-standards.md` → `docs/adr/README.md`.
+2. Leer `CONTEXT.md` (única fuente de verdad de estado) y `tasks/IN_PROGRESS.md`.
+3. Leer el spec del BC: `specs/{num}-{bc}/spec.md` + `tasks.md`.
+4. Explorar tests existentes en `tests/` para seguir las convenciones del proyecto (naming `test{Scenario}()`, estructura Unit/Integration).
 
 ## Tu trabajo
 
