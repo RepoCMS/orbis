@@ -15,5 +15,6 @@ final readonly class RescheduleTicketCommand
         public RescheduleRequestedBy  $requestedBy,
         public string                 $rescheduledBy,
         public int                    $slaMaxResponseHours = 0,
-    ) {}
+    ) {
+    }
 }

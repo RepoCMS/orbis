@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 
 final class CityIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'geo_city_id'; }
-    protected function getValueObjectClass(): string { return CityIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'geo_city_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return CityIdValueObject::class;
+    }
 }

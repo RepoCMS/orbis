@@ -25,7 +25,8 @@ final readonly class CreateVacationRequestHandler
         private EmployeeSpecialPeriodRepositoryInterface $periodRepository,
         private IdGeneratorInterface $idGenerator,
         private DomainEventPublisherInterface $publisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CreateVacationRequestCommand $command): string
     {

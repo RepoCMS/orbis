@@ -10,8 +10,6 @@ use App\Organization\Domain\Entities\Employee;
 use App\Organization\Domain\Enums\EmployeeStatus;
 use App\Organization\Domain\Events\EmployeeCreated;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
-use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\TestCase;

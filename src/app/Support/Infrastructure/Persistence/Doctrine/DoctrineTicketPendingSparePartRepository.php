@@ -12,7 +12,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrineTicketPendingSparePartRepository implements TicketPendingSparePartRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager) {}
+    public function __construct(private readonly EntityManagerInterface $entityManager)
+    {
+    }
 
     public function findById(TicketPendingSparePartIdValueObject $id): ?TicketPendingSparePart
     {

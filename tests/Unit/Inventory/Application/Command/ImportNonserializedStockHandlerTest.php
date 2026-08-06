@@ -34,6 +34,7 @@ final class ImportNonserializedStockHandlerTest extends TestCase
     {
         $path = tempnam(sys_get_temp_dir(), 'import_test_');
         file_put_contents($path, $content);
+
         return $path;
     }
 

@@ -8,5 +8,6 @@ final readonly class SendNotificationMessage
 {
     public function __construct(
         public string $notificationLogId,
-    ) {}
+    ) {
+    }
 }

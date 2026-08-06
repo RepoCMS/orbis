@@ -11,7 +11,8 @@ final readonly class ListInboxNotificationsHandler
 {
     public function __construct(
         private NotificationLogRepositoryInterface $logRepository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ListInboxNotificationsQuery $query): array
     {

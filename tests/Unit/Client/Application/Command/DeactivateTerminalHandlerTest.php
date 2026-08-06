@@ -14,9 +14,9 @@ use App\Client\Domain\Enums\TerminalType;
 use App\Client\Domain\Enums\TerminalVendor;
 use App\Client\Domain\Events\TerminalDeactivated;
 use App\Client\Domain\Repositories\TerminalRepositoryInterface;
-use App\Client\Domain\ValueObjects\TerminalIdValueObject;
-use App\Client\Domain\ValueObjects\SerialNumberValueObject;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
+use App\Client\Domain\ValueObjects\SerialNumberValueObject;
+use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use PHPUnit\Framework\TestCase;
 

@@ -8,8 +8,8 @@ use App\Identity\Application\Command\DisableUserMfa\DisableUserMfaCommand;
 use App\Identity\Application\Command\DisableUserMfa\DisableUserMfaHandler;
 use App\Identity\Domain\Entities\UserMfaConfig;
 use App\Identity\Domain\Repositories\UserMfaConfigRepositoryInterface;
-use App\Identity\Domain\ValueObjects\UserMfaConfigIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
+use App\Identity\Domain\ValueObjects\UserMfaConfigIdValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class DisableUserMfaHandlerTest extends TestCase

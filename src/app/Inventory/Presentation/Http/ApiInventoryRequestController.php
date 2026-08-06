@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Inventory\Presentation\Http;
 
+use App\Identity\Infrastructure\Security\SymfonySecurityUser;
 use App\Inventory\Application\Command\AcceptByTechnician\AcceptByTechnicianCommand;
 use App\Inventory\Application\Command\AcceptByTechnician\AcceptByTechnicianHandler;
 use App\Inventory\Application\Command\ApproveRequest\ApproveRequestCommand;
@@ -21,7 +22,6 @@ use App\Inventory\Application\Command\SubmitRequest\SubmitRequestHandler;
 use App\Inventory\Application\Exception\RequestNotFoundException;
 use App\Inventory\Application\Query\FindRequestById\FindRequestByIdHandler;
 use App\Inventory\Application\Query\ListRequests\ListRequestsHandler;
-use App\Identity\Infrastructure\Security\SymfonySecurityUser;
 use App\Shared\Exceptions\DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -47,7 +47,7 @@ final class ApiInventoryRequestController extends AbstractController
         if ($requestedBy !== null) {
             $requests = array_values(array_filter(
                 $requests,
-                static fn($r) => $r->requestedBy === $requestedBy,
+                static fn ($r) => $r->requestedBy === $requestedBy,
             ));
         }
 

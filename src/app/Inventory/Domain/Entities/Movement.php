@@ -75,6 +75,7 @@ final class Movement
         );
         $movement->createdByUserId = $createdByUserId;
         $movement->assignedToUserId = $assignedToUserId;
+
         return $movement;
     }
 

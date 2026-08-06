@@ -9,6 +9,12 @@ use App\Support\Domain\ValueObjects\TicketPauseIdValueObject;
 
 final class TicketPauseIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'ticket_pause_id'; }
-    protected function getValueObjectClass(): string { return TicketPauseIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'ticket_pause_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return TicketPauseIdValueObject::class;
+    }
 }

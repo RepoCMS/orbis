@@ -30,5 +30,6 @@ final class DashboardSummaryResponse
         public readonly array $advancesByTechnician = [],
         public readonly int $pendingSettlementAdvances = 0,
         public readonly float $monthlyApprovedExpenseTotal = 0.0,
-    ) {}
+    ) {
+    }
 }

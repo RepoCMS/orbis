@@ -24,7 +24,8 @@ final readonly class ImportClientsHandler
         private ClientRepositoryInterface $clientRepository,
         private IdGeneratorInterface $idGenerator,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ImportClientsCommand $command): ImportResult
     {

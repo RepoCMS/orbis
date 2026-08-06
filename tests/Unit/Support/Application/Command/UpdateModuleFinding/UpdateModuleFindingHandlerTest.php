@@ -11,8 +11,8 @@ use App\Support\Domain\AtmModel\FindingType;
 use App\Support\Domain\AtmModel\ModulePathValueObject;
 use App\Support\Domain\Entities\TicketModuleFinding;
 use App\Support\Domain\Repositories\TicketModuleFindingRepositoryInterface;
-use App\Support\Domain\ValueObjects\TicketModuleFindingIdValueObject;
 use App\Support\Domain\ValueObjects\TicketIdValueObject;
+use App\Support\Domain\ValueObjects\TicketModuleFindingIdValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class UpdateModuleFindingHandlerTest extends TestCase

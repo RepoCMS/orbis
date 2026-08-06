@@ -8,5 +8,6 @@ final readonly class GetOperatingExpenseDetailQuery
 {
     public function __construct(
         public string $expenseId,
-    ) {}
+    ) {
+    }
 }

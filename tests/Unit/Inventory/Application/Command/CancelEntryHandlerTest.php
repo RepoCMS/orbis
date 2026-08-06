@@ -35,6 +35,7 @@ final class CancelEntryHandlerTest extends TestCase
     {
         $entry = $this->makeDraftEntry();
         $entry->confirm();
+
         return $entry;
     }
 

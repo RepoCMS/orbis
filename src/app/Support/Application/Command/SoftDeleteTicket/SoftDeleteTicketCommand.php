@@ -8,5 +8,6 @@ final readonly class SoftDeleteTicketCommand
 {
     public function __construct(
         public string $ticketId,
-    ) {}
+    ) {
+    }
 }

@@ -20,7 +20,8 @@ final readonly class TicketFindingResponse
         public string  $registeredBy,
         public array   $spareParts = [],
         public array   $pendingSpareParts = [],
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(\App\Support\Domain\Entities\TicketFinding $finding): self
     {

@@ -20,7 +20,8 @@ final readonly class ReassignTicketHandler
         private TicketAssignmentRepositoryInterface  $assignmentRepo,
         private IdGeneratorInterface                 $idGenerator,
         private DomainEventPublisherInterface        $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ReassignTicketCommand $command): void
     {

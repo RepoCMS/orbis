@@ -10,7 +10,9 @@ use App\Location\Domain\ValueObjects\RegionIdValueObject;
 
 final readonly class ListProvincesHandler
 {
-    public function __construct(private ProvinceRepositoryInterface $provinceRepository) {}
+    public function __construct(private ProvinceRepositoryInterface $provinceRepository)
+    {
+    }
 
     /** @return ProvinceResponse[] */
     public function __invoke(ListProvincesQuery $query): array

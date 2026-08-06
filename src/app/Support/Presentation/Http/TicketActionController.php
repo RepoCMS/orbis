@@ -211,7 +211,7 @@ final class TicketActionController extends AbstractController
 
         try {
             $row = $connection->fetchAssociative(
-                "SELECT
+                'SELECT
                     UPPER(SUBSTRING(c.trade_name, 1, 3))  AS client_code,
                     UPPER(SUBSTRING(ci.name, 1, 3))       AS city_code,
                     COALESCE(ta.id_assigned_by_client, ta.id) AS terminal_code
@@ -221,7 +221,7 @@ final class TicketActionController extends AbstractController
                  JOIN terminals t ON t.id = ta.terminal_id
                  JOIN clients c ON c.id = t.client_id
                  JOIN cities ci ON ci.id = s.city_id
-                 WHERE tk.id = :ticketId",
+                 WHERE tk.id = :ticketId',
                 ['ticketId' => $id],
             );
 
@@ -347,6 +347,7 @@ final class TicketActionController extends AbstractController
         $uploadedFile = $request->files->get('file');
         if ($uploadedFile === null) {
             $this->addFlash('error', 'El archivo es requerido.');
+
             return $this->redirectToRoute('support_ticket_show', ['id' => $id]);
         }
 

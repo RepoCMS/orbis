@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Inventory\Presentation\Http;
 
+use App\Identity\Infrastructure\Security\SymfonySecurityUser;
 use App\Inventory\Application\Command\ApprovePhysicalCount\ApprovePhysicalCountCommand;
 use App\Inventory\Application\Command\ApprovePhysicalCount\ApprovePhysicalCountHandler;
 use App\Inventory\Application\Command\RejectPhysicalCount\RejectPhysicalCountCommand;
@@ -12,13 +13,11 @@ use App\Inventory\Application\Command\StartPhysicalCount\StartPhysicalCountComma
 use App\Inventory\Application\Command\StartPhysicalCount\StartPhysicalCountHandler;
 use App\Inventory\Application\Command\SubmitPhysicalCount\SubmitPhysicalCountCommand;
 use App\Inventory\Application\Command\SubmitPhysicalCount\SubmitPhysicalCountHandler;
-use App\Inventory\Application\Exception\LocationNotFoundException;
 use App\Inventory\Application\Query\ListLocations\ListLocationsHandler;
 use App\Inventory\Application\Query\ListPhysicalCounts\ListPhysicalCountsHandler;
 use App\Inventory\Application\Query\ListPhysicalCounts\ListPhysicalCountsQuery;
 use App\Inventory\Domain\Repositories\PhysicalCountRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\PhysicalCountIdValueObject;
-use App\Identity\Infrastructure\Security\SymfonySecurityUser;
 use App\Shared\Exceptions\DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

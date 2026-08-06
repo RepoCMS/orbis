@@ -12,7 +12,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrineRequestRepository implements RequestRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $em) {}
+    public function __construct(private readonly EntityManagerInterface $em)
+    {
+    }
 
     public function findById(RequestIdValueObject $id): ?Request
     {

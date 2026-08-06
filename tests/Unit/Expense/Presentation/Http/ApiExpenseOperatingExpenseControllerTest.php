@@ -11,7 +11,6 @@ use App\Expense\Application\Command\CreateOperatingExpense\CreateOperatingExpens
 use App\Expense\Application\Command\RejectExpenseItem\RejectExpenseItemHandler;
 use App\Expense\Application\Command\ResubmitExpense\ResubmitExpenseHandler;
 use App\Expense\Application\Command\SubmitExpense\SubmitExpenseHandler;
-use App\Expense\Application\Command\UploadEvidence\UploadEvidenceHandler;
 use App\Expense\Application\Query\GetOperatingExpenseDetail\GetOperatingExpenseDetailHandler;
 use App\Expense\Application\Query\ListOperatingExpenses\ListOperatingExpensesHandler;
 use App\Expense\Application\Service\EmployeeResolverInterface;
@@ -43,7 +42,7 @@ final class ApiExpenseOperatingExpenseControllerTest extends TestCase
     private function createController(): ApiExpenseOperatingExpenseController
     {
         $container = $this->createMock(ContainerInterface::class);
-        $container->method('has')->willReturnCallback(fn(string $id) => $id === 'parameter_bag');
+        $container->method('has')->willReturnCallback(fn (string $id) => $id === 'parameter_bag');
         $container->method('getParameter')
             ->with('kernel.project_dir')
             ->willReturn(sys_get_temp_dir());
@@ -72,7 +71,12 @@ final class ApiExpenseOperatingExpenseControllerTest extends TestCase
         $idempotency->method('tryProcess')->willReturn(true);
 
         return new CreateOperatingExpenseHandler(
-            $expenseRepo, $idGenerator, $employeeResolver, $ticketResolver, $eventPublisher, $idempotency
+            $expenseRepo,
+            $idGenerator,
+            $employeeResolver,
+            $ticketResolver,
+            $eventPublisher,
+            $idempotency
         );
     }
 

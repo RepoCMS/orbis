@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractStringEnumType;
 
 final class ExpenseItemStatusType extends AbstractStringEnumType
 {
-    public function getName(): string { return 'expense_item_status'; }
-    protected function getEnumClass(): string { return ExpenseItemStatus::class; }
+    public function getName(): string
+    {
+        return 'expense_item_status';
+    }
+    protected function getEnumClass(): string
+    {
+        return ExpenseItemStatus::class;
+    }
 }

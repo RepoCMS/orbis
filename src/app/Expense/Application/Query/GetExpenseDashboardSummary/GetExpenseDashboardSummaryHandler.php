@@ -16,7 +16,8 @@ final readonly class GetExpenseDashboardSummaryHandler
 
     public function __construct(
         private Connection $dbal,
-    ) {}
+    ) {
+    }
 
     public function __invoke(GetExpenseDashboardSummaryQuery $query): DashboardSummaryResponse
     {
@@ -72,10 +73,10 @@ final readonly class GetExpenseDashboardSummaryHandler
 
         // 5. Monthly advance total
         $monthlyAdvanceTotal = (float) $this->dbal->fetchOne(
-            "SELECT COALESCE(SUM(amount), 0) FROM {self::TABLE_ADVANCES}
+            'SELECT COALESCE(SUM(amount), 0) FROM {self::TABLE_ADVANCES}
              WHERE deleted_at IS NULL
                AND given_at >= :startMonth
-               AND given_at <= :endMonth",
+               AND given_at <= :endMonth',
             ['startMonth' => $startOfMonthStr, 'endMonth' => $endOfMonthStr],
         );
 
@@ -94,7 +95,7 @@ final readonly class GetExpenseDashboardSummaryHandler
             "SELECT COUNT(*) FROM {self::TABLE_EXPENSES} WHERE status != 'draft' AND deleted_at IS NULL",
         );
         $totalAdvances = (int) $this->dbal->fetchOne(
-            "SELECT COUNT(*) FROM {self::TABLE_ADVANCES} WHERE deleted_at IS NULL",
+            'SELECT COUNT(*) FROM {self::TABLE_ADVANCES} WHERE deleted_at IS NULL',
         );
 
         // 7. Recent expenses (last 5 non-draft)
@@ -134,12 +135,12 @@ final readonly class GetExpenseDashboardSummaryHandler
 
         // 9. Expense by type (items grouped by ExpenseItemType)
         $typeRows = $this->dbal->fetchAllAssociative(
-            "SELECT ei.type, COUNT(*) as count, COALESCE(SUM(ei.amount), 0) as total
+            'SELECT ei.type, COUNT(*) as count, COALESCE(SUM(ei.amount), 0) as total
              FROM {self::TABLE_ITEMS} ei
              JOIN {self::TABLE_EXPENSES} oe ON oe.id = ei.expense_id
              WHERE ei.deleted_at IS NULL AND oe.deleted_at IS NULL
              GROUP BY ei.type
-             ORDER BY total DESC",
+             ORDER BY total DESC',
         );
         $expenseByType = array_map(
             fn (array $row) => [

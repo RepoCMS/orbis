@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 
 final class ExpenseItemIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'expense_item_id'; }
-    protected function getValueObjectClass(): string { return ExpenseItemIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'expense_item_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return ExpenseItemIdValueObject::class;
+    }
 }

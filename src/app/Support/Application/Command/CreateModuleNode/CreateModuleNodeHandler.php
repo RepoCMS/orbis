@@ -16,7 +16,8 @@ final readonly class CreateModuleNodeHandler
     public function __construct(
         private ModuleNodeRepositoryInterface $repository,
         private IdGeneratorInterface $idGenerator,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CreateModuleNodeCommand $command): ModuleNode
     {

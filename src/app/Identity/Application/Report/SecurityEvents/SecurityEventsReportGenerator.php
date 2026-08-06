@@ -30,7 +30,8 @@ final readonly class SecurityEventsReportGenerator implements ReportGeneratorInt
 
     public function __construct(
         private Connection $connection,
-    ) {}
+    ) {
+    }
 
     public function getTitle(): string
     {

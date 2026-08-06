@@ -13,7 +13,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrineStockMinimumRepository implements StockMinimumRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $em) {}
+    public function __construct(private readonly EntityManagerInterface $em)
+    {
+    }
 
     public function findById(StockMinimumIdValueObject $id): ?StockMinimum
     {

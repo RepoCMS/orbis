@@ -13,5 +13,6 @@ final readonly class ListEmployeesQuery
         public ?EmployeeProfile $profile = null,
         public ?EmployeeStatus $status = null,
         public ?string $search = null,
-    ) {}
+    ) {
+    }
 }

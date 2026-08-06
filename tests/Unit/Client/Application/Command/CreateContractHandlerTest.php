@@ -9,7 +9,6 @@ use App\Client\Application\Command\CreateContract\CreateContractHandler;
 use App\Client\Application\Exception\ClientNotFoundException;
 use App\Client\Domain\Entities\Client;
 use App\Client\Domain\Enums\ClientStatus;
-use App\Client\Domain\Enums\ContractStatus;
 use App\Client\Domain\Events\ContractCreated;
 use App\Client\Domain\Repositories\ClientRepositoryInterface;
 use App\Client\Domain\Repositories\ContractRepositoryInterface;

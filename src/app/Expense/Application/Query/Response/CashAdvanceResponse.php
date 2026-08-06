@@ -22,7 +22,8 @@ final class CashAdvanceResponse
         public readonly ?string $settlementConfirmedAt,
         public readonly ?string $settlementDirection,
         public readonly int $daysSinceGiven,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(CashAdvance $cashAdvance): self
     {

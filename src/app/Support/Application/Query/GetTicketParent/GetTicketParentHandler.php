@@ -13,7 +13,8 @@ final readonly class GetTicketParentHandler
 {
     public function __construct(
         private TicketRepositoryInterface $ticketRepo,
-    ) {}
+    ) {
+    }
 
     public function __invoke(GetTicketParentQuery $query): ?TicketResponse
     {

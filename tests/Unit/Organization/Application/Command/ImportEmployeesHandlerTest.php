@@ -28,6 +28,7 @@ final class ImportEmployeesHandlerTest extends TestCase
             }
         }
         fclose($fp);
+
         return $path;
     }
 

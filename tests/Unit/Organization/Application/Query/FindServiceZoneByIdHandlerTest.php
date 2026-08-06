@@ -10,8 +10,8 @@ use App\Organization\Application\Query\FindServiceZoneById\FindServiceZoneByIdQu
 use App\Organization\Application\Query\Response\ServiceZoneResponse;
 use App\Organization\Domain\Entities\ServiceZone;
 use App\Organization\Domain\Repositories\ServiceZoneRepositoryInterface;
-use DateTimeImmutable;
 use App\Organization\Domain\ValueObjects\ServiceZoneIdValueObject;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 
 final class FindServiceZoneByIdHandlerTest extends TestCase

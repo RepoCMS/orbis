@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 
 final class CashAdvanceIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'expense_cash_advance_id'; }
-    protected function getValueObjectClass(): string { return CashAdvanceIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'expense_cash_advance_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return CashAdvanceIdValueObject::class;
+    }
 }

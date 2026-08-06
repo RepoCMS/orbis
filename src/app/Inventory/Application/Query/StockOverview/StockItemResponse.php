@@ -18,5 +18,6 @@ final class StockItemResponse
         public readonly string  $statusLabel,
         public readonly int     $quantity,
         public readonly ?string $serialNumber,
-    ) {}
+    ) {
+    }
 }

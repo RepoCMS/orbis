@@ -6,5 +6,7 @@ namespace App\Support\Application\Query\ListQuickTemplates;
 
 final readonly class ListQuickTemplatesQuery
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 }

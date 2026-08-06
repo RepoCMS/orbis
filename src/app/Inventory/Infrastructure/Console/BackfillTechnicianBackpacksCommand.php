@@ -48,11 +48,12 @@ final class BackfillTechnicianBackpacksCommand extends Command
         $allEmployees = $this->employeeRepository->findAll();
         $technicians = array_filter(
             $allEmployees,
-            static fn(Employee $e) => $e->isTechnician(),
+            static fn (Employee $e) => $e->isTechnician(),
         );
 
         if (count($technicians) === 0) {
             $io->info('No se encontraron técnicos en el sistema.');
+
             return Command::SUCCESS;
         }
 

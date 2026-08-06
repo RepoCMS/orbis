@@ -13,7 +13,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrineRepairRepository implements RepairRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $em) {}
+    public function __construct(private readonly EntityManagerInterface $em)
+    {
+    }
 
     public function findById(RepairIdValueObject $id): ?Repair
     {

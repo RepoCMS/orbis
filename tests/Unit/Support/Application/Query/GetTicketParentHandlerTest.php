@@ -94,7 +94,7 @@ final class GetTicketParentHandlerTest extends TestCase
      */
     private function createRepoWithFindByIdCallback(callable $callback): TicketRepositoryInterface
     {
-        return new class($callback) implements TicketRepositoryInterface {
+        return new class ($callback) implements TicketRepositoryInterface {
             private \Closure $callback;
 
             public function __construct(callable $callback)
@@ -107,14 +107,36 @@ final class GetTicketParentHandlerTest extends TestCase
                 return ($this->callback)($id);
             }
 
-            public function findByTicketNumber(string $ticketNumber): ?Ticket { return null; }
-            public function findByStatuses(array $statuses): array { return []; }
-            public function findByClientId(string $clientId): array { return []; }
-            public function findByEmployeeId(string $employeeId): array { return []; }
-            public function findAll(): array { return []; }
-            public function nextTicketSequence(int $year): int { return 0; }
-            public function save(Ticket $ticket): void {}
-            public function delete(TicketIdValueObject $id): void {}
+            public function findByTicketNumber(string $ticketNumber): ?Ticket
+            {
+                return null;
+            }
+            public function findByStatuses(array $statuses): array
+            {
+                return [];
+            }
+            public function findByClientId(string $clientId): array
+            {
+                return [];
+            }
+            public function findByEmployeeId(string $employeeId): array
+            {
+                return [];
+            }
+            public function findAll(): array
+            {
+                return [];
+            }
+            public function nextTicketSequence(int $year): int
+            {
+                return 0;
+            }
+            public function save(Ticket $ticket): void
+            {
+            }
+            public function delete(TicketIdValueObject $id): void
+            {
+            }
         };
     }
 }

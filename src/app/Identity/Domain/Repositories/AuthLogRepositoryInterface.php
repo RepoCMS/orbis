@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Identity\Domain\Repositories;
 
 use App\Identity\Domain\Entities\AuthLog;
-use App\Identity\Domain\ValueObjects\AuthLogIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use DateTimeImmutable;
 

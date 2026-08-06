@@ -9,5 +9,6 @@ final readonly class ApproveVacationRequestCommand
     public function __construct(
         public string $requestId,
         public string $reviewedBy,
-    ) {}
+    ) {
+    }
 }

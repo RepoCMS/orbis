@@ -8,16 +8,16 @@ use App\Identity\Application\Command\VerifyUserByToken\VerifyUserByTokenCommand;
 use App\Identity\Application\Command\VerifyUserByToken\VerifyUserByTokenHandler;
 use App\Identity\Domain\Entities\User;
 use App\Identity\Domain\Entities\UserToken;
-use App\Identity\Domain\Enums\UserTokenType;
 use App\Identity\Domain\Enums\UserStatus;
+use App\Identity\Domain\Enums\UserTokenType;
 use App\Identity\Domain\Exceptions\TokenException;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;
 use App\Identity\Domain\Repositories\UserTokenRepositoryInterface;
 use App\Identity\Domain\ValueObjects\HashedPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
-use App\Identity\Domain\ValueObjects\UserTokenIdValueObject;
 use App\Identity\Domain\ValueObjects\UsernameValueObject;
+use App\Identity\Domain\ValueObjects\UserTokenIdValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class VerifyUserByTokenHandlerTest extends TestCase

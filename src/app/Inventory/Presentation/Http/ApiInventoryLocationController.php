@@ -55,14 +55,14 @@ final class ApiInventoryLocationController extends AbstractController
         if ($type !== null) {
             $locations = array_values(array_filter(
                 $locations,
-                static fn($l) => $l->type === $type,
+                static fn ($l) => $l->type === $type,
             ));
         }
 
         if ($city !== null) {
             $locations = array_values(array_filter(
                 $locations,
-                static fn($l) => mb_strtolower($l->city) === mb_strtolower($city),
+                static fn ($l) => mb_strtolower($l->city) === mb_strtolower($city),
             ));
         }
 

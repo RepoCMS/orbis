@@ -18,7 +18,8 @@ final class OrganizationImportController extends AbstractController
 {
     public function __construct(
         private readonly ImportEmployeesHandler $handler,
-    ) {}
+    ) {
+    }
 
     #[Route('', name: 'organization_import', methods: ['GET'])]
     public function index(): Response
@@ -32,12 +33,14 @@ final class OrganizationImportController extends AbstractController
         $file = $request->files->get('file');
         if ($file === null) {
             $this->addFlash('error', 'No se ha proporcionado ningún archivo.');
+
             return $this->redirectToRoute('organization_import');
         }
 
         $extension = $file->getClientOriginalExtension();
         if (!in_array($extension, ['csv', 'xlsx'], true)) {
             $this->addFlash('error', 'Formato no soportado. Use archivos CSV o XLSX.');
+
             return $this->redirectToRoute('organization_import');
         }
 

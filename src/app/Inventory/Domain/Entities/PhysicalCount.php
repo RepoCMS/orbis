@@ -254,7 +254,7 @@ final class PhysicalCount
         return array_values(
             array_filter(
                 $this->items->toArray(),
-                static fn(PhysicalCountItem $item) => $item->difference() !== 0,
+                static fn (PhysicalCountItem $item) => $item->difference() !== 0,
             )
         );
     }

@@ -13,8 +13,8 @@ use App\Organization\Domain\Exceptions\EmployeePhoneNumberException;
 use App\Organization\Domain\Exceptions\EmployeeProfileException;
 use App\Organization\Domain\Exceptions\EmployeeStatusException;
 use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
+use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\ServiceZoneIdValueObject;
 use App\Shared\Domain\Contracts\TimestampableInterface;
 use App\Shared\Domain\StringNormalizer;
@@ -43,7 +43,7 @@ final class Employee implements TimestampableInterface
         private ?DateTimeImmutable $terminatedAt,
         private EmployeeProfile $profile = EmployeeProfile::ADMINISTRATIVE,
         private ?ServiceZoneIdValueObject $serviceZoneId = null,
-    ) {        
+    ) {
         $this->firstName = StringNormalizer::normalizeName($this->firstName);
         $this->lastName = StringNormalizer::normalizeName($this->lastName);
         $this->phoneNumber = StringNormalizer::normalizePhoneNumber($this->phoneNumber);

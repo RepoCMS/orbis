@@ -12,7 +12,8 @@ final readonly class ListEvidencesHandler
 {
     public function __construct(
         private TicketEvidenceRepositoryInterface $evidenceRepo,
-    ) {}
+    ) {
+    }
 
     /** @return TicketEvidenceResponse[] */
     public function __invoke(ListEvidencesQuery $query): array

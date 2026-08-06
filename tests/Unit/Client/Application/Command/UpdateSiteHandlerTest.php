@@ -9,8 +9,8 @@ use App\Client\Application\Command\UpdateSite\UpdateSiteHandler;
 use App\Client\Application\Exception\SiteNotFoundException;
 use App\Client\Domain\Entities\Site;
 use App\Client\Domain\Repositories\SiteRepositoryInterface;
-use App\Client\Domain\ValueObjects\SiteIdValueObject;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
+use App\Client\Domain\ValueObjects\SiteIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use PHPUnit\Framework\TestCase;
 

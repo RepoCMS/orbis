@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace App\Inventory\Infrastructure\Persistence\Doctrine;
 
 use App\Inventory\Domain\Entities\PurchaseOrder;
+use App\Inventory\Domain\Enums\PurchaseOrderStatus;
 use App\Inventory\Domain\Repositories\PurchaseOrderRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\PurchaseOrderIdValueObject;
-use App\Inventory\Domain\Enums\PurchaseOrderStatus;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrinePurchaseOrderRepository implements PurchaseOrderRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $em) {}
+    public function __construct(private readonly EntityManagerInterface $em)
+    {
+    }
 
     public function findById(PurchaseOrderIdValueObject $id): ?PurchaseOrder
     {

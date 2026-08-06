@@ -19,7 +19,8 @@ final readonly class ImportTerminalModelsHandler
         private TerminalModelRowValidator $rowValidator,
         private TerminalModelRepositoryInterface $terminalModelRepository,
         private IdGeneratorInterface $idGenerator,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ImportTerminalModelsCommand $command): ImportResult
     {

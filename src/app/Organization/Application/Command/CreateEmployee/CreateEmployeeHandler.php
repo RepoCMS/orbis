@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace App\Organization\Application\Command\CreateEmployee;
 
 use App\Organization\Domain\Entities\Employee;
-use App\Organization\Domain\Events\EmployeeCreated;
 use App\Organization\Domain\Enums\EmployeeProfile;
+use App\Organization\Domain\Events\EmployeeCreated;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
+use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
-use DateTimeImmutable;
 
 final readonly class CreateEmployeeHandler
 {

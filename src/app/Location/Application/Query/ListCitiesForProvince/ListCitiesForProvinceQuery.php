@@ -8,5 +8,6 @@ final readonly class ListCitiesForProvinceQuery
 {
     public function __construct(
         public string $provinceId,
-    ) {}
+    ) {
+    }
 }

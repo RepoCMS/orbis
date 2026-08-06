@@ -6,5 +6,7 @@ namespace App\Expense\Application\Query\GetExpenseDashboardSummary;
 
 final readonly class GetExpenseDashboardSummaryQuery
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 }

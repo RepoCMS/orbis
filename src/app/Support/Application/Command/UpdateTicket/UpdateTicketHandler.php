@@ -12,7 +12,8 @@ final readonly class UpdateTicketHandler
 {
     public function __construct(
         private TicketRepositoryInterface $ticketRepo,
-    ) {}
+    ) {
+    }
 
     public function __invoke(UpdateTicketCommand $command): void
     {

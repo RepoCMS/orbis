@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Notification\Presentation\Http;
 
 use App\Notification\Application\Command\RetryNotification\RetryNotificationHandler;
-use App\Notification\Application\Exception\InvalidNotificationStatusException;
-use App\Notification\Application\Exception\NotificationLogNotFoundException;
 use App\Notification\Application\Query\ListNotificationLogs\ListNotificationLogsHandler;
 use App\Notification\Domain\Repositories\NotificationLogRepositoryInterface;
 use App\Notification\Presentation\Http\ApiNotificationLogController;

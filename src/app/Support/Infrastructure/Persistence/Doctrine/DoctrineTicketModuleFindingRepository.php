@@ -6,13 +6,15 @@ namespace App\Support\Infrastructure\Persistence\Doctrine;
 
 use App\Support\Domain\Entities\TicketModuleFinding;
 use App\Support\Domain\Repositories\TicketModuleFindingRepositoryInterface;
-use App\Support\Domain\ValueObjects\TicketModuleFindingIdValueObject;
 use App\Support\Domain\ValueObjects\TicketIdValueObject;
+use App\Support\Domain\ValueObjects\TicketModuleFindingIdValueObject;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrineTicketModuleFindingRepository implements TicketModuleFindingRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager) {}
+    public function __construct(private readonly EntityManagerInterface $entityManager)
+    {
+    }
 
     public function findById(TicketModuleFindingIdValueObject $id): ?TicketModuleFinding
     {

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Client\Application\Command\RegisterWarranty;
 
 use App\Client\Application\Exception\TerminalNotFoundException;
+use App\Client\Domain\Entities\TerminalWarranty;
 use App\Client\Domain\Enums\WarrantyType;
 use App\Client\Domain\Events\WarrantyRegistered;
 use App\Client\Domain\Repositories\TerminalRepositoryInterface;
 use App\Client\Domain\Repositories\TerminalWarrantyRepositoryInterface;
-use App\Client\Domain\Entities\TerminalWarranty;
 use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalWarrantyIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;

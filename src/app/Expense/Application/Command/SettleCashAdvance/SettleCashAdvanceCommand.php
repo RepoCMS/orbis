@@ -10,5 +10,6 @@ final readonly class SettleCashAdvanceCommand
         public string $cashAdvanceId,
         public string $settlementConfirmedBy,
         public string $settlementDirection,
-    ) {}
+    ) {
+    }
 }

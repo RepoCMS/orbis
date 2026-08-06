@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 
 final class PurchaseOrderItemIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'purchase_order_item_id'; }
-    protected function getValueObjectClass(): string { return PurchaseOrderItemIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'purchase_order_item_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return PurchaseOrderItemIdValueObject::class;
+    }
 }

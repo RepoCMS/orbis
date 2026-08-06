@@ -10,7 +10,8 @@ final readonly class GetOrganizationDashboardHandler
 {
     public function __construct(
         private Connection $connection,
-    ) {}
+    ) {
+    }
 
     public function __invoke(GetOrganizationDashboardQuery $query): array
     {
@@ -40,61 +41,65 @@ final readonly class GetOrganizationDashboardHandler
     /** @return array<string, int> */
     private function employeesByStatus(): array
     {
-        $sql = "
+        $sql = '
             SELECT status, COUNT(*) AS total
             FROM employees
             WHERE deleted_at IS NULL
             GROUP BY status
-        ";
+        ';
         $rows = $this->connection->fetchAllAssociative($sql);
 
         $result = ['active' => 0, 'on_vacation' => 0, 'inactive' => 0];
         foreach ($rows as $row) {
             $result[(string) $row['status']] = (int) $row['total'];
         }
+
         return $result;
     }
 
     private function countActiveZones(): int
     {
         $sql = "SELECT COUNT(*) FROM service_zones WHERE status = 'active' AND deleted_at IS NULL";
+
         return (int) $this->connection->fetchOne($sql);
     }
 
     /** @return array<string, int> */
     private function employeesByZone(): array
     {
-        $sql = "
+        $sql = '
             SELECT service_zone_id, COUNT(*) AS total
             FROM employees
             WHERE deleted_at IS NULL
               AND service_zone_id IS NOT NULL
             GROUP BY service_zone_id
             ORDER BY total DESC
-        ";
+        ';
         $rows = $this->connection->fetchAllAssociative($sql);
 
         $result = [];
         foreach ($rows as $row) {
             $result[(string) $row['service_zone_id']] = (int) $row['total'];
         }
+
         return $result;
     }
 
     /** @return array<string, string> */
     private function zoneNames(): array
     {
-        $sql = "
+        $sql = '
             SELECT id, name
             FROM service_zones
             WHERE deleted_at IS NULL
-        ";
+        ';
         $rows = $this->connection->fetchAllAssociative($sql);
 
         $result = [];
         foreach ($rows as $row) {
             $result[(string) $row['id']] = (string) $row['name'];
         }
+
         return $result;
     }
 
@@ -139,7 +144,7 @@ final readonly class GetOrganizationDashboardHandler
      */
     private function avgTenureByProfile(): array
     {
-        $sql = "
+        $sql = '
             SELECT
                 profile,
                 COUNT(*) AS total,
@@ -148,7 +153,7 @@ final readonly class GetOrganizationDashboardHandler
             WHERE deleted_at IS NULL
             GROUP BY profile
             ORDER BY avgDays DESC
-        ";
+        ';
         $rows = $this->connection->fetchAllAssociative($sql);
 
         $labelMap = [
@@ -223,6 +228,7 @@ final readonly class GetOrganizationDashboardHandler
                     AND t.status NOT IN ('closed', 'cancelled')
               )
         ";
+
         return (int) $this->connection->fetchOne($sql);
     }
 
@@ -234,6 +240,7 @@ final readonly class GetOrganizationDashboardHandler
             WHERE profile = 'technician'
               AND deleted_at IS NULL
         ";
+
         return (int) $this->connection->fetchOne($sql);
     }
 }

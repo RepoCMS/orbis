@@ -19,7 +19,8 @@ final readonly class ClientCsvFileParser implements FileParserInterface
 
     public function __construct(
         private CsvFileParser $csvParser,
-    ) {}
+    ) {
+    }
 
     /** @return array<int, array<string, mixed>> */
     public function parse(string $filePath, int $maxRows = 100): array

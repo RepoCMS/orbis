@@ -28,7 +28,7 @@ final readonly class ListPhysicalCountsHandler
         if ($query->status !== null) {
             $responses = array_values(array_filter(
                 $responses,
-                static fn(PhysicalCountResponse $r) => $r->status === $query->status,
+                static fn (PhysicalCountResponse $r) => $r->status === $query->status,
             ));
         }
 

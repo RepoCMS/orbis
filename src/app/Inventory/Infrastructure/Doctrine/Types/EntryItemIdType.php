@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 
 final class EntryItemIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'entry_item_id'; }
-    protected function getValueObjectClass(): string { return EntryItemIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'entry_item_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return EntryItemIdValueObject::class;
+    }
 }

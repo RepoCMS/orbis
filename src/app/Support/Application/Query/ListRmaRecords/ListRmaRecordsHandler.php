@@ -11,7 +11,8 @@ final readonly class ListRmaRecordsHandler
 {
     public function __construct(
         private RmaRecordRepositoryInterface $rmaRecordRepo,
-    ) {}
+    ) {
+    }
 
     /** @return RmaRecordResponse[] */
     public function __invoke(ListRmaRecordsQuery $query): array

@@ -12,7 +12,8 @@ final readonly class ProvinceResponse
         public string $id,
         public string $name,
         public string $regionId,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(Province $province): self
     {

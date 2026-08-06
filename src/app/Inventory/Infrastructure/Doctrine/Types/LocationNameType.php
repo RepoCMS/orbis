@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractStringValueObjectType;
 
 final class LocationNameType extends AbstractStringValueObjectType
 {
-    public function getName(): string { return 'location_name'; }
-    protected function getValueObjectClass(): string { return LocationNameValueObject::class; }
+    public function getName(): string
+    {
+        return 'location_name';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return LocationNameValueObject::class;
+    }
 }

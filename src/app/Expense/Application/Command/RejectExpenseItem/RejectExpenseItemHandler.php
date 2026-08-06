@@ -15,7 +15,8 @@ final readonly class RejectExpenseItemHandler
         private OperatingExpenseRepositoryInterface $expenseRepository,
         private UserResolverInterface $userResolver,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(RejectExpenseItemCommand $command): void
     {

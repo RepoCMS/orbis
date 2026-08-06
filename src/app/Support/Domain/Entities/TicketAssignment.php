@@ -16,7 +16,8 @@ final class TicketAssignment
         private bool                          $isInCharge,
         private \DateTimeImmutable            $assignedAt,
         private ?string                       $reassignedFrom = null,
-    ) {}
+    ) {
+    }
 
     public static function create(
         TicketAssignmentIdValueObject $id,
@@ -39,10 +40,28 @@ final class TicketAssignment
         );
     }
 
-    public function id(): TicketAssignmentIdValueObject { return $this->id; }
-    public function ticketId(): TicketIdValueObject      { return $this->ticketId; }
-    public function employeeId(): string                 { return $this->employeeId; }
-    public function isInCharge(): bool                   { return $this->isInCharge; }
-    public function assignedAt(): \DateTimeImmutable     { return $this->assignedAt; }
-    public function reassignedFrom(): ?string            { return $this->reassignedFrom; }
+    public function id(): TicketAssignmentIdValueObject
+    {
+        return $this->id;
+    }
+    public function ticketId(): TicketIdValueObject
+    {
+        return $this->ticketId;
+    }
+    public function employeeId(): string
+    {
+        return $this->employeeId;
+    }
+    public function isInCharge(): bool
+    {
+        return $this->isInCharge;
+    }
+    public function assignedAt(): \DateTimeImmutable
+    {
+        return $this->assignedAt;
+    }
+    public function reassignedFrom(): ?string
+    {
+        return $this->reassignedFrom;
+    }
 }

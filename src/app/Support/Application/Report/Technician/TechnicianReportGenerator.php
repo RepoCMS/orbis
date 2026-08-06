@@ -11,7 +11,8 @@ final readonly class TechnicianReportGenerator implements ReportGeneratorInterfa
 {
     public function __construct(
         private Connection $connection,
-    ) {}
+    ) {
+    }
 
     public function getTitle(): string
     {

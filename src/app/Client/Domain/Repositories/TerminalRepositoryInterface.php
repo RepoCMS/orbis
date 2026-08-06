@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Client\Domain\Repositories;
 
 use App\Client\Domain\Entities\Terminal;
-use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
 use App\Client\Domain\ValueObjects\SerialNumberValueObject;
+use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 
 interface TerminalRepositoryInterface
 {

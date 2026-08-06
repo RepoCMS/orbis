@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Client\Application\Query;
 
-use App\Client\Application\Query\FindWarrantiesByTerminal\FindWarrantiesByTerminalHandler;
-use App\Client\Application\Query\FindWarrantiesByTerminal\FindWarrantiesByTerminalQuery;
+use App\Client\Application\Exception\TerminalWarrantyNotFoundException;
 use App\Client\Application\Query\FindWarrantyById\FindWarrantyByIdHandler;
 use App\Client\Application\Query\FindWarrantyById\FindWarrantyByIdQuery;
-use App\Client\Application\Exception\TerminalWarrantyNotFoundException;
 use App\Client\Application\Query\Response\WarrantyResponse;
 use App\Client\Domain\Entities\TerminalWarranty;
 use App\Client\Domain\Enums\WarrantyType;
 use App\Client\Domain\Repositories\TerminalWarrantyRepositoryInterface;
-use App\Client\Domain\ValueObjects\TerminalWarrantyIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdValueObject;
+use App\Client\Domain\ValueObjects\TerminalWarrantyIdValueObject;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 

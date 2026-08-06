@@ -6,7 +6,6 @@ namespace App\Organization\Application\Command\ScheduleEmployeeStandby;
 
 use App\Organization\Application\Exception\EmployeeNotFoundException;
 use App\Organization\Domain\Entities\EmployeeSpecialPeriod;
-use App\Organization\Domain\Enums\EmployeeSpecialPeriodStatus;
 use App\Organization\Domain\Enums\EmployeeSpecialPeriodType;
 use App\Organization\Domain\Exceptions\EmployeeSpecialPeriodException;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
@@ -22,7 +21,8 @@ final readonly class ScheduleEmployeeStandbyHandler
         private EmployeeRepositoryInterface $employeeRepository,
         private EmployeeSpecialPeriodRepositoryInterface $periodRepository,
         private IdGeneratorInterface $idGenerator,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ScheduleEmployeeStandbyCommand $command): void
     {

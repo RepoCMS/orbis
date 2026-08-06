@@ -23,14 +23,13 @@ use App\Inventory\Application\Command\RemoveEvidence\RemoveEvidenceHandler;
 use App\Inventory\Application\Command\StartRepair\StartRepairCommand;
 use App\Inventory\Application\Command\StartRepair\StartRepairHandler;
 use App\Inventory\Application\Exception\ConsumableNotFoundException;
-use App\Inventory\Application\Exception\LocationNotFoundException;
 use App\Inventory\Application\Exception\RepairEvidenceNotFoundException;
 use App\Inventory\Application\Exception\RepairNotFoundException;
 use App\Inventory\Application\Query\FindRepairById\FindRepairByIdHandler;
-use App\Inventory\Application\Query\ListRepairConsumables\ListRepairConsumablesQuery;
 use App\Inventory\Application\Query\ListRepairConsumables\ListRepairConsumablesHandler;
-use App\Inventory\Application\Query\ListRepairEvidences\ListRepairEvidencesQuery;
+use App\Inventory\Application\Query\ListRepairConsumables\ListRepairConsumablesQuery;
 use App\Inventory\Application\Query\ListRepairEvidences\ListRepairEvidencesHandler;
+use App\Inventory\Application\Query\ListRepairEvidences\ListRepairEvidencesQuery;
 use App\Inventory\Application\Query\ListRepairs\ListRepairsHandler;
 use App\Shared\Exceptions\ApplicationException;
 use App\Shared\Exceptions\DomainException;
@@ -59,14 +58,14 @@ final class ApiInventoryRepairController extends AbstractController
         if ($serializedStockId !== null) {
             $repairs = array_values(array_filter(
                 $repairs,
-                static fn($r) => $r->serializedStockId === $serializedStockId,
+                static fn ($r) => $r->serializedStockId === $serializedStockId,
             ));
         }
 
         if ($laboratoryId !== null) {
             $repairs = array_values(array_filter(
                 $repairs,
-                static fn($r) => $r->laboratoryId === $laboratoryId,
+                static fn ($r) => $r->laboratoryId === $laboratoryId,
             ));
         }
 

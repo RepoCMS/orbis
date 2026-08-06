@@ -10,7 +10,6 @@ use App\Shared\Exceptions\DomainException;
 
 final readonly class EmployeeIdValueObject extends AbstractUlid
 {
-
     protected static function invalidIdException(): DomainException
     {
         return new EmployeeIdException('Formato de ULID inválido.');

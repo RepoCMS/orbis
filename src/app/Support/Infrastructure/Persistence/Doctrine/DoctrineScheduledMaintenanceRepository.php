@@ -13,7 +13,8 @@ final class DoctrineScheduledMaintenanceRepository implements ScheduledMaintenan
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function findById(ScheduledMaintenanceIdValueObject $id): ?ScheduledMaintenance
     {

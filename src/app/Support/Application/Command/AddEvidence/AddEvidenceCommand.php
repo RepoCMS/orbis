@@ -10,5 +10,6 @@ final readonly class AddEvidenceCommand
         public string $ticketId,
         public string $filePath,
         public string $uploadedBy,
-    ) {}
+    ) {
+    }
 }

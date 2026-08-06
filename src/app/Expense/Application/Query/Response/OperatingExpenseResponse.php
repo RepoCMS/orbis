@@ -29,7 +29,8 @@ final class OperatingExpenseResponse
         public readonly ?string $approvedBy,
         public readonly ?string $approvedAt,
         public readonly array $items = [],
-    ) {}
+    ) {
+    }
 
     /**
      * @param OperatingExpense $expense

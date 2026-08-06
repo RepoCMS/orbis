@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Identity\Domain\Repositories;
 
 use App\Identity\Domain\Entities\UserMfaBackupCode;
-use App\Identity\Domain\ValueObjects\UserMfaBackupCodeIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
+use App\Identity\Domain\ValueObjects\UserMfaBackupCodeIdValueObject;
 
 interface UserMfaBackupCodeRepositoryInterface
 {

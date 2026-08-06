@@ -14,5 +14,6 @@ final readonly class ListOperatingExpensesQuery
         public ?string $dateFrom = null,
         public ?string $dateTo = null,
         public ?string $ticketId = null,
-    ) {}
+    ) {
+    }
 }

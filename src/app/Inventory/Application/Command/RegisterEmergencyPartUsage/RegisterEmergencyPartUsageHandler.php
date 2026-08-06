@@ -14,7 +14,6 @@ use App\Inventory\Domain\Repositories\SerialHistoryRepositoryInterface;
 use App\Inventory\Domain\Repositories\SerializedStockRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\ProductCodeAssignedBySupplierValueObject;
 use App\Inventory\Domain\ValueObjects\SerialHistoryIdValueObject;
-use App\Inventory\Domain\ValueObjects\SerializedStockIdValueObject;
 use App\Inventory\Domain\ValueObjects\StockSerialNumberValueObject;
 use App\Shared\Application\Service\TransactionManagerInterface;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;

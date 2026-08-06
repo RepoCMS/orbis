@@ -6,7 +6,6 @@ namespace App\Tests\Unit\Expense\Domain\Entities;
 
 use App\Expense\Domain\Entities\ExpenseItem;
 use App\Expense\Domain\Entities\OperatingExpense;
-use App\Expense\Domain\Enums\ExpenseItemStatus;
 use App\Expense\Domain\Enums\ExpenseItemType;
 use App\Expense\Domain\Enums\ExpenseStatus;
 use App\Expense\Domain\Events\ExpenseApproved;
@@ -17,7 +16,6 @@ use App\Expense\Domain\Exceptions\ExpenseHasNoItemsException;
 use App\Expense\Domain\Exceptions\ExpenseHasPendingItemsException;
 use App\Expense\Domain\Exceptions\ExpenseHasRejectedItemsException;
 use App\Expense\Domain\Exceptions\ExpenseNotEditableException;
-use App\Expense\Domain\Exceptions\ExpenseNotSubmittedException;
 use App\Expense\Domain\Exceptions\MissingEvidenceException;
 use App\Expense\Domain\ValueObjects\ExpenseItemIdValueObject;
 use App\Expense\Domain\ValueObjects\OperatingExpenseIdValueObject;
@@ -333,6 +331,7 @@ final class OperatingExpenseTest extends TestCase
             amount: $amount,
         );
         $item->uploadEvidence('/evidence/receipt.jpg');
+
         return $item;
     }
 
@@ -342,6 +341,7 @@ final class OperatingExpenseTest extends TestCase
         $expense->addItem($this->createItemWithEvidence(self::ITEM_ID_1, 50.00));
         $expense->addItem($this->createItemWithEvidence(self::ITEM_ID_2, 30.00));
         $expense->submit();
+
         return $expense;
     }
 
@@ -350,6 +350,7 @@ final class OperatingExpenseTest extends TestCase
         $expense = $this->createDraftExpense();
         $expense->addItem($this->createItemWithEvidence(self::ITEM_ID_1, 50.00));
         $expense->submit();
+
         return $expense;
     }
 
@@ -359,6 +360,7 @@ final class OperatingExpenseTest extends TestCase
         foreach ($expense->items() as $item) {
             $item->approve('USER001');
         }
+
         return $expense;
     }
 }

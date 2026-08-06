@@ -15,7 +15,8 @@ final readonly class CheckOverdueCashAdvancesMessageHandler
     public function __construct(
         private CheckOverdueCashAdvancesHandler $handler,
         private LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CheckOverdueCashAdvancesMessage $message): void
     {

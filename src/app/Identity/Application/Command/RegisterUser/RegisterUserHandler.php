@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Identity\Application\Command\RegisterUser;
 
-use App\Identity\Domain\Entities\User;
 use App\Identity\Application\Exception\RoleNotFoundException;
 use App\Identity\Application\Exception\UsernameAlreadyExistsException;
+use App\Identity\Domain\Entities\User;
 use App\Identity\Domain\Events\UserRegistered;
 use App\Identity\Domain\Repositories\RoleRepositoryInterface;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;

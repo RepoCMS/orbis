@@ -13,7 +13,8 @@ final readonly class ListNotificationTemplatesHandler
 {
     public function __construct(
         private NotificationTemplateRepositoryInterface $templateRepository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ListNotificationTemplatesQuery $query): array
     {

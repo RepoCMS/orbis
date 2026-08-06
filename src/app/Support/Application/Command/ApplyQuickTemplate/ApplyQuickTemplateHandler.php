@@ -27,7 +27,8 @@ final readonly class ApplyQuickTemplateHandler
         private TicketSparePartRepositoryInterface           $sparePartRepo,
         private TicketPendingSparePartRepositoryInterface    $pendingSparePartRepo,
         private IdGeneratorInterface                        $idGenerator,
-    ) {}
+    ) {
+    }
 
     /**
      * @return array{sparePartIds: string[], pendingSparePartIds: string[]}

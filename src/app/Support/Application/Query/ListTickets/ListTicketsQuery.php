@@ -19,5 +19,6 @@ final readonly class ListTicketsQuery
         public ?string $dateTo        = null,
         public int     $page          = 1,
         public int     $perPage       = 25,
-    ) {}
+    ) {
+    }
 }

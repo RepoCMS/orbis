@@ -18,7 +18,8 @@ final readonly class ImportEmployeesHandler
         private EmployeeCsvFileParser $parser,
         private EmployeeRowValidator $rowValidator,
         private CreateEmployeeHandler $createEmployee,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ImportEmployeesCommand $command): ImportResult
     {

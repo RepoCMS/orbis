@@ -8,5 +8,6 @@ final readonly class GetAtmModuleTreeQuery
 {
     public function __construct(
         public string $model,
-    ) {}
+    ) {
+    }
 }

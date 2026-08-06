@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 
 final class ProvinceIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'geo_province_id'; }
-    protected function getValueObjectClass(): string { return ProvinceIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'geo_province_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return ProvinceIdValueObject::class;
+    }
 }

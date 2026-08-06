@@ -23,7 +23,8 @@ final readonly class RequestPendingSparePartHandler
         private SparePartViewScopeResolver                 $scopeResolver,
         private TicketAssignmentRepositoryInterface        $assignmentRepo,
         private IdGeneratorInterface                       $idGenerator,
-    ) {}
+    ) {
+    }
 
     public function __invoke(RequestPendingSparePartCommand $command): void
     {

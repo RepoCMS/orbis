@@ -31,7 +31,7 @@ final readonly class PhysicalCountResponse
     public static function fromEntity(PhysicalCount $count): self
     {
         $items = array_map(
-            static fn($item) => PhysicalCountItemResponse::fromEntity($item),
+            static fn ($item) => PhysicalCountItemResponse::fromEntity($item),
             $count->items(),
         );
 
@@ -56,7 +56,7 @@ final readonly class PhysicalCountResponse
     public static function fromEntities(array $counts): array
     {
         return array_map(
-            static fn(PhysicalCount $count) => self::fromEntity($count),
+            static fn (PhysicalCount $count) => self::fromEntity($count),
             $counts,
         );
     }

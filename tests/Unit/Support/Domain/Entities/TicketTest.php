@@ -51,6 +51,7 @@ final class TicketTest extends TestCase
         );
         // Clear the TicketCreated event so subsequent state changes have clean slate
         $ticket->pullDomainEvents();
+
         return $ticket;
     }
 

@@ -10,5 +10,6 @@ final readonly class UploadEvidenceCommand
         public string $expenseId,
         public string $itemId,
         public string $filePath,
-    ) {}
+    ) {
+    }
 }

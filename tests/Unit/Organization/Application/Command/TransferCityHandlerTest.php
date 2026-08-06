@@ -40,6 +40,7 @@ final class TransferCityHandlerTest extends TestCase
         $repo = $this->createMock(ServiceZoneRepositoryInterface::class);
         $repo->method('findById')->willReturnCallback(function (ServiceZoneIdValueObject $id) {
             $strId = (string) $id;
+
             return match ($strId) {
                 self::SOURCE_ZONE_ID => $this->sourceZone,
                 self::TARGET_ZONE_ID => $this->targetZone,

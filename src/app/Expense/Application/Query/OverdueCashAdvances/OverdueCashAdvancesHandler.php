@@ -13,7 +13,8 @@ final readonly class OverdueCashAdvancesHandler
 {
     public function __construct(
         private CashAdvanceRepositoryInterface $cashAdvanceRepo,
-    ) {}
+    ) {
+    }
 
     /**
      * @return CashAdvanceResponse[]

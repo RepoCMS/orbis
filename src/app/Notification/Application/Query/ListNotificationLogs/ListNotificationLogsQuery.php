@@ -15,5 +15,6 @@ final readonly class ListNotificationLogsQuery
         public ?string $dateTo = null,
         public int $page = 1,
         public int $limit = 20,
-    ) {}
+    ) {
+    }
 }

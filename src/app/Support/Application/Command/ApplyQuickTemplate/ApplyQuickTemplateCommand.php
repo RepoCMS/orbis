@@ -10,5 +10,6 @@ final readonly class ApplyQuickTemplateCommand
         public string $ticketId,
         public string $findingId,
         public string $templateId,
-    ) {}
+    ) {
+    }
 }

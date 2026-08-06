@@ -13,7 +13,8 @@ final readonly class EmailForgotPasswordEmailSender implements ForgotPasswordEma
     public function __construct(
         private MailerInterface $mailer,
         private string $fromEmail,
-    ) {}
+    ) {
+    }
 
     public function sendPasswordResetEmail(string $toEmail, string $username, string $token): void
     {
@@ -59,6 +60,7 @@ HTML;
     private function getAppBaseUrl(): string
     {
         $url = getenv('APP_BASE_URL');
+
         return $url ? rtrim($url, '/') : 'https://orbis.app';
     }
 }

@@ -9,11 +9,11 @@ use App\Client\Domain\Entities\Terminal;
 use App\Client\Domain\Enums\TerminalFunctionality;
 use App\Client\Domain\Enums\TerminalType;
 use App\Client\Domain\Enums\TerminalVendor;
-use App\Client\Domain\Repositories\TerminalRepositoryInterface;
 use App\Client\Domain\Repositories\ClientRepositoryInterface;
-use App\Client\Domain\ValueObjects\TerminalIdValueObject;
+use App\Client\Domain\Repositories\TerminalRepositoryInterface;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
 use App\Client\Domain\ValueObjects\SerialNumberValueObject;
+use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use App\Shared\Application\Service\TransactionManagerInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 

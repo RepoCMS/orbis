@@ -11,7 +11,6 @@ use App\Identity\Domain\Repositories\UserRepositoryInterface;
 use App\Identity\Domain\Repositories\UserTokenRepositoryInterface;
 use App\Identity\Domain\ValueObjects\PlainTokenValueObject;
 use App\Identity\Domain\ValueObjects\TokenHashValueObject;
-use App\Identity\Domain\ValueObjects\UserIdValueObject;
 
 /**
  * Verifica la cuenta de un usuario usando el token enviado por email.

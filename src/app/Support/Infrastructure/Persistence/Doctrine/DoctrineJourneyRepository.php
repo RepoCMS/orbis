@@ -12,7 +12,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrineJourneyRepository implements JourneyRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager) {}
+    public function __construct(private readonly EntityManagerInterface $entityManager)
+    {
+    }
 
     public function findById(JourneyIdValueObject $id): ?Journey
     {

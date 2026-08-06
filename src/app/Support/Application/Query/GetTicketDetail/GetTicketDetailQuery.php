@@ -8,5 +8,6 @@ final readonly class GetTicketDetailQuery
 {
     public function __construct(
         public string $ticketId,
-    ) {}
+    ) {
+    }
 }

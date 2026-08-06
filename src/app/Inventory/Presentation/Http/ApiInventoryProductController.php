@@ -41,7 +41,7 @@ final class ApiInventoryProductController extends AbstractController
         if ($trackingType !== null) {
             $products = array_values(array_filter(
                 $products,
-                static fn($p) => $p->trackingType === $trackingType,
+                static fn ($p) => $p->trackingType === $trackingType,
             ));
         }
 
@@ -49,7 +49,7 @@ final class ApiInventoryProductController extends AbstractController
             $search = mb_strtolower($q);
             $products = array_values(array_filter(
                 $products,
-                static fn($p) => str_contains(mb_strtolower($p->name), $search)
+                static fn ($p) => str_contains(mb_strtolower($p->name), $search)
                     || str_contains(mb_strtolower($p->code), $search),
             ));
         }

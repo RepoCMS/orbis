@@ -35,6 +35,7 @@ final class SubmitRequestHandlerTest extends TestCase
             ->method('save')
             ->with($this->callback(function (Request $request) use (&$savedRequest) {
                 $savedRequest = $request;
+
                 return true;
             }));
 
@@ -78,6 +79,7 @@ final class SubmitRequestHandlerTest extends TestCase
             ->method('save')
             ->with($this->callback(function (Request $request) use (&$savedRequest) {
                 $savedRequest = $request;
+
                 return true;
             }));
 
@@ -118,6 +120,7 @@ final class SubmitRequestHandlerTest extends TestCase
             ->method('save')
             ->with($this->callback(function (Request $request) use (&$savedRequest) {
                 $savedRequest = $request;
+
                 return true;
             }));
 
@@ -157,6 +160,7 @@ final class SubmitRequestHandlerTest extends TestCase
             ->method('save')
             ->with($this->callback(function (Request $request) use (&$savedRequest) {
                 $savedRequest = $request;
+
                 return true;
             }));
 

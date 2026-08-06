@@ -6,4 +6,6 @@ namespace App\Inventory\Domain\Exceptions;
 
 use App\Shared\Exceptions\DomainException;
 
-final class TransformationIdException extends DomainException {}
+final class TransformationIdException extends DomainException
+{
+}

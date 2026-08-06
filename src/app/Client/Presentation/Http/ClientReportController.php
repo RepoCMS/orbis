@@ -23,7 +23,8 @@ final class ClientReportController extends AbstractController
         private readonly TerminalsByClientReportGenerator $terminalsByClientReportGenerator,
         private readonly ExcelExportService $excelExport,
         private readonly PdfExportService $pdfExport,
-    ) {}
+    ) {
+    }
 
     #[Route('/contracts-expiring.{_format}', name: 'client_report_contracts_expiring', methods: ['GET'], requirements: ['_format' => 'xlsx|pdf'])]
     public function contractsExpiring(Request $request, string $_format = 'xlsx'): Response

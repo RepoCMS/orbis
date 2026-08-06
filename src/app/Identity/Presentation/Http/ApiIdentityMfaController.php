@@ -7,7 +7,6 @@ namespace App\Identity\Presentation\Http;
 use App\Identity\Domain\Entities\UserMfaConfig;
 use App\Identity\Domain\Repositories\UserMfaConfigRepositoryInterface;
 use App\Identity\Domain\ValueObjects\UserMfaConfigIdValueObject;
-use App\Identity\Infrastructure\Security\LandingRouteResolver;
 use App\Identity\Infrastructure\Security\SymfonySecurityUser;
 use App\Identity\Infrastructure\Security\TotpService;
 use App\Shared\Domain\Service\IdGeneratorInterface;

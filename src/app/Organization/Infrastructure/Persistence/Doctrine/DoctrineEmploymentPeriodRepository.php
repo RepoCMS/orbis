@@ -7,8 +7,8 @@ namespace App\Organization\Infrastructure\Persistence\Doctrine;
 use App\Organization\Domain\Entities\EmploymentPeriod;
 use App\Organization\Domain\Enums\EmploymentPeriodStatus;
 use App\Organization\Domain\Repositories\EmploymentPeriodRepositoryInterface;
-use App\Organization\Domain\ValueObjects\EmploymentPeriodIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
+use App\Organization\Domain\ValueObjects\EmploymentPeriodIdValueObject;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrineEmploymentPeriodRepository implements EmploymentPeriodRepositoryInterface

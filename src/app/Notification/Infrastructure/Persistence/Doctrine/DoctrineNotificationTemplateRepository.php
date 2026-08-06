@@ -15,7 +15,8 @@ final class DoctrineNotificationTemplateRepository implements NotificationTempla
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function findById(NotificationTemplateIdValueObject $id): ?NotificationTemplate
     {

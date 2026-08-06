@@ -9,5 +9,6 @@ final readonly class ApproveOperatingExpenseCommand
     public function __construct(
         public string $expenseId,
         public string $approvedBy,
-    ) {}
+    ) {
+    }
 }

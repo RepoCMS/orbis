@@ -9,6 +9,12 @@ use App\Support\Domain\ValueObjects\TicketAssignmentIdValueObject;
 
 final class TicketAssignmentIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'ticket_assignment_id'; }
-    protected function getValueObjectClass(): string { return TicketAssignmentIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'ticket_assignment_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return TicketAssignmentIdValueObject::class;
+    }
 }

@@ -7,8 +7,8 @@ namespace App\Organization\Domain\Entities;
 use App\Organization\Domain\Enums\OvertimeStatus;
 use App\Organization\Domain\Events\OvertimeApproved;
 use App\Organization\Domain\Events\OvertimeCorrected;
-use App\Organization\Domain\Events\OvertimeRejected;
 use App\Organization\Domain\Events\OvertimeRegistered;
+use App\Organization\Domain\Events\OvertimeRejected;
 use App\Organization\Domain\Events\OvertimeReviewRequested;
 use App\Organization\Domain\Exceptions\OvertimeRecordException;
 use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
@@ -199,6 +199,7 @@ final class OvertimeRecord implements TimestampableInterface
     {
         $events = $this->domainEvents;
         $this->domainEvents = [];
+
         return $events;
     }
 

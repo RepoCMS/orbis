@@ -13,7 +13,8 @@ final readonly class GetAtmModuleTreeHandler
 {
     public function __construct(
         private AtmModuleTreeRegistry $registry,
-    ) {}
+    ) {
+    }
 
     /**
      * @return ModuleTreeResponse[]

@@ -15,7 +15,8 @@ final readonly class CorrectOvertimeHandler
     public function __construct(
         private OvertimeRecordRepositoryInterface $overtimeRecordRepository,
         private DomainEventPublisherInterface $publisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CorrectOvertimeCommand $command): void
     {

@@ -9,7 +9,6 @@ use App\Inventory\Domain\Repositories\SubLocationRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\SubLocationIdValueObject;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 
-
 final readonly class CreateSubLocationHandler
 {
     public function __construct(

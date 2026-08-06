@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Tests\Unit\Support\Presentation\Http;
 
 use App\Support\Application\Command\RecordModuleFinding\RecordModuleFindingCommand;
+use App\Support\Domain\AtmModel\EvidenceMoment;
 use App\Support\Domain\AtmModel\FindingType;
 use App\Support\Domain\AtmModel\ModulePathValueObject;
 use App\Support\Domain\Entities\FindingEvidence;
 use App\Support\Domain\Entities\TicketModuleFinding;
-use App\Support\Domain\AtmModel\EvidenceMoment;
 use App\Support\Domain\Repositories\TicketModuleFindingRepositoryInterface;
 use App\Support\Domain\ValueObjects\FindingEvidenceIdValueObject;
 use App\Support\Domain\ValueObjects\TicketIdValueObject;
@@ -44,7 +44,7 @@ final class ApiSupportTicketModuleFindingControllerTest extends TestCase
         $repo = $this->createMock(TicketModuleFindingRepositoryInterface::class);
         $repo->expects($this->once())
             ->method('findById')
-            ->with($this->callback(fn($id) => (string) $id === self::FINDING_ID))
+            ->with($this->callback(fn ($id) => (string) $id === self::FINDING_ID))
             ->willReturn($finding);
         $repo->expects($this->once())->method('delete')->with($finding);
 

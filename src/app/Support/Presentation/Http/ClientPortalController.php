@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Support\Presentation\Http;
 
 use App\Client\Domain\Repositories\ContactRepositoryInterface;
-use App\Client\Domain\ValueObjects\ContactIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Identity\Infrastructure\Security\SymfonySecurityUser;
 use App\Support\Application\Query\GetTicketDetail\GetTicketDetailHandler;

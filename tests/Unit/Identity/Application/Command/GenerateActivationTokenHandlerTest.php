@@ -8,7 +8,6 @@ use App\Identity\Application\Command\GenerateActivationToken\GenerateActivationT
 use App\Identity\Application\Command\GenerateActivationToken\GenerateActivationTokenHandler;
 use App\Identity\Application\Exception\UserNotFoundException;
 use App\Identity\Domain\Entities\User;
-use App\Identity\Domain\Enums\UserTokenType;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;
 use App\Identity\Domain\Repositories\UserTokenRepositoryInterface;
 use App\Identity\Domain\Service\AccountNotifierInterface;
@@ -52,7 +51,11 @@ final class GenerateActivationTokenHandlerTest extends TestCase
         $idGenerator->method('generate')->willReturn(self::TOKEN_ID);
 
         $handler = new GenerateActivationTokenHandler(
-            $userRepo, $tokenRepo, $notifier, $emailResolver, $idGenerator,
+            $userRepo,
+            $tokenRepo,
+            $notifier,
+            $emailResolver,
+            $idGenerator,
         );
         ($handler)(new GenerateActivationTokenCommand(self::USER_ID));
 

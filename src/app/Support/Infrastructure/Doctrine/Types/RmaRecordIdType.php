@@ -9,6 +9,12 @@ use App\Support\Domain\ValueObjects\RmaRecordIdValueObject;
 
 final class RmaRecordIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'rma_record_id'; }
-    protected function getValueObjectClass(): string { return RmaRecordIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'rma_record_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return RmaRecordIdValueObject::class;
+    }
 }

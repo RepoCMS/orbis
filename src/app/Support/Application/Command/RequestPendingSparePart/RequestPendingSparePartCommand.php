@@ -12,5 +12,6 @@ final readonly class RequestPendingSparePartCommand
         public int     $quantity = 1,
         public ?string $notes = null,
         public string  $userId = '',
-    ) {}
+    ) {
+    }
 }

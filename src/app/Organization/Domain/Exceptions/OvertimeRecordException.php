@@ -6,4 +6,6 @@ namespace App\Organization\Domain\Exceptions;
 
 use App\Shared\Exceptions\DomainException;
 
-final class OvertimeRecordException extends DomainException {}
+final class OvertimeRecordException extends DomainException
+{
+}

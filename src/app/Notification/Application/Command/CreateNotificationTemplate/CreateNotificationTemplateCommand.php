@@ -21,5 +21,6 @@ final readonly class CreateNotificationTemplateCommand
         public ?string $subject,
         public string $bodyTemplate,
         public bool $isActive = true,
-    ) {}
+    ) {
+    }
 }

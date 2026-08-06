@@ -11,5 +11,6 @@ final readonly class UpdateQuickTemplateCommand
         public ?string $name = null,
         public ?string $description = null,
         public ?bool   $isActive = null,
-    ) {}
+    ) {
+    }
 }

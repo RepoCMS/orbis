@@ -19,7 +19,8 @@ final readonly class ImportModelPartsHandler
         private ModelPartRowValidator $rowValidator,
         private ModelPartRepositoryInterface $modelPartRepository,
         private IdGeneratorInterface $idGenerator,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ImportModelPartsCommand $command): ImportResult
     {

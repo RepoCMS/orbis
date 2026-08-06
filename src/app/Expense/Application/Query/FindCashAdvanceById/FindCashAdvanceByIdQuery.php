@@ -8,5 +8,6 @@ final readonly class FindCashAdvanceByIdQuery
 {
     public function __construct(
         public string $cashAdvanceId,
-    ) {}
+    ) {
+    }
 }

@@ -15,7 +15,8 @@ final readonly class SearchCitiesHandler
     public function __construct(
         private CityRepositoryInterface $cityRepository,
         private ProvinceRepositoryInterface $provinceRepository,
-    ) {}
+    ) {
+    }
 
     /** @return CitySearchResponse[] */
     public function __invoke(SearchCitiesQuery $query): array
@@ -37,6 +38,7 @@ final readonly class SearchCitiesHandler
                 provinceId: $response->provinceId,
                 provinceName: $province?->name() ?? '',
             );
+
             return $response;
         }, $cities);
     }

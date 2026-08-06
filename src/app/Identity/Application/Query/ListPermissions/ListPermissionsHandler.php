@@ -22,7 +22,7 @@ final readonly class ListPermissionsHandler
         $permissions = $this->permissionRepository->findAll();
 
         return array_map(
-            static fn($permission) => PermissionResponse::fromEntity($permission),
+            static fn ($permission) => PermissionResponse::fromEntity($permission),
             $permissions,
         );
     }

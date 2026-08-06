@@ -9,6 +9,12 @@ use App\Support\Domain\ValueObjects\QuickTemplateItemIdValueObject;
 
 final class QuickTemplateItemIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'quick_template_item_id'; }
-    protected function getValueObjectClass(): string { return QuickTemplateItemIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'quick_template_item_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return QuickTemplateItemIdValueObject::class;
+    }
 }

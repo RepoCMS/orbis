@@ -16,7 +16,8 @@ final readonly class CreateTicketHandler
         private TicketRepositoryInterface    $ticketRepo,
         private IdGeneratorInterface         $idGenerator,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CreateTicketCommand $command): string
     {

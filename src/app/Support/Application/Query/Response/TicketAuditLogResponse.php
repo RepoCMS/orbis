@@ -14,7 +14,8 @@ final readonly class TicketAuditLogResponse
         public ?string $newValue,
         public string  $changedBy,
         public string  $changedAt,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(\App\Support\Domain\Entities\TicketAuditLog $log): self
     {

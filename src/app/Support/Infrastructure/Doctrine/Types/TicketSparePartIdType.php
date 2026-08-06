@@ -9,6 +9,12 @@ use App\Support\Domain\ValueObjects\TicketSparePartIdValueObject;
 
 final class TicketSparePartIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'ticket_spare_part_id'; }
-    protected function getValueObjectClass(): string { return TicketSparePartIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'ticket_spare_part_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return TicketSparePartIdValueObject::class;
+    }
 }

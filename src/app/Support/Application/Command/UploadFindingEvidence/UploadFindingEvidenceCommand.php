@@ -13,5 +13,6 @@ final readonly class UploadFindingEvidenceCommand
         public string $mimeType,
         public string $moment,
         public string $uploadedBy,
-    ) {}
+    ) {
+    }
 }

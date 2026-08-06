@@ -30,7 +30,8 @@ final class ScheduledMaintenance
         private \DateTimeImmutable                $createdAt,
         private ?\DateTimeImmutable               $updatedAt,
         private ?\DateTimeImmutable               $deletedAt,
-    ) {}
+    ) {
+    }
 
     public static function create(
         ScheduledMaintenanceIdValueObject $id,
@@ -94,7 +95,7 @@ final class ScheduledMaintenance
 
         // Está próxima si la fecha está dentro de los próximos ALERT_DAYS_BEFORE días
         // o si ya pasó (vencida)
-        return $referenceDate >= $this->nextScheduledAt->modify("-" . self::ALERT_DAYS_BEFORE . " days");
+        return $referenceDate >= $this->nextScheduledAt->modify('-' . self::ALERT_DAYS_BEFORE . ' days');
     }
 
     /**
@@ -137,17 +138,56 @@ final class ScheduledMaintenance
         $this->updatedAt = new \DateTimeImmutable();
     }
 
-    public function id(): ScheduledMaintenanceIdValueObject { return $this->id; }
-    public function clientId(): string                       { return $this->clientId; }
-    public function terminalAssignmentId(): string            { return $this->terminalAssignmentId; }
-    public function modelId(): string                         { return $this->modelId; }
-    public function frequency(): MaintenanceFrequencyType     { return $this->frequency; }
-    public function nextScheduledAt(): \DateTimeImmutable     { return $this->nextScheduledAt; }
-    public function lastCompletedAt(): ?\DateTimeImmutable    { return $this->lastCompletedAt; }
-    public function isActive(): bool                          { return $this->isActive; }
-    public function createdBy(): string                       { return $this->createdBy; }
-    public function createdAt(): \DateTimeImmutable           { return $this->createdAt; }
-    public function updatedAt(): ?\DateTimeImmutable          { return $this->updatedAt; }
-    public function deletedAt(): ?\DateTimeImmutable          { return $this->deletedAt; }
-    public function alertDaysBefore(): int                    { return self::ALERT_DAYS_BEFORE; }
+    public function id(): ScheduledMaintenanceIdValueObject
+    {
+        return $this->id;
+    }
+    public function clientId(): string
+    {
+        return $this->clientId;
+    }
+    public function terminalAssignmentId(): string
+    {
+        return $this->terminalAssignmentId;
+    }
+    public function modelId(): string
+    {
+        return $this->modelId;
+    }
+    public function frequency(): MaintenanceFrequencyType
+    {
+        return $this->frequency;
+    }
+    public function nextScheduledAt(): \DateTimeImmutable
+    {
+        return $this->nextScheduledAt;
+    }
+    public function lastCompletedAt(): ?\DateTimeImmutable
+    {
+        return $this->lastCompletedAt;
+    }
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+    public function createdBy(): string
+    {
+        return $this->createdBy;
+    }
+    public function createdAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    public function updatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+    public function deletedAt(): ?\DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+    public function alertDaysBefore(): int
+    {
+        return self::ALERT_DAYS_BEFORE;
+    }
 }

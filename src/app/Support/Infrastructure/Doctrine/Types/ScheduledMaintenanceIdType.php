@@ -9,6 +9,12 @@ use App\Support\Domain\ValueObjects\ScheduledMaintenanceIdValueObject;
 
 final class ScheduledMaintenanceIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'scheduled_maintenance_id'; }
-    protected function getValueObjectClass(): string { return ScheduledMaintenanceIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'scheduled_maintenance_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return ScheduledMaintenanceIdValueObject::class;
+    }
 }

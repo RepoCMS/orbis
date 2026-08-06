@@ -17,13 +17,13 @@ use App\Organization\Application\Command\LinkUserToEmployee\LinkUserToEmployeeCo
 use App\Organization\Application\Command\LinkUserToEmployee\LinkUserToEmployeeHandler;
 use App\Organization\Application\Exception\EmployeeNotFoundException;
 use App\Organization\Application\Service\EmployeeUserInvariantService;
-use App\Organization\Domain\Events\EmployeeUserLinked;
 use App\Organization\Domain\Entities\Employee;
+use App\Organization\Domain\Events\EmployeeUserLinked;
 use App\Organization\Domain\Exceptions\EmployeeAlreadyHasUserException;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
+use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;

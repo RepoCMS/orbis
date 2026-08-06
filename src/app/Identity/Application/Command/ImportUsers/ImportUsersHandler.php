@@ -9,7 +9,6 @@ use App\Identity\Domain\Events\UserRegistered;
 use App\Identity\Domain\Repositories\RoleRepositoryInterface;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;
 use App\Identity\Domain\Service\PasswordHasherInterface;
-use App\Identity\Domain\ValueObjects\HashedPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RawPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
@@ -31,7 +30,8 @@ final readonly class ImportUsersHandler
         private PasswordHasherInterface $passwordHasher,
         private IdGeneratorInterface $idGenerator,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ImportUsersCommand $command): ImportResult
     {

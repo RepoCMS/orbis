@@ -10,7 +10,8 @@ final readonly class CleanupOldNotificationsHandler
 {
     public function __construct(
         private NotificationLogRepositoryInterface $logRepository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CleanupOldNotificationsCommand $command): int
     {

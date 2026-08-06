@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Identity\Infrastructure\Persistence\Doctrine;
 
 use App\Identity\Domain\Entities\UserMfaBackupCode;
-use App\Identity\Domain\ValueObjects\UserMfaBackupCodeIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
+use App\Identity\Domain\ValueObjects\UserMfaBackupCodeIdValueObject;
 use App\Identity\Infrastructure\Persistence\Doctrine\DoctrineUserMfaBackupCodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;

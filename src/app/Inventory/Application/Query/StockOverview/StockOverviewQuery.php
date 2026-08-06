@@ -15,5 +15,6 @@ final readonly class StockOverviewQuery
         public ?string $search      = null,
         public int     $page        = 1,
         public int     $perPage     = 30,
-    ) {}
+    ) {
+    }
 }

@@ -12,7 +12,6 @@ use App\Location\Domain\Entities\City;
 use App\Location\Domain\Entities\Province;
 use App\Location\Domain\Repositories\CityRepositoryInterface;
 use App\Location\Domain\Repositories\ProvinceRepositoryInterface;
-use App\Location\Domain\ValueObjects\ProvinceIdValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class SearchCitiesHandlerTest extends TestCase

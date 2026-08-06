@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 
 final class StockMinimumIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'stock_minimum_id'; }
-    protected function getValueObjectClass(): string { return StockMinimumIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'stock_minimum_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return StockMinimumIdValueObject::class;
+    }
 }

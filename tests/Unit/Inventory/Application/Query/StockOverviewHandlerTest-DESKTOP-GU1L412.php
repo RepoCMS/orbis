@@ -78,6 +78,7 @@ final class StockOverviewHandlerTest extends TestCase
                 if (str_contains($sql, 'SUM(quantity)')) {
                     return [];
                 }
+
                 return [];
             });
 

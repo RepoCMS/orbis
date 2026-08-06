@@ -8,5 +8,6 @@ final readonly class ListTicketChildrenQuery
 {
     public function __construct(
         public string $parentTicketId,
-    ) {}
+    ) {
+    }
 }

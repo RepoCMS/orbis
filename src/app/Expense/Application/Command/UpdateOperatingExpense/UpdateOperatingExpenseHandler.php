@@ -14,7 +14,8 @@ final readonly class UpdateOperatingExpenseHandler
     public function __construct(
         private OperatingExpenseRepositoryInterface $expenseRepository,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(UpdateOperatingExpenseCommand $command): void
     {

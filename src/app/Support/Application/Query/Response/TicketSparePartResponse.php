@@ -16,7 +16,8 @@ final readonly class TicketSparePartResponse
         public bool    $isIncoming,
         public bool    $isVisibleToClient,
         public bool    $autoMarkedDamaged,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(\App\Support\Domain\Entities\TicketSparePart $sparePart): self
     {

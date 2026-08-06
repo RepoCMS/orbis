@@ -8,7 +8,6 @@ use App\Identity\Application\Command\ImportUsers\ImportUsersCommand;
 use App\Identity\Application\Command\ImportUsers\ImportUsersHandler;
 use App\Identity\Domain\Entities\Role;
 use App\Identity\Domain\Entities\User;
-use App\Identity\Domain\Enums\UserStatus;
 use App\Identity\Domain\Events\UserRegistered;
 use App\Identity\Domain\Repositories\RoleRepositoryInterface;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;
@@ -34,6 +33,7 @@ final class ImportUsersHandlerTest extends TestCase
     {
         $path = tempnam(sys_get_temp_dir(), 'import_test_');
         file_put_contents($path, $content);
+
         return $path;
     }
 

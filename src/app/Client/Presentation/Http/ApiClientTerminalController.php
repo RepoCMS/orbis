@@ -73,6 +73,7 @@ final class ApiClientTerminalController extends AbstractController
     {
         try {
             $terminal = ($handler)(new FindTerminalByIdQuery($id));
+
             return $this->json(['data' => $terminal]);
         } catch (TerminalNotFoundException $e) {
             return $this->json(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
@@ -115,6 +116,7 @@ final class ApiClientTerminalController extends AbstractController
     {
         try {
             ($handler)(new DeactivateTerminalCommand($id));
+
             return $this->json(['data' => ['terminalId' => $id, 'status' => 'deactivated']]);
         } catch (TerminalNotFoundException $e) {
             return $this->json(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
@@ -127,6 +129,7 @@ final class ApiClientTerminalController extends AbstractController
     {
         try {
             ($handler)(new ActivateTerminalCommand($id));
+
             return $this->json(['data' => ['terminalId' => $id, 'status' => 'reactivated']]);
         } catch (TerminalNotFoundException $e) {
             return $this->json(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);

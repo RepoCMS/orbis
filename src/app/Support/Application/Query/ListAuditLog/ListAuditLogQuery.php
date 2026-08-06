@@ -8,5 +8,6 @@ final readonly class ListAuditLogQuery
 {
     public function __construct(
         public string $ticketId,
-    ) {}
+    ) {
+    }
 }

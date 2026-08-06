@@ -34,7 +34,8 @@ final readonly class EmployeeStatusCascadeHandler
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     public function __invoke(DomainEventMessage $message): void
     {

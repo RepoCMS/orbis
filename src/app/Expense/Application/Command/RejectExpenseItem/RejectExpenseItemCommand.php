@@ -11,5 +11,6 @@ final readonly class RejectExpenseItemCommand
         public string $itemId,
         public string $rejectionReason,
         public string $reviewedBy,
-    ) {}
+    ) {
+    }
 }

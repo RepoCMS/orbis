@@ -24,7 +24,8 @@ final class DashboardMetrics
         public readonly int   $stockMovementsYesterday,
         public readonly array $stockAlerts,
         public readonly array $recentTickets,
-    ) {}
+    ) {
+    }
 
     public function ticketsTodayVsYesterdayDiff(): int
     {

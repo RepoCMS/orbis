@@ -7,7 +7,6 @@ namespace App\Inventory\Application\Command\RemoveConsumable;
 use App\Inventory\Application\Exception\ConsumableNotFoundException;
 use App\Inventory\Domain\Repositories\ConsumableRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\ConsumableIdValueObject;
-use App\Inventory\Domain\ValueObjects\RepairIdValueObject;
 use App\Shared\Infrastructure\DbExceptionHandlerTrait;
 
 final readonly class RemoveConsumableHandler

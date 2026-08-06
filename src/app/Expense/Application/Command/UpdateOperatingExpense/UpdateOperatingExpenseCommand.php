@@ -11,5 +11,6 @@ final readonly class UpdateOperatingExpenseCommand
         public string $reason,
         public string $startDate,
         public string $endDate,
-    ) {}
+    ) {
+    }
 }

@@ -15,7 +15,8 @@ final readonly class NotificationTemplateResponse
         public ?string $subject,
         public string $bodyTemplate,
         public bool $isActive,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(NotificationTemplate $template): self
     {

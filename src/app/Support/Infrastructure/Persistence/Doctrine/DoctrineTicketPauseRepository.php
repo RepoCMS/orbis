@@ -12,7 +12,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrineTicketPauseRepository implements TicketPauseRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager) {}
+    public function __construct(private readonly EntityManagerInterface $entityManager)
+    {
+    }
 
     public function findById(TicketPauseIdValueObject $id): ?TicketPause
     {

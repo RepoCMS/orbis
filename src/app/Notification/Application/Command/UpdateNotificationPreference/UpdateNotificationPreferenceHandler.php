@@ -12,7 +12,8 @@ final readonly class UpdateNotificationPreferenceHandler
 {
     public function __construct(
         private NotificationPreferenceRepositoryInterface $preferenceRepository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(UpdateNotificationPreferenceCommand $command): void
     {

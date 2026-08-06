@@ -9,7 +9,6 @@ use App\Inventory\Application\Command\CancelPurchaseOrder\CancelPurchaseOrderCom
 use App\Inventory\Application\Command\CancelPurchaseOrder\CancelPurchaseOrderHandler;
 use App\Inventory\Application\Exception\PurchaseOrderNotFoundException;
 use App\Inventory\Domain\Entities\PurchaseOrder;
-use App\Inventory\Domain\Enums\PurchaseOrderStatus;
 use App\Inventory\Domain\Repositories\PurchaseOrderRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\PurchaseOrderIdValueObject;
 use PHPUnit\Framework\TestCase;

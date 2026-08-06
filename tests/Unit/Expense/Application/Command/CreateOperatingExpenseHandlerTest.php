@@ -8,8 +8,6 @@ use App\Expense\Application\Command\CreateOperatingExpense\CreateOperatingExpens
 use App\Expense\Application\Command\CreateOperatingExpense\CreateOperatingExpenseHandler;
 use App\Expense\Application\Service\EmployeeResolverInterface;
 use App\Expense\Application\Service\TicketResolverInterface;
-use App\Expense\Domain\Entities\OperatingExpense;
-use App\Expense\Domain\Events\ExpenseSubmitted;
 use App\Expense\Domain\Repositories\OperatingExpenseRepositoryInterface;
 use App\Shared\Application\Service\IdempotencyServiceInterface;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
@@ -37,7 +35,12 @@ final class CreateOperatingExpenseHandlerTest extends TestCase
         $publisher = $this->createMock(DomainEventPublisherInterface::class);
 
         $handler = new CreateOperatingExpenseHandler(
-            $repo, $idGenerator, $employeeResolver, $ticketResolver, $publisher, $idempotency,
+            $repo,
+            $idGenerator,
+            $employeeResolver,
+            $ticketResolver,
+            $publisher,
+            $idempotency,
         );
 
         $result = ($handler)(new CreateOperatingExpenseCommand(

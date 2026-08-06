@@ -13,7 +13,8 @@ final readonly class SubmitExpenseHandler
     public function __construct(
         private OperatingExpenseRepositoryInterface $expenseRepository,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(SubmitExpenseCommand $command): void
     {

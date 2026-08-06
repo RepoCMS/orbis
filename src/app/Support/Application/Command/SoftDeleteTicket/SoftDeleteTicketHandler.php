@@ -14,7 +14,8 @@ final readonly class SoftDeleteTicketHandler
     public function __construct(
         private TicketRepositoryInterface     $ticketRepo,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(SoftDeleteTicketCommand $command): void
     {

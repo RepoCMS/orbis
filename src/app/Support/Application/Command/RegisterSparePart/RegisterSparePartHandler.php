@@ -26,7 +26,8 @@ final readonly class RegisterSparePartHandler
         private SparePartViewScopeResolver           $scopeResolver,
         private EmployeeRepositoryInterface          $employeeRepository,
         private IdGeneratorInterface                 $idGenerator,
-    ) {}
+    ) {
+    }
 
     public function __invoke(RegisterSparePartCommand $command): void
     {

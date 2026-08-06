@@ -17,7 +17,8 @@ final readonly class PauseTicketHandler
         private TicketRepositoryInterface      $ticketRepo,
         private TicketPauseRepositoryInterface $pauseRepo,
         private IdGeneratorInterface           $idGenerator,
-    ) {}
+    ) {
+    }
 
     public function __invoke(PauseTicketCommand $command): void
     {

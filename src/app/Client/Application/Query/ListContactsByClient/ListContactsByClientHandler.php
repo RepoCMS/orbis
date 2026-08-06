@@ -20,7 +20,7 @@ final readonly class ListContactsByClientHandler
     public function __invoke(ListContactsByClientQuery $query): array
     {
         return array_map(
-            static fn($contact) => ContactResponse::fromEntity($contact),
+            static fn ($contact) => ContactResponse::fromEntity($contact),
             $this->contactRepository->findAll(),
         );
     }

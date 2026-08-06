@@ -10,5 +10,6 @@ final readonly class ImportPurchaseOrdersCommand
         public string $filePath,
         public string $createdBy,
         public bool $dryRun = false,
-    ) {}
+    ) {
+    }
 }

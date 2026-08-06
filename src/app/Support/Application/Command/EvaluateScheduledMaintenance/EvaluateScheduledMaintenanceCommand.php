@@ -6,5 +6,7 @@ namespace App\Support\Application\Command\EvaluateScheduledMaintenance;
 
 final readonly class EvaluateScheduledMaintenanceCommand
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 }

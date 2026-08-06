@@ -20,6 +20,7 @@ final class DashboardMetricsHandlerTest extends TestCase
                 if (isset($returnMap['fetchOne'][$key])) {
                     return $returnMap['fetchOne'][$key];
                 }
+
                 return 0;
             }
         );
@@ -30,6 +31,7 @@ final class DashboardMetricsHandlerTest extends TestCase
                 if (isset($returnMap['fetchAllAssociative'][$key])) {
                     return $returnMap['fetchAllAssociative'][$key];
                 }
+
                 return [];
             }
         );
@@ -66,19 +68,19 @@ final class DashboardMetricsHandlerTest extends TestCase
                     ['service_type' => 'correctivo', 'total' => 8],
                     ['service_type' => 'preventivo', 'total' => 7],
                 ],
-                "SELECT p.name AS productName, p.code, l.name AS locationName, sm.alert_threshold, " .
-                "COALESCE(ns.quantity, 0) AS current FROM stock_minimums sm INNER JOIN products p " .
-                "ON p.id = sm.product_id AND p.deleted_at IS NULL INNER JOIN stock_locations l " .
-                "ON l.id = sm.location_id AND l.deleted_at IS NULL LEFT JOIN nonserialized_stock ns " .
-                "ON ns.product_id = sm.product_id AND ns.location_id = sm.location_id " .
+                'SELECT p.name AS productName, p.code, l.name AS locationName, sm.alert_threshold, ' .
+                'COALESCE(ns.quantity, 0) AS current FROM stock_minimums sm INNER JOIN products p ' .
+                'ON p.id = sm.product_id AND p.deleted_at IS NULL INNER JOIN stock_locations l ' .
+                'ON l.id = sm.location_id AND l.deleted_at IS NULL LEFT JOIN nonserialized_stock ns ' .
+                'ON ns.product_id = sm.product_id AND ns.location_id = sm.location_id ' .
                 "AND ns.status = 'disponible' AND ns.deleted_at IS NULL " .
-                "WHERE COALESCE(ns.quantity, 0) < sm.alert_threshold " .
-                "ORDER BY (sm.alert_threshold - COALESCE(ns.quantity, 0)) DESC LIMIT 5" => [
+                'WHERE COALESCE(ns.quantity, 0) < sm.alert_threshold ' .
+                'ORDER BY (sm.alert_threshold - COALESCE(ns.quantity, 0)) DESC LIMIT 5' => [
                     ['productName' => 'Papel A4', 'code' => 'PAPEL', 'locationName' => 'Bodega Central',
                      'alert_threshold' => 50, 'current' => 10],
                 ],
-                "SELECT t.id, t.ticket_number AS ticketNumber, t.status, t.service_type AS serviceType, " .
-                "t.scheduled_at AS scheduledAt FROM tickets t WHERE t.deleted_at IS NULL ORDER BY t.id DESC LIMIT 10" => [
+                'SELECT t.id, t.ticket_number AS ticketNumber, t.status, t.service_type AS serviceType, ' .
+                't.scheduled_at AS scheduledAt FROM tickets t WHERE t.deleted_at IS NULL ORDER BY t.id DESC LIMIT 10' => [
                     ['id' => '01HZ001', 'ticketNumber' => 'TK-2026-001', 'status' => 'in_progress',
                      'serviceType' => 'correctivo', 'scheduledAt' => '2026-07-30 10:00:00'],
                 ],

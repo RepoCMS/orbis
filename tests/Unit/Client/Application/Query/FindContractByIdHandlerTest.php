@@ -10,8 +10,8 @@ use App\Client\Application\Query\FindContractById\FindContractByIdQuery;
 use App\Client\Application\Query\Response\ContractResponse;
 use App\Client\Domain\Entities\Contract;
 use App\Client\Domain\Repositories\ContractRepositoryInterface;
-use App\Client\Domain\ValueObjects\ContractIdValueObject;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
+use App\Client\Domain\ValueObjects\ContractIdValueObject;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 

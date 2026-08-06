@@ -12,7 +12,8 @@ final readonly class WhatsAppChannelSender implements ChannelSenderInterface
 {
     public function __construct(
         private LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     public function send(NotificationLog $log): void
     {

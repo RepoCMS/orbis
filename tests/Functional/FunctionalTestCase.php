@@ -16,15 +16,20 @@ abstract class FunctionalTestCase extends WebTestCase
      */
     public static function assertRouteExists(Response $response): void
     {
-        static::assertNotSame(404, $response->getStatusCode(),
-            \sprintf('Route not found (404). URL may be invalid. Response: %s', $response->getContent() ?: '(empty)'));
+        static::assertNotSame(
+            404,
+            $response->getStatusCode(),
+            \sprintf('Route not found (404). URL may be invalid. Response: %s', $response->getContent() ?: '(empty)')
+        );
     }
 
     public static function assertResponseIsRedirectToLogin(Response $response): void
     {
         $isRedirect = $response->isRedirect() || $response->getStatusCode() === 302;
-        static::assertTrue($isRedirect,
-            \sprintf('Expected redirect (302) to login, got %d: %s', $response->getStatusCode(), $response->getContent() ?: '(empty)'));
+        static::assertTrue(
+            $isRedirect,
+            \sprintf('Expected redirect (302) to login, got %d: %s', $response->getStatusCode(), $response->getContent() ?: '(empty)')
+        );
     }
 
     /**

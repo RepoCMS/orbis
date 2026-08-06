@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Notification\Application\Command\SendNotification;
 
+use App\Notification\Domain\Entities\NotificationLog;
 use App\Notification\Domain\Enums\EventType;
 use App\Notification\Domain\Enums\NotificationChannel;
 use App\Notification\Domain\Enums\RecipientType;
-use App\Notification\Domain\Entities\NotificationLog;
 use App\Notification\Domain\Repositories\NotificationLogRepositoryInterface;
 use App\Notification\Domain\ValueObjects\NotificationLogIdValueObject;
 use App\Shared\Domain\Service\IdGeneratorInterface;
@@ -19,7 +19,8 @@ final readonly class SendNotificationHandler
         private NotificationLogRepositoryInterface $logRepository,
         private IdGeneratorInterface $idGenerator,
         private MessageBusInterface $messageBus,
-    ) {}
+    ) {
+    }
 
     public function __invoke(SendNotificationCommand $command): void
     {

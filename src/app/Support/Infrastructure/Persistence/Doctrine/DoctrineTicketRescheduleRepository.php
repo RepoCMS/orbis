@@ -12,7 +12,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrineTicketRescheduleRepository implements TicketRescheduleRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager) {}
+    public function __construct(private readonly EntityManagerInterface $entityManager)
+    {
+    }
 
     public function findById(TicketRescheduleIdValueObject $id): ?TicketReschedule
     {

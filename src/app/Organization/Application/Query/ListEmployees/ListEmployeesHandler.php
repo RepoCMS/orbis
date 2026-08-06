@@ -28,7 +28,7 @@ final readonly class ListEmployeesHandler
             : $this->employeeRepository->findAll();
 
         return array_map(
-            static fn($employee) => EmployeeResponse::fromEntity($employee),
+            static fn ($employee) => EmployeeResponse::fromEntity($employee),
             $employees,
         );
     }

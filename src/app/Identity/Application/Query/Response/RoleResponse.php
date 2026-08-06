@@ -26,7 +26,7 @@ final readonly class RoleResponse
             name: (string) $role->name(),
             status: $role->status()->value,
             permissionIds: array_map(
-                static fn($pid) => (string) $pid,
+                static fn ($pid) => (string) $pid,
                 $role->permissionIds(),
             ),
         );

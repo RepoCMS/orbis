@@ -9,7 +9,6 @@ use App\Organization\Application\Query\ListEmployeeSpecialPeriods\ListEmployeeSp
 use App\Organization\Application\Query\Response\EmployeeSpecialPeriodResponse;
 use App\Organization\Domain\Entities\EmployeeSpecialPeriod;
 use App\Organization\Domain\Enums\EmployeeSpecialPeriodType;
-use App\Organization\Domain\Enums\EmployeeSpecialPeriodStatus;
 use App\Organization\Domain\Repositories\EmployeeSpecialPeriodRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeSpecialPeriodIdValueObject;

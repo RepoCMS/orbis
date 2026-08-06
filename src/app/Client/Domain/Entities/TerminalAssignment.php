@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Client\Domain\Entities;
 
 use App\Client\Domain\Enums\TerminalAssignmentStatus;
-use App\Client\Domain\ValueObjects\TerminalAssignmentIdValueObject;
 use App\Client\Domain\ValueObjects\SiteIdValueObject;
+use App\Client\Domain\ValueObjects\TerminalAssignmentIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdAssignedByClientValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalNameValueObject;

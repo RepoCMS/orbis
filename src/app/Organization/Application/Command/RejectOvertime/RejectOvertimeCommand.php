@@ -10,5 +10,6 @@ final readonly class RejectOvertimeCommand
         public string $overtimeRecordId,
         public string $reviewedBy,
         public string $reason,
-    ) {}
+    ) {
+    }
 }

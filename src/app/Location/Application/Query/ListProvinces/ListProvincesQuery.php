@@ -8,5 +8,6 @@ final readonly class ListProvincesQuery
 {
     public function __construct(
         public ?string $regionId = null,
-    ) {}
+    ) {
+    }
 }

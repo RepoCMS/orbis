@@ -7,11 +7,11 @@ namespace App\Tests\Unit\Client\Application\Command;
 use App\Client\Application\Command\DeactivateSite\DeactivateSiteCommand;
 use App\Client\Application\Command\DeactivateSite\DeactivateSiteHandler;
 use App\Client\Application\Exception\SiteNotFoundException;
-use App\Client\Domain\Enums\SiteStatus;
 use App\Client\Domain\Entities\Site;
+use App\Client\Domain\Enums\SiteStatus;
 use App\Client\Domain\Repositories\SiteRepositoryInterface;
-use App\Client\Domain\ValueObjects\SiteIdValueObject;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
+use App\Client\Domain\ValueObjects\SiteIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use PHPUnit\Framework\TestCase;
 

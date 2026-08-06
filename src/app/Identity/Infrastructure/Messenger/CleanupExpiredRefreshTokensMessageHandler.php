@@ -13,7 +13,8 @@ final readonly class CleanupExpiredRefreshTokensMessageHandler
 {
     public function __construct(
         private RefreshTokenRepositoryInterface $refreshTokenRepository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CleanupExpiredRefreshTokensMessage $message): void
     {

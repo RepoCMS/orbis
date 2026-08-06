@@ -8,8 +8,6 @@ use App\Client\Application\Command\CancelContract\CancelContractCommand;
 use App\Client\Application\Command\CancelContract\CancelContractHandler;
 use App\Client\Application\Command\CreateContract\CreateContractCommand;
 use App\Client\Application\Command\CreateContract\CreateContractHandler;
-use App\Client\Application\Command\UpdateContract\UpdateContractCommand;
-use App\Client\Application\Command\UpdateContract\UpdateContractHandler;
 use App\Client\Application\Exception\ClientNotFoundException;
 use App\Client\Application\Exception\ContractNotFoundException;
 use App\Client\Application\Query\FindContractById\FindContractByIdHandler;

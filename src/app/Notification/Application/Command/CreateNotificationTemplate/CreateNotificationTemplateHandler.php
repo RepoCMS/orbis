@@ -20,7 +20,8 @@ final readonly class CreateNotificationTemplateHandler
     public function __construct(
         private NotificationTemplateRepositoryInterface $templateRepository,
         private IdGeneratorInterface $idGenerator,
-    ) {}
+    ) {
+    }
 
     /**
      * @return string|null ULID de la plantilla creada, o null si ya existía

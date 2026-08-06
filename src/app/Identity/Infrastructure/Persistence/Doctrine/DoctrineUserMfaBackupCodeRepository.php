@@ -6,8 +6,8 @@ namespace App\Identity\Infrastructure\Persistence\Doctrine;
 
 use App\Identity\Domain\Entities\UserMfaBackupCode;
 use App\Identity\Domain\Repositories\UserMfaBackupCodeRepositoryInterface;
-use App\Identity\Domain\ValueObjects\UserMfaBackupCodeIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
+use App\Identity\Domain\ValueObjects\UserMfaBackupCodeIdValueObject;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrineUserMfaBackupCodeRepository implements UserMfaBackupCodeRepositoryInterface

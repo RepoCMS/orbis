@@ -27,7 +27,8 @@ final class InventoryReportController extends AbstractController
         private readonly PhysicalCountReportGenerator $physicalCountReportGenerator,
         private readonly ExcelExportService $excelExport,
         private readonly PdfExportService $pdfExport,
-    ) {}
+    ) {
+    }
 
     #[Route('/valued.{_format}', name: 'inventory_report_valued', methods: ['GET'], requirements: ['_format' => 'xlsx|pdf'])]
     public function valued(Request $request, string $_format = 'xlsx'): Response

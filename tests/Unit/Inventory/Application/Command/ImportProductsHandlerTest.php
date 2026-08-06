@@ -15,8 +15,8 @@ use App\Inventory\Domain\ValueObjects\ProductIdValueObject;
 use App\Inventory\Domain\ValueObjects\ProductNameValueObject;
 use App\Inventory\Infrastructure\Import\ProductCsvFileParser;
 use App\Inventory\Infrastructure\Import\ProductRowValidator;
-use App\Shared\Domain\Service\IdGeneratorInterface;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
+use App\Shared\Domain\Service\IdGeneratorInterface;
 use App\Shared\Infrastructure\Import\CsvFileParser;
 use PHPUnit\Framework\TestCase;
 
@@ -28,6 +28,7 @@ final class ImportProductsHandlerTest extends TestCase
     {
         $path = tempnam(sys_get_temp_dir(), 'import_test_');
         file_put_contents($path, $content);
+
         return $path;
     }
 

@@ -9,8 +9,8 @@ use App\Identity\Application\Command\RevokeMfa\RevokeMfaHandler;
 use App\Identity\Domain\Entities\UserMfaConfig;
 use App\Identity\Domain\Repositories\AuthLogRepositoryInterface;
 use App\Identity\Domain\Repositories\UserMfaConfigRepositoryInterface;
-use App\Identity\Domain\ValueObjects\UserMfaConfigIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
+use App\Identity\Domain\ValueObjects\UserMfaConfigIdValueObject;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\TestCase;
 

@@ -51,6 +51,7 @@ final class GetOrganizationDashboardHandlerTest extends TestCase
                 if (str_contains($sql, 'org_vacation_requests')) {
                     return [];
                 }
+
                 return [];
             });
 
@@ -65,6 +66,7 @@ final class GetOrganizationDashboardHandlerTest extends TestCase
                 if (str_contains($sql, 'WHERE profile')) {
                     return 1;
                 }
+
                 return 0;
             });
 
@@ -97,6 +99,7 @@ final class GetOrganizationDashboardHandlerTest extends TestCase
                 if (str_contains($sql, 'FROM service_zones')) {
                     return [];
                 }
+
                 return [];
             });
 
@@ -142,6 +145,7 @@ final class GetOrganizationDashboardHandlerTest extends TestCase
                         ['id' => $zoneB, 'name' => 'Zona B'],
                     ];
                 }
+
                 return [];
             });
 
@@ -174,6 +178,7 @@ final class GetOrganizationDashboardHandlerTest extends TestCase
                 if (str_contains($sql, 'org_overtime_records')) {
                     return [];
                 }
+
                 return [];
             });
 
@@ -213,6 +218,7 @@ final class GetOrganizationDashboardHandlerTest extends TestCase
                 if (str_contains($sql, 'org_vacation_requests')) {
                     return [];
                 }
+
                 return [];
             });
 
@@ -252,6 +258,7 @@ final class GetOrganizationDashboardHandlerTest extends TestCase
                 if (str_contains($sql, 'org_vacation_requests')) {
                     return [];
                 }
+
                 return [];
             });
 
@@ -289,6 +296,7 @@ final class GetOrganizationDashboardHandlerTest extends TestCase
                 if (str_contains($sql, 'org_vacation_requests')) {
                     return [];
                 }
+
                 return [];
             });
 
@@ -300,6 +308,7 @@ final class GetOrganizationDashboardHandlerTest extends TestCase
                 if (str_contains($sql, 'WHERE profile')) {
                     return 8;
                 }
+
                 return 0;
             });
 

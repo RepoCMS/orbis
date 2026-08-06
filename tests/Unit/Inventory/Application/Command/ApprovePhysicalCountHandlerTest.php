@@ -11,7 +11,6 @@ use App\Inventory\Domain\Entities\PhysicalCount;
 use App\Inventory\Domain\Entities\PhysicalCountItem;
 use App\Inventory\Domain\Entities\Product;
 use App\Inventory\Domain\Enums\MovementType;
-use App\Inventory\Domain\Enums\PhysicalCountStatus;
 use App\Inventory\Domain\Enums\ProductTrackingType;
 use App\Inventory\Domain\Events\PhysicalCountApproved;
 use App\Inventory\Domain\Exceptions\InventoryDomainException;

@@ -14,7 +14,8 @@ final readonly class GetClientDashboardSummaryHandler
 {
     public function __construct(
         private Connection $connection,
-    ) {}
+    ) {
+    }
 
     public function __invoke(GetClientDashboardSummaryQuery $query): ClientDashboardSummary
     {
@@ -35,32 +36,35 @@ final readonly class GetClientDashboardSummaryHandler
 
     private function countTotalClients(): int
     {
-        $sql = "SELECT COUNT(*) FROM client_clients WHERE deleted_at IS NULL";
+        $sql = 'SELECT COUNT(*) FROM client_clients WHERE deleted_at IS NULL';
+
         return (int) $this->connection->fetchOne($sql);
     }
 
     private function countActiveContacts(): int
     {
         $sql = "SELECT COUNT(*) FROM contacts WHERE status = 'active' AND deleted_at IS NULL";
+
         return (int) $this->connection->fetchOne($sql);
     }
 
     private function countTotalTerminals(): int
     {
-        $sql = "SELECT COUNT(*) FROM client_terminals WHERE deleted_at IS NULL";
+        $sql = 'SELECT COUNT(*) FROM client_terminals WHERE deleted_at IS NULL';
+
         return (int) $this->connection->fetchOne($sql);
     }
 
     /** @return array<array{status: string, label: string, count: int, color: string}> */
     private function terminalsByStatus(): array
     {
-        $sql = "
+        $sql = '
             SELECT status, COUNT(*) as total
             FROM client_terminals
             WHERE deleted_at IS NULL
             GROUP BY status
             ORDER BY total DESC
-        ";
+        ';
         $rows = $this->connection->fetchAllAssociative($sql);
 
         $colorMap = [
@@ -90,7 +94,7 @@ final readonly class GetClientDashboardSummaryHandler
     /** @return array<array{id: string, name: string, ruc: string, status: string}> */
     private function getRecentClients(): array
     {
-        $sql = "
+        $sql = '
             SELECT
                 id,
                 name,
@@ -100,7 +104,7 @@ final readonly class GetClientDashboardSummaryHandler
             WHERE deleted_at IS NULL
             ORDER BY created_at DESC
             LIMIT 5
-        ";
+        ';
         $rows = $this->connection->fetchAllAssociative($sql);
 
         return array_map(
@@ -119,13 +123,13 @@ final readonly class GetClientDashboardSummaryHandler
     /** @return array<array{status: string, label: string, count: int, color: string}> */
     private function clientsByStatus(): array
     {
-        $sql = "
+        $sql = '
             SELECT status, COUNT(*) as total
             FROM client_clients
             WHERE deleted_at IS NULL
             GROUP BY status
             ORDER BY total DESC
-        ";
+        ';
         $rows = $this->connection->fetchAllAssociative($sql);
 
         $colorMap = [
@@ -192,7 +196,7 @@ final readonly class GetClientDashboardSummaryHandler
     /** @return array<array{clientId: string, clientName: string, terminalCount: int}> */
     private function topClientsByTerminals(): array
     {
-        $sql = "
+        $sql = '
             SELECT
                 c.id AS clientId,
                 c.name AS clientName,
@@ -203,7 +207,7 @@ final readonly class GetClientDashboardSummaryHandler
             GROUP BY c.id, c.name
             ORDER BY terminalCount DESC
             LIMIT 10
-        ";
+        ';
         $rows = $this->connection->fetchAllAssociative($sql);
 
         return array_map(
@@ -219,13 +223,13 @@ final readonly class GetClientDashboardSummaryHandler
     /** @return array<array{status: string, label: string, count: int}> */
     private function contactsByStatus(): array
     {
-        $sql = "
+        $sql = '
             SELECT status, COUNT(*) as total
             FROM contacts
             WHERE deleted_at IS NULL
             GROUP BY status
             ORDER BY total DESC
-        ";
+        ';
         $rows = $this->connection->fetchAllAssociative($sql);
 
         $labelMap = [
@@ -248,7 +252,7 @@ final readonly class GetClientDashboardSummaryHandler
 
     private function countUnassignedTerminals(): int
     {
-        $sql = "
+        $sql = '
             SELECT COUNT(*)
             FROM client_terminals t
             WHERE t.deleted_at IS NULL
@@ -256,7 +260,8 @@ final readonly class GetClientDashboardSummaryHandler
                   SELECT 1 FROM client_terminal_assignments ta
                   WHERE ta.terminal_id = t.id AND ta.deleted_at IS NULL
               )
-        ";
+        ';
+
         return (int) $this->connection->fetchOne($sql);
     }
 

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Support\Application\Query;
 
-use App\Support\Application\Query\ListTicketPendingSpareParts\ListTicketPendingSparePartsHandler;
-use App\Support\Application\Query\ListTicketPendingSpareParts\ListTicketPendingSparePartsQuery;
 use App\Inventory\Domain\Repositories\LocationRepositoryInterface;
 use App\Organization\Domain\Enums\EmployeeProfile;
 use App\Organization\Domain\Enums\EmployeeStatus;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
+use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
+use App\Support\Application\Query\ListTicketPendingSpareParts\ListTicketPendingSparePartsHandler;
+use App\Support\Application\Query\ListTicketPendingSpareParts\ListTicketPendingSparePartsQuery;
 use App\Support\Application\Service\SparePartViewScopeResolver;
 use App\Support\Domain\Entities\Ticket;
 use App\Support\Domain\Entities\TicketPendingSparePart;
@@ -36,6 +36,7 @@ final class ListTicketPendingSparePartsHandlerTest extends TestCase
     {
         $employeeRepo = $this->createMock(EmployeeRepositoryInterface::class);
         $locationRepo = $this->createMock(LocationRepositoryInterface::class);
+
         return new SparePartViewScopeResolver($employeeRepo, $locationRepo);
     }
 

@@ -15,5 +15,6 @@ final readonly class CreateQuickTemplateCommand
         public string $createdBy,
         public ?string $description = null,
         public array $items = [],
-    ) {}
+    ) {
+    }
 }

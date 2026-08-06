@@ -36,7 +36,8 @@ final readonly class FulfillRequestItemHandler
         private DomainEventPublisherInterface $eventPublisher,
         private IdGeneratorInterface $idGenerator,
         private TransactionManagerInterface $transactionManager,
-    ) {}
+    ) {
+    }
 
     public function __invoke(FulfillRequestItemCommand $command): void
     {

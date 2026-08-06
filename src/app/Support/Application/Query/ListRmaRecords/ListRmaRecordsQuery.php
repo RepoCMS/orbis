@@ -8,5 +8,6 @@ final readonly class ListRmaRecordsQuery
 {
     public function __construct(
         public ?string $ticketId = null,
-    ) {}
+    ) {
+    }
 }

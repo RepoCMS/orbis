@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Inventory\Infrastructure\Console;
 
-use App\Inventory\Domain\Enums\RepairPriority;
 use App\Inventory\Domain\Enums\RepairStatus;
-use App\Inventory\Domain\Enums\SerializedStockStatus;
 use App\Inventory\Domain\Repositories\RepairRepositoryInterface;
 use App\Inventory\Domain\Repositories\SerializedStockRepositoryInterface;
 use Symfony\Component\Console\Attribute\AsCommand;

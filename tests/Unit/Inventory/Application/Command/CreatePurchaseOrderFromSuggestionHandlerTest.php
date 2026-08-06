@@ -10,9 +10,9 @@ use App\Inventory\Application\Command\CreatePurchaseOrderFromSuggestion\CreatePu
 use App\Inventory\Application\Exception\LocationNotFoundException;
 use App\Inventory\Application\Exception\ProductNotFoundException;
 use App\Inventory\Application\Exception\PurchaseOrderReferenceAlreadyExistsException;
-use App\Inventory\Domain\Enums\LocationType;
 use App\Inventory\Domain\Entities\Location;
 use App\Inventory\Domain\Entities\Product;
+use App\Inventory\Domain\Enums\LocationType;
 use App\Inventory\Domain\Enums\ProductTrackingType;
 use App\Inventory\Domain\Repositories\LocationRepositoryInterface;
 use App\Inventory\Domain\Repositories\ProductRepositoryInterface;

@@ -4,22 +4,20 @@ declare(strict_types=1);
 
 namespace App\Identity\Presentation\Http;
 
+use App\Identity\Application\Command\ActivateUser\ActivateUserCommand;
+use App\Identity\Application\Command\ActivateUser\ActivateUserHandler;
 use App\Identity\Application\Command\AssignRoleToUser\AssignRoleToUserCommand;
 use App\Identity\Application\Command\AssignRoleToUser\AssignRoleToUserHandler;
 use App\Identity\Application\Command\ChangePassword\ChangePasswordCommand;
 use App\Identity\Application\Command\ChangePassword\ChangePasswordHandler;
 use App\Identity\Application\Command\ChangeUsername\ChangeUsernameCommand;
 use App\Identity\Application\Command\ChangeUsername\ChangeUsernameHandler;
-use App\Identity\Application\Command\ActivateUser\ActivateUserCommand;
-use App\Identity\Application\Command\ActivateUser\ActivateUserHandler;
 use App\Identity\Application\Command\DeactivateUser\DeactivateUserCommand;
 use App\Identity\Application\Command\DeactivateUser\DeactivateUserHandler;
 use App\Identity\Application\Command\DisableUserMfa\DisableUserMfaCommand;
 use App\Identity\Application\Command\DisableUserMfa\DisableUserMfaHandler;
 use App\Identity\Application\Command\InviteContactToPortal\InviteContactToPortalCommand;
 use App\Identity\Application\Command\InviteContactToPortal\InviteContactToPortalHandler;
-use App\Identity\Application\Command\ReactivateUser\ReactivateUserCommand;
-use App\Identity\Application\Command\ReactivateUser\ReactivateUserHandler;
 use App\Identity\Application\Command\RegisterUser\RegisterUserCommand;
 use App\Identity\Application\Command\RegisterUser\RegisterUserHandler;
 use App\Identity\Application\Command\SoftDeleteUser\SoftDeleteUserCommand;
@@ -31,8 +29,8 @@ use App\Identity\Application\Command\VerifyUser\VerifyUserHandler;
 use App\Identity\Application\Exception\ContactAlreadyHasAccessException;
 use App\Identity\Application\Exception\ContactNotFoundException;
 use App\Identity\Application\Exception\RoleNotFoundException;
-use App\Identity\Application\Exception\UserNotFoundException;
 use App\Identity\Application\Exception\UsernameAlreadyExistsException;
+use App\Identity\Application\Exception\UserNotFoundException;
 use App\Identity\Application\Query\FindUserById\FindUserByIdHandler;
 use App\Identity\Application\Query\FindUserById\FindUserByIdQuery;
 use App\Identity\Application\Query\ListUsers\ListUsersHandler;
@@ -76,14 +74,14 @@ final class ApiIdentityUserController extends AbstractController
         if ($status !== null) {
             $items = array_values(array_filter(
                 $items,
-                static fn($u) => $u->status === $status,
+                static fn ($u) => $u->status === $status,
             ));
         }
 
         if ($role !== null) {
             $items = array_values(array_filter(
                 $items,
-                static fn($u) => $u->roleId === $role,
+                static fn ($u) => $u->roleId === $role,
             ));
         }
 
@@ -91,7 +89,7 @@ final class ApiIdentityUserController extends AbstractController
             $q = mb_strtolower($search);
             $items = array_values(array_filter(
                 $items,
-                static fn($u) => str_contains(mb_strtolower($u->username), $q),
+                static fn ($u) => str_contains(mb_strtolower($u->username), $q),
             ));
         }
 

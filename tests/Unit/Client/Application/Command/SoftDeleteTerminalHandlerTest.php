@@ -13,9 +13,9 @@ use App\Client\Domain\Enums\TerminalStatus;
 use App\Client\Domain\Enums\TerminalType;
 use App\Client\Domain\Enums\TerminalVendor;
 use App\Client\Domain\Repositories\TerminalRepositoryInterface;
-use App\Client\Domain\ValueObjects\TerminalIdValueObject;
-use App\Client\Domain\ValueObjects\SerialNumberValueObject;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
+use App\Client\Domain\ValueObjects\SerialNumberValueObject;
+use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class SoftDeleteTerminalHandlerTest extends TestCase

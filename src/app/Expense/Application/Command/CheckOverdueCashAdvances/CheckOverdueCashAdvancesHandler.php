@@ -6,7 +6,6 @@ namespace App\Expense\Application\Command\CheckOverdueCashAdvances;
 
 use App\Expense\Domain\Enums\CashAdvanceStatus;
 use App\Expense\Domain\Events\CashAdvancePaymentPending;
-use App\Expense\Domain\Events\CashAdvancePendingReview;
 use App\Expense\Domain\Repositories\CashAdvanceRepositoryInterface;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use DateTimeImmutable;
@@ -16,7 +15,8 @@ final readonly class CheckOverdueCashAdvancesHandler
     public function __construct(
         private CashAdvanceRepositoryInterface $cashAdvanceRepository,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CheckOverdueCashAdvancesCommand $command): void
     {

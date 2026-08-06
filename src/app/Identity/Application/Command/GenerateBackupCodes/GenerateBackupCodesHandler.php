@@ -6,10 +6,9 @@ namespace App\Identity\Application\Command\GenerateBackupCodes;
 
 use App\Identity\Domain\Entities\UserMfaBackupCode;
 use App\Identity\Domain\Repositories\UserMfaBackupCodeRepositoryInterface;
-use App\Identity\Domain\ValueObjects\UserMfaBackupCodeIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
+use App\Identity\Domain\ValueObjects\UserMfaBackupCodeIdValueObject;
 use App\Shared\Domain\Service\IdGeneratorInterface;
-use Random\RandomException;
 
 final readonly class GenerateBackupCodesHandler
 {
@@ -53,6 +52,7 @@ final readonly class GenerateBackupCodesHandler
         for ($i = 0; $i < self::CODE_LENGTH; $i++) {
             $code .= $chars[random_int(0, strlen($chars) - 1)];
         }
+
         return implode('-', str_split($code, 4));
     }
 }

@@ -6,9 +6,9 @@ namespace App\Client\Infrastructure\Persistence\Doctrine;
 
 use App\Client\Domain\Entities\Terminal;
 use App\Client\Domain\Repositories\TerminalRepositoryInterface;
+use App\Client\Domain\ValueObjects\ClientIdValueObject;
 use App\Client\Domain\ValueObjects\SerialNumberValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdValueObject;
-use App\Client\Domain\ValueObjects\ClientIdValueObject;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrineTerminalRepository implements TerminalRepositoryInterface

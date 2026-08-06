@@ -15,7 +15,8 @@ final class DoctrineVacationRequestRepository implements VacationRequestReposito
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function save(VacationRequest $request): void
     {

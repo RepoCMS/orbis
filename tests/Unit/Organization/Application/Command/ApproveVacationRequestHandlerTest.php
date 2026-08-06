@@ -15,8 +15,8 @@ use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\Repositories\EmployeeSpecialPeriodRepositoryInterface;
 use App\Organization\Domain\Repositories\VacationRequestRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
+use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\VacationRequestIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
@@ -65,7 +65,11 @@ final class ApproveVacationRequestHandlerTest extends TestCase
         $publisher->expects($this->once())->method('publish');
 
         $handler = new ApproveVacationRequestHandler(
-            $requestRepo, $periodRepo, $employeeRepo, $idGenerator, $publisher,
+            $requestRepo,
+            $periodRepo,
+            $employeeRepo,
+            $idGenerator,
+            $publisher,
         );
         ($handler)(new ApproveVacationRequestCommand(
             requestId: self::REQUEST_ID,
@@ -97,7 +101,11 @@ final class ApproveVacationRequestHandlerTest extends TestCase
         $publisher = $this->createMock(DomainEventPublisherInterface::class);
 
         $handler = new ApproveVacationRequestHandler(
-            $requestRepo, $periodRepo, $employeeRepo, $idGenerator, $publisher,
+            $requestRepo,
+            $periodRepo,
+            $employeeRepo,
+            $idGenerator,
+            $publisher,
         );
 
         $this->expectException(EmployeeNotFoundException::class);

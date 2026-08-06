@@ -20,7 +20,8 @@ final class TicketSparePart
         private bool                         $isIncoming,
         private bool                         $isVisibleToClient,
         private bool                         $autoMarkedDamaged,
-    ) {}
+    ) {
+    }
 
     public static function register(
         TicketSparePartIdValueObject $id,
@@ -65,13 +66,40 @@ final class TicketSparePart
         $this->isVisibleToClient = $visible;
     }
 
-    public function id(): TicketSparePartIdValueObject   { return $this->id; }
-    public function ticketId(): TicketIdValueObject       { return $this->ticketId; }
-    public function findingId(): TicketFindingIdValueObject { return $this->findingId; }
-    public function productCode(): string                 { return $this->productCode; }
-    public function serialNumber(): ?string               { return $this->serialNumber; }
-    public function quantity(): int                       { return $this->quantity; }
-    public function isIncoming(): bool                    { return $this->isIncoming; }
-    public function isVisibleToClient(): bool             { return $this->isVisibleToClient; }
-    public function autoMarkedDamaged(): bool             { return $this->autoMarkedDamaged; }
+    public function id(): TicketSparePartIdValueObject
+    {
+        return $this->id;
+    }
+    public function ticketId(): TicketIdValueObject
+    {
+        return $this->ticketId;
+    }
+    public function findingId(): TicketFindingIdValueObject
+    {
+        return $this->findingId;
+    }
+    public function productCode(): string
+    {
+        return $this->productCode;
+    }
+    public function serialNumber(): ?string
+    {
+        return $this->serialNumber;
+    }
+    public function quantity(): int
+    {
+        return $this->quantity;
+    }
+    public function isIncoming(): bool
+    {
+        return $this->isIncoming;
+    }
+    public function isVisibleToClient(): bool
+    {
+        return $this->isVisibleToClient;
+    }
+    public function autoMarkedDamaged(): bool
+    {
+        return $this->autoMarkedDamaged;
+    }
 }

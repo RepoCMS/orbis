@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 
 final class RepairIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'repair_id'; }
-    protected function getValueObjectClass(): string { return RepairIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'repair_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return RepairIdValueObject::class;
+    }
 }

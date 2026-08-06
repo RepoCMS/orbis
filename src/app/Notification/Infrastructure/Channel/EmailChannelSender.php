@@ -16,7 +16,8 @@ final readonly class EmailChannelSender implements ChannelSenderInterface
         private MailerInterface $mailer,
         private string $fromAddress,
         private ContactResolverInterface $contactResolver,
-    ) {}
+    ) {
+    }
 
     public function send(NotificationLog $log): void
     {

@@ -11,5 +11,6 @@ final readonly class UpdateNotificationTemplateCommand
         public ?string $subject,
         public string $bodyTemplate,
         public bool $isActive,
-    ) {}
+    ) {
+    }
 }

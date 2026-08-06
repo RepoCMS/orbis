@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 
 final class SerialHistoryIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'serial_history_id'; }
-    protected function getValueObjectClass(): string { return SerialHistoryIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'serial_history_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return SerialHistoryIdValueObject::class;
+    }
 }

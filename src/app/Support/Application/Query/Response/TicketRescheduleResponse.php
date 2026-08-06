@@ -15,7 +15,8 @@ final readonly class TicketRescheduleResponse
         public string  $requestedBy,
         public string  $rescheduledBy,
         public string  $rescheduledAt,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(\App\Support\Domain\Entities\TicketReschedule $reschedule): self
     {

@@ -30,7 +30,7 @@ final readonly class OperatingExpenseRowValidator implements RowValidatorInterfa
             try {
                 ExpenseItemType::from($tipo);
             } catch (\ValueError) {
-                $validTypes = implode(', ', array_map(fn(ExpenseItemType $t) => $t->value, ExpenseItemType::cases()));
+                $validTypes = implode(', ', array_map(fn (ExpenseItemType $t) => $t->value, ExpenseItemType::cases()));
                 $errors[] = sprintf('Fila %d: Tipo de gasto "%s" inválido. Válidos: %s', $rowNumber, $tipo, $validTypes);
             }
         }

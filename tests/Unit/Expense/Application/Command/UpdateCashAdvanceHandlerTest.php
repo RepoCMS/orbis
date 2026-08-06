@@ -10,7 +10,6 @@ use App\Expense\Application\Exception\CashAdvanceNotFoundException;
 use App\Expense\Domain\Entities\CashAdvance;
 use App\Expense\Domain\Repositories\CashAdvanceRepositoryInterface;
 use App\Expense\Domain\ValueObjects\CashAdvanceIdValueObject;
-use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 

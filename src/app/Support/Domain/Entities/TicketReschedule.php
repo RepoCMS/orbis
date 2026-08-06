@@ -19,7 +19,8 @@ final class TicketReschedule
         private RescheduleRequestedBy         $requestedBy,
         private string                        $rescheduledBy,
         private \DateTimeImmutable            $rescheduledAt,
-    ) {}
+    ) {
+    }
 
     public static function create(
         TicketRescheduleIdValueObject $id,
@@ -52,12 +53,36 @@ final class TicketReschedule
         );
     }
 
-    public function id(): TicketRescheduleIdValueObject    { return $this->id; }
-    public function ticketId(): TicketIdValueObject        { return $this->ticketId; }
-    public function previousScheduledAt(): \DateTimeImmutable { return $this->previousScheduledAt; }
-    public function newScheduledAt(): \DateTimeImmutable   { return $this->newScheduledAt; }
-    public function reason(): string                       { return $this->reason; }
-    public function requestedBy(): RescheduleRequestedBy  { return $this->requestedBy; }
-    public function rescheduledBy(): string                { return $this->rescheduledBy; }
-    public function rescheduledAt(): \DateTimeImmutable    { return $this->rescheduledAt; }
+    public function id(): TicketRescheduleIdValueObject
+    {
+        return $this->id;
+    }
+    public function ticketId(): TicketIdValueObject
+    {
+        return $this->ticketId;
+    }
+    public function previousScheduledAt(): \DateTimeImmutable
+    {
+        return $this->previousScheduledAt;
+    }
+    public function newScheduledAt(): \DateTimeImmutable
+    {
+        return $this->newScheduledAt;
+    }
+    public function reason(): string
+    {
+        return $this->reason;
+    }
+    public function requestedBy(): RescheduleRequestedBy
+    {
+        return $this->requestedBy;
+    }
+    public function rescheduledBy(): string
+    {
+        return $this->rescheduledBy;
+    }
+    public function rescheduledAt(): \DateTimeImmutable
+    {
+        return $this->rescheduledAt;
+    }
 }

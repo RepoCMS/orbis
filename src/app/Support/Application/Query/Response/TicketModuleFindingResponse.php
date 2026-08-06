@@ -22,7 +22,8 @@ final readonly class TicketModuleFindingResponse
         public string  $registeredBy,
         public string  $registeredAt,
         public array   $evidences = [],
-    ) {}
+    ) {
+    }
 
     /**
      * @return FindingEvidenceResponse[]

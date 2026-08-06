@@ -11,7 +11,8 @@ final readonly class GetCatCodeComponentsHandler
 {
     public function __construct(
         private Connection $dbal,
-    ) {}
+    ) {
+    }
 
     /**
      * Returns the clientCode, cityCode and terminalCode for the given ticket ID.
@@ -23,7 +24,7 @@ final readonly class GetCatCodeComponentsHandler
     public function __invoke(GetCatCodeComponentsQuery $query): array
     {
         $row = $this->dbal->fetchAssociative(
-            "SELECT
+            'SELECT
                 UPPER(SUBSTRING(c.trade_name, 1, 3))  AS client_code,
                 UPPER(SUBSTRING(ci.name, 1, 3))       AS city_code,
                 COALESCE(ta.id_assigned_by_client, ta.id) AS terminal_code
@@ -33,7 +34,7 @@ final readonly class GetCatCodeComponentsHandler
              JOIN terminals t ON t.id = ta.terminal_id
              JOIN clients c ON c.id = t.client_id
              JOIN cities ci ON ci.id = s.city_id
-             WHERE tk.id = :ticketId",
+             WHERE tk.id = :ticketId',
             ['ticketId' => $query->ticketId],
         );
 

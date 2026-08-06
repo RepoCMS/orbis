@@ -16,7 +16,6 @@ use App\Identity\Domain\Service\PasswordHasherInterface;
 use App\Identity\Domain\ValueObjects\AuthLogIdValueObject;
 use App\Identity\Domain\ValueObjects\PlainTokenValueObject;
 use App\Identity\Domain\ValueObjects\RawPasswordValueObject;
-use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 

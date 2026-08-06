@@ -24,13 +24,14 @@ final class IdentityDashboardMetrics
         public readonly array $usersByRole,
         public readonly array $securityEventsLast24h,
         public readonly int   $totalPermissions,
-    ) {}
+    ) {
+    }
 
     public function failedLoginsLast7d(): int
     {
         $failed = array_filter(
             $this->loginEventsLast7d,
-            static fn(array $row) => $row['event'] === 'login_failed',
+            static fn (array $row) => $row['event'] === 'login_failed',
         );
 
         return array_sum(array_column($failed, 'total'));
@@ -40,7 +41,7 @@ final class IdentityDashboardMetrics
     {
         $success = array_filter(
             $this->loginEventsLast7d,
-            static fn(array $row) => $row['event'] === 'login_success',
+            static fn (array $row) => $row['event'] === 'login_success',
         );
 
         return array_sum(array_column($success, 'total'));

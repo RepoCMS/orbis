@@ -28,20 +28,16 @@ use App\Inventory\Domain\Events\RequestRejected;
 use App\Inventory\Domain\Events\RequestSubmitted;
 use App\Inventory\Domain\Events\StockBelowThreshold;
 use App\Notification\Application\Command\SendNotification\SendNotificationCommand;
-use App\Notification\Application\Command\SendNotification\SendNotificationMessage;
 use App\Notification\Application\Service\TemplateVariableResolver;
 use App\Notification\Domain\Entities\NotificationTemplate;
 use App\Notification\Domain\Enums\EventType;
 use App\Notification\Domain\Enums\NotificationChannel;
-use App\Notification\Domain\Enums\RecipientType;
-use App\Notification\Domain\Repositories\NotificationLogRepositoryInterface;
 use App\Notification\Domain\Repositories\NotificationPreferenceRepositoryInterface;
 use App\Notification\Domain\Repositories\NotificationTemplateRepositoryInterface;
 use App\Notification\Domain\Services\ContactResolverInterface;
 use App\Notification\Domain\ValueObjects\NotificationTemplateIdValueObject;
 use App\Notification\Infrastructure\Messenger\Handler\CrossBcDomainEventHandler;
 use App\Notification\Infrastructure\Service\NotificationDispatcher;
-use App\Client\Domain\Events\ClientCreated;
 use App\Organization\Domain\Events\SpecialPeriodAutoProcessed;
 use App\Organization\Domain\Events\SpecialPeriodScheduled;
 use App\Shared\Application\Service\TransactionManagerInterface;
@@ -198,7 +194,7 @@ final class CrossBcDomainEventHandlerTest extends TestCase
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3); // IN_APP, EMAIL, WHATSAPP
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -214,7 +210,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -229,7 +225,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -247,7 +243,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -262,7 +258,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -277,7 +273,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -295,7 +291,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -310,7 +306,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -326,7 +322,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -342,7 +338,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -359,7 +355,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -377,7 +373,7 @@ $dispatcher = $this->createDispatcher($messageBus);
 
         // UserRegistered is NOT a security event (only UserAccountActivated and PasswordResetCompleted are)
         $messageBus = $this->createMessageBusExpectingDispatches(3); // IN_APP, EMAIL, WHATSAPP
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -392,7 +388,7 @@ $dispatcher = $this->createDispatcher($messageBus);
 
         // UserAccountActivated IS a security event ? only EMAIL channel
         $messageBus = $this->createMessageBusExpectingDispatches(1); // Only EMAIL
-// Only EMAIL
+        // Only EMAIL
         $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
@@ -407,7 +403,7 @@ $dispatcher = $this->createDispatcher($messageBus);
 
         // PasswordResetCompleted IS a security event ? only EMAIL channel
         $messageBus = $this->createMessageBusExpectingDispatches(1); // Only EMAIL
-// Only EMAIL
+        // Only EMAIL
         $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
@@ -424,7 +420,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -440,7 +436,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -455,7 +451,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         // PartRepaired has empty recipients, so no dispatches
         $messageBus = $this->createMock(MessageBusInterface::class);
         $messageBus->expects($this->never())->method('dispatch');
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -475,7 +471,7 @@ $dispatcher = $this->createDispatcher($messageBus);
 
         // 2 recipients � 3 channels = 6 dispatches
         $messageBus = $this->createMessageBusExpectingDispatches(6);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -491,7 +487,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -507,7 +503,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -524,7 +520,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -539,7 +535,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -556,7 +552,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -575,7 +571,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -592,7 +588,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -608,7 +604,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -621,7 +617,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));
@@ -635,7 +631,7 @@ $dispatcher = $this->createDispatcher($messageBus);
         );
 
         $messageBus = $this->createMessageBusExpectingDispatches(3);
-$dispatcher = $this->createDispatcher($messageBus);
+        $dispatcher = $this->createDispatcher($messageBus);
         $handler = $this->createHandler($dispatcher);
 
         $handler($this->makeDomainEventMessage($event));

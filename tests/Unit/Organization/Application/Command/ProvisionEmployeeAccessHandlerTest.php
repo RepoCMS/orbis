@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Organization\Application\Command;
 
-use App\Identity\Application\Command\GenerateActivationToken\GenerateActivationTokenCommand;
 use App\Identity\Application\Command\GenerateActivationToken\GenerateActivationTokenHandler;
-use App\Identity\Application\Command\RegisterUser\RegisterUserCommand;
 use App\Identity\Application\Command\RegisterUser\RegisterUserHandler;
 use App\Identity\Domain\Entities\Role;
 use App\Identity\Domain\Entities\User;
+use App\Identity\Domain\Repositories\RoleRepositoryInterface;
+use App\Identity\Domain\Repositories\UserRepositoryInterface;
+use App\Identity\Domain\Repositories\UserTokenRepositoryInterface;
 use App\Identity\Domain\Service\AccountNotifierInterface;
 use App\Identity\Domain\Service\PasswordHasherInterface;
 use App\Identity\Domain\Service\UserEmailResolverInterface;
@@ -18,26 +19,21 @@ use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Identity\Domain\ValueObjects\UsernameValueObject;
-use App\Identity\Domain\Repositories\RoleRepositoryInterface;
-use App\Identity\Domain\Repositories\UserRepositoryInterface;
-use App\Identity\Domain\Repositories\UserTokenRepositoryInterface;
-use App\Organization\Application\Command\LinkUserToEmployee\LinkUserToEmployeeCommand;
 use App\Organization\Application\Command\LinkUserToEmployee\LinkUserToEmployeeHandler;
 use App\Organization\Application\Command\ProvisionEmployeeAccess\ProvisionEmployeeAccessCommand;
-use App\Organization\Application\Service\EmployeeUserInvariantService;
 use App\Organization\Application\Command\ProvisionEmployeeAccess\ProvisionEmployeeAccessHandler;
+use App\Organization\Application\Service\EmployeeUserInvariantService;
 use App\Organization\Domain\Entities\Employee;
-use App\Organization\Domain\Enums\EmployeeProfile;
 use App\Organization\Domain\Enums\EmployeeStatus;
 use App\Organization\Domain\Events\EmployeeAccessProvisioned;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
+use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
-use PHPUnit\Framework\TestCase;
 use DateTimeImmutable;
+use PHPUnit\Framework\TestCase;
 
 final class ProvisionEmployeeAccessHandlerTest extends TestCase
 {

@@ -9,4 +9,6 @@ namespace App\Shared\Domain\Contracts;
  * La infraestructura (TimestampsSubscriber) los gestiona automáticamente.
  * El dominio no los conoce ni expone getters para ellos.
  */
-interface TimestampableInterface {}
+interface TimestampableInterface
+{
+}

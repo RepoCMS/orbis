@@ -12,7 +12,8 @@ final readonly class UpdateQuickTemplateHandler
 {
     public function __construct(
         private QuickTemplateRepositoryInterface $templateRepo,
-    ) {}
+    ) {
+    }
 
     public function __invoke(UpdateQuickTemplateCommand $command): void
     {

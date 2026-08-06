@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Support\Presentation\Http;
 
 use App\Identity\Infrastructure\Security\SymfonySecurityUser;
+use App\Shared\Exceptions\DomainException;
 use App\Support\Application\Command\AddEvidence\AddEvidenceCommand;
 use App\Support\Application\Command\AddEvidence\AddEvidenceHandler;
 use App\Support\Application\Command\ApproveReopenTicket\ApproveReopenTicketCommand;
@@ -43,10 +44,10 @@ use App\Support\Application\Command\SoftDeleteTicket\SoftDeleteTicketCommand;
 use App\Support\Application\Command\SoftDeleteTicket\SoftDeleteTicketHandler;
 use App\Support\Application\Command\StartAssistanceFromWaiting\StartAssistanceFromWaitingCommand;
 use App\Support\Application\Command\StartAssistanceFromWaiting\StartAssistanceFromWaitingHandler;
-use App\Support\Application\Command\StartWaiting\StartWaitingCommand;
-use App\Support\Application\Command\StartWaiting\StartWaitingHandler;
 use App\Support\Application\Command\StartOutwardJourney\StartOutwardJourneyCommand;
 use App\Support\Application\Command\StartOutwardJourney\StartOutwardJourneyHandler;
+use App\Support\Application\Command\StartWaiting\StartWaitingCommand;
+use App\Support\Application\Command\StartWaiting\StartWaitingHandler;
 use App\Support\Application\Command\UpdateTicket\UpdateTicketCommand;
 use App\Support\Application\Command\UpdateTicket\UpdateTicketHandler;
 use App\Support\Application\Query\GetTicketDetail\GetTicketDetailHandler;
@@ -58,7 +59,6 @@ use App\Support\Application\Query\ListTickets\ListTicketsQuery;
 use App\Support\Domain\Enums\JourneyType;
 use App\Support\Domain\Enums\RescheduleRequestedBy;
 use App\Support\Domain\Enums\ServiceType;
-use App\Shared\Exceptions\DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -111,7 +111,7 @@ final class ApiSupportTicketController extends AbstractController
             $serviceType = ServiceType::from((string) ($payload['serviceType'] ?? ''));
         } catch (\ValueError) {
             return $this->json(
-                ['error' => 'El campo serviceType no es válido. Valores permitidos: ' . implode(', ', array_map(fn($c) => $c->value, ServiceType::cases()))],
+                ['error' => 'El campo serviceType no es válido. Valores permitidos: ' . implode(', ', array_map(fn ($c) => $c->value, ServiceType::cases()))],
                 Response::HTTP_UNPROCESSABLE_ENTITY,
             );
         }

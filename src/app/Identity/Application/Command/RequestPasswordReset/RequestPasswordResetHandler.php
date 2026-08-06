@@ -17,7 +17,6 @@ use App\Identity\Domain\Service\ForgotPasswordEmailSenderInterface;
 use App\Identity\Domain\Service\UserByEmailResolverInterface;
 use App\Identity\Domain\Service\UserEmailResolverInterface;
 use App\Identity\Domain\ValueObjects\AuthLogIdValueObject;
-use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Identity\Domain\ValueObjects\UserTokenIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;

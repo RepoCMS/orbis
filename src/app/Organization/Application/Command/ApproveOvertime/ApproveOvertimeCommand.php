@@ -9,5 +9,6 @@ final readonly class ApproveOvertimeCommand
     public function __construct(
         public string $overtimeRecordId,
         public string $reviewedBy,
-    ) {}
+    ) {
+    }
 }

@@ -9,5 +9,6 @@ final readonly class ApproveReopenTicketCommand
     public function __construct(
         public string $ticketId,
         public string $approvedBy,
-    ) {}
+    ) {
+    }
 }

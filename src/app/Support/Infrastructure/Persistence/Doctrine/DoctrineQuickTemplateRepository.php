@@ -13,7 +13,8 @@ final class DoctrineQuickTemplateRepository implements QuickTemplateRepositoryIn
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function findById(QuickTemplateIdValueObject $id): ?QuickTemplate
     {

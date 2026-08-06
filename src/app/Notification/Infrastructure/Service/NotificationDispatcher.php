@@ -27,7 +27,8 @@ final readonly class NotificationDispatcher
         private ContactResolverInterface $contactResolver,
         private TemplateVariableResolver $templateResolver,
         private MessageBusInterface $messageBus,
-    ) {}
+    ) {
+    }
 
     public function dispatchForEvent(
         EventType $eventType,

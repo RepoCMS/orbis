@@ -8,5 +8,6 @@ final readonly class SubmitExpenseCommand
 {
     public function __construct(
         public string $expenseId,
-    ) {}
+    ) {
+    }
 }

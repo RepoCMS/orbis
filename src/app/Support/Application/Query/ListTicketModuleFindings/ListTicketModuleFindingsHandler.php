@@ -12,7 +12,8 @@ final readonly class ListTicketModuleFindingsHandler
 {
     public function __construct(
         private TicketModuleFindingRepositoryInterface $findingRepo,
-    ) {}
+    ) {
+    }
 
     /**
      * @return TicketModuleFindingResponse[]

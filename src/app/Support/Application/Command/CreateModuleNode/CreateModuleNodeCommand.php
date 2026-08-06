@@ -15,5 +15,6 @@ final readonly class CreateModuleNodeCommand
         public string $label,
         public array $components = [],
         public ?string $parentId = null,
-    ) {}
+    ) {
+    }
 }

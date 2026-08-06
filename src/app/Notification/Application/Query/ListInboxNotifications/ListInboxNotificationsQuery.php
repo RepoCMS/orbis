@@ -11,5 +11,6 @@ final readonly class ListInboxNotificationsQuery
         public bool $unreadOnly = false,
         public int $page = 1,
         public int $limit = 20,
-    ) {}
+    ) {
+    }
 }

@@ -12,5 +12,6 @@ final readonly class UpdateTicketCommand
         public string       $ticketId,
         public ?string      $description = null,
         public ?ServiceType $serviceType = null,
-    ) {}
+    ) {
+    }
 }

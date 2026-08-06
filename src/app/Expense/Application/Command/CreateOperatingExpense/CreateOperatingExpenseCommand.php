@@ -13,5 +13,6 @@ final readonly class CreateOperatingExpenseCommand
         public string $endDate,
         public ?string $cashAdvanceId = null,
         public array $ticketIds = [],
-    ) {}
+    ) {
+    }
 }

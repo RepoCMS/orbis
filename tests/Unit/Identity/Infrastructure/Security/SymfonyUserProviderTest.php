@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Identity\Infrastructure\Security;
 
-use App\Identity\Domain\Entities\Permission;
 use App\Identity\Domain\Entities\Role;
 use App\Identity\Domain\Entities\User;
-use App\Identity\Domain\Enums\UserStatus;
 use App\Identity\Domain\Repositories\PermissionRepositoryInterface;
 use App\Identity\Domain\Repositories\RoleRepositoryInterface;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;

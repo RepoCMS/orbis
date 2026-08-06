@@ -17,7 +17,8 @@ final class TicketEvidence
         private string                      $uploadedBy,
         private \DateTimeImmutable          $uploadedAt,
         private EvidenceVisibility          $visibility = EvidenceVisibility::ALL,
-    ) {}
+    ) {
+    }
 
     public static function upload(
         TicketEvidenceIdValueObject $id,
@@ -36,10 +37,28 @@ final class TicketEvidence
         return new self($id, $ticketId, $filePath, $uploadedBy, new \DateTimeImmutable(), $visibility ?? EvidenceVisibility::ALL);
     }
 
-    public function id(): TicketEvidenceIdValueObject { return $this->id; }
-    public function ticketId(): TicketIdValueObject    { return $this->ticketId; }
-    public function filePath(): string                 { return $this->filePath; }
-    public function uploadedBy(): string               { return $this->uploadedBy; }
-    public function uploadedAt(): \DateTimeImmutable   { return $this->uploadedAt; }
-    public function visibility(): EvidenceVisibility   { return $this->visibility; }
+    public function id(): TicketEvidenceIdValueObject
+    {
+        return $this->id;
+    }
+    public function ticketId(): TicketIdValueObject
+    {
+        return $this->ticketId;
+    }
+    public function filePath(): string
+    {
+        return $this->filePath;
+    }
+    public function uploadedBy(): string
+    {
+        return $this->uploadedBy;
+    }
+    public function uploadedAt(): \DateTimeImmutable
+    {
+        return $this->uploadedAt;
+    }
+    public function visibility(): EvidenceVisibility
+    {
+        return $this->visibility;
+    }
 }

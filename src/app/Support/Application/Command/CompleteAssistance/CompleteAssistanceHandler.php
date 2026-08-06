@@ -11,7 +11,8 @@ final readonly class CompleteAssistanceHandler
 {
     public function __construct(
         private TicketRepositoryInterface $ticketRepo,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CompleteAssistanceCommand $command): void
     {

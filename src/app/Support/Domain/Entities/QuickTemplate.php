@@ -88,6 +88,7 @@ final class QuickTemplate
             if ((string) $item->id() === (string) $itemId) {
                 $this->items->removeElement($item);
                 $this->markAsUpdated();
+
                 return;
             }
         }
@@ -117,6 +118,7 @@ final class QuickTemplate
                     sortOrder:   $sortOrder,
                 );
                 $this->markAsUpdated();
+
                 return;
             }
         }
@@ -157,15 +159,42 @@ final class QuickTemplate
         $this->updatedAt = new \DateTimeImmutable();
     }
 
-    public function id(): QuickTemplateIdValueObject    { return $this->id; }
-    public function modelId(): string                    { return $this->modelId; }
-    public function name(): string                       { return $this->name; }
-    public function description(): ?string               { return $this->description; }
-    public function isActive(): bool                     { return $this->isActive; }
-    public function createdBy(): string                  { return $this->createdBy; }
-    public function createdAt(): \DateTimeImmutable      { return $this->createdAt; }
-    public function updatedAt(): ?\DateTimeImmutable     { return $this->updatedAt; }
+    public function id(): QuickTemplateIdValueObject
+    {
+        return $this->id;
+    }
+    public function modelId(): string
+    {
+        return $this->modelId;
+    }
+    public function name(): string
+    {
+        return $this->name;
+    }
+    public function description(): ?string
+    {
+        return $this->description;
+    }
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+    public function createdBy(): string
+    {
+        return $this->createdBy;
+    }
+    public function createdAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    public function updatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
 
     /** @return QuickTemplateItem[] */
-    public function items(): array                       { return $this->items->toArray(); }
+    public function items(): array
+    {
+        return $this->items->toArray();
+    }
 }

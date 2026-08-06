@@ -24,7 +24,8 @@ final readonly class UserContactResolver implements ContactResolverInterface
         private EmployeeRepositoryInterface $employeeRepository,
         private ContactRepositoryInterface $contactRepository,
         private UserRepositoryInterface $userRepository,
-    ) {}
+    ) {
+    }
 
     public function resolve(string $recipientType, string $recipientId): array
     {

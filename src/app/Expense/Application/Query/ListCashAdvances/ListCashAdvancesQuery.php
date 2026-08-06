@@ -10,5 +10,6 @@ final readonly class ListCashAdvancesQuery
         public ?string $employeeId = null,
         public ?string $status = null,
         public ?int $daysOverdue = null,
-    ) {}
+    ) {
+    }
 }

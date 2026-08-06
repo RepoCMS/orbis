@@ -21,7 +21,8 @@ final readonly class RegisterOvertimeHandler
         private OvertimeRecordRepositoryInterface $overtimeRecordRepository,
         private IdGeneratorInterface $idGenerator,
         private DomainEventPublisherInterface $publisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(RegisterOvertimeCommand $command): string
     {

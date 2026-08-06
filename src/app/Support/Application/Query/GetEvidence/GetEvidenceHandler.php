@@ -13,7 +13,8 @@ final readonly class GetEvidenceHandler
 {
     public function __construct(
         private TicketEvidenceRepositoryInterface $evidenceRepo,
-    ) {}
+    ) {
+    }
 
     public function __invoke(GetEvidenceQuery $query): TicketEvidenceResponse
     {

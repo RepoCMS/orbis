@@ -74,7 +74,8 @@ final class CreateRoleHandlerTest extends TestCase
         $permissionRepo->method('findById')->willReturn(null);
 
         $handler = new CreateRoleHandler(
-            $roleRepo, $permissionRepo,
+            $roleRepo,
+            $permissionRepo,
             $this->createMock(IdGeneratorInterface::class),
         );
 

@@ -85,6 +85,7 @@ final class CashAdvance implements TimestampableInterface
     {
         $events = $this->domainEvents;
         $this->domainEvents = [];
+
         return $events;
     }
 

@@ -10,5 +10,6 @@ final readonly class CancelTicketCommand
         public string $ticketId,
         public string $reason,
         public string $cancelledBy,
-    ) {}
+    ) {
+    }
 }

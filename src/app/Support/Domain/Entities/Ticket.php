@@ -76,7 +76,8 @@ final class Ticket
         private ?\DateTimeImmutable  $reopenedAt = null,
         private ?string              $reopenedReason = null,
         private ?string              $parentTicketId = null,
-    ) {}
+    ) {
+    }
 
     // ─────────────────────────────────────────────────────────────────────────
     // Factory
@@ -472,49 +473,136 @@ final class Ticket
     // Accessors
     // ─────────────────────────────────────────────────────────────────────────
 
-    public function id(): TicketIdValueObject            { return $this->id; }
-    public function ticketNumber(): string               { return $this->ticketNumber; }
-    public function clientId(): string                   { return $this->clientId; }
-    public function terminalAssignmentId(): string       { return $this->terminalAssignmentId; }
-    public function serviceType(): ServiceType           { return $this->serviceType; }
-    public function description(): string                { return $this->description; }
-    public function status(): TicketStatus               { return $this->status; }
-    public function createdBy(): string                  { return $this->createdBy; }
-    public function scheduledAt(): ?\DateTimeImmutable   { return $this->scheduledAt; }
-    public function slaDeadlineAt(): ?\DateTimeImmutable { return $this->slaDeadlineAt; }
-    public function inTransitOutAt(): ?\DateTimeImmutable  { return $this->inTransitOutAt; }
-    public function waitingStartAt(): ?\DateTimeImmutable  { return $this->waitingStartAt; }
-    public function assistanceStartAt(): ?\DateTimeImmutable { return $this->assistanceStartAt; }
-    public function inTransitBackAt(): ?\DateTimeImmutable { return $this->inTransitBackAt; }
-    public function closedAt(): ?\DateTimeImmutable      { return $this->closedAt; }
-    public function cancelledAt(): ?\DateTimeImmutable   { return $this->cancelledAt; }
-    public function cancellationReason(): ?string        { return $this->cancellationReason; }
-    public function deletedAt(): ?\DateTimeImmutable     { return $this->deletedAt; }
-    public function reopenedAt(): ?\DateTimeImmutable    { return $this->reopenedAt; }
-    public function reopenedReason(): ?string            { return $this->reopenedReason; }
-    public function parentTicketId(): ?string             { return $this->parentTicketId; }
+    public function id(): TicketIdValueObject
+    {
+        return $this->id;
+    }
+    public function ticketNumber(): string
+    {
+        return $this->ticketNumber;
+    }
+    public function clientId(): string
+    {
+        return $this->clientId;
+    }
+    public function terminalAssignmentId(): string
+    {
+        return $this->terminalAssignmentId;
+    }
+    public function serviceType(): ServiceType
+    {
+        return $this->serviceType;
+    }
+    public function description(): string
+    {
+        return $this->description;
+    }
+    public function status(): TicketStatus
+    {
+        return $this->status;
+    }
+    public function createdBy(): string
+    {
+        return $this->createdBy;
+    }
+    public function scheduledAt(): ?\DateTimeImmutable
+    {
+        return $this->scheduledAt;
+    }
+    public function slaDeadlineAt(): ?\DateTimeImmutable
+    {
+        return $this->slaDeadlineAt;
+    }
+    public function inTransitOutAt(): ?\DateTimeImmutable
+    {
+        return $this->inTransitOutAt;
+    }
+    public function waitingStartAt(): ?\DateTimeImmutable
+    {
+        return $this->waitingStartAt;
+    }
+    public function assistanceStartAt(): ?\DateTimeImmutable
+    {
+        return $this->assistanceStartAt;
+    }
+    public function inTransitBackAt(): ?\DateTimeImmutable
+    {
+        return $this->inTransitBackAt;
+    }
+    public function closedAt(): ?\DateTimeImmutable
+    {
+        return $this->closedAt;
+    }
+    public function cancelledAt(): ?\DateTimeImmutable
+    {
+        return $this->cancelledAt;
+    }
+    public function cancellationReason(): ?string
+    {
+        return $this->cancellationReason;
+    }
+    public function deletedAt(): ?\DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+    public function reopenedAt(): ?\DateTimeImmutable
+    {
+        return $this->reopenedAt;
+    }
+    public function reopenedReason(): ?string
+    {
+        return $this->reopenedReason;
+    }
+    public function parentTicketId(): ?string
+    {
+        return $this->parentTicketId;
+    }
 
     /** @return TicketAssignment[] */
-    public function assignments(): array  { return $this->assignments; }
+    public function assignments(): array
+    {
+        return $this->assignments;
+    }
 
     /** @return Journey[] */
-    public function journeys(): array     { return $this->journeys; }
+    public function journeys(): array
+    {
+        return $this->journeys;
+    }
 
     /** @return TicketPause[] */
-    public function pauses(): array       { return $this->pauses; }
+    public function pauses(): array
+    {
+        return $this->pauses;
+    }
 
     /** @return TicketReschedule[] */
-    public function reschedules(): array  { return $this->reschedules; }
+    public function reschedules(): array
+    {
+        return $this->reschedules;
+    }
 
     /** @return TicketEvidence[] */
-    public function evidences(): array    { return $this->evidences; }
+    public function evidences(): array
+    {
+        return $this->evidences;
+    }
 
-    public function finding(): ?TicketFinding { return $this->finding; }
+    public function finding(): ?TicketFinding
+    {
+        return $this->finding;
+    }
 
     /** @return TicketModuleFinding[] */
-    public function moduleFindings(): array { return $this->moduleFindings; }
+    public function moduleFindings(): array
+    {
+        return $this->moduleFindings;
+    }
 
-    public function isDeleted(): bool { return $this->deletedAt !== null; }
+    public function isDeleted(): bool
+    {
+        return $this->deletedAt !== null;
+    }
 
     // ─────────────────────────────────────────────────────────────────────────
     // Domain events
@@ -525,6 +613,7 @@ final class Ticket
     {
         $events            = $this->domainEvents;
         $this->domainEvents = [];
+
         return $events;
     }
 
@@ -557,6 +646,7 @@ final class Ticket
                 return $pause;
             }
         }
+
         return null;
     }
 

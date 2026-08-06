@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Support\Presentation\Http;
 
 use App\Identity\Infrastructure\Security\SymfonySecurityUser;
-use App\Shared\Exceptions\ApplicationException;
 use App\Shared\Exceptions\DomainException;
 use App\Support\Application\Command\CreateRmaRecord\CreateRmaRecordCommand;
 use App\Support\Application\Command\CreateRmaRecord\CreateRmaRecordHandler;

@@ -10,7 +10,8 @@ final readonly class IdentityDashboardMetricsHandler
 {
     public function __construct(
         private Connection $connection,
-    ) {}
+    ) {
+    }
 
     public function __invoke(IdentityDashboardMetricsQuery $query): IdentityDashboardMetrics
     {
@@ -36,30 +37,35 @@ final readonly class IdentityDashboardMetricsHandler
     private function countUsers(): int
     {
         $sql = 'SELECT COUNT(*) FROM identity_users WHERE deleted_at IS NULL';
+
         return (int) $this->connection->fetchOne($sql);
     }
 
     private function countUsersByStatus(string $status): int
     {
         $sql = 'SELECT COUNT(*) FROM identity_users WHERE status = :status AND deleted_at IS NULL';
+
         return (int) $this->connection->fetchOne($sql, ['status' => $status]);
     }
 
     private function countLockedUsers(): int
     {
         $sql = 'SELECT COUNT(*) FROM identity_users WHERE locked_until > NOW() AND deleted_at IS NULL';
+
         return (int) $this->connection->fetchOne($sql);
     }
 
     private function countMfaEnabled(): int
     {
         $sql = 'SELECT COUNT(*) FROM identity_user_mfa_configs WHERE is_enabled = 1';
+
         return (int) $this->connection->fetchOne($sql);
     }
 
     private function countActiveSessions(): int
     {
         $sql = 'SELECT COUNT(*) FROM identity_refresh_tokens WHERE expires_at > NOW() AND revoked_at IS NULL';
+
         return (int) $this->connection->fetchOne($sql);
     }
 
@@ -73,6 +79,7 @@ final readonly class IdentityDashboardMetricsHandler
             GROUP BY status
             ORDER BY total DESC
         ';
+
         return $this->connection->fetchAllAssociative($sql);
     }
 
@@ -86,6 +93,7 @@ final readonly class IdentityDashboardMetricsHandler
               AND occurred_at >= DATE_SUB(NOW(), INTERVAL :days DAY)
             GROUP BY event
         ';
+
         return $this->connection->fetchAllAssociative($sql, [
             'login_success' => 'login_success',
             'login_failed' => 'login_failed',
@@ -104,6 +112,7 @@ final readonly class IdentityDashboardMetricsHandler
             GROUP BY r.name
             ORDER BY total DESC
         ';
+
         return $this->connection->fetchAllAssociative($sql);
     }
 
@@ -118,6 +127,7 @@ final readonly class IdentityDashboardMetricsHandler
             GROUP BY DATE(occurred_at)
             ORDER BY date DESC
         ';
+
         return $this->connection->fetchAllAssociative($sql, [
             'login_success' => 'login_success',
             'login_failed' => 'login_failed',
@@ -127,6 +137,7 @@ final readonly class IdentityDashboardMetricsHandler
     private function countPermissions(): int
     {
         $sql = 'SELECT COUNT(*) FROM identity_permissions WHERE deleted_at IS NULL';
+
         return (int) $this->connection->fetchOne($sql);
     }
 }

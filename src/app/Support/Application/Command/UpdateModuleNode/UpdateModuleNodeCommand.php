@@ -13,5 +13,6 @@ final readonly class UpdateModuleNodeCommand
         public string $id,
         public string $label,
         public array $components = [],
-    ) {}
+    ) {
+    }
 }

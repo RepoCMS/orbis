@@ -18,7 +18,8 @@ final readonly class ModuleTreeResponse
         public string $label,
         public array  $children = [],
         public array  $components = [],
-    ) {}
+    ) {
+    }
 
     /**
      * @return ModuleTreeResponse[]

@@ -21,7 +21,8 @@ final class ModelPart
         private ?string $parentPartNumber,
         private DateTimeImmutable $createdAt,
         private ?DateTimeImmutable $updatedAt,
-    ) {}
+    ) {
+    }
 
     public static function register(
         ModelPartIdValueObject $id,
@@ -56,15 +57,42 @@ final class ModelPart
         );
     }
 
-    public function id(): ModelPartIdValueObject { return $this->id; }
-    public function model(): string { return $this->model; }
-    public function partName(): string { return $this->partName; }
-    public function partNumber(): string { return $this->partNumber; }
-    public function level(): int { return $this->level; }
-    public function parentPartNumber(): ?string { return $this->parentPartNumber; }
-    public function createdAt(): DateTimeImmutable { return $this->createdAt; }
-    public function updatedAt(): ?DateTimeImmutable { return $this->updatedAt; }
-    public function deletedAt(): ?DateTimeImmutable { return $this->deletedAt; }
+    public function id(): ModelPartIdValueObject
+    {
+        return $this->id;
+    }
+    public function model(): string
+    {
+        return $this->model;
+    }
+    public function partName(): string
+    {
+        return $this->partName;
+    }
+    public function partNumber(): string
+    {
+        return $this->partNumber;
+    }
+    public function level(): int
+    {
+        return $this->level;
+    }
+    public function parentPartNumber(): ?string
+    {
+        return $this->parentPartNumber;
+    }
+    public function createdAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    public function updatedAt(): ?DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+    public function deletedAt(): ?DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
 
     public function softDelete(): void
     {

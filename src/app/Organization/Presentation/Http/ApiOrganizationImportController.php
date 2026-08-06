@@ -18,7 +18,8 @@ final class ApiOrganizationImportController extends AbstractController
 {
     public function __construct(
         private readonly ImportEmployeesHandler $handler,
-    ) {}
+    ) {
+    }
 
     #[Route('/employees', name: 'organization_import_employees', methods: ['POST'])]
     #[IsGranted('organization.import')]

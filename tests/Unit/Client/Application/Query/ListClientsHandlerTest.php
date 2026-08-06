@@ -8,12 +8,12 @@ use App\Client\Application\Query\ListClients\ListClientsHandler;
 use App\Client\Application\Query\ListClients\ListClientsQuery;
 use App\Client\Application\Query\Response\ClientResponse;
 use App\Client\Domain\Entities\Client;
+use App\Client\Domain\Enums\ClientStatus;
 use App\Client\Domain\Repositories\ClientRepositoryInterface;
-use PHPUnit\Framework\TestCase;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
 use App\Client\Domain\ValueObjects\ClientNameValueObject;
 use App\Client\Domain\ValueObjects\ClientRucValueObject;
-use App\Client\Domain\Enums\ClientStatus;
+use PHPUnit\Framework\TestCase;
 
 final class ListClientsHandlerTest extends TestCase
 {

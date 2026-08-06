@@ -16,7 +16,6 @@ use App\Expense\Domain\Exceptions\ExpenseHasRejectedItemsException;
 use App\Expense\Domain\Exceptions\ExpenseNotEditableException;
 use App\Expense\Domain\Exceptions\ExpenseNotSubmittedException;
 use App\Expense\Domain\Exceptions\MissingEvidenceException;
-use App\Expense\Domain\ValueObjects\ExpenseItemIdValueObject;
 use App\Expense\Domain\ValueObjects\OperatingExpenseIdValueObject;
 use App\Shared\Domain\Contracts\TimestampableInterface;
 use App\Shared\Domain\Event\DomainEvent;
@@ -95,6 +94,7 @@ final class OperatingExpense implements TimestampableInterface
     {
         $events = $this->domainEvents;
         $this->domainEvents = [];
+
         return $events;
     }
 
@@ -408,7 +408,7 @@ final class OperatingExpense implements TimestampableInterface
 
     public function totalExpenses(): float
     {
-        return array_sum(array_map(fn(ExpenseItem $item) => $item->amount(), $this->items->toArray()));
+        return array_sum(array_map(fn (ExpenseItem $item) => $item->amount(), $this->items->toArray()));
     }
 
     public function updateDetails(string $reason, DateTimeImmutable $startDate, DateTimeImmutable $endDate): void
@@ -456,6 +456,7 @@ final class OperatingExpense implements TimestampableInterface
                 return $item;
             }
         }
+
         return null;
     }
 

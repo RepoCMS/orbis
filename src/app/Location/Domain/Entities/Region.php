@@ -11,7 +11,8 @@ final class Region
     private function __construct(
         private RegionIdValueObject $id,
         private string $name,
-    ) {}
+    ) {
+    }
 
     public static function reconstitute(string $id, string $name): self
     {
@@ -21,6 +22,12 @@ final class Region
         );
     }
 
-    public function id(): RegionIdValueObject { return $this->id; }
-    public function name(): string { return $this->name; }
+    public function id(): RegionIdValueObject
+    {
+        return $this->id;
+    }
+    public function name(): string
+    {
+        return $this->name;
+    }
 }

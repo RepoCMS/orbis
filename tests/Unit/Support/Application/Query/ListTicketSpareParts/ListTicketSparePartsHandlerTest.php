@@ -9,8 +9,8 @@ use App\Organization\Domain\Enums\EmployeeProfile;
 use App\Organization\Domain\Enums\EmployeeStatus;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
+use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Support\Application\Query\ListTicketSpareParts\ListTicketSparePartsHandler;
 use App\Support\Application\Query\ListTicketSpareParts\ListTicketSparePartsQuery;
 use App\Support\Application\Service\SparePartViewScopeResolver;
@@ -31,6 +31,7 @@ final class ListTicketSparePartsHandlerTest extends TestCase
     {
         $employeeRepo = $this->createMock(EmployeeRepositoryInterface::class);
         $locationRepo = $this->createMock(LocationRepositoryInterface::class);
+
         return new SparePartViewScopeResolver($employeeRepo, $locationRepo);
     }
 
@@ -59,7 +60,7 @@ final class ListTicketSparePartsHandlerTest extends TestCase
     private const TICKET_ID   = '01HZ0000000000000000000001';
     private const TICKET_ID_2 = '01HZ0000000000000000000002';
     private const FINDING_ID  = '01HZ0000000000000000000003';
-    private const FINDING_ID_2= '01HZ0000000000000000000004';
+    private const FINDING_ID_2 = '01HZ0000000000000000000004';
     private const CLIENT_ID   = '01HZ0000000000000000000005';
     private const TERMINAL_ID = '01HZ0000000000000000000006';
     private const CREATED_BY  = '01HZ0000000000000000000007';
@@ -176,7 +177,7 @@ final class ListTicketSparePartsHandlerTest extends TestCase
 
         $sparePartRepo = $this->createMock(TicketSparePartRepositoryInterface::class);
         $sparePartRepo->method('findByTicket')->willReturnCallback(
-            fn(TicketIdValueObject $id) => match ((string) $id) {
+            fn (TicketIdValueObject $id) => match ((string) $id) {
                 self::TICKET_ID => [$sparePart1],
                 self::TICKET_ID_2 => [$sparePart2],
                 default => [],

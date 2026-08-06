@@ -10,8 +10,8 @@ use App\Client\Application\Query\FindSiteById\FindSiteByIdQuery;
 use App\Client\Application\Query\Response\SiteResponse;
 use App\Client\Domain\Entities\Site;
 use App\Client\Domain\Repositories\SiteRepositoryInterface;
-use App\Client\Domain\ValueObjects\SiteIdValueObject;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
+use App\Client\Domain\ValueObjects\SiteIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use PHPUnit\Framework\TestCase;
 

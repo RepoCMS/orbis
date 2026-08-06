@@ -12,7 +12,8 @@ final readonly class DeleteModuleNodeHandler
 {
     public function __construct(
         private ModuleNodeRepositoryInterface $repository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(DeleteModuleNodeCommand $command): void
     {

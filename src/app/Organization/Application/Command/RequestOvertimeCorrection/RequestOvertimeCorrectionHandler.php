@@ -15,7 +15,8 @@ final readonly class RequestOvertimeCorrectionHandler
     public function __construct(
         private OvertimeRecordRepositoryInterface $overtimeRecordRepository,
         private DomainEventPublisherInterface $publisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(RequestOvertimeCorrectionCommand $command): void
     {

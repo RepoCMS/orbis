@@ -13,7 +13,8 @@ final readonly class TicketAssignmentResponse
         public bool    $isInCharge,
         public ?string $assignedAt,
         public ?string $reassignedFrom,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(\App\Support\Domain\Entities\TicketAssignment $assignment): self
     {

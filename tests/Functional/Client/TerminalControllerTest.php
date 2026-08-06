@@ -63,7 +63,10 @@ final class TerminalControllerTest extends FunctionalTestCase
         $client = static::createClient();
         $client->request('GET', '/clients/bad-id/terminals/99X');
         $response = $client->getResponse();
-        self::assertNotSame(500, $response->getStatusCode(),
-            \sprintf('Route should not return 500: %s', $response->getContent() ?: '(empty)'));
+        self::assertNotSame(
+            500,
+            $response->getStatusCode(),
+            \sprintf('Route should not return 500: %s', $response->getContent() ?: '(empty)')
+        );
     }
 }

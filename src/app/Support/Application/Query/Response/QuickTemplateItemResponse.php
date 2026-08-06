@@ -22,7 +22,8 @@ final readonly class QuickTemplateItemResponse
         public int     $sortOrder,
         public string  $createdAt,
         public ?int    $availableStock = null,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(QuickTemplateItem $item, ?int $availableStock = null): self
     {

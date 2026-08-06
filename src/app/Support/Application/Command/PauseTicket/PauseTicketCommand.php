@@ -10,5 +10,6 @@ final readonly class PauseTicketCommand
         public string $ticketId,
         public string $reason,
         public string $pausedBy,
-    ) {}
+    ) {
+    }
 }

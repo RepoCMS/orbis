@@ -19,7 +19,8 @@ final readonly class CreateQuickTemplateHandler
         private QuickTemplateRepositoryInterface $templateRepo,
         private TerminalModelRepositoryInterface $terminalModelRepo,
         private IdGeneratorInterface $idGenerator,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CreateQuickTemplateCommand $command): string
     {

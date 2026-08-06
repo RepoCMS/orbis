@@ -13,5 +13,6 @@ final readonly class RegisterOvertimeCommand
         public string $endTime,
         public string $reason,
         public ?string $evidenceUrl = null,
-    ) {}
+    ) {
+    }
 }

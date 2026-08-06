@@ -19,7 +19,8 @@ final readonly class RescheduleTicketHandler
         private TicketRescheduleRepositoryInterface $rescheduleRepo,
         private IdGeneratorInterface                $idGenerator,
         private DomainEventPublisherInterface       $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(RescheduleTicketCommand $command): void
     {

@@ -26,7 +26,8 @@ final readonly class ApproveVacationRequestHandler
         private EmployeeRepositoryInterface $employeeRepository,
         private IdGeneratorInterface $idGenerator,
         private DomainEventPublisherInterface $publisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ApproveVacationRequestCommand $command): void
     {

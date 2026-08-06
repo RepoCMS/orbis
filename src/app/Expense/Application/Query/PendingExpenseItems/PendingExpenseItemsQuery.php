@@ -8,5 +8,6 @@ final readonly class PendingExpenseItemsQuery
 {
     public function __construct(
         public ?string $employeeId = null,
-    ) {}
+    ) {
+    }
 }

@@ -19,7 +19,8 @@ final class NotificationPreference
         private NotificationChannel $channel,
         private EventType $eventType,
         private bool $isEnabled = true,
-    ) {}
+    ) {
+    }
 
     public static function create(
         NotificationPreferenceIdValueObject $id,

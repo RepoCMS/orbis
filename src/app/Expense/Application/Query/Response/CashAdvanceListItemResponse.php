@@ -22,7 +22,8 @@ final class CashAdvanceListItemResponse
         public readonly string $status,
         public readonly string $statusLabel,
         public readonly int $daysSinceGiven,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(CashAdvance $cashAdvance): self
     {

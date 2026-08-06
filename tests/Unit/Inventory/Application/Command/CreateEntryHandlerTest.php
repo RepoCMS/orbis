@@ -9,7 +9,6 @@ use App\Inventory\Application\Command\CreateEntry\CreateEntryHandler;
 use App\Inventory\Domain\Entities\Entry;
 use App\Inventory\Domain\Enums\EntryStatus;
 use App\Inventory\Domain\Repositories\EntryRepositoryInterface;
-use App\Inventory\Domain\ValueObjects\EntryIdValueObject;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\TestCase;
 

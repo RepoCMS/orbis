@@ -12,7 +12,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrineCityRepository implements CityRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager) {}
+    public function __construct(private readonly EntityManagerInterface $entityManager)
+    {
+    }
 
     public function findById(CityIdValueObject $id): ?City
     {
@@ -62,7 +64,9 @@ final class DoctrineCityRepository implements CityRepositoryInterface
     public function delete(CityIdValueObject $id): void
     {
         $city = $this->findById($id);
-        if ($city === null) { return; }
+        if ($city === null) {
+            return;
+        }
         $this->entityManager->remove($city);
         $this->entityManager->flush();
     }

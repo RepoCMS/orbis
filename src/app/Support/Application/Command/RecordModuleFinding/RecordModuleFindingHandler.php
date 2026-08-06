@@ -22,7 +22,8 @@ final readonly class RecordModuleFindingHandler
         private TicketModuleFindingRepositoryInterface   $findingRepo,
         private IdGeneratorInterface                     $idGenerator,
         private DomainEventPublisherInterface            $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(RecordModuleFindingCommand $command): string
     {

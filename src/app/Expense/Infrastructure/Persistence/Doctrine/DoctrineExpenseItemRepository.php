@@ -23,6 +23,7 @@ final readonly class DoctrineExpenseItemRepository implements ExpenseItemReposit
         if ($item !== null && $item->isDeleted()) {
             return null;
         }
+
         return $item;
     }
 

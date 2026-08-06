@@ -12,7 +12,8 @@ final readonly class TicketPendingSparePartResponse
         public string  $productCode,
         public int     $quantity,
         public ?string $notes,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(\App\Support\Domain\Entities\TicketPendingSparePart $pendingSparePart): self
     {

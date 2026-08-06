@@ -12,7 +12,6 @@ use App\Inventory\Domain\Repositories\NonserializedStockRepositoryInterface;
 use App\Inventory\Domain\Repositories\SerializedStockRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\MovementIdValueObject;
 use App\Inventory\Domain\ValueObjects\NonserializedStockIdValueObject;
-use App\Inventory\Domain\ValueObjects\SerializedStockIdValueObject;
 use App\Shared\Application\Service\TransactionManagerInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use App\Shared\Exceptions\ApplicationException;

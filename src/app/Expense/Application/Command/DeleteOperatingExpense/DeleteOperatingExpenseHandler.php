@@ -13,7 +13,8 @@ final readonly class DeleteOperatingExpenseHandler
     public function __construct(
         private OperatingExpenseRepositoryInterface $expenseRepository,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(DeleteOperatingExpenseCommand $command): void
     {

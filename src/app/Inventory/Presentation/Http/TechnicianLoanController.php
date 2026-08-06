@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Inventory\Presentation\Http;
 
+use App\Identity\Infrastructure\Security\SymfonySecurityUser;
 use App\Inventory\Application\Command\ApproveTechnicianLoan\ApproveTechnicianLoanCommand;
 use App\Inventory\Application\Command\ApproveTechnicianLoan\ApproveTechnicianLoanHandler;
 use App\Inventory\Application\Command\CancelTechnicianLoan\CancelTechnicianLoanCommand;
@@ -17,7 +18,6 @@ use App\Inventory\Application\Query\ListTechnicianLoans\ListTechnicianLoansQuery
 use App\Inventory\Application\Query\Response\TechnicianLoanResponse;
 use App\Inventory\Domain\Repositories\TechnicianLoanRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\TechnicianLoanIdValueObject;
-use App\Identity\Infrastructure\Security\SymfonySecurityUser;
 use App\Shared\Exceptions\DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

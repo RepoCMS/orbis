@@ -41,7 +41,6 @@ use App\Expense\Domain\ValueObjects\ExpenseItemIdValueObject;
 use App\Expense\Domain\ValueObjects\OperatingExpenseIdValueObject;
 use App\Identity\Domain\Repositories\RoleRepositoryInterface;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;
-use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Inventory\Domain\Entities\Location;
 use App\Inventory\Domain\Entities\Movement;
@@ -52,10 +51,8 @@ use App\Inventory\Domain\Entities\SerializedStock;
 use App\Inventory\Domain\Enums\LocationType;
 use App\Inventory\Domain\Enums\MovementStatus;
 use App\Inventory\Domain\Enums\MovementType;
-use App\Inventory\Domain\Enums\NonserializedStockStatus;
 use App\Inventory\Domain\Enums\ProductTrackingType;
 use App\Inventory\Domain\Enums\RepairStatus;
-use App\Inventory\Domain\Enums\SerializedStockStatus;
 use App\Inventory\Domain\Repositories\LocationRepositoryInterface;
 use App\Inventory\Domain\Repositories\MovementRepositoryInterface;
 use App\Inventory\Domain\Repositories\NonserializedStockRepositoryInterface;
@@ -73,30 +70,21 @@ use App\Inventory\Domain\ValueObjects\RepairIdValueObject;
 use App\Inventory\Domain\ValueObjects\SerializedStockIdValueObject;
 use App\Inventory\Domain\ValueObjects\StockSerialNumberValueObject;
 use App\Location\Domain\Repositories\CityRepositoryInterface;
-use App\Organization\Domain\Entities\Employee;
 use App\Organization\Domain\Entities\ServiceZone;
-use App\Organization\Domain\Enums\EmployeeProfile;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\Repositories\ServiceZoneRepositoryInterface;
-use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
 use App\Organization\Domain\ValueObjects\ServiceZoneIdValueObject;
 use App\Shared\Domain\Service\IdGeneratorInterface;
-use App\Support\Domain\Entities\Journey;
 use App\Support\Domain\Entities\Ticket;
-use App\Support\Domain\Entities\TicketAssignment;
-use App\Support\Domain\Entities\TicketFinding;
-use App\Support\Domain\Enums\JourneyType;
 use App\Support\Domain\Enums\ServiceType;
 use App\Support\Domain\Enums\TicketStatus;
 use App\Support\Domain\Repositories\TicketAssignmentRepositoryInterface;
 use App\Support\Domain\Repositories\TicketFindingRepositoryInterface;
 use App\Support\Domain\Repositories\TicketRepositoryInterface;
-use App\Support\Domain\ValueObjects\JourneyIdValueObject;
 use App\Support\Domain\ValueObjects\TicketAssignmentIdValueObject;
 use App\Support\Domain\ValueObjects\TicketFindingIdValueObject;
 use App\Support\Domain\ValueObjects\TicketIdValueObject;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -105,7 +93,6 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use DateTimeImmutable;
 
 #[AsCommand(
     name: 'app:seed:full',
@@ -233,6 +220,7 @@ HELP);
                 $cache[$name] = (string) $city->id();
             }
         }
+
         return $cache[$name] ?? null;
     }
 
@@ -247,14 +235,18 @@ HELP);
     private function existingEmployee(string $username): ?string
     {
         $user = $this->userRepo->findByUsername(new \App\Identity\Domain\ValueObjects\UsernameValueObject($username));
-        if ($user === null) return null;
+        if ($user === null) {
+            return null;
+        }
         $employee = $this->employeeRepo->findByUserId($user->id());
+
         return $employee !== null ? (string) $employee->id() : null;
     }
 
     private function userIdByUsername(string $username): ?UserIdValueObject
     {
         $user = $this->userRepo->findByUsername(new \App\Identity\Domain\ValueObjects\UsernameValueObject($username));
+
         return $user !== null ? new UserIdValueObject((string) $user->id()) : null;
     }
 
@@ -267,6 +259,7 @@ HELP);
                 return (string) $loc->id();
             }
         }
+
         return null;
     }
 
@@ -294,7 +287,9 @@ HELP);
         $count = 0;
         foreach ($models as $m) {
             $existing = $this->terminalRepo->findBySerial(new SerialNumberValueObject($m['serial']));
-            if ($existing !== null) continue;
+            if ($existing !== null) {
+                continue;
+            }
 
             $terminal = Terminal::add(
                 id: new TerminalIdValueObject($this->idGenerator->generate()),
@@ -347,7 +342,9 @@ HELP);
 
         foreach ($clients as $c) {
             $ruc = new ClientRucValueObject($c['ruc']);
-            if ($this->clientRepo->findByRuc($ruc) !== null) continue;
+            if ($this->clientRepo->findByRuc($ruc) !== null) {
+                continue;
+            }
 
             $client = Client::register(
                 id: new ClientIdValueObject($this->idGenerator->generate()),
@@ -392,15 +389,21 @@ HELP);
             ->from(Terminal::class, 't')
             ->getQuery()
             ->getResult();
-        if (empty($terminals)) return;
+        if (empty($terminals)) {
+            return;
+        }
 
         $allClients = [];
         $rucs = ['1790012344001', '1790098761001', '1790045676001'];
         foreach ($rucs as $ruc) {
             $c = $this->clientRepo->findByRuc(new ClientRucValueObject($ruc));
-            if ($c !== null) $allClients[] = $c;
+            if ($c !== null) {
+                $allClients[] = $c;
+            }
         }
-        if (empty($allClients)) return;
+        if (empty($allClients)) {
+            return;
+        }
 
         // Build a lookup of existing assignments by terminal ID
         $existingAssignmentsByTerminal = [];
@@ -422,12 +425,18 @@ HELP);
         $count = 0;
         foreach ($assignmentsData as $ad) {
             $terminal = $this->terminalRepo->findBySerial(new SerialNumberValueObject($ad['term_serial']));
-            if ($terminal === null) continue;
+            if ($terminal === null) {
+                continue;
+            }
             $client = $allClients[$ad['client_idx']] ?? null;
-            if ($client === null) continue;
+            if ($client === null) {
+                continue;
+            }
 
             $termId = (string) $terminal->id();
-            if (isset($existingAssignmentsByTerminal[$termId])) continue;
+            if (isset($existingAssignmentsByTerminal[$termId])) {
+                continue;
+            }
 
             $cityId = $this->cityByName($ad['location']) ?? $this->cityByName('Guayaquil');
             $assignment = TerminalAssignment::add(
@@ -470,7 +479,9 @@ HELP);
         $count = 0;
         foreach ($products as $p) {
             $code = new ProductCodeAssignedBySupplierValueObject($p['code']);
-            if ($this->productRepo->findByCode($code) !== null) continue;
+            if ($this->productRepo->findByCode($code) !== null) {
+                continue;
+            }
 
             $product = Product::add(
                 id: new ProductIdValueObject($this->idGenerator->generate()),
@@ -535,7 +546,9 @@ HELP);
     private function createStock(): void
     {
         $bodegaCentral = $this->locationByName('Bodega Central Quito');
-        if ($bodegaCentral === null) return;
+        if ($bodegaCentral === null) {
+            return;
+        }
 
         $allProducts = $this->productRepo->findAll();
         $serialCount = 0;
@@ -544,7 +557,9 @@ HELP);
         foreach ($allProducts as $product) {
             if ($product->trackingType() === ProductTrackingType::SERIALIZED) {
                 $existing = $this->serializedStockRepo->findByProduct(new ProductIdValueObject((string) $product->id()));
-                if (!empty($existing)) continue;
+                if (!empty($existing)) {
+                    continue;
+                }
 
                 $stock = SerializedStock::register(
                     id: new SerializedStockIdValueObject($this->idGenerator->generate()),
@@ -556,7 +571,9 @@ HELP);
                 $serialCount++;
             } else {
                 $existing = $this->nonserializedStockRepo->findByProduct(new ProductIdValueObject((string) $product->id()));
-                if (!empty($existing)) continue;
+                if (!empty($existing)) {
+                    continue;
+                }
 
                 $stock = NonserializedStock::initialize(
                     id: new NonserializedStockIdValueObject($this->idGenerator->generate()),
@@ -598,11 +615,13 @@ HELP);
         ];
 
         $allZones = $this->serviceZoneRepo->findAll();
-        $existingZoneNames = array_map(static fn(ServiceZone $z) => (string) $z->name(), $allZones);
+        $existingZoneNames = array_map(static fn (ServiceZone $z) => (string) $z->name(), $allZones);
 
         $count = 0;
         foreach ($zones as $z) {
-            if (in_array($z['name'], $existingZoneNames, true)) continue;
+            if (in_array($z['name'], $existingZoneNames, true)) {
+                continue;
+            }
 
             $zone = ServiceZone::create(
                 id: new ServiceZoneIdValueObject($this->idGenerator->generate()),
@@ -632,16 +651,22 @@ HELP);
         $clients = [];
         foreach ($rucs as $ruc) {
             $c = $this->clientRepo->findByRuc(new ClientRucValueObject($ruc));
-            if ($c !== null) $clients[(string) $c->id()] = $c;
+            if ($c !== null) {
+                $clients[(string) $c->id()] = $c;
+            }
         }
-        if (empty($clients)) return;
+        if (empty($clients)) {
+            return;
+        }
 
         $adminEmpId = $this->existingEmployee(self::ADMIN_USERNAME);
         $carlosEmpId = $this->existingEmployee(self::TECH_USERNAME);
         $adminUserId = $this->userIdByUsername(self::ADMIN_USERNAME);
 
         $allAssignments = $this->terminalAssignmentRepo->findAll();
-        if (empty($allAssignments)) return;
+        if (empty($allAssignments)) {
+            return;
+        }
 
         $clientIds = array_keys($clients);
         $clientTerminals = [];
@@ -652,10 +677,14 @@ HELP);
             $clientTerminals[$clientTerminalIdx][] = $ta;
             $idx++;
         }
-        if (empty($clientTerminals)) return;
+        if (empty($clientTerminals)) {
+            return;
+        }
 
         $firstClientTerminals = reset($clientTerminals);
-        if ($firstClientTerminals === false) $firstClientTerminals = [];
+        if ($firstClientTerminals === false) {
+            $firstClientTerminals = [];
+        }
 
         $ticketDefs = [
             ['client_idx' => 0, 'status' => 'assigned', 'type' => 'correctivo',  'desc' => 'Cajero no enciende en agencia Quito Centro', 'sla' => 4],
@@ -758,7 +787,9 @@ HELP);
 
             if ($targetStatus === TicketStatus::CLOSED) {
                 $findingId = (string) new TicketFindingIdValueObject($this->idGenerator->generate());
-                $problemType = match (random_int(0, 4)) { 0 => 'fallo_electrico', 1 => 'desgaste_mecanico', 2 => 'fallo_software', 3 => 'suciedad_excesiva', default => 'componente_danado' };
+                $problemType = match (random_int(0, 4)) {
+                    0 => 'fallo_electrico', 1 => 'desgaste_mecanico', 2 => 'fallo_software', 3 => 'suciedad_excesiva', default => 'componente_danado'
+                };
                 $empId = $carlosEmpId ?? $adminEmpId ?? 'unknown';
                 $conn->executeStatement(
                     'INSERT INTO ticket_findings (id, ticket_id, problem_type_found, problem_detail, battery_voltage_ok, solution, registered_by) VALUES (:id, :tid, :ptf, :pd, :bvo, :sol, :rb)',
@@ -784,7 +815,9 @@ HELP);
     {
         $labQuito = $this->locationByName('Laboratorio Técnico Quito');
         $labGuayaquil = $this->locationByName('Laboratorio Guayaquil');
-        if ($labQuito === null && $labGuayaquil === null) return;
+        if ($labQuito === null && $labGuayaquil === null) {
+            return;
+        }
 
         $adminUserId = $this->userIdByUsername(self::ADMIN_USERNAME);
         $carlosUserId = $this->userIdByUsername(self::TECH_USERNAME);
@@ -798,11 +831,13 @@ HELP);
             ->where('s.deletedAt IS NULL')
             ->getQuery()
             ->getResult();
-        $availableStock = array_filter($allSerialized, fn(SerializedStock $s) => $s->status()->value === 'available');
+        $availableStock = array_filter($allSerialized, fn (SerializedStock $s) => $s->status()->value === 'available');
         $availableStock = array_values($availableStock);
 
-        if (empty($availableStock)) return;
-        $stockId = fn(int $i) => new SerializedStockIdValueObject((string) $availableStock[$i % count($availableStock)]->id());
+        if (empty($availableStock)) {
+            return;
+        }
+        $stockId = fn (int $i) => new SerializedStockIdValueObject((string) $availableStock[$i % count($availableStock)]->id());
 
         $repairsData = [
             ['lab' => 0, 'tech' => 'carlos', 'status' => 'completed', 'stock_idx' => 0, 'note' => 'Se reemplazó el sensor dañado', 'started' => '2026-05-10', 'completed' => '2026-05-11'],
@@ -817,7 +852,9 @@ HELP);
 
         foreach ($repairsData as $rd) {
             $labId = $labIds[$rd['lab']] ?? $labQuito;
-            if ($labId === null) continue;
+            if ($labId === null) {
+                continue;
+            }
 
             $repair = Repair::assign(
                 id: new RepairIdValueObject($this->idGenerator->generate()),
@@ -888,7 +925,9 @@ HELP);
         $mochilaCarlos = $this->locationByName('Mochila Carlos Técnico');
         $labQuito = $this->locationByName('Laboratorio Técnico Quito');
 
-        if ($bodegaCentral === null) return;
+        if ($bodegaCentral === null) {
+            return;
+        }
 
         $adminEmpId = $this->existingEmployee(self::ADMIN_USERNAME);
         $carlosEmpId = $this->existingEmployee(self::TECH_USERNAME);
@@ -912,7 +951,9 @@ HELP);
 
         foreach ($movementsData as $md) {
             $product = $md['product'];
-            if ($product === null) continue;
+            if ($product === null) {
+                continue;
+            }
             $productId = (string) $product->id();
 
             $movement = Movement::create(
@@ -960,7 +1001,9 @@ HELP);
     private function createDecommissionedStock(): void
     {
         $bodegaCentral = $this->locationByName('Bodega Central Quito');
-        if ($bodegaCentral === null) return;
+        if ($bodegaCentral === null) {
+            return;
+        }
 
         // Mark some serialized as damaged
         $allSerialized = $this->entityManager->createQueryBuilder()
@@ -973,7 +1016,9 @@ HELP);
         $decommissionedCount = 0;
 
         foreach ($allSerialized as $i => $stock) {
-            if ($stock->status()->value !== 'available') continue;
+            if ($stock->status()->value !== 'available') {
+                continue;
+            }
 
             if ($i % 5 === 0 && $damagedCount < 2) {
                 try {
@@ -1007,7 +1052,9 @@ HELP);
         $nsDecommissioned = 0;
 
         foreach ($allNonserialized as $i => $stock) {
-            if ($stock->status()->value !== 'available') continue;
+            if ($stock->status()->value !== 'available') {
+                continue;
+            }
 
             if ($i % 5 === 0 && $nsDamaged < 2) {
                 try {
@@ -1043,7 +1090,9 @@ HELP);
         $maria = $this->employeeRepo->findByEmail('maria@orbis.cms.com.ec');
         $mariaEmpId = $maria !== null ? (string) $maria->id() : null;
 
-        if ($carlosEmpId === null && $mariaEmpId === null) return;
+        if ($carlosEmpId === null && $mariaEmpId === null) {
+            return;
+        }
 
         // ── Operating expenses ──
         $oeData = [
@@ -1084,10 +1133,14 @@ HELP);
 
         foreach ($oeData as $i => $oed) {
             $empId = $oed['empId'] === 'carlos' ? $carlosEmpId : $mariaEmpId;
-            if ($empId === null) continue;
+            if ($empId === null) {
+                continue;
+            }
 
             $oeId = new OperatingExpenseIdValueObject($this->idGenerator->generate());
-            if ($this->operatingExpenseRepo->findById($oeId) !== null) continue;
+            if ($this->operatingExpenseRepo->findById($oeId) !== null) {
+                continue;
+            }
 
             $oe = OperatingExpense::create(
                 id: $oeId,
@@ -1145,15 +1198,22 @@ HELP);
         $caCount = 0;
         foreach ($caData as $cad) {
             $empId = $cad['empId'] === 'carlos' ? $carlosEmpId : $mariaEmpId;
-            if ($empId === null) continue;
+            if ($empId === null) {
+                continue;
+            }
 
             // Check by advance number to avoid unique constraint violation
             $existingCa = $this->cashAdvanceRepo->findAll();
             $caExists = false;
             foreach ($existingCa as $ea) {
-                if ($ea->advanceNumber() === $cad['number']) { $caExists = true; break; }
+                if ($ea->advanceNumber() === $cad['number']) {
+                    $caExists = true;
+                    break;
+                }
             }
-            if ($caExists) continue;
+            if ($caExists) {
+                continue;
+            }
 
             $caId = new CashAdvanceIdValueObject($this->idGenerator->generate());
             $ca = CashAdvance::create(

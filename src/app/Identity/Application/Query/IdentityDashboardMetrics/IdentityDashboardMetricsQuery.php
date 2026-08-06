@@ -8,5 +8,6 @@ final readonly class IdentityDashboardMetricsQuery
 {
     public function __construct(
         public int $recentDays = 7,
-    ) {}
+    ) {
+    }
 }

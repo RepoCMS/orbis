@@ -12,5 +12,6 @@ final readonly class ListTicketsByStatusQuery
         public TicketStatus $status,
         public int $page = 1,
         public int $perPage = 25,
-    ) {}
+    ) {
+    }
 }

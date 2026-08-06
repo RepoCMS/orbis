@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Inventory\Presentation\Http;
 
+use App\Identity\Infrastructure\Security\SymfonySecurityUser;
 use App\Inventory\Application\Query\InventoryDashboardMetrics\InventoryDashboardMetricsHandler;
 use App\Inventory\Application\Query\ListEntries\ListEntriesHandler;
 use App\Inventory\Application\Query\ListLocations\ListLocationsHandler;
@@ -21,7 +22,6 @@ use App\Inventory\Domain\Repositories\SerialHistoryRepositoryInterface;
 use App\Inventory\Domain\Repositories\SerializedStockRepositoryInterface;
 use App\Inventory\Domain\Repositories\TransformationRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\SerializedStockIdValueObject;
-use App\Identity\Infrastructure\Security\SymfonySecurityUser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -111,7 +111,7 @@ final class ApiInventoryStockController extends AbstractController
         );
 
         $data = array_map(
-            static fn($h) => [
+            static fn ($h) => [
                 'id'                  => (string) $h->id(),
                 'serializedStockId'   => (string) $h->serializedStockId(),
                 'previousSerialNumber' => (string) $h->previousSerialNumber(),
@@ -144,7 +144,7 @@ final class ApiInventoryStockController extends AbstractController
 
         $pendingOrders = array_values(array_filter(
             $purchaseOrders,
-            static fn($po) => $po->status === 'open' || $po->status === 'partial',
+            static fn ($po) => $po->status === 'open' || $po->status === 'partial',
         ));
 
         return $this->json([
@@ -181,7 +181,7 @@ final class ApiInventoryStockController extends AbstractController
 
         $draft = array_values(array_filter(
             $entries,
-            static fn($e) => $e->status === 'draft',
+            static fn ($e) => $e->status === 'draft',
         ));
 
         return $this->json([
@@ -211,7 +211,7 @@ final class ApiInventoryStockController extends AbstractController
 
         // Serial history
         $history = array_map(
-            static fn($h) => [
+            static fn ($h) => [
                 'id'             => (string) $h->id(),
                 'previousSerial' => (string) $h->previousSerialNumber(),
                 'newSerial'      => (string) $h->newSerialNumber(),
@@ -224,13 +224,13 @@ final class ApiInventoryStockController extends AbstractController
         // Repairs on this stock
         $repairs = array_filter(
             iterator_to_array($repairRepository->findBySerializedStock($stockId)),
-            static fn($r) => true,
+            static fn ($r) => true,
         );
 
         // Transformations
         $transformations = array_filter(
             $transformationRepository->findBySerializedStock($stockId),
-            static fn($t) => true,
+            static fn ($t) => true,
         );
 
         return $this->json([

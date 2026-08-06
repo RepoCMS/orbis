@@ -25,7 +25,8 @@ final class TicketFinding
         private bool                       $batteryVoltageOk,
         private string                     $solution,
         private string                     $registeredBy,
-    ) {}
+    ) {
+    }
 
     public static function register(
         TicketFindingIdValueObject $id,
@@ -76,19 +77,52 @@ final class TicketFinding
         $this->physicalDocNumber = $docNumber;
     }
 
-    public function id(): TicketFindingIdValueObject { return $this->id; }
-    public function ticketId(): TicketIdValueObject   { return $this->ticketId; }
-    public function catCode(): ?string                { return $this->catCode; }
-    public function physicalDocNumber(): ?string      { return $this->physicalDocNumber; }
-    public function problemTypeFound(): string        { return $this->problemTypeFound; }
-    public function problemDetail(): string           { return $this->problemDetail; }
-    public function batteryVoltageOk(): bool          { return $this->batteryVoltageOk; }
-    public function solution(): string                { return $this->solution; }
-    public function registeredBy(): string            { return $this->registeredBy; }
+    public function id(): TicketFindingIdValueObject
+    {
+        return $this->id;
+    }
+    public function ticketId(): TicketIdValueObject
+    {
+        return $this->ticketId;
+    }
+    public function catCode(): ?string
+    {
+        return $this->catCode;
+    }
+    public function physicalDocNumber(): ?string
+    {
+        return $this->physicalDocNumber;
+    }
+    public function problemTypeFound(): string
+    {
+        return $this->problemTypeFound;
+    }
+    public function problemDetail(): string
+    {
+        return $this->problemDetail;
+    }
+    public function batteryVoltageOk(): bool
+    {
+        return $this->batteryVoltageOk;
+    }
+    public function solution(): string
+    {
+        return $this->solution;
+    }
+    public function registeredBy(): string
+    {
+        return $this->registeredBy;
+    }
 
     /** @return TicketSparePart[] */
-    public function spareParts(): array { return $this->spareParts; }
+    public function spareParts(): array
+    {
+        return $this->spareParts;
+    }
 
     /** @return TicketPendingSparePart[] */
-    public function pendingSpareParts(): array { return $this->pendingSpareParts; }
+    public function pendingSpareParts(): array
+    {
+        return $this->pendingSpareParts;
+    }
 }

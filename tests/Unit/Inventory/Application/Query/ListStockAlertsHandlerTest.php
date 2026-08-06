@@ -10,8 +10,8 @@ use App\Inventory\Application\Query\Response\StockAlertResponse;
 use App\Inventory\Domain\Entities\Location;
 use App\Inventory\Domain\Entities\Product;
 use App\Inventory\Domain\Entities\StockMinimum;
-use App\Inventory\Domain\Enums\ProductTrackingType;
 use App\Inventory\Domain\Enums\LocationType;
+use App\Inventory\Domain\Enums\ProductTrackingType;
 use App\Inventory\Domain\Repositories\LocationRepositoryInterface;
 use App\Inventory\Domain\Repositories\NonserializedStockRepositoryInterface;
 use App\Inventory\Domain\Repositories\ProductRepositoryInterface;
@@ -220,7 +220,11 @@ final class ListStockAlertsHandlerTest extends TestCase
         $nonSerRepo->method('countAvailableByProductAndLocation')->willReturn(2);
 
         $handler = new ListStockAlertsHandler(
-            $minimumRepo, $productRepo, $locationRepo, $serialRepo, $nonSerRepo,
+            $minimumRepo,
+            $productRepo,
+            $locationRepo,
+            $serialRepo,
+            $nonSerRepo,
         );
 
         $alerts = ($handler)(new ListStockAlertsQuery());

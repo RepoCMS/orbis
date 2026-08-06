@@ -16,7 +16,8 @@ final readonly class SettleCashAdvanceHandler
         private CashAdvanceRepositoryInterface $cashAdvanceRepository,
         private UserResolverInterface $userResolver,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(SettleCashAdvanceCommand $command): void
     {

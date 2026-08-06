@@ -6,4 +6,6 @@ namespace App\Inventory\Domain\Exceptions;
 
 use App\Shared\Exceptions\DomainException;
 
-final class InvalidLocationTypeException extends DomainException {}
+final class InvalidLocationTypeException extends DomainException
+{
+}

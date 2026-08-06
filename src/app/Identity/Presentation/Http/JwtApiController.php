@@ -90,6 +90,7 @@ final class JwtApiController extends AbstractController
             ($this->recordFailedLoginHandler)(new RecordFailedLoginCommand(
                 userId: (string) $symfonyUser->getDomainUser()->id(),
             ));
+
             return $this->json(
                 ['error' => 'Credenciales inválidas.'],
                 Response::HTTP_UNAUTHORIZED,
@@ -122,6 +123,7 @@ final class JwtApiController extends AbstractController
 
             if (!$mfaVerified) {
                 $requiresCode = $totpCode === '' && $backupCode === '';
+
                 return $this->json(
                     $requiresCode
                         ? ['error' => 'Código de verificación requerido.', 'mfaRequired' => true]

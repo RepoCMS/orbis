@@ -8,5 +8,6 @@ final readonly class GetActiveTerminalAssignmentsQuery
 {
     public function __construct(
         public string $clientId,
-    ) {}
+    ) {
+    }
 }

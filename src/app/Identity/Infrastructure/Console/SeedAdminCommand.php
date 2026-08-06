@@ -14,9 +14,9 @@ use App\Identity\Domain\Enums\UserStatus;
 use App\Identity\Domain\Repositories\PermissionRepositoryInterface;
 use App\Identity\Domain\Repositories\RoleRepositoryInterface;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;
+use App\Identity\Domain\ValueObjects\RoleNameValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Identity\Domain\ValueObjects\UsernameValueObject;
-use App\Identity\Domain\ValueObjects\RoleNameValueObject;
 use App\Organization\Application\Command\CreateEmployee\CreateEmployeeCommand;
 use App\Organization\Application\Command\CreateEmployee\CreateEmployeeHandler;
 use App\Organization\Application\Command\LinkUserToEmployee\LinkUserToEmployeeCommand;
@@ -65,6 +65,7 @@ final class SeedAdminCommand extends Command
 
         if (!$password || strlen($password) < 6) {
             $io->error('La contraseña debe tener al menos 6 caracteres.');
+
             return Command::FAILURE;
         }
 
@@ -73,7 +74,7 @@ final class SeedAdminCommand extends Command
         if ($this->roleRepo->findByName(new RoleNameValueObject('Administrador')) === null) {
             $io->section('Creando rol Administrador...');
             $allPermissions = $this->permissionRepo->findAll();
-            $allPermissionIds = array_map(static fn($p) => (string) $p->id(), $allPermissions);
+            $allPermissionIds = array_map(static fn ($p) => (string) $p->id(), $allPermissions);
 
             ($this->createRoleHandler)(new CreateRoleCommand(
                 name: 'Administrador',
@@ -84,7 +85,7 @@ final class SeedAdminCommand extends Command
             $io->note('Rol Administrador ya existe — sincronizando permisos...');
             $adminRole = $this->roleRepo->findByName(new RoleNameValueObject('Administrador'));
             $allPermissions = $this->permissionRepo->findAll();
-            $allPermissionIds = array_map(static fn($p) => (string) $p->id(), $allPermissions);
+            $allPermissionIds = array_map(static fn ($p) => (string) $p->id(), $allPermissions);
             ($this->syncRolePermissionsHandler)(new SyncRolePermissionsCommand(
                 roleId: (string) $adminRole->id(),
                 permissionIds: $allPermissionIds,
@@ -95,6 +96,7 @@ final class SeedAdminCommand extends Command
         $adminRole = $this->roleRepo->findByName(new RoleNameValueObject('Administrador'));
         if ($adminRole === null) {
             $io->error('No se pudo encontrar el rol admin.');
+
             return Command::FAILURE;
         }
 
@@ -108,6 +110,7 @@ final class SeedAdminCommand extends Command
                 $io->warning("El usuario '$username' ya existe y está activo. Se omitirá la creación.");
             }
             $io->note('Para crear un admin distinto usa: --username otro --password clave');
+
             return Command::SUCCESS;
         }
 

@@ -8,5 +8,6 @@ final readonly class StartWaitingCommand
 {
     public function __construct(
         public string $ticketId,
-    ) {}
+    ) {
+    }
 }

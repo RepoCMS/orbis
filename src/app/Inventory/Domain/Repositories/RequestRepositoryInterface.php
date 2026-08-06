@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Inventory\Domain\Repositories;
 
 use App\Inventory\Domain\Entities\Request;
-use App\Inventory\Domain\Enums\RequestStatus;
 use App\Inventory\Domain\ValueObjects\RequestIdValueObject;
 
 interface RequestRepositoryInterface

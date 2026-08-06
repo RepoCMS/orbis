@@ -20,7 +20,6 @@ use App\Inventory\Domain\Repositories\NonserializedStockRepositoryInterface;
 use App\Inventory\Domain\Repositories\RequestRepositoryInterface;
 use App\Inventory\Domain\Repositories\SerializedStockRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\LocationIdValueObject;
-use App\Inventory\Domain\ValueObjects\MovementIdValueObject;
 use App\Inventory\Domain\ValueObjects\NonserializedStockIdValueObject;
 use App\Inventory\Domain\ValueObjects\ProductIdValueObject;
 use App\Inventory\Domain\ValueObjects\RequestIdValueObject;
@@ -208,6 +207,7 @@ final class FulfillRequestItemHandlerTest extends TestCase
                 if ((string) $locationId === self::DEST_LOC) {
                     return $destStock;
                 }
+
                 return null;
             });
         $nonserializedStockRepo->expects($this->exactly(2))->method('save');
@@ -279,6 +279,7 @@ final class FulfillRequestItemHandlerTest extends TestCase
                 if ((string) $locationId === self::SOURCE_LOC) {
                     return $sourceStock;
                 }
+
                 return null;
             });
         $nonserializedStockRepo->expects($this->exactly(2))

@@ -11,7 +11,8 @@ final readonly class ArriveAtSiteHandler
 {
     public function __construct(
         private TicketRepositoryInterface $ticketRepo,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ArriveAtSiteCommand $command): void
     {

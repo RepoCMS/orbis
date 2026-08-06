@@ -6,10 +6,8 @@ namespace App\Tests\Unit\Inventory\Application\Command;
 
 use App\Inventory\Application\Command\StartPhysicalCount\StartPhysicalCountCommand;
 use App\Inventory\Application\Command\StartPhysicalCount\StartPhysicalCountHandler;
-use App\Inventory\Domain\Enums\PhysicalCountStatus;
 use App\Inventory\Domain\Events\PhysicalCountStarted;
 use App\Inventory\Domain\Repositories\PhysicalCountRepositoryInterface;
-use App\Inventory\Domain\ValueObjects\PhysicalCountIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\TestCase;

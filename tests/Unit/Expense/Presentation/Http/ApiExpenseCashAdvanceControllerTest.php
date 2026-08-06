@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Expense\Presentation\Http;
 
-use App\Expense\Application\Command\CreateCashAdvance\CreateCashAdvanceCommand;
 use App\Expense\Application\Command\CreateCashAdvance\CreateCashAdvanceHandler;
-use App\Expense\Application\Command\SettleCashAdvance\SettleCashAdvanceCommand;
 use App\Expense\Application\Command\SettleCashAdvance\SettleCashAdvanceHandler;
 use App\Expense\Application\Query\ListCashAdvances\ListCashAdvancesHandler;
-use App\Expense\Application\Query\ListCashAdvances\ListCashAdvancesQuery;
 use App\Expense\Application\Service\EmployeeResolverInterface;
 use App\Expense\Application\Service\UserResolverInterface;
 use App\Expense\Domain\Repositories\CashAdvanceRepositoryInterface;
@@ -57,7 +54,12 @@ final class ApiExpenseCashAdvanceControllerTest extends TestCase
         $idempotency->method('tryProcess')->willReturn(true);
 
         return new CreateCashAdvanceHandler(
-            $cashAdvanceRepo, $idGenerator, $employeeResolver, $userResolver, $eventPublisher, $idempotency
+            $cashAdvanceRepo,
+            $idGenerator,
+            $employeeResolver,
+            $userResolver,
+            $eventPublisher,
+            $idempotency
         );
     }
 

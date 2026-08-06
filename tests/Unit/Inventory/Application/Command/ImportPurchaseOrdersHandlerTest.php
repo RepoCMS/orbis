@@ -18,8 +18,8 @@ use App\Inventory\Domain\ValueObjects\ProductIdValueObject;
 use App\Inventory\Domain\ValueObjects\ProductNameValueObject;
 use App\Inventory\Infrastructure\Import\PurchaseOrderCsvFileParser;
 use App\Inventory\Infrastructure\Import\PurchaseOrderRowValidator;
-use App\Shared\Domain\Service\IdGeneratorInterface;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
+use App\Shared\Domain\Service\IdGeneratorInterface;
 use App\Shared\Infrastructure\Import\CsvFileParser;
 use PHPUnit\Framework\TestCase;
 
@@ -33,6 +33,7 @@ final class ImportPurchaseOrdersHandlerTest extends TestCase
     {
         $path = tempnam(sys_get_temp_dir(), 'import_test_');
         file_put_contents($path, $content);
+
         return $path;
     }
 

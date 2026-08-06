@@ -35,7 +35,7 @@ final readonly class TerminalIdAssignedByClientValueObject
             );
         }
 
-         if (!preg_match('/^[A-Z0-9]+$/', $normalized)) {
+        if (!preg_match('/^[A-Z0-9]+$/', $normalized)) {
             throw new TerminalIdAssignedByClientException(
                 'El ID asignado por el cliente solo puede contener letras y números (sin espacios ni símbolos).'
             );

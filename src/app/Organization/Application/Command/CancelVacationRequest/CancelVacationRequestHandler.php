@@ -16,7 +16,8 @@ final readonly class CancelVacationRequestHandler
     public function __construct(
         private VacationRequestRepositoryInterface $vacationRequestRepository,
         private DomainEventPublisherInterface $publisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CancelVacationRequestCommand $command): void
     {

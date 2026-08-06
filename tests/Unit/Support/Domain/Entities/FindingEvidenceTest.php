@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Support\Domain\Entities;
 
 use App\Support\Domain\AtmModel\EvidenceMoment;
-use App\Support\Domain\Entities\FindingEvidence;
-use App\Support\Domain\Entities\TicketModuleFinding;
 use App\Support\Domain\AtmModel\FindingType;
 use App\Support\Domain\AtmModel\ModulePathValueObject;
+use App\Support\Domain\Entities\FindingEvidence;
+use App\Support\Domain\Entities\TicketModuleFinding;
 use App\Support\Domain\ValueObjects\FindingEvidenceIdValueObject;
-use App\Support\Domain\ValueObjects\TicketModuleFindingIdValueObject;
 use App\Support\Domain\ValueObjects\TicketIdValueObject;
+use App\Support\Domain\ValueObjects\TicketModuleFindingIdValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class FindingEvidenceTest extends TestCase

@@ -21,7 +21,8 @@ final class RequestItem
         private int $quantity,
         private RequestItemStatus $status,
         private ?MovementIdValueObject $fulfilledMovementId,
-    ) {}
+    ) {
+    }
 
     public static function create(
         RequestItemIdValueObject $id,

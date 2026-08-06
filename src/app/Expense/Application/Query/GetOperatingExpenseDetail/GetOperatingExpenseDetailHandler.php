@@ -12,7 +12,8 @@ final readonly class GetOperatingExpenseDetailHandler
 {
     public function __construct(
         private OperatingExpenseRepositoryInterface $expenseRepo,
-    ) {}
+    ) {
+    }
 
     public function __invoke(GetOperatingExpenseDetailQuery $query): ?OperatingExpenseResponse
     {

@@ -8,5 +8,6 @@ final readonly class GetCatCodeComponentsQuery
 {
     public function __construct(
         public string $ticketId,
-    ) {}
+    ) {
+    }
 }

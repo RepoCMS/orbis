@@ -30,5 +30,6 @@ final readonly class ClientDashboardSummary
         public array $contactsByStatus = [],
         public int $unassignedTerminals = 0,
         public array $monthlyGrowth = [],
-    ) {}
+    ) {
+    }
 }

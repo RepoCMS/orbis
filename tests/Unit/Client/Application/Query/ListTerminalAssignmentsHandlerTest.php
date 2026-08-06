@@ -9,11 +9,11 @@ use App\Client\Application\Query\ListTerminalAssignments\ListTerminalAssignments
 use App\Client\Application\Query\Response\TerminalAssignmentResponse;
 use App\Client\Domain\Entities\TerminalAssignment;
 use App\Client\Domain\Repositories\TerminalAssignmentRepositoryInterface;
+use App\Client\Domain\ValueObjects\SiteIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalAssignmentIdValueObject;
+use App\Client\Domain\ValueObjects\TerminalIdAssignedByClientValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalNameValueObject;
-use App\Client\Domain\ValueObjects\TerminalIdAssignedByClientValueObject;
-use App\Client\Domain\ValueObjects\SiteIdValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class ListTerminalAssignmentsHandlerTest extends TestCase

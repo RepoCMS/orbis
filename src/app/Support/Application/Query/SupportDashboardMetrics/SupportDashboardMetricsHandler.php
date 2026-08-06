@@ -12,7 +12,8 @@ final readonly class SupportDashboardMetricsHandler
 
     public function __construct(
         private Connection $dbal,
-    ) {}
+    ) {
+    }
 
     public function __invoke(): SupportDashboardMetrics
     {
@@ -37,7 +38,7 @@ final readonly class SupportDashboardMetricsHandler
     private function loadStatusBreakdown(SupportDashboardMetrics $m): void
     {
         $rows = $this->dbal->fetchAllAssociative(
-            "SELECT status, COUNT(*) AS cnt FROM support_tickets WHERE deleted_at IS NULL GROUP BY status"
+            'SELECT status, COUNT(*) AS cnt FROM support_tickets WHERE deleted_at IS NULL GROUP BY status'
         );
 
         $m->totalTickets = 0;
@@ -75,18 +76,18 @@ final readonly class SupportDashboardMetricsHandler
         );
 
         $totalSla = (int) $this->dbal->fetchOne(
-            "SELECT COUNT(*) FROM support_tickets
+            'SELECT COUNT(*) FROM support_tickets
              WHERE deleted_at IS NULL
                AND sla_deadline_at IS NOT NULL
-               AND closed_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)"
+               AND closed_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)'
         );
 
         $m->slaBreachCount30d = (int) $this->dbal->fetchOne(
-            "SELECT COUNT(*) FROM support_tickets
+            'SELECT COUNT(*) FROM support_tickets
              WHERE deleted_at IS NULL
                AND sla_deadline_at IS NOT NULL
                AND sla_deadline_at < closed_at
-               AND closed_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)"
+               AND closed_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)'
         );
 
         $m->slaBreachRate30d = $totalSla > 0
@@ -97,34 +98,34 @@ final readonly class SupportDashboardMetricsHandler
     private function loadCompletionMetrics(SupportDashboardMetrics $m): void
     {
         $m->completedToday = (int) $this->dbal->fetchOne(
-            "SELECT COUNT(*) FROM support_tickets
+            'SELECT COUNT(*) FROM support_tickets
              WHERE deleted_at IS NULL
                AND closed_at >= CURDATE()
-               AND closed_at < DATE_ADD(CURDATE(), INTERVAL 1 DAY)"
+               AND closed_at < DATE_ADD(CURDATE(), INTERVAL 1 DAY)'
         );
 
         $m->completedThisWeek = (int) $this->dbal->fetchOne(
-            "SELECT COUNT(*) FROM support_tickets
+            'SELECT COUNT(*) FROM support_tickets
              WHERE deleted_at IS NULL
-               AND closed_at >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)"
+               AND closed_at >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)'
         );
     }
 
     private function loadAvgResolution(SupportDashboardMetrics $m): void
     {
         $avg = $this->dbal->fetchOne(
-            "SELECT AVG(TIMESTAMPDIFF(HOUR,
+            'SELECT AVG(TIMESTAMPDIFF(HOUR,
                 COALESCE(scheduled_at, assistance_start_at, in_transit_out_at),
                 COALESCE(closed_at, cancelled_at)
              )) FROM support_tickets
              WHERE deleted_at IS NULL
                AND (closed_at IS NOT NULL OR cancelled_at IS NOT NULL)
-               AND (scheduled_at IS NOT NULL OR assistance_start_at IS NOT NULL OR in_transit_out_at IS NOT NULL)"
+               AND (scheduled_at IS NOT NULL OR assistance_start_at IS NOT NULL OR in_transit_out_at IS NOT NULL)'
         );
         $m->avgResolutionHours = $avg !== false && $avg !== null ? round((float) $avg, 1) : 0.0;
 
         $byType = $this->dbal->fetchAllAssociative(
-            "SELECT service_type,
+            'SELECT service_type,
                     AVG(TIMESTAMPDIFF(HOUR,
                         COALESCE(scheduled_at, assistance_start_at, in_transit_out_at),
                         COALESCE(closed_at, cancelled_at)
@@ -135,7 +136,7 @@ final readonly class SupportDashboardMetricsHandler
                AND (closed_at IS NOT NULL OR cancelled_at IS NOT NULL)
                AND (scheduled_at IS NOT NULL OR assistance_start_at IS NOT NULL OR in_transit_out_at IS NOT NULL)
              GROUP BY service_type
-             ORDER BY avg_hours DESC"
+             ORDER BY avg_hours DESC'
         );
         $m->avgResolutionByServiceType = $byType;
     }
@@ -143,7 +144,7 @@ final readonly class SupportDashboardMetricsHandler
     private function loadAvgTimeByTechnician(SupportDashboardMetrics $m): void
     {
         $m->avgTimeByTechnician = $this->dbal->fetchAllAssociative(
-            "SELECT ta.employee_id,
+            'SELECT ta.employee_id,
                     AVG(TIMESTAMPDIFF(HOUR,
                         COALESCE(t.scheduled_at, t.assistance_start_at, t.in_transit_out_at),
                         COALESCE(t.closed_at, t.cancelled_at)
@@ -156,22 +157,22 @@ final readonly class SupportDashboardMetricsHandler
                AND (t.scheduled_at IS NOT NULL OR t.assistance_start_at IS NOT NULL OR t.in_transit_out_at IS NOT NULL)
              GROUP BY ta.employee_id
              ORDER BY avg_hours DESC
-             LIMIT 10"
+             LIMIT 10'
         );
     }
 
     private function loadReopenAndCancelMetrics(SupportDashboardMetrics $m): void
     {
         $m->reopenedCount = (int) $this->dbal->fetchOne(
-            "SELECT COUNT(*) FROM support_tickets WHERE deleted_at IS NULL AND reopened_at IS NOT NULL"
+            'SELECT COUNT(*) FROM support_tickets WHERE deleted_at IS NULL AND reopened_at IS NOT NULL'
         );
 
         $totalTerminal = (int) $this->dbal->fetchOne(
-            "SELECT COUNT(*) FROM support_tickets WHERE deleted_at IS NULL AND (closed_at IS NOT NULL OR cancelled_at IS NOT NULL)"
+            'SELECT COUNT(*) FROM support_tickets WHERE deleted_at IS NULL AND (closed_at IS NOT NULL OR cancelled_at IS NOT NULL)'
         );
 
         $m->cancelledCount = (int) $this->dbal->fetchOne(
-            "SELECT COUNT(*) FROM support_tickets WHERE deleted_at IS NULL AND cancelled_at IS NOT NULL"
+            'SELECT COUNT(*) FROM support_tickets WHERE deleted_at IS NULL AND cancelled_at IS NOT NULL'
         );
 
         $m->reopenRate = $totalTerminal > 0
@@ -186,49 +187,49 @@ final readonly class SupportDashboardMetricsHandler
     private function loadTopTechnicians(SupportDashboardMetrics $m): void
     {
         $m->topTechnicians = $this->dbal->fetchAllAssociative(
-            "SELECT ta.employee_id, COUNT(*) AS cnt
+            'SELECT ta.employee_id, COUNT(*) AS cnt
              FROM support_ticket_assignments ta
              JOIN support_tickets t ON t.id = ta.ticket_id AND t.deleted_at IS NULL
              GROUP BY ta.employee_id
              ORDER BY cnt DESC
-             LIMIT 5"
+             LIMIT 5'
         );
     }
 
     private function loadTopClients(SupportDashboardMetrics $m): void
     {
         $m->topClientsByTickets = $this->dbal->fetchAllAssociative(
-            "SELECT client_id, COUNT(*) AS cnt
+            'SELECT client_id, COUNT(*) AS cnt
              FROM support_tickets
              WHERE deleted_at IS NULL
              GROUP BY client_id
              ORDER BY cnt DESC
-             LIMIT 10"
+             LIMIT 10'
         );
     }
 
     private function loadCompletionsTrend(SupportDashboardMetrics $m): void
     {
         $m->completionsTrend = $this->dbal->fetchAllAssociative(
-            "SELECT DATE(closed_at) AS day, COUNT(*) AS cnt
+            'SELECT DATE(closed_at) AS day, COUNT(*) AS cnt
              FROM support_tickets
              WHERE deleted_at IS NULL
                AND closed_at >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
              GROUP BY DATE(closed_at)
-             ORDER BY day ASC"
+             ORDER BY day ASC'
         );
     }
 
     private function loadRecentTickets(SupportDashboardMetrics $m): void
     {
         $m->recentTickets = $this->dbal->fetchAllAssociative(
-            "SELECT id, ticket_number, client_id, service_type, status,
+            'SELECT id, ticket_number, client_id, service_type, status,
                     scheduled_at, sla_deadline_at, closed_at, cancelled_at,
                     created_by
              FROM support_tickets
              WHERE deleted_at IS NULL
              ORDER BY id DESC
-             LIMIT 10"
+             LIMIT 10'
         );
     }
 

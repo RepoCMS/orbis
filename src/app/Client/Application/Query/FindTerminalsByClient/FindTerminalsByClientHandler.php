@@ -21,7 +21,7 @@ final readonly class FindTerminalsByClientHandler
     public function __invoke(FindTerminalsByClientQuery $query): array
     {
         return array_map(
-            static fn($terminal) => TerminalResponse::fromEntity($terminal),
+            static fn ($terminal) => TerminalResponse::fromEntity($terminal),
             $this->terminalRepository->findByClientId(new ClientIdValueObject($query->clientId)),
         );
     }

@@ -32,7 +32,8 @@ final class CashAdvanceDetailResponse
         public readonly bool $isEditable,
         public readonly string $createdAt,
         public readonly ?string $updatedAt,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(CashAdvance $cashAdvance): self
     {

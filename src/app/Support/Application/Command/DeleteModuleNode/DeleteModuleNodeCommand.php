@@ -8,5 +8,6 @@ final readonly class DeleteModuleNodeCommand
 {
     public function __construct(
         public string $id,
-    ) {}
+    ) {
+    }
 }

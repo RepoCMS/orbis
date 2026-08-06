@@ -9,9 +9,9 @@ use App\Client\Application\Command\UnlinkUserFromContact\UnlinkUserFromContactHa
 use App\Client\Domain\Entities\Contact;
 use App\Client\Domain\Events\ContactUserUnlinked;
 use App\Client\Domain\Repositories\ContactRepositoryInterface;
-use App\Client\Domain\ValueObjects\ContactIdValueObject;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
 use App\Client\Domain\ValueObjects\ContactEmailValueObject;
+use App\Client\Domain\ValueObjects\ContactIdValueObject;
 use App\Client\Domain\ValueObjects\ContactPhoneNumberValueObject;
 use App\Client\Domain\ValueObjects\ContactRoleValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;

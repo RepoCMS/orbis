@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Inventory\Presentation\Http;
 
+use App\Identity\Infrastructure\Security\SymfonySecurityUser;
 use App\Inventory\Application\Command\AddProduct\AddProductCommand;
 use App\Inventory\Application\Command\AddProduct\AddProductHandler;
 use App\Inventory\Application\Command\DeleteProduct\DeleteProductCommand;
@@ -14,16 +15,15 @@ use App\Inventory\Application\Command\UpdateProduct\UpdateProductCommand;
 use App\Inventory\Application\Command\UpdateProduct\UpdateProductHandler;
 use App\Inventory\Application\Command\WriteOffNonserializedStock\WriteOffNonserializedStockCommand;
 use App\Inventory\Application\Command\WriteOffNonserializedStock\WriteOffNonserializedStockHandler;
-use App\Inventory\Application\Exception\ProductHasStockException;
-use App\Inventory\Application\Exception\StockNotFoundException;
 use App\Inventory\Application\Exception\LocationNotFoundException;
 use App\Inventory\Application\Exception\ProductCodeAlreadyExistsException;
+use App\Inventory\Application\Exception\ProductHasStockException;
 use App\Inventory\Application\Exception\ProductNotFoundException;
+use App\Inventory\Application\Exception\StockNotFoundException;
 use App\Inventory\Application\Query\FindProductById\FindProductByIdHandler;
 use App\Inventory\Application\Query\ListLocations\ListLocationsHandler;
 use App\Inventory\Application\Query\ListProducts\ListProductsHandler;
 use App\Inventory\Application\Query\StockByProduct\StockByProductHandler;
-use App\Identity\Infrastructure\Security\SymfonySecurityUser;
 use App\Shared\Exceptions\DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractStringEnumType;
 
 final class ContractStatusType extends AbstractStringEnumType
 {
-    public function getName(): string { return 'contract_status'; }
-    protected function getEnumClass(): string { return ContractStatus::class; }
+    public function getName(): string
+    {
+        return 'contract_status';
+    }
+    protected function getEnumClass(): string
+    {
+        return ContractStatus::class;
+    }
 }

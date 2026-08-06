@@ -16,19 +16,20 @@ abstract class DomainException extends RuntimeException
 
     /**
      * Agrega contexto adicional a la excepción.
-     * 
+     *
      * @param array $context Datos estructurados adicionales (field, value, constraints, etc.)
      * @return $this Para usar fluent interface
      */
     public function withContext(array $context): self
     {
         $this->context = $context;
+
         return $this;
     }
 
     /**
      * Obtiene el contexto de la excepción.
-     * 
+     *
      * @return array Datos de contexto estructurados
      */
     public function getContext(): array
@@ -38,7 +39,7 @@ abstract class DomainException extends RuntimeException
 
     /**
      * Serializa la excepción a un array para logging o respuestas API.
-     * 
+     *
      * @return array
      */
     public function toArray(): array

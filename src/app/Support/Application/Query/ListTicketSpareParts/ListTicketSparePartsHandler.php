@@ -15,7 +15,8 @@ final readonly class ListTicketSparePartsHandler
         private TicketSparePartRepositoryInterface $sparePartRepo,
         private TicketRepositoryInterface $ticketRepo,
         private SparePartViewScopeResolver $scopeResolver,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ListTicketSparePartsQuery $query): array
     {
@@ -38,6 +39,7 @@ final readonly class ListTicketSparePartsHandler
                     $spareParts[] = $part;
                 }
             }
+
             return $spareParts;
         }
 

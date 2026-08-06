@@ -21,7 +21,8 @@ final class IdentityReportController extends AbstractController
         private readonly SecurityEventsReportGenerator $securityEventsReportGenerator,
         private readonly ExcelExportService $excelExport,
         private readonly PdfExportService $pdfExport,
-    ) {}
+    ) {
+    }
 
     #[Route('/security-events.{_format}', name: 'identity_report_security_events', methods: ['GET'], requirements: ['_format' => 'xlsx|pdf'])]
     public function securityEvents(Request $request, string $_format = 'xlsx'): Response

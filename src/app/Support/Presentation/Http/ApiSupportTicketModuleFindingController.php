@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Support\Presentation\Http;
 
 use App\Identity\Infrastructure\Security\SymfonySecurityUser;
+use App\Shared\Exceptions\ApplicationException;
+use App\Shared\Exceptions\DomainException;
 use App\Support\Application\Command\RecordModuleFinding\RecordModuleFindingCommand;
 use App\Support\Application\Command\RecordModuleFinding\RecordModuleFindingHandler;
 use App\Support\Application\Command\UpdateModuleFinding\UpdateModuleFindingCommand;
@@ -12,16 +14,13 @@ use App\Support\Application\Command\UpdateModuleFinding\UpdateModuleFindingHandl
 use App\Support\Application\Command\UploadFindingEvidence\UploadFindingEvidenceCommand;
 use App\Support\Application\Command\UploadFindingEvidence\UploadFindingEvidenceHandler;
 use App\Support\Application\Exception\TicketNotFoundException;
-use App\Support\Application\Query\GetAtmModuleTree\GetAtmModuleTreeQuery;
 use App\Support\Application\Query\GetAtmModuleTree\GetAtmModuleTreeHandler;
-use App\Support\Application\Query\ListTicketModuleFindings\ListTicketModuleFindingsQuery;
+use App\Support\Application\Query\GetAtmModuleTree\GetAtmModuleTreeQuery;
 use App\Support\Application\Query\ListTicketModuleFindings\ListTicketModuleFindingsHandler;
-use App\Support\Domain\Exceptions\TicketModuleFindingException;
+use App\Support\Application\Query\ListTicketModuleFindings\ListTicketModuleFindingsQuery;
 use App\Support\Domain\Repositories\TicketModuleFindingRepositoryInterface;
 use App\Support\Domain\ValueObjects\FindingEvidenceIdValueObject;
 use App\Support\Domain\ValueObjects\TicketModuleFindingIdValueObject;
-use App\Shared\Exceptions\ApplicationException;
-use App\Shared\Exceptions\DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

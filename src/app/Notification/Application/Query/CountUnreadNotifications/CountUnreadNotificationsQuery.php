@@ -8,5 +8,6 @@ final readonly class CountUnreadNotificationsQuery
 {
     public function __construct(
         public string $employeeId,
-    ) {}
+    ) {
+    }
 }

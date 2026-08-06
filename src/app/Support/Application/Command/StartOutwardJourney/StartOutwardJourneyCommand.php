@@ -13,5 +13,6 @@ final readonly class StartOutwardJourneyCommand
         public JourneyType $journeyType = JourneyType::OUTWARD,
         public bool        $isPartOfRoute = false,
         public ?string     $notes = null,
-    ) {}
+    ) {
+    }
 }

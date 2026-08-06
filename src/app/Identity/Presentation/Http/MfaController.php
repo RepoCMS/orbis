@@ -78,6 +78,7 @@ final class MfaController extends AbstractController
 
         if ($secret === '' || !$this->totp->verify($secret, $code)) {
             $this->addFlash('error', 'Código incorrecto. Verifica la hora de tu dispositivo e intenta de nuevo.');
+
             return $this->redirectToRoute('mfa_setup');
         }
 
@@ -132,6 +133,7 @@ final class MfaController extends AbstractController
         $request->getSession()->set(self::SESSION_KEY, true);
 
         $this->addFlash('success', 'Autenticación en dos pasos activada correctamente.');
+
         return $this->redirectToRoute($this->landingRouteResolver->resolveFor($this->getUser()));
     }
 
@@ -160,6 +162,7 @@ final class MfaController extends AbstractController
         }
 
         $request->getSession()->set(self::SESSION_KEY, true);
+
         return $this->redirectToRoute($this->landingRouteResolver->resolveFor($secUser));
     }
 

@@ -22,7 +22,8 @@ final readonly class ImportTerminalsHandler
         private TerminalRowValidator $rowValidator,
         private ClientRepositoryInterface $clientRepository,
         private RegisterTerminalHandler $registerTerminal,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ImportTerminalsCommand $command): ImportResult
     {

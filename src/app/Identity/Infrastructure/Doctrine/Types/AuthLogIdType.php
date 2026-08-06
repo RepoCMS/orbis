@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Identity\Infrastructure\Doctrine\Types;
 
-use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 use App\Identity\Domain\ValueObjects\AuthLogIdValueObject;
+use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 
 final class AuthLogIdType extends AbstractUlidType
 {

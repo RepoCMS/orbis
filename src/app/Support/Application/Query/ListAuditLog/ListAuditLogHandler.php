@@ -11,7 +11,8 @@ final readonly class ListAuditLogHandler
 {
     public function __construct(
         private TicketAuditLogRepositoryInterface $auditLogRepo,
-    ) {}
+    ) {
+    }
 
     /** @return TicketAuditLogResponse[] */
     public function __invoke(ListAuditLogQuery $query): array

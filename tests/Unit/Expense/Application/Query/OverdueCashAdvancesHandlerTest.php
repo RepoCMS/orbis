@@ -21,6 +21,7 @@ final class OverdueCashAdvancesHandlerTest extends TestCase
         for ($i = 0; $i < 26; $i++) {
             $ulid .= $chars[random_int(0, 31)];
         }
+
         return $ulid;
     }
     public function testReturnsOverdueAdvances(): void

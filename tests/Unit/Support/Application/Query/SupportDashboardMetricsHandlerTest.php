@@ -142,6 +142,7 @@ final class SupportDashboardMetricsHandlerTest extends TestCase
             if (str_contains($sql, 'service_type')) {
                 return [['service_type' => 'correctivo', 'avg_hours' => '4.5', 'cnt' => '10']];
             }
+
             return [];
         });
 
@@ -152,6 +153,7 @@ final class SupportDashboardMetricsHandlerTest extends TestCase
             if (str_contains($sql, 'AVG')) {
                 return '4.5';
             }
+
             return '0';
         });
 

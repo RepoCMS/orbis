@@ -35,11 +35,10 @@ use App\Organization\Domain\Entities\Employee;
 use App\Organization\Domain\Enums\EmployeeProfile;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
+use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Support\Domain\Entities\Ticket;
-use App\Support\Domain\Enums\ServiceType;
-use App\Support\Domain\ValueObjects\TicketIdValueObject;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -47,7 +46,6 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use DateTimeImmutable;
 
 /**
  * Siembra datos demo realistas a través de múltiples Bounded Contexts
@@ -435,14 +433,14 @@ final class SeedDemoDataCommand extends Command
         $io->section('Resumen');
 
         $io->definitionList(
-            ['Roles'             => sprintf('%d creados',             $rolesCreated)],
+            ['Roles'             => sprintf('%d creados', $rolesCreated)],
             ['Permisos'          => 'Sembrados del catálogo completo'],
-            ['Empleados'         => sprintf('%d creados',             $employeesCreated)],
-            ['Usuarios'          => sprintf('%d creados',             $usersCreated)],
-            ['Cliente'           => sprintf('%d creado con contactos',$clientCreated + $contactsCreated)],
+            ['Empleados'         => sprintf('%d creados', $employeesCreated)],
+            ['Usuarios'          => sprintf('%d creados', $usersCreated)],
+            ['Cliente'           => sprintf('%d creado con contactos', $clientCreated + $contactsCreated)],
             ['Ticket'            => 'Omitido (Known Issue: Ticket::$assignments type)'],
-            ['Liquidación gastos'=> sprintf('%d creada',              $oeCreated)],
-            ['Adelanto efectivo' => sprintf('%d creado',              $caCreated)],
+            ['Liquidación gastos' => sprintf('%d creada', $oeCreated)],
+            ['Adelanto efectivo' => sprintf('%d creado', $caCreated)],
         );
 
         $io->newLine();

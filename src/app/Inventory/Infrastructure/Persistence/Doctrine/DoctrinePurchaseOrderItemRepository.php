@@ -8,12 +8,13 @@ use App\Inventory\Domain\Entities\PurchaseOrderItem;
 use App\Inventory\Domain\Repositories\PurchaseOrderItemRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\PurchaseOrderIdValueObject;
 use App\Inventory\Domain\ValueObjects\PurchaseOrderItemIdValueObject;
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrinePurchaseOrderItemRepository implements PurchaseOrderItemRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $em) {}
+    public function __construct(private readonly EntityManagerInterface $em)
+    {
+    }
 
     public function findById(PurchaseOrderItemIdValueObject $id): ?PurchaseOrderItem
     {

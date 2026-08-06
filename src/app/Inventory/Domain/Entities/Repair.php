@@ -7,7 +7,6 @@ namespace App\Inventory\Domain\Entities;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Inventory\Domain\Enums\RepairPriority;
 use App\Inventory\Domain\Enums\RepairStatus;
-use App\Inventory\Domain\Exceptions\InvalidLocationTypeException;
 use App\Inventory\Domain\ValueObjects\LocationIdValueObject;
 use App\Inventory\Domain\ValueObjects\RepairIdValueObject;
 use App\Inventory\Domain\ValueObjects\SerializedStockIdValueObject;

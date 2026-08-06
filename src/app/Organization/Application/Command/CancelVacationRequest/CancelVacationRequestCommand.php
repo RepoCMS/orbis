@@ -9,5 +9,6 @@ final readonly class CancelVacationRequestCommand
     public function __construct(
         public string $requestId,
         public string $employeeId,
-    ) {}
+    ) {
+    }
 }

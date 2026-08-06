@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Inventory\Application\Command;
 
-use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Inventory\Application\Command\CreateCustodyAssignment\CreateCustodyAssignmentCommand;
 use App\Inventory\Application\Command\CreateCustodyAssignment\CreateCustodyAssignmentHandler;
 use App\Inventory\Domain\Entities\Location;
@@ -25,8 +24,8 @@ use App\Organization\Domain\Enums\EmployeeProfile;
 use App\Organization\Domain\Enums\EmployeeStatus;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
+use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Shared\Application\Service\IdempotencyServiceInterface;
 use App\Shared\Application\Service\TransactionManagerInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;

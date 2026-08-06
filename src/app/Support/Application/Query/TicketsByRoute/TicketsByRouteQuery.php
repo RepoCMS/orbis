@@ -8,5 +8,6 @@ final readonly class TicketsByRouteQuery
 {
     public function __construct(
         public string $routeGroupId,
-    ) {}
+    ) {
+    }
 }

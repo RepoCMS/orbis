@@ -6,7 +6,7 @@ namespace App\Client\Application\Query\ListClients;
 
 use App\Client\Domain\Enums\ClientStatus;
 
-final class ListClientsQuery
+final readonly class ListClientsQuery
 {
     public function __construct(
         public readonly ?string $name = null,
@@ -14,6 +14,6 @@ final class ListClientsQuery
         public readonly ?ClientStatus $status = null,
         public readonly int $page = 1,
         public readonly int $limit = 20,
-    ) {}
+    ) {
+    }
 }
-

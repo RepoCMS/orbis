@@ -20,7 +20,7 @@ final readonly class ListUsersHandler
     public function __invoke(ListUsersQuery $query): array
     {
         return array_map(
-            static fn($user) => UserResponse::fromEntity($user),
+            static fn ($user) => UserResponse::fromEntity($user),
             $this->userRepository->findAll(),
         );
     }

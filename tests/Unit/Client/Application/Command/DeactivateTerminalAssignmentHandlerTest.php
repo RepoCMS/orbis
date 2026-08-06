@@ -7,15 +7,15 @@ namespace App\Tests\Unit\Client\Application\Command;
 use App\Client\Application\Command\DeactivateTerminalAssignment\DeactivateTerminalAssignmentCommand;
 use App\Client\Application\Command\DeactivateTerminalAssignment\DeactivateTerminalAssignmentHandler;
 use App\Client\Application\Exception\TerminalAssignmentNotFoundException;
-use App\Client\Domain\Enums\TerminalAssignmentStatus;
 use App\Client\Domain\Entities\TerminalAssignment;
+use App\Client\Domain\Enums\TerminalAssignmentStatus;
 use App\Client\Domain\Events\TerminalAssignmentDeactivated;
 use App\Client\Domain\Repositories\TerminalAssignmentRepositoryInterface;
+use App\Client\Domain\ValueObjects\SiteIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalAssignmentIdValueObject;
+use App\Client\Domain\ValueObjects\TerminalIdAssignedByClientValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalNameValueObject;
-use App\Client\Domain\ValueObjects\TerminalIdAssignedByClientValueObject;
-use App\Client\Domain\ValueObjects\SiteIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use PHPUnit\Framework\TestCase;
 

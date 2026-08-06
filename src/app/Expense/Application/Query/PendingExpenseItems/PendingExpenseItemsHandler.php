@@ -13,7 +13,8 @@ final readonly class PendingExpenseItemsHandler
 {
     public function __construct(
         private OperatingExpenseRepositoryInterface $expenseRepo,
-    ) {}
+    ) {
+    }
 
     /**
      * @return ExpenseItemResponse[]

@@ -11,7 +11,8 @@ final readonly class DoctrineTransactionManager implements TransactionManagerInt
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-    ) {}
+    ) {
+    }
 
     public function begin(): void
     {

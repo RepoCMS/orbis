@@ -23,14 +23,14 @@ final readonly class ListTechnicianLoansHandler
         if ($query->technicianId !== null) {
             $loans = array_values(array_filter(
                 $loans,
-                static fn($loan) =>
+                static fn ($loan) =>
                     $loan->fromTechnicianId() === $query->technicianId
                     || $loan->toTechnicianId() === $query->technicianId
             ));
         }
 
         return array_map(
-            static fn($loan) => TechnicianLoanResponse::fromEntity($loan),
+            static fn ($loan) => TechnicianLoanResponse::fromEntity($loan),
             $loans,
         );
     }

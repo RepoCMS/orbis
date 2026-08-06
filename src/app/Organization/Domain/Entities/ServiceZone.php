@@ -78,7 +78,7 @@ final class ServiceZone implements TimestampableInterface
     {
         $cityId = strtoupper(trim($cityId));
         $this->cityIds = array_values(
-            array_filter($this->cityIds, static fn(string $c) => $c !== $cityId)
+            array_filter($this->cityIds, static fn (string $c) => $c !== $cityId)
         );
     }
 

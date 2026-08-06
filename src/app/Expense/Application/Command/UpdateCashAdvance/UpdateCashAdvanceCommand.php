@@ -9,5 +9,6 @@ final readonly class UpdateCashAdvanceCommand
     public function __construct(
         public string $cashAdvanceId,
         public float $newAmount,
-    ) {}
+    ) {
+    }
 }

@@ -14,7 +14,8 @@ final class DoctrineServiceZoneAssignmentRepository implements ServiceZoneAssign
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function save(ServiceZoneAssignment $assignment): void
     {

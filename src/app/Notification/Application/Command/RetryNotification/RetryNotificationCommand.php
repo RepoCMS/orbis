@@ -8,5 +8,6 @@ final readonly class RetryNotificationCommand
 {
     public function __construct(
         public string $logId,
-    ) {}
+    ) {
+    }
 }

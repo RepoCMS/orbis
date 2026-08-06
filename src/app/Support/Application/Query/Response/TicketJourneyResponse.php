@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Support\Application\Query\Response;
 
-use App\Support\Domain\Enums\JourneyType;
-
 final readonly class TicketJourneyResponse
 {
     public function __construct(
@@ -17,7 +15,8 @@ final readonly class TicketJourneyResponse
         public ?string $arrivedAt,
         public bool    $isPartOfRoute,
         public ?string $notes,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(\App\Support\Domain\Entities\Journey $journey): self
     {

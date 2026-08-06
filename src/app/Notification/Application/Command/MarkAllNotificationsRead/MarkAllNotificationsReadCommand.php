@@ -8,5 +8,6 @@ final readonly class MarkAllNotificationsReadCommand
 {
     public function __construct(
         public string $employeeId,
-    ) {}
+    ) {
+    }
 }

@@ -9,7 +9,6 @@ use App\Support\Application\Query\ListTicketChildren\ListTicketChildrenQuery;
 use App\Support\Application\Query\Response\TicketResponse;
 use App\Support\Domain\Entities\Ticket;
 use App\Support\Domain\Enums\ServiceType;
-use App\Support\Domain\Enums\TicketStatus;
 use App\Support\Domain\Repositories\TicketRepositoryInterface;
 use App\Support\Domain\ValueObjects\TicketIdValueObject;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +28,7 @@ final class ListTicketChildrenHandlerTest extends TestCase
      */
     private function createRepoWithMethod(string $method, mixed $return): mixed
     {
-        $repo = new class implements TicketRepositoryInterface {
+        $repo = new class () implements TicketRepositoryInterface {
             private array $methods = [];
 
             public function __call(string $name, array $args): mixed
@@ -39,18 +38,43 @@ final class ListTicketChildrenHandlerTest extends TestCase
 
             public function setReturn(string $method, mixed $return): void
             {
-                $this->methods[$method] = is_callable($return) ? $return : fn() => $return;
+                $this->methods[$method] = is_callable($return) ? $return : fn () => $return;
             }
 
-            public function findById(\App\Support\Domain\ValueObjects\TicketIdValueObject $id): ?Ticket { return null; }
-            public function findByTicketNumber(string $ticketNumber): ?Ticket { return null; }
-            public function findByStatuses(array $statuses): array { return []; }
-            public function findByClientId(string $clientId): array { return []; }
-            public function findByEmployeeId(string $employeeId): array { return []; }
-            public function findAll(): array { return []; }
-            public function nextTicketSequence(int $year): int { return 0; }
-            public function save(Ticket $ticket): void {}
-            public function delete(TicketIdValueObject $id): void {}
+            public function findById(\App\Support\Domain\ValueObjects\TicketIdValueObject $id): ?Ticket
+            {
+                return null;
+            }
+            public function findByTicketNumber(string $ticketNumber): ?Ticket
+            {
+                return null;
+            }
+            public function findByStatuses(array $statuses): array
+            {
+                return [];
+            }
+            public function findByClientId(string $clientId): array
+            {
+                return [];
+            }
+            public function findByEmployeeId(string $employeeId): array
+            {
+                return [];
+            }
+            public function findAll(): array
+            {
+                return [];
+            }
+            public function nextTicketSequence(int $year): int
+            {
+                return 0;
+            }
+            public function save(Ticket $ticket): void
+            {
+            }
+            public function delete(TicketIdValueObject $id): void
+            {
+            }
         };
 
         $repo->setReturn($method, $return);

@@ -25,7 +25,8 @@ final class RmaRecord
         private string                 $createdBy,
         private \DateTimeImmutable     $createdAt,
         private ?\DateTimeImmutable    $deletedAt,
-    ) {}
+    ) {
+    }
 
     public static function create(
         RmaRecordIdValueObject $id,
@@ -67,15 +68,45 @@ final class RmaRecord
         $this->deletedAt = new \DateTimeImmutable();
     }
 
-    public function id(): RmaRecordIdValueObject { return $this->id; }
-    public function ticketId(): string            { return $this->ticketId; }
-    public function productCode(): string         { return $this->productCode; }
-    public function serialNumber(): ?string       { return $this->serialNumber; }
-    public function quantity(): int               { return $this->quantity; }
-    public function notes(): ?string              { return $this->notes; }
-    public function createdBy(): string           { return $this->createdBy; }
-    public function createdAt(): \DateTimeImmutable { return $this->createdAt; }
-    public function deletedAt(): ?\DateTimeImmutable { return $this->deletedAt; }
+    public function id(): RmaRecordIdValueObject
+    {
+        return $this->id;
+    }
+    public function ticketId(): string
+    {
+        return $this->ticketId;
+    }
+    public function productCode(): string
+    {
+        return $this->productCode;
+    }
+    public function serialNumber(): ?string
+    {
+        return $this->serialNumber;
+    }
+    public function quantity(): int
+    {
+        return $this->quantity;
+    }
+    public function notes(): ?string
+    {
+        return $this->notes;
+    }
+    public function createdBy(): string
+    {
+        return $this->createdBy;
+    }
+    public function createdAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    public function deletedAt(): ?\DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
 
-    public function isDeleted(): bool { return $this->deletedAt !== null; }
+    public function isDeleted(): bool
+    {
+        return $this->deletedAt !== null;
+    }
 }

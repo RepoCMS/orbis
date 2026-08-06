@@ -10,5 +10,6 @@ final readonly class ListTicketSparePartsQuery
         public ?string $ticketId = null,
         public ?string $employeeId = null,
         public ?string $userId = null,
-    ) {}
+    ) {
+    }
 }

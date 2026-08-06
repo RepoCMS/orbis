@@ -15,7 +15,8 @@ final class TicketPause
         private string                   $pauseReason,
         private \DateTimeImmutable       $pausedAt,
         private ?\DateTimeImmutable      $resumedAt,
-    ) {}
+    ) {
+    }
 
     public static function start(
         TicketPauseIdValueObject $id,
@@ -37,11 +38,29 @@ final class TicketPause
         $this->resumedAt = new \DateTimeImmutable();
     }
 
-    public function isActive(): bool { return $this->resumedAt === null; }
+    public function isActive(): bool
+    {
+        return $this->resumedAt === null;
+    }
 
-    public function id(): TicketPauseIdValueObject    { return $this->id; }
-    public function ticketId(): TicketIdValueObject    { return $this->ticketId; }
-    public function pauseReason(): string              { return $this->pauseReason; }
-    public function pausedAt(): \DateTimeImmutable     { return $this->pausedAt; }
-    public function resumedAt(): ?\DateTimeImmutable   { return $this->resumedAt; }
+    public function id(): TicketPauseIdValueObject
+    {
+        return $this->id;
+    }
+    public function ticketId(): TicketIdValueObject
+    {
+        return $this->ticketId;
+    }
+    public function pauseReason(): string
+    {
+        return $this->pauseReason;
+    }
+    public function pausedAt(): \DateTimeImmutable
+    {
+        return $this->pausedAt;
+    }
+    public function resumedAt(): ?\DateTimeImmutable
+    {
+        return $this->resumedAt;
+    }
 }

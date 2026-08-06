@@ -8,5 +8,6 @@ final readonly class OverdueCashAdvancesQuery
 {
     public function __construct(
         public int $cutoffDays = 3,
-    ) {}
+    ) {
+    }
 }

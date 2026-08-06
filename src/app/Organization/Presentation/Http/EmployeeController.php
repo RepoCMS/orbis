@@ -7,34 +7,34 @@ namespace App\Organization\Presentation\Http;
 use App\Identity\Application\Exception\RoleNotFoundException;
 use App\Identity\Application\Exception\UsernameAlreadyExistsException;
 use App\Identity\Application\Exception\UserNotFoundException;
-use App\Organization\Application\Command\ProvisionEmployeeAccess\ProvisionEmployeeAccessCommand;
-use App\Organization\Application\Command\ProvisionEmployeeAccess\ProvisionEmployeeAccessHandler;
 use App\Identity\Application\Query\FindUserById\FindUserByIdHandler;
 use App\Identity\Application\Query\FindUserById\FindUserByIdQuery;
 use App\Identity\Application\Query\ListRoles\ListRolesHandler;
 use App\Identity\Application\Query\ListRoles\ListRolesQuery;
 use App\Identity\Application\Query\ListUsers\ListUsersHandler;
 use App\Identity\Application\Query\ListUsers\ListUsersQuery;
+use App\Organization\Application\Command\CancelEmployeeSpecialPeriod\CancelEmployeeSpecialPeriodCommand;
+use App\Organization\Application\Command\CancelEmployeeSpecialPeriod\CancelEmployeeSpecialPeriodHandler;
 use App\Organization\Application\Command\CreateEmployee\CreateEmployeeCommand;
 use App\Organization\Application\Command\CreateEmployee\CreateEmployeeHandler;
 use App\Organization\Application\Command\DeactivateEmployee\DeactivateEmployeeCommand;
 use App\Organization\Application\Command\DeactivateEmployee\DeactivateEmployeeHandler;
-use App\Organization\Application\Command\ScheduleEmployeeVacation\ScheduleEmployeeVacationCommand;
-use App\Organization\Application\Command\ScheduleEmployeeVacation\ScheduleEmployeeVacationHandler;
-use App\Organization\Application\Command\ScheduleEmployeeStandby\ScheduleEmployeeStandbyCommand;
-use App\Organization\Application\Command\ScheduleEmployeeStandby\ScheduleEmployeeStandbyHandler;
-use App\Organization\Application\Command\CancelEmployeeSpecialPeriod\CancelEmployeeSpecialPeriodCommand;
-use App\Organization\Application\Command\CancelEmployeeSpecialPeriod\CancelEmployeeSpecialPeriodHandler;
-use App\Organization\Application\Command\ReactivateEmployee\ReactivateEmployeeCommand;
-use App\Organization\Application\Command\ReactivateEmployee\ReactivateEmployeeHandler;
-use App\Organization\Application\Command\SoftDeleteEmployee\SoftDeleteEmployeeCommand;
-use App\Organization\Application\Command\SoftDeleteEmployee\SoftDeleteEmployeeHandler;
-use App\Organization\Application\Command\UpdateEmployee\UpdateEmployeeCommand;
-use App\Organization\Application\Command\UpdateEmployee\UpdateEmployeeHandler;
 use App\Organization\Application\Command\LinkUserToEmployee\LinkUserToEmployeeCommand;
 use App\Organization\Application\Command\LinkUserToEmployee\LinkUserToEmployeeHandler;
+use App\Organization\Application\Command\ProvisionEmployeeAccess\ProvisionEmployeeAccessCommand;
+use App\Organization\Application\Command\ProvisionEmployeeAccess\ProvisionEmployeeAccessHandler;
+use App\Organization\Application\Command\ReactivateEmployee\ReactivateEmployeeCommand;
+use App\Organization\Application\Command\ReactivateEmployee\ReactivateEmployeeHandler;
+use App\Organization\Application\Command\ScheduleEmployeeStandby\ScheduleEmployeeStandbyCommand;
+use App\Organization\Application\Command\ScheduleEmployeeStandby\ScheduleEmployeeStandbyHandler;
+use App\Organization\Application\Command\ScheduleEmployeeVacation\ScheduleEmployeeVacationCommand;
+use App\Organization\Application\Command\ScheduleEmployeeVacation\ScheduleEmployeeVacationHandler;
+use App\Organization\Application\Command\SoftDeleteEmployee\SoftDeleteEmployeeCommand;
+use App\Organization\Application\Command\SoftDeleteEmployee\SoftDeleteEmployeeHandler;
 use App\Organization\Application\Command\UnlinkUserFromEmployee\UnlinkUserFromEmployeeCommand;
 use App\Organization\Application\Command\UnlinkUserFromEmployee\UnlinkUserFromEmployeeHandler;
+use App\Organization\Application\Command\UpdateEmployee\UpdateEmployeeCommand;
+use App\Organization\Application\Command\UpdateEmployee\UpdateEmployeeHandler;
 use App\Organization\Application\Exception\EmployeeNotFoundException;
 use App\Organization\Application\Query\FindEmployeeById\FindEmployeeByIdHandler;
 use App\Organization\Application\Query\FindEmployeeById\FindEmployeeByIdQuery;
@@ -44,10 +44,10 @@ use App\Organization\Application\Query\ListEmployeeSpecialPeriods\ListEmployeeSp
 use App\Organization\Application\Query\ListEmployeeSpecialPeriods\ListEmployeeSpecialPeriodsQuery;
 use App\Shared\Exceptions\DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/employees')]
 final class EmployeeController extends AbstractController
@@ -242,6 +242,7 @@ final class EmployeeController extends AbstractController
             ));
 
             $this->addFlash('success', 'Datos del empleado actualizados.');
+
             return $this->redirectToRoute('employee_show', ['id' => $id]);
         } catch (EmployeeNotFoundException) {
             throw $this->createNotFoundException('Empleado no encontrado.');
@@ -303,6 +304,7 @@ final class EmployeeController extends AbstractController
                 ));
 
                 $this->addFlash('success', 'Acceso al sistema creado y vinculado al empleado.');
+
                 return $this->redirectToRoute('employee_show', ['id' => $id]);
             } catch (UsernameAlreadyExistsException $e) {
                 $errors[] = $e->getMessage();
@@ -435,4 +437,3 @@ final class EmployeeController extends AbstractController
         return $this->redirectToRoute('employee_show', ['id' => $id]);
     }
 }
-

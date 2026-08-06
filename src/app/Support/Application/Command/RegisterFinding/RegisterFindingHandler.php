@@ -17,7 +17,8 @@ final readonly class RegisterFindingHandler
         private TicketRepositoryInterface        $ticketRepo,
         private TicketFindingRepositoryInterface $findingRepo,
         private IdGeneratorInterface             $idGenerator,
-    ) {}
+    ) {
+    }
 
     public function __invoke(RegisterFindingCommand $command): void
     {

@@ -14,8 +14,8 @@ use App\Client\Domain\ValueObjects\ContractIdValueObject;
 use App\Shared\Application\IdempotentHandlerTrait;
 use App\Shared\Application\Service\IdempotencyService;
 use App\Shared\Application\Service\IdempotencyServiceInterface;
-use App\Shared\Domain\Service\IdGeneratorInterface;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
+use App\Shared\Domain\Service\IdGeneratorInterface;
 use DateTimeImmutable;
 
 final readonly class CreateContractHandler

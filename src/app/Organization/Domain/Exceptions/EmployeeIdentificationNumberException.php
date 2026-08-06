@@ -8,5 +8,4 @@ use App\Shared\Exceptions\DomainException;
 
 class EmployeeIdentificationNumberException extends DomainException
 {
-    
 }

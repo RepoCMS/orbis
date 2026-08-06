@@ -12,7 +12,8 @@ final readonly class GetCashAdvanceDetailHandler
 {
     public function __construct(
         private CashAdvanceRepositoryInterface $cashAdvanceRepo,
-    ) {}
+    ) {
+    }
 
     public function __invoke(GetCashAdvanceDetailQuery $query): ?CashAdvanceDetailResponse
     {

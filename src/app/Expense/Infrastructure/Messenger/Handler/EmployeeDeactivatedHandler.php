@@ -24,7 +24,8 @@ final readonly class EmployeeDeactivatedHandler
 {
     public function __construct(
         private CashAdvanceRepositoryInterface $cashAdvanceRepository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(DomainEventMessage $message): void
     {

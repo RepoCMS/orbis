@@ -22,7 +22,8 @@ final class ApiClientImportController extends AbstractController
     public function __construct(
         private readonly ImportClientsHandler $clientHandler,
         private readonly ImportTerminalsHandler $terminalHandler,
-    ) {}
+    ) {
+    }
 
     #[Route('/clients', name: 'client_import_clients', methods: ['POST'])]
     #[IsGranted('client.import')]

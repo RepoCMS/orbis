@@ -17,8 +17,8 @@ use App\Organization\Domain\Events\EmployeeDeactivated;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\Repositories\EmploymentPeriodRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
+use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use PHPUnit\Framework\TestCase;
 

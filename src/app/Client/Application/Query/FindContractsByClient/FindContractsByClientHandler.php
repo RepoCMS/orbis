@@ -21,7 +21,7 @@ final readonly class FindContractsByClientHandler
     public function __invoke(FindContractsByClientQuery $query): array
     {
         return array_map(
-            static fn($contract) => ContractResponse::fromEntity($contract),
+            static fn ($contract) => ContractResponse::fromEntity($contract),
             $this->contractRepository->findByClientId(new ClientIdValueObject($query->clientId)),
         );
     }

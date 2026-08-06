@@ -12,7 +12,8 @@ final readonly class UpdateNotificationTemplateHandler
 {
     public function __construct(
         private NotificationTemplateRepositoryInterface $templateRepository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(UpdateNotificationTemplateCommand $command): void
     {

@@ -9,5 +9,6 @@ final readonly class MarkNotificationReadCommand
     public function __construct(
         public string $logId,
         public string $employeeId,
-    ) {}
+    ) {
+    }
 }

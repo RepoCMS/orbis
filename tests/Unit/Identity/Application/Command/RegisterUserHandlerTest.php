@@ -91,7 +91,8 @@ final class RegisterUserHandlerTest extends TestCase
         $roleRepo->method('findById')->willReturn(null);
 
         $handler = new RegisterUserHandler(
-            $userRepo, $roleRepo,
+            $userRepo,
+            $roleRepo,
             $this->createMock(PasswordHasherInterface::class),
             $this->createMock(IdGeneratorInterface::class),
             $this->createMock(DomainEventPublisherInterface::class),

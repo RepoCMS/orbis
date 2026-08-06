@@ -21,7 +21,7 @@ final readonly class FindWarrantiesByTerminalHandler
     public function __invoke(FindWarrantiesByTerminalQuery $query): array
     {
         return array_map(
-            static fn($warranty) => WarrantyResponse::fromEntity($warranty),
+            static fn ($warranty) => WarrantyResponse::fromEntity($warranty),
             $this->warrantyRepository->findByTerminalId(new TerminalIdValueObject($query->terminalId)),
         );
     }

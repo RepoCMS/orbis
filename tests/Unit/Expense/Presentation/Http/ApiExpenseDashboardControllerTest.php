@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Expense\Presentation\Http;
 
 use App\Expense\Application\Query\GetExpenseDashboardSummary\GetExpenseDashboardSummaryHandler;
-use App\Expense\Application\Query\GetExpenseDashboardSummary\GetExpenseDashboardSummaryQuery;
-use App\Expense\Application\Query\Response\DashboardSummaryResponse;
 use App\Expense\Presentation\Http\ApiExpenseDashboardController;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;

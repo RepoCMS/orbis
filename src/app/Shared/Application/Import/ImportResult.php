@@ -12,7 +12,8 @@ final readonly class ImportResult
         public int   $errors,
         public int   $skipped,
         public array $errorDetail = [],
-    ) {}
+    ) {
+    }
 
     public function isSuccess(): bool
     {

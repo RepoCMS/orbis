@@ -8,5 +8,6 @@ final readonly class ResumeTicketCommand
 {
     public function __construct(
         public string $ticketId,
-    ) {}
+    ) {
+    }
 }

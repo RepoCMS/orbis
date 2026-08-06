@@ -21,7 +21,7 @@ final readonly class FindContactsByClientHandler
     public function __invoke(FindContactsByClientQuery $query): array
     {
         return array_map(
-            static fn($contact) => ContactResponse::fromEntity($contact),
+            static fn ($contact) => ContactResponse::fromEntity($contact),
             $this->contactRepository->findByClientId(new ClientIdValueObject($query->clientId)),
         );
     }

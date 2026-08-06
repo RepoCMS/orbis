@@ -17,8 +17,8 @@ use App\Identity\Domain\Service\PasswordHasherInterface;
 use App\Identity\Domain\ValueObjects\HashedPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
-use App\Identity\Domain\ValueObjects\UserTokenIdValueObject;
 use App\Identity\Domain\ValueObjects\UsernameValueObject;
+use App\Identity\Domain\ValueObjects\UserTokenIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\TestCase;
@@ -68,7 +68,12 @@ final class ResetPasswordHandlerTest extends TestCase
         $idGenerator->method('generate')->willReturn(self::TOKEN_ID);
 
         $handler = new ResetPasswordHandler(
-            $tokenRepo, $userRepo, $hasher, $publisher, $authLogRepo, $idGenerator,
+            $tokenRepo,
+            $userRepo,
+            $hasher,
+            $publisher,
+            $authLogRepo,
+            $idGenerator,
         );
         ($handler)(new ResetPasswordCommand((string) $plainToken, 'NewSecurePass1!'));
 

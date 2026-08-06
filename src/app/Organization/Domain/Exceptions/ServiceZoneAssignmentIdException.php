@@ -6,4 +6,6 @@ namespace App\Organization\Domain\Exceptions;
 
 use App\Shared\Exceptions\DomainException;
 
-final class ServiceZoneAssignmentIdException extends DomainException {}
+final class ServiceZoneAssignmentIdException extends DomainException
+{
+}

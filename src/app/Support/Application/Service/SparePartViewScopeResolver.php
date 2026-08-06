@@ -21,7 +21,8 @@ final readonly class SparePartViewScopeResolver
     public function __construct(
         private EmployeeRepositoryInterface $employeeRepository,
         private LocationRepositoryInterface $locationRepository,
-    ) {}
+    ) {
+    }
 
     public function resolve(string $userId): ?SparePartScope
     {

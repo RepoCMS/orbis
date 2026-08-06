@@ -28,7 +28,8 @@ final class InventoryImportController extends AbstractController
         private readonly ImportSerializedStockHandler $serializedHandler,
         private readonly ImportNonserializedStockHandler $nonserializedHandler,
         private readonly ImportPurchaseOrdersHandler $purchaseOrdersHandler,
-    ) {}
+    ) {
+    }
 
     #[Route('', name: 'inventory_import', methods: ['GET'])]
     public function index(): Response
@@ -118,12 +119,14 @@ final class InventoryImportController extends AbstractController
         $file = $request->files->get('file');
         if ($file === null) {
             $this->addFlash('error', 'No se ha proporcionado ningún archivo.');
+
             return $this->redirectToRoute('inventory_import');
         }
 
         $extension = $file->getClientOriginalExtension();
         if (!in_array($extension, ['csv', 'xlsx'], true)) {
             $this->addFlash('error', 'Formato no soportado. Use archivos CSV o XLSX.');
+
             return $this->redirectToRoute('inventory_import');
         }
 

@@ -23,5 +23,6 @@ final readonly class AtmModuleNode
         public string $label,
         public array $children = [],
         public array $components = [],
-    ) {}
+    ) {
+    }
 }

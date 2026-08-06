@@ -15,7 +15,8 @@ final class DoctrineOvertimeRecordRepository implements OvertimeRecordRepository
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function save(OvertimeRecord $record): void
     {

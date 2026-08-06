@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 
 final class RegionIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'geo_region_id'; }
-    protected function getValueObjectClass(): string { return RegionIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'geo_region_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return RegionIdValueObject::class;
+    }
 }

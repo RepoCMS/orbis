@@ -12,7 +12,8 @@ final readonly class ListNotificationPreferencesHandler
 {
     public function __construct(
         private NotificationPreferenceRepositoryInterface $preferenceRepository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ListNotificationPreferencesQuery $query): array
     {

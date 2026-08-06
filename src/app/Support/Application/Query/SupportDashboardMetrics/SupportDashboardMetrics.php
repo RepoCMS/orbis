@@ -31,5 +31,6 @@ final class SupportDashboardMetrics
         public array $completionsTrend = [],
         public array $recentTickets = [],
         public array $avgTimeByTechnician = [],
-    ) {}
+    ) {
+    }
 }

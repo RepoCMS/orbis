@@ -17,7 +17,8 @@ final readonly class UploadFindingEvidenceHandler
     public function __construct(
         private TicketModuleFindingRepositoryInterface $findingRepo,
         private IdGeneratorInterface                   $idGenerator,
-    ) {}
+    ) {
+    }
 
     public function __invoke(UploadFindingEvidenceCommand $command): string
     {

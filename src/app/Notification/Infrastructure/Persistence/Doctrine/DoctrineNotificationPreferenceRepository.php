@@ -14,7 +14,8 @@ final class DoctrineNotificationPreferenceRepository implements NotificationPref
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function findById(NotificationPreferenceIdValueObject $id): ?NotificationPreference
     {

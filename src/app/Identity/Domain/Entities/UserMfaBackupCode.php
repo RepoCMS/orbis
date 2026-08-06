@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Identity\Domain\Entities;
 
-use App\Identity\Domain\ValueObjects\UserMfaBackupCodeIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
+use App\Identity\Domain\ValueObjects\UserMfaBackupCodeIdValueObject;
 use DateTimeImmutable;
 
 /**

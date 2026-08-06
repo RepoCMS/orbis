@@ -27,7 +27,8 @@ final readonly class CreateCashAdvanceHandler
         private UserResolverInterface $userResolver,
         private DomainEventPublisherInterface $eventPublisher,
         private IdempotencyServiceInterface $idempotencyService,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CreateCashAdvanceCommand $command): string
     {

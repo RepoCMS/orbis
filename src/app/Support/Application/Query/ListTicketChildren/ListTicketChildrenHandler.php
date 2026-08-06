@@ -11,7 +11,8 @@ final readonly class ListTicketChildrenHandler
 {
     public function __construct(
         private TicketRepositoryInterface $ticketRepo,
-    ) {}
+    ) {
+    }
 
     /** @return TicketResponse[] */
     public function __invoke(ListTicketChildrenQuery $query): array

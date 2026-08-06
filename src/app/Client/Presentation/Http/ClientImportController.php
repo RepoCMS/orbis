@@ -8,7 +8,6 @@ use App\Client\Application\Command\ImportClients\ImportClientsCommand;
 use App\Client\Application\Command\ImportClients\ImportClientsHandler;
 use App\Client\Application\Command\ImportTerminals\ImportTerminalsCommand;
 use App\Client\Application\Command\ImportTerminals\ImportTerminalsHandler;
-use App\Shared\Application\Import\ImportResult;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +21,8 @@ final class ClientImportController extends AbstractController
     public function __construct(
         private readonly ImportClientsHandler $clientHandler,
         private readonly ImportTerminalsHandler $terminalHandler,
-    ) {}
+    ) {
+    }
 
     #[Route('', name: 'client_import', methods: ['GET'])]
     public function index(): Response
@@ -61,12 +61,14 @@ final class ClientImportController extends AbstractController
         $file = $request->files->get('file');
         if ($file === null) {
             $this->addFlash('error', 'No se ha proporcionado ningún archivo.');
+
             return $this->redirectToRoute($redirectRoute);
         }
 
         $extension = $file->getClientOriginalExtension();
         if (!in_array($extension, ['csv', 'xlsx'], true)) {
             $this->addFlash('error', 'Formato no soportado. Use archivos CSV o XLSX.');
+
             return $this->redirectToRoute($redirectRoute);
         }
 

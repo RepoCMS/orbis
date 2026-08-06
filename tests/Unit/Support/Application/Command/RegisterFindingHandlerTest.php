@@ -17,7 +17,6 @@ use App\Support\Domain\Repositories\TicketFindingRepositoryInterface;
 use App\Support\Domain\Repositories\TicketRepositoryInterface;
 use App\Support\Domain\ValueObjects\JourneyIdValueObject;
 use App\Support\Domain\ValueObjects\TicketAssignmentIdValueObject;
-use App\Support\Domain\ValueObjects\TicketFindingIdValueObject;
 use App\Support\Domain\ValueObjects\TicketIdValueObject;
 use PHPUnit\Framework\TestCase;
 

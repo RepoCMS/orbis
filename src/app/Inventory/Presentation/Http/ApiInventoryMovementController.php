@@ -45,49 +45,49 @@ final class ApiInventoryMovementController extends AbstractController
         if ($productId !== null) {
             $movements = array_values(array_filter(
                 $movements,
-                static fn($m) => $m->productId === $productId,
+                static fn ($m) => $m->productId === $productId,
             ));
         }
 
         if ($type !== null) {
             $movements = array_values(array_filter(
                 $movements,
-                static fn($m) => $m->type === $type,
+                static fn ($m) => $m->type === $type,
             ));
         }
 
         if ($status !== null) {
             $movements = array_values(array_filter(
                 $movements,
-                static fn($m) => $m->status === $status,
+                static fn ($m) => $m->status === $status,
             ));
         }
 
         if ($sourceLocationId !== null) {
             $movements = array_values(array_filter(
                 $movements,
-                static fn($m) => $m->sourceLocationId === $sourceLocationId,
+                static fn ($m) => $m->sourceLocationId === $sourceLocationId,
             ));
         }
 
         if ($destinationLocationId !== null) {
             $movements = array_values(array_filter(
                 $movements,
-                static fn($m) => $m->destinationLocationId === $destinationLocationId,
+                static fn ($m) => $m->destinationLocationId === $destinationLocationId,
             ));
         }
 
         if ($dateFrom !== null) {
             $movements = array_values(array_filter(
                 $movements,
-                static fn($m) => $m->createdAt >= $dateFrom,
+                static fn ($m) => $m->createdAt >= $dateFrom,
             ));
         }
 
         if ($dateTo !== null) {
             $movements = array_values(array_filter(
                 $movements,
-                static fn($m) => $m->createdAt <= $dateTo . ' 23:59:59',
+                static fn ($m) => $m->createdAt <= $dateTo . ' 23:59:59',
             ));
         }
 

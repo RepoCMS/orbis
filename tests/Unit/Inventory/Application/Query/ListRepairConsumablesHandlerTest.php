@@ -103,7 +103,7 @@ final class ListRepairConsumablesHandlerTest extends TestCase
         $repo = $this->createMock(ConsumableRepositoryInterface::class);
         $repo->expects(self::once())
             ->method('findByRepairId')
-            ->with(self::callback(fn(RepairIdValueObject $v) => (string) $v === self::REPAIR_ID))
+            ->with(self::callback(fn (RepairIdValueObject $v) => (string) $v === self::REPAIR_ID))
             ->willReturn([]);
 
         $handler = new ListRepairConsumablesHandler($repo);

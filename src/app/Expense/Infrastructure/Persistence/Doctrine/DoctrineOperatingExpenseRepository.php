@@ -14,7 +14,8 @@ final class DoctrineOperatingExpenseRepository implements OperatingExpenseReposi
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function findById(OperatingExpenseIdValueObject $id): ?OperatingExpense
     {
@@ -22,6 +23,7 @@ final class DoctrineOperatingExpenseRepository implements OperatingExpenseReposi
         if ($expense !== null && $expense->isDeleted()) {
             return null;
         }
+
         return $expense;
     }
 

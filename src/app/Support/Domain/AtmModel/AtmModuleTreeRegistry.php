@@ -17,7 +17,8 @@ final readonly class AtmModuleTreeRegistry
 {
     public function __construct(
         private ModuleNodeRepositoryInterface $moduleNodeRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * Obtiene el árbol completo de módulos para un modelo de ATM específico.
@@ -62,6 +63,7 @@ final readonly class AtmModuleTreeRegistry
         foreach ($roots as $root) {
             $nodes[] = $this->entityToNode($root);
         }
+
         return $nodes;
     }
 

@@ -15,7 +15,6 @@ use App\Support\Domain\Enums\ServiceType;
 use App\Support\Domain\Enums\TicketStatus;
 use App\Support\Domain\Repositories\JourneyRepositoryInterface;
 use App\Support\Domain\Repositories\TicketRepositoryInterface;
-use App\Support\Domain\ValueObjects\JourneyIdValueObject;
 use App\Support\Domain\ValueObjects\TicketAssignmentIdValueObject;
 use App\Support\Domain\ValueObjects\TicketIdValueObject;
 use PHPUnit\Framework\TestCase;

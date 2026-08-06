@@ -15,7 +15,8 @@ final class DoctrineClientRepository implements ClientRepositoryInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     /**
      * @return Client[]

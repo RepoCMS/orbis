@@ -7,7 +7,6 @@ namespace App\Tests\Unit\Inventory\Application\Command;
 use App\Inventory\Application\Command\CreateSubLocation\CreateSubLocationCommand;
 use App\Inventory\Application\Command\CreateSubLocation\CreateSubLocationHandler;
 use App\Inventory\Domain\Repositories\SubLocationRepositoryInterface;
-use App\Inventory\Domain\ValueObjects\SubLocationIdValueObject;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\TestCase;
 

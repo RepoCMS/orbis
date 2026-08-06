@@ -6,4 +6,6 @@ namespace App\Notification\Domain\Exceptions;
 
 use App\Shared\Exceptions\DomainException;
 
-final class EmptyRecipientException extends DomainException {}
+final class EmptyRecipientException extends DomainException
+{
+}

@@ -34,7 +34,10 @@ final class DashboardControllerTest extends FunctionalTestCase
         $response = $client->getResponse();
 
         $contentType = $response->headers->get('Content-Type') ?? '';
-        self::assertStringContainsString('text/html', $contentType,
-            \sprintf('Expected HTML content type, got: %s', $contentType));
+        self::assertStringContainsString(
+            'text/html',
+            $contentType,
+            \sprintf('Expected HTML content type, got: %s', $contentType)
+        );
     }
 }

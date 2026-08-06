@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractStringValueObjectType;
 
 final class ProductNameType extends AbstractStringValueObjectType
 {
-    public function getName(): string { return 'product_name'; }
-    protected function getValueObjectClass(): string { return ProductNameValueObject::class; }
+    public function getName(): string
+    {
+        return 'product_name';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return ProductNameValueObject::class;
+    }
 }

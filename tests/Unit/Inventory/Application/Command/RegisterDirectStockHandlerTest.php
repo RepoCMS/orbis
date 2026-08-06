@@ -27,8 +27,6 @@ use App\Inventory\Domain\ValueObjects\NonserializedStockIdValueObject;
 use App\Inventory\Domain\ValueObjects\ProductCodeAssignedBySupplierValueObject;
 use App\Inventory\Domain\ValueObjects\ProductIdValueObject;
 use App\Inventory\Domain\ValueObjects\ProductNameValueObject;
-use App\Inventory\Domain\ValueObjects\SerializedStockIdValueObject;
-use App\Inventory\Domain\ValueObjects\StockSerialNumberValueObject;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\TestCase;
 

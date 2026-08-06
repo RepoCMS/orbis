@@ -13,7 +13,8 @@ final class DoctrineRmaRecordRepository implements RmaRecordRepositoryInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function findById(RmaRecordIdValueObject $id): ?RmaRecord
     {

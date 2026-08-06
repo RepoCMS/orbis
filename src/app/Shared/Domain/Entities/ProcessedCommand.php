@@ -14,7 +14,8 @@ final class ProcessedCommand
         private readonly string $idempotencyKey,
         private readonly string $processedBy,
         private \DateTimeImmutable $processedAt,
-    ) {}
+    ) {
+    }
 
     public static function register(
         ProcessedCommandId $id,

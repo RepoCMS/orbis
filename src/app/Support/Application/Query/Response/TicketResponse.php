@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Support\Application\Query\Response;
 
-use App\Support\Domain\Enums\ServiceType;
-use App\Support\Domain\Enums\TicketStatus;
-
 final class TicketResponse
 {
     private static array $statusLabels = [
@@ -49,7 +46,8 @@ final class TicketResponse
         public readonly ?string $closedAt,
         public readonly ?string $cancelledAt,
         public readonly ?string $cancellationReason,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(\App\Support\Domain\Entities\Ticket $ticket): self
     {

@@ -23,7 +23,8 @@ final readonly class StockOverviewHandler
 
     public function __construct(
         private Connection $connection,
-    ) {}
+    ) {
+    }
 
     public function __invoke(StockOverviewQuery $query): StockOverviewResult
     {
@@ -34,7 +35,7 @@ final readonly class StockOverviewHandler
         [$nonSerialSql, $nonSerialParams, $nonSerialTypes] = $this->buildNonserializedSql($query);
 
         $allParams = array_merge($serialParams, $nonSerialParams);
-        $allTypes  = array_merge($serialTypes,  $nonSerialTypes);
+        $allTypes  = array_merge($serialTypes, $nonSerialTypes);
 
         // Count totals for metrics (without LIMIT)
         $countSql = "SELECT status, SUM(quantity) as qty FROM ({$serialSql} UNION ALL {$nonSerialSql}) as stock GROUP BY status";

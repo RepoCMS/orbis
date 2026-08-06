@@ -25,7 +25,8 @@ final readonly class ActivePersonnelReportGenerator implements ReportGeneratorIn
 
     public function __construct(
         private Connection $connection,
-    ) {}
+    ) {
+    }
 
     public function getTitle(): string
     {

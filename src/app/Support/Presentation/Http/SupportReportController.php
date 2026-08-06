@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Support\Presentation\Http;
 
-use App\Support\Application\Report\Technician\TechnicianReportGenerator;
-use App\Support\Application\Report\TicketsByClient\TicketsByClientReportGenerator;
 use App\Shared\Infrastructure\Export\ExcelExportService;
 use App\Shared\Infrastructure\Export\PdfExportService;
+use App\Support\Application\Report\Technician\TechnicianReportGenerator;
+use App\Support\Application\Report\TicketsByClient\TicketsByClientReportGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +23,8 @@ final class SupportReportController extends AbstractController
         private readonly TicketsByClientReportGenerator $ticketsByClientReportGenerator,
         private readonly ExcelExportService $excelExport,
         private readonly PdfExportService $pdfExport,
-    ) {}
+    ) {
+    }
 
     #[Route('/technicians.{_format}', name: 'support_report_technicians', methods: ['GET'], requirements: ['_format' => 'xlsx|pdf'])]
     public function technicians(Request $request, string $_format = 'xlsx'): Response

@@ -16,7 +16,8 @@ final readonly class ListTicketPendingSparePartsHandler
         private TicketPendingSparePartRepositoryInterface $pendingSparePartRepo,
         private TicketRepositoryInterface $ticketRepo,
         private SparePartViewScopeResolver $scopeResolver,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ListTicketPendingSparePartsQuery $query): array
     {
@@ -39,6 +40,7 @@ final readonly class ListTicketPendingSparePartsHandler
                     $pendingSpareParts[] = TicketPendingSparePartResponse::fromEntity($part);
                 }
             }
+
             return $pendingSpareParts;
         }
 
@@ -46,8 +48,9 @@ final readonly class ListTicketPendingSparePartsHandler
             $parts = $this->pendingSparePartRepo->findByTicket(
                 TicketIdValueObject::fromString($query->ticketId),
             );
+
             return array_map(
-                fn($part) => TicketPendingSparePartResponse::fromEntity($part),
+                fn ($part) => TicketPendingSparePartResponse::fromEntity($part),
                 $parts,
             );
         }

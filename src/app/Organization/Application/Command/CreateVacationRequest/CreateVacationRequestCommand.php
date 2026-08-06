@@ -10,5 +10,6 @@ final readonly class CreateVacationRequestCommand
         public string $employeeId,
         public string $startDate,
         public string $endDate,
-    ) {}
+    ) {
+    }
 }

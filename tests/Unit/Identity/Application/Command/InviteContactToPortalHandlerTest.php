@@ -5,21 +5,18 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Identity\Application\Command;
 
 use App\Client\Domain\Entities\Contact;
-use App\Client\Domain\Enums\ContactStatus;
 use App\Client\Domain\Repositories\ContactRepositoryInterface;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
 use App\Client\Domain\ValueObjects\ContactEmailValueObject;
 use App\Client\Domain\ValueObjects\ContactIdValueObject;
 use App\Client\Domain\ValueObjects\ContactPhoneNumberValueObject;
 use App\Client\Domain\ValueObjects\ContactRoleValueObject;
-use App\Identity\Application\Command\GenerateActivationToken\GenerateActivationTokenCommand;
 use App\Identity\Application\Command\GenerateActivationToken\GenerateActivationTokenHandler;
 use App\Identity\Application\Command\InviteContactToPortal\InviteContactToPortalCommand;
 use App\Identity\Application\Command\InviteContactToPortal\InviteContactToPortalHandler;
 use App\Identity\Application\Exception\ContactNotFoundException;
 use App\Identity\Application\Exception\RoleNotFoundException;
 use App\Identity\Domain\Entities\Role;
-use App\Identity\Domain\Enums\AuthEvent;
 use App\Identity\Domain\Repositories\AuthLogRepositoryInterface;
 use App\Identity\Domain\Repositories\RoleRepositoryInterface;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;
@@ -31,7 +28,6 @@ use App\Identity\Domain\Service\UserEmailResolverInterface;
 use App\Identity\Domain\ValueObjects\HashedPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
-use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\TestCase;
@@ -105,8 +101,15 @@ final class InviteContactToPortalHandlerTest extends TestCase
         $publisher->expects($this->once())->method('publish');
 
         $handler = new InviteContactToPortalHandler(
-            $contactFinder, $contactRepo, $userRepo, $roleRepo, $hasher,
-            $idGenerator, $authLogRepo, $activationHandler, $publisher,
+            $contactFinder,
+            $contactRepo,
+            $userRepo,
+            $roleRepo,
+            $hasher,
+            $idGenerator,
+            $authLogRepo,
+            $activationHandler,
+            $publisher,
         );
         $result = ($handler)(new InviteContactToPortalCommand(self::CONTACT_ID));
 
@@ -167,7 +170,8 @@ final class InviteContactToPortalHandlerTest extends TestCase
         );
 
         $handler = new InviteContactToPortalHandler(
-            $contactFinder, $contactRepo,
+            $contactFinder,
+            $contactRepo,
             $this->createMock(UserRepositoryInterface::class),
             $roleRepo,
             $this->createMock(PasswordHasherInterface::class),

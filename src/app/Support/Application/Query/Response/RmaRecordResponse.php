@@ -17,7 +17,8 @@ final readonly class RmaRecordResponse
         public ?string $notes,
         public string $createdBy,
         public string $createdAt,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(RmaRecord $record): self
     {

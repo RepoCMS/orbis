@@ -11,7 +11,8 @@ final readonly class ImportTerminalsMessageHandler
 {
     public function __construct(
         private ImportTerminalsHandler $handler,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ImportTerminalsMessage $message): void
     {

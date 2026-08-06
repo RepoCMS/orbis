@@ -16,8 +16,6 @@ use App\Expense\Application\Command\CreateOperatingExpense\CreateOperatingExpens
 use App\Expense\Application\Command\CreateOperatingExpense\CreateOperatingExpenseHandler;
 use App\Expense\Application\Command\DeleteOperatingExpense\DeleteOperatingExpenseCommand;
 use App\Expense\Application\Command\DeleteOperatingExpense\DeleteOperatingExpenseHandler;
-use App\Expense\Application\Command\UpdateOperatingExpense\UpdateOperatingExpenseCommand;
-use App\Expense\Application\Command\UpdateOperatingExpense\UpdateOperatingExpenseHandler;
 use App\Expense\Application\Command\RejectExpenseItem\RejectExpenseItemCommand;
 use App\Expense\Application\Command\RejectExpenseItem\RejectExpenseItemHandler;
 use App\Expense\Application\Command\ResubmitExpense\ResubmitExpenseCommand;
@@ -26,13 +24,15 @@ use App\Expense\Application\Command\SettleCashAdvance\SettleCashAdvanceCommand;
 use App\Expense\Application\Command\SettleCashAdvance\SettleCashAdvanceHandler;
 use App\Expense\Application\Command\SubmitExpense\SubmitExpenseCommand;
 use App\Expense\Application\Command\SubmitExpense\SubmitExpenseHandler;
-use App\Expense\Application\Query\GetExpenseDashboardSummary\GetExpenseDashboardSummaryHandler;
-use App\Expense\Application\Query\GetExpenseDashboardSummary\GetExpenseDashboardSummaryQuery;
 use App\Expense\Application\Command\UpdateCashAdvance\UpdateCashAdvanceCommand;
 use App\Expense\Application\Command\UpdateCashAdvance\UpdateCashAdvanceHandler;
+use App\Expense\Application\Command\UpdateOperatingExpense\UpdateOperatingExpenseCommand;
+use App\Expense\Application\Command\UpdateOperatingExpense\UpdateOperatingExpenseHandler;
 use App\Expense\Application\Exception\CashAdvanceNotFoundException;
 use App\Expense\Application\Query\GetCashAdvanceDetail\GetCashAdvanceDetailHandler;
 use App\Expense\Application\Query\GetCashAdvanceDetail\GetCashAdvanceDetailQuery;
+use App\Expense\Application\Query\GetExpenseDashboardSummary\GetExpenseDashboardSummaryHandler;
+use App\Expense\Application\Query\GetExpenseDashboardSummary\GetExpenseDashboardSummaryQuery;
 use App\Expense\Application\Query\GetOperatingExpenseDetail\GetOperatingExpenseDetailHandler;
 use App\Expense\Application\Query\GetOperatingExpenseDetail\GetOperatingExpenseDetailQuery;
 use App\Expense\Application\Query\ListCashAdvances\ListCashAdvancesHandler;
@@ -167,6 +167,7 @@ final class ExpenseController extends AbstractController
             ));
 
             $this->addFlash('success', 'Liquidación creada correctamente.');
+
             return $this->redirectToRoute('expense_oe_show', ['id' => $id]);
         } catch (DomainException | \InvalidArgumentException $e) {
             $allEmployees = $employees(new ListEmployeesQuery(limit: 500));
@@ -189,6 +190,7 @@ final class ExpenseController extends AbstractController
         } catch (DomainException $e) {
             $this->addFlash('error', $e->getMessage());
         }
+
         return $this->redirectToRoute('expense_oe_show', ['id' => $id]);
     }
 
@@ -205,6 +207,7 @@ final class ExpenseController extends AbstractController
         } catch (DomainException $e) {
             $this->addFlash('error', $e->getMessage());
         }
+
         return $this->redirectToRoute('expense_oe_show', ['id' => $id]);
     }
 
@@ -218,6 +221,7 @@ final class ExpenseController extends AbstractController
         } catch (DomainException $e) {
             $this->addFlash('error', $e->getMessage());
         }
+
         return $this->redirectToRoute('expense_oe_show', ['id' => $id]);
     }
 
@@ -258,6 +262,7 @@ final class ExpenseController extends AbstractController
             ));
 
             $this->addFlash('success', 'Liquidación actualizada correctamente.');
+
             return $this->redirectToRoute('expense_oe_show', ['id' => $id]);
         } catch (DomainException | \InvalidArgumentException $e) {
             $expense = $detailHandler(new GetOperatingExpenseDetailQuery(expenseId: $id));
@@ -306,6 +311,7 @@ final class ExpenseController extends AbstractController
         } catch (DomainException | \InvalidArgumentException | \ValueError $e) {
             $this->addFlash('error', $e->getMessage());
         }
+
         return $this->redirectToRoute('expense_oe_show', ['id' => $id]);
     }
 
@@ -326,6 +332,7 @@ final class ExpenseController extends AbstractController
         } catch (DomainException $e) {
             $this->addFlash('error', $e->getMessage());
         }
+
         return $this->redirectToRoute('expense_oe_show', ['id' => $id]);
     }
 
@@ -341,6 +348,7 @@ final class ExpenseController extends AbstractController
 
         if ($reason === '') {
             $this->addFlash('error', 'Debe indicar el motivo del rechazo.');
+
             return $this->redirectToRoute('expense_oe_show', ['id' => $id]);
         }
 
@@ -355,6 +363,7 @@ final class ExpenseController extends AbstractController
         } catch (DomainException $e) {
             $this->addFlash('error', $e->getMessage());
         }
+
         return $this->redirectToRoute('expense_oe_show', ['id' => $id]);
     }
 
@@ -416,6 +425,7 @@ final class ExpenseController extends AbstractController
             ));
 
             $this->addFlash('success', 'Anticipo creado correctamente.');
+
             return $this->redirectToRoute('expense_ca_list');
         } catch (DomainException | \InvalidArgumentException $e) {
             $allEmployees = $employees(new ListEmployeesQuery(limit: 500));
@@ -447,6 +457,7 @@ final class ExpenseController extends AbstractController
         } catch (DomainException $e) {
             $this->addFlash('error', $e->getMessage());
         }
+
         return $this->redirectToRoute('expense_ca_list');
     }
 
@@ -530,6 +541,7 @@ final class ExpenseController extends AbstractController
             ));
 
             $this->addFlash('success', 'Anticipo actualizado correctamente.');
+
             return $this->redirectToRoute('expense_ca_show', ['id' => $id]);
         } catch (\App\Shared\Exceptions\DomainException | CashAdvanceNotFoundException | \InvalidArgumentException $e) {
             $advance = $detailHandler(new GetCashAdvanceDetailQuery(cashAdvanceId: $id));

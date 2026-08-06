@@ -9,5 +9,6 @@ final readonly class SparePartScope
     public function __construct(
         public ?string $employeeId = null,
         public ?string $locationId = null,
-    ) {}
+    ) {
+    }
 }

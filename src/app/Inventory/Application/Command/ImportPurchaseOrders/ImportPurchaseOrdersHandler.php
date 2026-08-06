@@ -31,7 +31,8 @@ final readonly class ImportPurchaseOrdersHandler
         private ProductRepositoryInterface $productRepository,
         private IdGeneratorInterface $idGenerator,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ImportPurchaseOrdersCommand $command): ImportResult
     {

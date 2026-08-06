@@ -17,7 +17,8 @@ final class TicketWaiting
         private ?string $subReason,
         private \DateTimeImmutable $startedAt,
         private ?\DateTimeImmutable $endedAt = null,
-    ) {}
+    ) {
+    }
 
     public static function start(
         TicketWaitingIdValueObject $id,
@@ -45,10 +46,28 @@ final class TicketWaiting
         return $this->endedAt === null;
     }
 
-    public function id(): TicketWaitingIdValueObject { return $this->id; }
-    public function ticketId(): string                { return $this->ticketId; }
-    public function category(): WaitingCategory       { return $this->category; }
-    public function subReason(): ?string              { return $this->subReason; }
-    public function startedAt(): \DateTimeImmutable   { return $this->startedAt; }
-    public function endedAt(): ?\DateTimeImmutable    { return $this->endedAt; }
+    public function id(): TicketWaitingIdValueObject
+    {
+        return $this->id;
+    }
+    public function ticketId(): string
+    {
+        return $this->ticketId;
+    }
+    public function category(): WaitingCategory
+    {
+        return $this->category;
+    }
+    public function subReason(): ?string
+    {
+        return $this->subReason;
+    }
+    public function startedAt(): \DateTimeImmutable
+    {
+        return $this->startedAt;
+    }
+    public function endedAt(): ?\DateTimeImmutable
+    {
+        return $this->endedAt;
+    }
 }

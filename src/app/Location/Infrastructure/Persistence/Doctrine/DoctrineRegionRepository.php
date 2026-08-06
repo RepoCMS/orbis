@@ -11,7 +11,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrineRegionRepository implements RegionRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager) {}
+    public function __construct(private readonly EntityManagerInterface $entityManager)
+    {
+    }
 
     public function findById(RegionIdValueObject $id): ?Region
     {

@@ -8,5 +8,6 @@ final readonly class ListTicketModuleFindingsQuery
 {
     public function __construct(
         public string $ticketId,
-    ) {}
+    ) {
+    }
 }

@@ -10,8 +10,8 @@ use App\Organization\Domain\Enums\EmployeeStatus;
 use App\Organization\Domain\Exceptions\EmployeeNameException;
 use App\Organization\Domain\Exceptions\EmployeeStatusException;
 use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
+use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 

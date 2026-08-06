@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Inventory\Presentation\Http;
 
+use App\Identity\Infrastructure\Security\SymfonySecurityUser;
 use App\Inventory\Application\Command\AddEntryItem\AddEntryItemCommand;
 use App\Inventory\Application\Command\AddEntryItem\AddEntryItemHandler;
 use App\Inventory\Application\Command\CancelEntry\CancelEntryCommand;
@@ -15,7 +16,6 @@ use App\Inventory\Application\Command\CreateEntry\CreateEntryHandler;
 use App\Inventory\Application\Exception\EntryNotFoundException;
 use App\Inventory\Application\Query\FindEntryById\FindEntryByIdHandler;
 use App\Inventory\Application\Query\ListEntries\ListEntriesHandler;
-use App\Identity\Infrastructure\Security\SymfonySecurityUser;
 use App\Shared\Exceptions\DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -41,7 +41,7 @@ final class ApiInventoryEntryController extends AbstractController
         if ($status !== null) {
             $entries = array_values(array_filter(
                 $entries,
-                static fn($e) => $e->status === $status,
+                static fn ($e) => $e->status === $status,
             ));
         }
 
@@ -49,7 +49,7 @@ final class ApiInventoryEntryController extends AbstractController
             $q = mb_strtolower($reference);
             $entries = array_values(array_filter(
                 $entries,
-                static fn($e) => str_contains(mb_strtolower($e->reference), $q),
+                static fn ($e) => str_contains(mb_strtolower($e->reference), $q),
             ));
         }
 

@@ -10,7 +10,8 @@ final readonly class InventoryDashboardMetricsHandler
 {
     public function __construct(
         private Connection $connection,
-    ) {}
+    ) {
+    }
 
     public function __invoke(): InventoryDashboardMetrics
     {
@@ -62,6 +63,7 @@ final readonly class InventoryDashboardMetricsHandler
                  WHERE ns.status = :avail2 AND ns.deleted_at IS NULL)
             , 0) AS total
         ';
+
         return (float) $this->connection->fetchOne($sql, [
             'avail' => 'available',
             'avail2' => 'available',
@@ -101,6 +103,7 @@ final readonly class InventoryDashboardMetricsHandler
                     AND m.serialized_stock_id IS NOT NULL
               )
         ';
+
         return (int) $this->connection->fetchOne($sql, [
             'avail' => 'available',
             'days' => $days,
@@ -119,6 +122,7 @@ final readonly class InventoryDashboardMetricsHandler
                     AND m.serialized_stock_id IS NOT NULL
               )
         ';
+
         return (int) $this->connection->fetchOne($sql, [
             'avail' => 'available',
             'days' => $days,
@@ -214,6 +218,7 @@ final readonly class InventoryDashboardMetricsHandler
                 'B' => 'B',
                 default => 'C',
             };
+
             return $row;
         }, $result);
     }
@@ -240,6 +245,7 @@ final readonly class InventoryDashboardMetricsHandler
             ORDER BY ss.created_at ASC
             LIMIT :limit
         ';
+
         return $this->connection->fetchAllAssociative($sql, [
             'avail' => 'available',
             'days' => $days,
@@ -266,6 +272,7 @@ final readonly class InventoryDashboardMetricsHandler
             WHERE p.deleted_at IS NULL
             GROUP BY p.tracking_type
         ';
+
         return $this->connection->fetchAllAssociative($sql, [
             'serial' => 'serialized',
             'avail' => 'available',
@@ -283,6 +290,7 @@ final readonly class InventoryDashboardMetricsHandler
             GROUP BY type
             ORDER BY total DESC
         ';
+
         return $this->connection->fetchAllAssociative($sql, ['days' => $days]);
     }
 
@@ -303,6 +311,7 @@ final readonly class InventoryDashboardMetricsHandler
                 AND ns.status = :avail AND ns.deleted_at IS NULL
             WHERE COALESCE(ns.quantity, 0) < sm.alert_threshold
         ';
+
         return (int) $this->connection->fetchOne($sql, ['avail' => 'available']);
     }
 
@@ -315,13 +324,14 @@ final readonly class InventoryDashboardMetricsHandler
               AND started_at IS NOT NULL
               AND completed_at IS NOT NULL
         ";
+
         return (float) $this->connection->fetchOne($sql);
     }
 
     private function countMovementsToday(): int
     {
         return (int) $this->connection->fetchOne(
-            "SELECT COUNT(*) FROM stock_movements WHERE DATE(created_at) = CURDATE()",
+            'SELECT COUNT(*) FROM stock_movements WHERE DATE(created_at) = CURDATE()',
         );
     }
 
@@ -350,6 +360,7 @@ final readonly class InventoryDashboardMetricsHandler
               AND (COALESCE(ss.serialized, 0) > 0 OR COALESCE(ns.nonserialized, 0) > 0)
             ORDER BY l.name ASC
         ';
+
         return $this->connection->fetchAllAssociative($sql, [
             'avail' => 'available',
             'avail2' => 'available',
@@ -375,6 +386,7 @@ final readonly class InventoryDashboardMetricsHandler
             ORDER BY (COALESCE(ns.quantity, 0) - sm.alert_threshold) ASC
             LIMIT 20
         ';
+
         return $this->connection->fetchAllAssociative($sql, ['avail' => 'available']);
     }
 
@@ -388,6 +400,7 @@ final readonly class InventoryDashboardMetricsHandler
             GROUP BY type
             ORDER BY total DESC
         ';
+
         return $this->connection->fetchAllAssociative($sql);
     }
 
@@ -404,6 +417,7 @@ final readonly class InventoryDashboardMetricsHandler
             ORDER BY total_quantity DESC
             LIMIT 10
         ';
+
         return $this->connection->fetchAllAssociative($sql, [
             'exitType' => 'exit',
             'completed' => 'completed',

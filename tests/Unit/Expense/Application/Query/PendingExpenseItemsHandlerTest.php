@@ -9,7 +9,6 @@ use App\Expense\Application\Query\PendingExpenseItems\PendingExpenseItemsQuery;
 use App\Expense\Application\Query\Response\ExpenseItemResponse;
 use App\Expense\Domain\Entities\ExpenseItem;
 use App\Expense\Domain\Entities\OperatingExpense;
-use App\Expense\Domain\Enums\ExpenseItemStatus;
 use App\Expense\Domain\Enums\ExpenseItemType;
 use App\Expense\Domain\Enums\ExpenseStatus;
 use App\Expense\Domain\Repositories\OperatingExpenseRepositoryInterface;
@@ -26,6 +25,7 @@ final class PendingExpenseItemsHandlerTest extends TestCase
         for ($i = 0; $i < 26; $i++) {
             $ulid .= $chars[random_int(0, 31)];
         }
+
         return $ulid;
     }
     public function testReturnsPendingItemsFromSubmittedExpenses(): void
@@ -114,6 +114,7 @@ final class PendingExpenseItemsHandlerTest extends TestCase
     private function createExpenseWithStatus(string $employeeId, ExpenseStatus $status): OperatingExpense
     {
         $id = new OperatingExpenseIdValueObject(self::ulid());
+
         return OperatingExpense::create(
             id: $id,
             sequence: 1,

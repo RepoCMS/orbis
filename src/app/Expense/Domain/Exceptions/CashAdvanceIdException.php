@@ -6,4 +6,6 @@ namespace App\Expense\Domain\Exceptions;
 
 use App\Shared\Exceptions\DomainException;
 
-final class CashAdvanceIdException extends DomainException {}
+final class CashAdvanceIdException extends DomainException
+{
+}

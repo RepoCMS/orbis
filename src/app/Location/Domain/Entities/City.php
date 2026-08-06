@@ -13,7 +13,8 @@ final class City
         private CityIdValueObject     $id,
         private ProvinceIdValueObject $provinceId,
         private string $name,
-    ) {}
+    ) {
+    }
 
     public static function reconstitute(string $id, string $provinceId, string $name): self
     {
@@ -24,7 +25,16 @@ final class City
         );
     }
 
-    public function id(): CityIdValueObject             { return $this->id; }
-    public function provinceId(): ProvinceIdValueObject  { return $this->provinceId; }
-    public function name(): string                       { return $this->name; }
+    public function id(): CityIdValueObject
+    {
+        return $this->id;
+    }
+    public function provinceId(): ProvinceIdValueObject
+    {
+        return $this->provinceId;
+    }
+    public function name(): string
+    {
+        return $this->name;
+    }
 }

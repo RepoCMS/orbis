@@ -30,7 +30,8 @@ final class FindingEvidence
         private EvidenceMoment $moment,
         private string $uploadedBy,
         private DateTimeImmutable $uploadedAt,
-    ) {}
+    ) {
+    }
 
     /**
      * Crea una nueva evidencia validando que el mime type sea imagen o video.

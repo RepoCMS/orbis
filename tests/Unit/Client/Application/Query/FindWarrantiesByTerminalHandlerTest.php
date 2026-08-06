@@ -10,8 +10,8 @@ use App\Client\Application\Query\Response\WarrantyResponse;
 use App\Client\Domain\Entities\TerminalWarranty;
 use App\Client\Domain\Enums\WarrantyType;
 use App\Client\Domain\Repositories\TerminalWarrantyRepositoryInterface;
-use App\Client\Domain\ValueObjects\TerminalWarrantyIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdValueObject;
+use App\Client\Domain\ValueObjects\TerminalWarrantyIdValueObject;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 

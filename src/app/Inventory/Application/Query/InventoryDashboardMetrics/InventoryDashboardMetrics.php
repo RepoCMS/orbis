@@ -43,5 +43,6 @@ final class InventoryDashboardMetrics
         public readonly array  $stockAlerts,
         public readonly array  $movementsByTypeToday = [],
         public readonly array  $topUsedParts = [],
-    ) {}
+    ) {
+    }
 }

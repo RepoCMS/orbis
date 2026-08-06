@@ -16,7 +16,8 @@ final readonly class AddEvidenceHandler
     public function __construct(
         private TicketRepositoryInterface $ticketRepo,
         private IdGeneratorInterface      $idGenerator,
-    ) {}
+    ) {
+    }
 
     public function __invoke(AddEvidenceCommand $command): void
     {

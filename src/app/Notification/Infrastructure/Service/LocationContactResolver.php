@@ -21,7 +21,8 @@ final readonly class LocationContactResolver implements ContactResolverInterface
     public function __construct(
         private LocationRepositoryInterface $locationRepository,
         private EmployeeRepositoryInterface $employeeRepository,
-    ) {}
+    ) {
+    }
 
     public function resolve(string $recipientType, string $recipientId): array
     {

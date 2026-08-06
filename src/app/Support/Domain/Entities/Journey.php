@@ -18,7 +18,8 @@ final class Journey
         private ?\DateTimeImmutable  $arrivedAt,
         private bool                 $isPartOfRoute,
         private ?string              $notes,
-    ) {}
+    ) {
+    }
 
     public static function start(
         JourneyIdValueObject $id,
@@ -46,11 +47,32 @@ final class Journey
         $this->arrivedAt = new \DateTimeImmutable();
     }
 
-    public function id(): JourneyIdValueObject       { return $this->id; }
-    public function ticketId(): TicketIdValueObject   { return $this->ticketId; }
-    public function type(): JourneyType               { return $this->type; }
-    public function startedAt(): \DateTimeImmutable   { return $this->startedAt; }
-    public function arrivedAt(): ?\DateTimeImmutable  { return $this->arrivedAt; }
-    public function isPartOfRoute(): bool             { return $this->isPartOfRoute; }
-    public function notes(): ?string                  { return $this->notes; }
+    public function id(): JourneyIdValueObject
+    {
+        return $this->id;
+    }
+    public function ticketId(): TicketIdValueObject
+    {
+        return $this->ticketId;
+    }
+    public function type(): JourneyType
+    {
+        return $this->type;
+    }
+    public function startedAt(): \DateTimeImmutable
+    {
+        return $this->startedAt;
+    }
+    public function arrivedAt(): ?\DateTimeImmutable
+    {
+        return $this->arrivedAt;
+    }
+    public function isPartOfRoute(): bool
+    {
+        return $this->isPartOfRoute;
+    }
+    public function notes(): ?string
+    {
+        return $this->notes;
+    }
 }

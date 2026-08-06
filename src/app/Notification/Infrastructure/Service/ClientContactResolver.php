@@ -12,7 +12,8 @@ final readonly class ClientContactResolver implements ContactResolverInterface
 {
     public function __construct(
         private ContactRepositoryInterface $contactRepository,
-    ) {}
+    ) {
+    }
 
     public function resolve(string $recipientType, string $recipientId): array
     {

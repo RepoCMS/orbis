@@ -16,7 +16,6 @@ use App\Inventory\Domain\Repositories\MovementRepositoryInterface;
 use App\Inventory\Domain\Repositories\SerializedStockRepositoryInterface;
 use App\Inventory\Domain\Repositories\TechnicianLoanRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\LocationIdValueObject;
-use App\Inventory\Domain\ValueObjects\MovementIdValueObject;
 use App\Inventory\Domain\ValueObjects\ProductIdValueObject;
 use App\Inventory\Domain\ValueObjects\SerializedStockIdValueObject;
 use App\Inventory\Domain\ValueObjects\StockSerialNumberValueObject;

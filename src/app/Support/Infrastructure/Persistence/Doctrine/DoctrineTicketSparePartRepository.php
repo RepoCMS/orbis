@@ -13,7 +13,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrineTicketSparePartRepository implements TicketSparePartRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager) {}
+    public function __construct(private readonly EntityManagerInterface $entityManager)
+    {
+    }
 
     public function findById(TicketSparePartIdValueObject $id): ?TicketSparePart
     {

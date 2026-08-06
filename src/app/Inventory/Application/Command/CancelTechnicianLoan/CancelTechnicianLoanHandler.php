@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Inventory\Application\Command\CancelTechnicianLoan;
 
 use App\Inventory\Domain\Events\TechnicianLoanCancelled;
+use App\Inventory\Domain\Exceptions\InventoryDomainException;
 use App\Inventory\Domain\Repositories\TechnicianLoanRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\TechnicianLoanIdValueObject;
-use App\Inventory\Domain\Exceptions\InventoryDomainException;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Exceptions\ApplicationException;
 

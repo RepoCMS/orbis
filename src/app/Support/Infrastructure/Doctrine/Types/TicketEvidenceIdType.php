@@ -9,6 +9,12 @@ use App\Support\Domain\ValueObjects\TicketEvidenceIdValueObject;
 
 final class TicketEvidenceIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'ticket_evidence_id'; }
-    protected function getValueObjectClass(): string { return TicketEvidenceIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'ticket_evidence_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return TicketEvidenceIdValueObject::class;
+    }
 }

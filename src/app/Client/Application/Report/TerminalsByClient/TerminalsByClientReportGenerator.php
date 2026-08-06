@@ -21,7 +21,8 @@ final readonly class TerminalsByClientReportGenerator implements ReportGenerator
 
     public function __construct(
         private Connection $connection,
-    ) {}
+    ) {
+    }
 
     public function getTitle(): string
     {

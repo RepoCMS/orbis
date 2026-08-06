@@ -35,7 +35,8 @@ final readonly class TerminationVerificationService implements TerminationVerifi
     public function __construct(
         private TicketRepositoryInterface $ticketRepository,
         private EmployeeSpecialPeriodRepositoryInterface $specialPeriodRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * Verifica si hay items pendientes que bloqueen la terminación.

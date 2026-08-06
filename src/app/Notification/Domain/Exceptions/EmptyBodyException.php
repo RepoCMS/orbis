@@ -6,4 +6,6 @@ namespace App\Notification\Domain\Exceptions;
 
 use App\Shared\Exceptions\DomainException;
 
-final class EmptyBodyException extends DomainException {}
+final class EmptyBodyException extends DomainException
+{
+}

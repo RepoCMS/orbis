@@ -9,7 +9,6 @@ use App\Client\Domain\Entities\Client;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
 use App\Client\Domain\ValueObjects\ClientRucValueObject;
 
-
 interface ClientRepositoryInterface
 {
     /**

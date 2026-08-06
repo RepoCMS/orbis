@@ -9,6 +9,12 @@ use App\Support\Domain\ValueObjects\TicketWaitingIdValueObject;
 
 final class TicketWaitingIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'ticket_waiting_id'; }
-    protected function getValueObjectClass(): string { return TicketWaitingIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'ticket_waiting_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return TicketWaitingIdValueObject::class;
+    }
 }

@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 
 final class TransformationIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'transformation_id'; }
-    protected function getValueObjectClass(): string { return TransformationIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'transformation_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return TransformationIdValueObject::class;
+    }
 }

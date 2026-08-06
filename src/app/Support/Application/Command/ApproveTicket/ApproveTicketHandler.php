@@ -13,7 +13,8 @@ final readonly class ApproveTicketHandler
     public function __construct(
         private TicketRepositoryInterface     $ticketRepo,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ApproveTicketCommand $command): void
     {

@@ -18,7 +18,8 @@ final readonly class FindingEvidenceResponse
         public string $moment,
         public string $uploadedBy,
         public string $uploadedAt,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(FindingEvidence $evidence): self
     {

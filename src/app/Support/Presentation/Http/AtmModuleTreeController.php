@@ -16,7 +16,6 @@ use App\Support\Application\Query\Response\ModuleTreeResponse;
 use App\Support\Domain\AtmModel\AtmModel;
 use App\Support\Domain\Exceptions\ModuleNodeNotFoundException;
 use App\Support\Domain\Repositories\ModuleNodeRepositoryInterface;
-use App\Support\Domain\ValueObjects\ModuleNodeIdValueObject;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -9,10 +9,10 @@ use App\Inventory\Application\Command\DeleteEntryItem\DeleteEntryItemHandler;
 use App\Inventory\Application\Exception\EntryItemNotFoundException;
 use App\Inventory\Domain\Entities\EntryItem;
 use App\Inventory\Domain\Repositories\EntryItemRepositoryInterface;
-use App\Inventory\Domain\ValueObjects\EntryItemIdValueObject;
 use App\Inventory\Domain\ValueObjects\EntryIdValueObject;
-use App\Inventory\Domain\ValueObjects\ProductIdValueObject;
+use App\Inventory\Domain\ValueObjects\EntryItemIdValueObject;
 use App\Inventory\Domain\ValueObjects\LocationIdValueObject;
+use App\Inventory\Domain\ValueObjects\ProductIdValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class DeleteEntryItemHandlerTest extends TestCase

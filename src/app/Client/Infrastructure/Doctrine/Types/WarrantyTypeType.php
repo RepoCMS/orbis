@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractStringEnumType;
 
 final class WarrantyTypeType extends AbstractStringEnumType
 {
-    public function getName(): string { return 'warranty_type'; }
-    protected function getEnumClass(): string { return WarrantyType::class; }
+    public function getName(): string
+    {
+        return 'warranty_type';
+    }
+    protected function getEnumClass(): string
+    {
+        return WarrantyType::class;
+    }
 }

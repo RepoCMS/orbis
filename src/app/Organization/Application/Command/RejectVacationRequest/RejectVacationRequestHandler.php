@@ -19,7 +19,8 @@ final readonly class RejectVacationRequestHandler
         private VacationRequestRepositoryInterface $vacationRequestRepository,
         private EmployeeRepositoryInterface $employeeRepository,
         private DomainEventPublisherInterface $publisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(RejectVacationRequestCommand $command): void
     {

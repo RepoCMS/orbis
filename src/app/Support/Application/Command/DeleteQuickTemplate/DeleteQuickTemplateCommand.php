@@ -8,5 +8,6 @@ final readonly class DeleteQuickTemplateCommand
 {
     public function __construct(
         public string $templateId,
-    ) {}
+    ) {
+    }
 }

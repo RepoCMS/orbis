@@ -8,5 +8,6 @@ final readonly class ArriveAtSiteCommand
 {
     public function __construct(
         public string $ticketId,
-    ) {}
+    ) {
+    }
 }

@@ -24,7 +24,8 @@ final readonly class NotificationLogResponse
         public ?string $referenceId,
         public ?string $readAt,
         public string $createdAt,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(NotificationLog $log): self
     {

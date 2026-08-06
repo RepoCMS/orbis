@@ -8,5 +8,6 @@ final readonly class StartAssistanceFromWaitingCommand
 {
     public function __construct(
         public string $ticketId,
-    ) {}
+    ) {
+    }
 }

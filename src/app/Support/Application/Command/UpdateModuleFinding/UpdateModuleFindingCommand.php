@@ -10,5 +10,6 @@ final readonly class UpdateModuleFindingCommand
         public string  $findingId,
         public string  $findingType,
         public ?string $notes = null,
-    ) {}
+    ) {
+    }
 }

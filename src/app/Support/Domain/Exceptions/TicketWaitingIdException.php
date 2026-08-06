@@ -6,4 +6,6 @@ namespace App\Support\Domain\Exceptions;
 
 use App\Shared\Exceptions\DomainException;
 
-class TicketWaitingIdException extends DomainException {}
+class TicketWaitingIdException extends DomainException
+{
+}

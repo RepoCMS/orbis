@@ -6,4 +6,6 @@ namespace App\Inventory\Domain\Exceptions;
 
 use App\Shared\Exceptions\DomainException;
 
-final class MovementIdException extends DomainException {}
+final class MovementIdException extends DomainException
+{
+}

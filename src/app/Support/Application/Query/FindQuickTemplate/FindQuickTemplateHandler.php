@@ -13,7 +13,8 @@ final readonly class FindQuickTemplateHandler
 {
     public function __construct(
         private QuickTemplateRepositoryInterface $templateRepo,
-    ) {}
+    ) {
+    }
 
     public function __invoke(FindQuickTemplateQuery $query): QuickTemplateResponse
     {

@@ -6,5 +6,7 @@ namespace App\Notification\Application\Command\CleanupOldNotifications;
 
 final readonly class CleanupOldNotificationsCommand
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 }

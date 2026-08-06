@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Identity\Presentation\Http;
 
-use App\Identity\Application\Command\ActivateRole\ActivateRoleCommand;
-use App\Identity\Application\Command\ActivateRole\ActivateRoleHandler;
+use App\Identity\Application\Command\ChangePermissionDescription\ChangePermissionDescriptionCommand;
+use App\Identity\Application\Command\ChangePermissionDescription\ChangePermissionDescriptionHandler;
 use App\Identity\Application\Command\CreateRole\CreateRoleCommand;
 use App\Identity\Application\Command\CreateRole\CreateRoleHandler;
 use App\Identity\Application\Command\DeleteRole\DeleteRoleCommand;
 use App\Identity\Application\Command\DeleteRole\DeleteRoleHandler;
-use App\Identity\Application\Command\ChangePermissionDescription\ChangePermissionDescriptionCommand;
-use App\Identity\Application\Command\ChangePermissionDescription\ChangePermissionDescriptionHandler;
 use App\Identity\Application\Command\RenameRole\RenameRoleCommand;
 use App\Identity\Application\Command\RenameRole\RenameRoleHandler;
 use App\Identity\Application\Command\RevokePermissionFromRole\RevokePermissionFromRoleCommand;

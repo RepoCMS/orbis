@@ -9,6 +9,12 @@ use App\Support\Domain\ValueObjects\JourneyIdValueObject;
 
 final class JourneyIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'journey_id'; }
-    protected function getValueObjectClass(): string { return JourneyIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'journey_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return JourneyIdValueObject::class;
+    }
 }

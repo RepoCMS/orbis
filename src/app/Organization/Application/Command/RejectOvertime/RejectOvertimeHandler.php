@@ -18,7 +18,8 @@ final readonly class RejectOvertimeHandler
         private OvertimeRecordRepositoryInterface $overtimeRecordRepository,
         private EmployeeRepositoryInterface $employeeRepository,
         private DomainEventPublisherInterface $publisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(RejectOvertimeCommand $command): void
     {

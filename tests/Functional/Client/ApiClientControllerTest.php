@@ -18,16 +18,22 @@ final class ApiClientControllerTest extends FunctionalTestCase
     {
         $client = static::createClient();
         $this->jsonRequest($client, 'GET', self::API_LIST_ROUTE);
-        static::assertSame(401, $client->getResponse()->getStatusCode(),
-            'Unauthenticated API request should return 401');
+        static::assertSame(
+            401,
+            $client->getResponse()->getStatusCode(),
+            'Unauthenticated API request should return 401'
+        );
     }
 
     public function testShowReturns401WhenUnauthenticated(): void
     {
         $client = static::createClient();
         $this->jsonRequest($client, 'GET', self::API_SHOW_ROUTE);
-        static::assertSame(401, $client->getResponse()->getStatusCode(),
-            'Unauthenticated API request should return 401');
+        static::assertSame(
+            401,
+            $client->getResponse()->getStatusCode(),
+            'Unauthenticated API request should return 401'
+        );
     }
 
     public function testCreateReturns401WhenUnauthenticated(): void
@@ -37,8 +43,11 @@ final class ApiClientControllerTest extends FunctionalTestCase
             'name' => 'Test Client',
             'ruc' => '1799999999001',
         ]);
-        static::assertSame(401, $client->getResponse()->getStatusCode(),
-            'Unauthenticated API POST request should return 401');
+        static::assertSame(
+            401,
+            $client->getResponse()->getStatusCode(),
+            'Unauthenticated API POST request should return 401'
+        );
     }
 
     public function testListRouteExists(): void
@@ -62,8 +71,11 @@ final class ApiClientControllerTest extends FunctionalTestCase
         $response = $client->getResponse();
 
         $contentType = $response->headers->get('Content-Type') ?? '';
-        static::assertStringContainsString('application/json', $contentType,
-            \sprintf('Expected JSON content type, got: %s', $contentType));
+        static::assertStringContainsString(
+            'application/json',
+            $contentType,
+            \sprintf('Expected JSON content type, got: %s', $contentType)
+        );
     }
 
     public function testApiErrorResponseContainsErrorKey(): void
@@ -76,8 +88,10 @@ final class ApiClientControllerTest extends FunctionalTestCase
             $data = $this->decodeJsonResponse($response);
 
             $hasErrorKey = isset($data['error']) || isset($data['message']) || isset($data['title']);
-            static::assertTrue($hasErrorKey,
-                'Unauthorized response should contain an error key');
+            static::assertTrue(
+                $hasErrorKey,
+                'Unauthorized response should contain an error key'
+            );
         }
     }
 
@@ -85,7 +99,10 @@ final class ApiClientControllerTest extends FunctionalTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/api/v1/client/nonexistent');
-        static::assertNotSame(500, $client->getResponse()->getStatusCode(),
-            'Invalid API route should not crash with 500');
+        static::assertNotSame(
+            500,
+            $client->getResponse()->getStatusCode(),
+            'Invalid API route should not crash with 500'
+        );
     }
 }

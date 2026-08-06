@@ -9,6 +9,12 @@ use App\Support\Domain\Enums\MaintenanceFrequencyType;
 
 final class MaintenanceFrequencyTypeType extends AbstractStringEnumType
 {
-    public function getName(): string { return 'maintenance_frequency_type'; }
-    protected function getEnumClass(): string { return MaintenanceFrequencyType::class; }
+    public function getName(): string
+    {
+        return 'maintenance_frequency_type';
+    }
+    protected function getEnumClass(): string
+    {
+        return MaintenanceFrequencyType::class;
+    }
 }

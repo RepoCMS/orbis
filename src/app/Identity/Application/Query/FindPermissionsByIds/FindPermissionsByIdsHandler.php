@@ -21,14 +21,14 @@ final readonly class FindPermissionsByIdsHandler
     public function __invoke(FindPermissionsByIdsQuery $query): array
     {
         $ids = array_map(
-            static fn(string $id) => new PermissionIdValueObject($id),
+            static fn (string $id) => new PermissionIdValueObject($id),
             $query->permissionIds,
         );
 
         $permissions = $this->permissionRepository->findByIds($ids);
 
         return array_map(
-            static fn($permission) => PermissionResponse::fromEntity($permission),
+            static fn ($permission) => PermissionResponse::fromEntity($permission),
             $permissions,
         );
     }

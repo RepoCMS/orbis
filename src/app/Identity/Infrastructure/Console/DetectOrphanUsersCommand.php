@@ -88,6 +88,7 @@ final class DetectOrphanUsersCommand extends Command
 
         if ($orphans === []) {
             $output->writeln('<info>No se encontraron usuarios huérfanos.</info>');
+
             return Command::SUCCESS;
         }
 
@@ -100,7 +101,7 @@ final class DetectOrphanUsersCommand extends Command
         $table = new Table($output);
         $table
             ->setHeaders(['ID', 'Username', 'Status', 'Creado', 'Días'])
-            ->setRows(array_map(fn(array $o) => [
+            ->setRows(array_map(fn (array $o) => [
                 $o['id'],
                 $o['username'],
                 $o['status'],
@@ -155,7 +156,7 @@ final class DetectOrphanUsersCommand extends Command
     private function handleAutoDisable(array $orphans, int $days, bool $dryRun, OutputInterface $output): int
     {
         $cutoff = new \DateTimeImmutable(sprintf('-%d days', $days));
-        $eligible = array_filter($orphans, fn(array $o) => $o['daysSinceCreation'] >= $days);
+        $eligible = array_filter($orphans, fn (array $o) => $o['daysSinceCreation'] >= $days);
         $disabled = 0;
 
         foreach ($eligible as $o) {
@@ -197,6 +198,7 @@ final class DetectOrphanUsersCommand extends Command
     {
         if ($orphans === []) {
             $output->writeln('<info>[NOTIFY] No hay huérfanos que notificar.</info>');
+
             return;
         }
 

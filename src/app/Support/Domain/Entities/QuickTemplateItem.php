@@ -18,7 +18,8 @@ final class QuickTemplateItem
         private ?string                        $notes,
         private int                            $sortOrder,
         private \DateTimeImmutable             $createdAt,
-    ) {}
+    ) {
+    }
 
     public static function register(
         QuickTemplateItemIdValueObject $id,
@@ -85,13 +86,40 @@ final class QuickTemplateItem
         $this->sortOrder   = $sortOrder;
     }
 
-    public function id(): QuickTemplateItemIdValueObject   { return $this->id; }
-    public function modelPartId(): ?string                 { return $this->modelPartId; }
-    public function partNumber(): ?string                  { return $this->partNumber; }
-    public function productCode(): ?string                 { return $this->productCode; }
-    public function description(): string                  { return $this->description; }
-    public function quantity(): int                        { return $this->quantity; }
-    public function notes(): ?string                       { return $this->notes; }
-    public function sortOrder(): int                       { return $this->sortOrder; }
-    public function createdAt(): \DateTimeImmutable        { return $this->createdAt; }
+    public function id(): QuickTemplateItemIdValueObject
+    {
+        return $this->id;
+    }
+    public function modelPartId(): ?string
+    {
+        return $this->modelPartId;
+    }
+    public function partNumber(): ?string
+    {
+        return $this->partNumber;
+    }
+    public function productCode(): ?string
+    {
+        return $this->productCode;
+    }
+    public function description(): string
+    {
+        return $this->description;
+    }
+    public function quantity(): int
+    {
+        return $this->quantity;
+    }
+    public function notes(): ?string
+    {
+        return $this->notes;
+    }
+    public function sortOrder(): int
+    {
+        return $this->sortOrder;
+    }
+    public function createdAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
 }

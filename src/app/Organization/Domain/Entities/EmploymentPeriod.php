@@ -6,8 +6,8 @@ namespace App\Organization\Domain\Entities;
 
 use App\Organization\Domain\Enums\EmploymentPeriodStatus;
 use App\Organization\Domain\Exceptions\EmploymentPeriodException;
-use App\Organization\Domain\ValueObjects\EmploymentPeriodIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
+use App\Organization\Domain\ValueObjects\EmploymentPeriodIdValueObject;
 use DateTimeImmutable;
 
 /**

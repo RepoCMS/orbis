@@ -22,7 +22,7 @@ final readonly class ListRolesHandler
         $roles = $this->roleRepository->findAll();
 
         return array_map(
-            static fn($role) => RoleResponse::fromEntity($role),
+            static fn ($role) => RoleResponse::fromEntity($role),
             $roles,
         );
     }

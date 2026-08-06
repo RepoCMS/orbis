@@ -7,15 +7,14 @@ namespace App\Tests\Unit\Inventory\Application\Command;
 use App\Inventory\Application\Command\AddProduct\AddProductCommand;
 use App\Inventory\Application\Command\AddProduct\AddProductHandler;
 use App\Inventory\Application\Exception\ProductCodeAlreadyExistsException;
-use App\Inventory\Domain\Exceptions\ProductNotFoundException;
 use App\Inventory\Domain\Entities\Product;
 use App\Inventory\Domain\Enums\ProductTrackingType;
 use App\Inventory\Domain\Exceptions\ProductIdException;
+use App\Inventory\Domain\Exceptions\ProductNotFoundException;
 use App\Inventory\Domain\Repositories\ProductRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\ProductCodeAssignedBySupplierValueObject;
 use App\Inventory\Domain\ValueObjects\ProductIdValueObject;
 use App\Inventory\Domain\ValueObjects\ProductNameValueObject;
-use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\TestCase;
 

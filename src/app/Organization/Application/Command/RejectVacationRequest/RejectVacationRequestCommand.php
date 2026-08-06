@@ -10,5 +10,6 @@ final readonly class RejectVacationRequestCommand
         public string $requestId,
         public string $reviewedBy,
         public string $reason,
-    ) {}
+    ) {
+    }
 }

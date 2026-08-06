@@ -17,7 +17,8 @@ final class IdentityDashboardController extends AbstractController
 {
     public function __construct(
         private readonly IdentityDashboardMetricsHandler $handler,
-    ) {}
+    ) {
+    }
 
     #[Route('', name: 'index', methods: ['GET'])]
     public function __invoke(): Response

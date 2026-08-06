@@ -10,5 +10,6 @@ final readonly class RequestOvertimeCorrectionCommand
         public string $overtimeRecordId,
         public string $reviewedBy,
         public ?string $correctionHint = null,
-    ) {}
+    ) {
+    }
 }

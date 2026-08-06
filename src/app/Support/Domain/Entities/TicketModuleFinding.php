@@ -7,8 +7,8 @@ namespace App\Support\Domain\Entities;
 use App\Support\Domain\AtmModel\FindingType;
 use App\Support\Domain\AtmModel\ModulePathValueObject;
 use App\Support\Domain\ValueObjects\FindingEvidenceIdValueObject;
-use App\Support\Domain\ValueObjects\TicketModuleFindingIdValueObject;
 use App\Support\Domain\ValueObjects\TicketIdValueObject;
+use App\Support\Domain\ValueObjects\TicketModuleFindingIdValueObject;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -85,6 +85,7 @@ final class TicketModuleFinding
         foreach ($this->evidences as $evidence) {
             if ($evidence->id()->__toString() === (string) $id) {
                 $this->evidences->removeElement($evidence);
+
                 return;
             }
         }

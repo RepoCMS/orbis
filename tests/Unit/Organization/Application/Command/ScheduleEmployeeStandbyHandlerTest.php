@@ -11,13 +11,12 @@ use App\Organization\Domain\Entities\Employee;
 use App\Organization\Domain\Entities\EmployeeSpecialPeriod;
 use App\Organization\Domain\Enums\EmployeeProfile;
 use App\Organization\Domain\Enums\EmployeeSpecialPeriodStatus;
-use App\Organization\Domain\Enums\EmployeeStatus;
 use App\Organization\Domain\Exceptions\EmployeeSpecialPeriodException;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\Repositories\EmployeeSpecialPeriodRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
+use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\TestCase;
 

@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 
 final class RequestIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'request_id'; }
-    protected function getValueObjectClass(): string { return RequestIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'request_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return RequestIdValueObject::class;
+    }
 }

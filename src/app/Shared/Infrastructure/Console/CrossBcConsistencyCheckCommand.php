@@ -38,6 +38,7 @@ final class CrossBcConsistencyCheckCommand extends Command
 
         if ($this->issues === 0) {
             $output->writeln('<info>✔ No se encontraron inconsistencias cross-BC.</info>');
+
             return Command::SUCCESS;
         }
 
@@ -60,7 +61,7 @@ final class CrossBcConsistencyCheckCommand extends Command
         $this->output->writeln('<fg=blue>▶</> Verificando usuarios huérfanos (sin Employee ni Contact)...');
 
         $orphans = $this->dbal->fetchAllAssociative(
-            "SELECT u.id, u.username, u.status
+            'SELECT u.id, u.username, u.status
              FROM users u
              WHERE u.deleted_at IS NULL
                AND u.id NOT IN (
@@ -68,11 +69,12 @@ final class CrossBcConsistencyCheckCommand extends Command
                 )
                AND u.id NOT IN (
                    SELECT c.user_id FROM contacts c WHERE c.user_id IS NOT NULL AND c.deleted_at IS NULL
-                )",
+                )',
         );
 
         if ($orphans === []) {
             $this->output->writeln('  <info>✔ Sin usuarios huérfanos.</info>');
+
             return;
         }
 
@@ -80,7 +82,7 @@ final class CrossBcConsistencyCheckCommand extends Command
 
         $table = new Table($this->output);
         $table->setHeaders(['ID', 'Username', 'Status']);
-        $table->setRows(array_map(fn(array $o) => [$o['id'], $o['username'], $o['status']], $orphans));
+        $table->setRows(array_map(fn (array $o) => [$o['id'], $o['username'], $o['status']], $orphans));
         $table->render();
 
         $this->issues += count($orphans);
@@ -100,6 +102,7 @@ final class CrossBcConsistencyCheckCommand extends Command
 
         if ($employees === []) {
             $this->output->writeln('  <info>✔ Todos los técnicos tienen User vinculado.</info>');
+
             return;
         }
 
@@ -108,7 +111,7 @@ final class CrossBcConsistencyCheckCommand extends Command
         $table = new Table($this->output);
         $table->setHeaders(['ID', 'Identificación', 'Nombre']);
         $table->setRows(array_map(
-            fn(array $e) => [$e['id'], $e['identification'], $e['first_name'] . ' ' . $e['last_name']],
+            fn (array $e) => [$e['id'], $e['identification'], $e['first_name'] . ' ' . $e['last_name']],
             $employees,
         ));
         $table->render();
@@ -121,14 +124,15 @@ final class CrossBcConsistencyCheckCommand extends Command
         $this->output->writeln('<fg=blue>▶</> Verificando contactos activos sin User vinculado...');
 
         $contacts = $this->dbal->fetchAllAssociative(
-            "SELECT c.id, c.first_name, c.last_name, c.email
+            'SELECT c.id, c.first_name, c.last_name, c.email
              FROM contacts c
              WHERE c.user_id IS NULL
-               AND c.deleted_at IS NULL",
+               AND c.deleted_at IS NULL',
         );
 
         if ($contacts === []) {
             $this->output->writeln('  <info>✔ Todos los contactos tienen User vinculado.</info>');
+
             return;
         }
 
@@ -137,7 +141,7 @@ final class CrossBcConsistencyCheckCommand extends Command
         $table = new Table($this->output);
         $table->setHeaders(['ID', 'Nombre', 'Email']);
         $table->setRows(array_map(
-            fn(array $c) => [$c['id'], $c['first_name'] . ' ' . $c['last_name'], $c['email']],
+            fn (array $c) => [$c['id'], $c['first_name'] . ' ' . $c['last_name'], $c['email']],
             $contacts,
         ));
         $table->render();
@@ -160,6 +164,7 @@ final class CrossBcConsistencyCheckCommand extends Command
 
         if ($advances === []) {
             $this->output->writeln('  <info>✔ Sin adelantos activos para empleados inactivos.</info>');
+
             return;
         }
 
@@ -168,7 +173,7 @@ final class CrossBcConsistencyCheckCommand extends Command
         $table = new Table($this->output);
         $table->setHeaders(['ID', 'N° Adelanto', 'Monto', 'Employee ID']);
         $table->setRows(array_map(
-            fn(array $a) => [$a['id'], $a['advance_number'], '$' . $a['amount'], $a['employee_id']],
+            fn (array $a) => [$a['id'], $a['advance_number'], '$' . $a['amount'], $a['employee_id']],
             $advances,
         ));
         $table->render();
@@ -181,18 +186,19 @@ final class CrossBcConsistencyCheckCommand extends Command
         $this->output->writeln('<fg=blue>▶</> Verificando liquidaciones con referencias a tickets inexistentes...');
 
         $expenses = $this->dbal->fetchAllAssociative(
-            "SELECT oe.id, oe.sequence, oe.employee_id
+            'SELECT oe.id, oe.sequence, oe.employee_id
              FROM expense_operating_expenses oe
              WHERE oe.deleted_at IS NULL
                AND JSON_LENGTH(oe.ticket_ids) > 0
                AND NOT EXISTS (
                    SELECT 1 FROM tickets t
                    WHERE t.id MEMBER OF(oe.ticket_ids)
-               )",
+               )',
         );
 
         if ($expenses === []) {
             $this->output->writeln('  <info>✔ Todos los ticketIds refieren a tickets existentes.</info>');
+
             return;
         }
 
@@ -201,7 +207,7 @@ final class CrossBcConsistencyCheckCommand extends Command
         $table = new Table($this->output);
         $table->setHeaders(['ID', 'Secuencia', 'Employee ID']);
         $table->setRows(array_map(
-            fn(array $e) => [$e['id'], $e['sequence'], $e['employee_id']],
+            fn (array $e) => [$e['id'], $e['sequence'], $e['employee_id']],
             $expenses,
         ));
         $table->render();

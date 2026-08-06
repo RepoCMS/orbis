@@ -14,5 +14,6 @@ final readonly class CreateTicketCommand
         public ServiceType $serviceType,
         public string      $description,
         public string      $createdBy,
-    ) {}
+    ) {
+    }
 }

@@ -12,5 +12,6 @@ final readonly class ReassignTicketCommand
         public string              $previousEmployeeId,
         public string              $reassignedBy,
         public ?\DateTimeImmutable $scheduledAt = null,
-    ) {}
+    ) {
+    }
 }

@@ -10,7 +10,8 @@ final readonly class GetActiveTerminalAssignmentsHandler
 {
     public function __construct(
         private Connection $dbal,
-    ) {}
+    ) {
+    }
 
     /**
      * Returns active terminal assignments for a given client.

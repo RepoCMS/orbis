@@ -12,7 +12,8 @@ final readonly class TicketPauseResponse
         public string  $pauseReason,
         public string  $pausedAt,
         public ?string $resumedAt,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(\App\Support\Domain\Entities\TicketPause $pause): self
     {

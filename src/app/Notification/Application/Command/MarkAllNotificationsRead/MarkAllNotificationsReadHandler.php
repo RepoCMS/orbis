@@ -10,7 +10,8 @@ final readonly class MarkAllNotificationsReadHandler
 {
     public function __construct(
         private NotificationLogRepositoryInterface $logRepository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(MarkAllNotificationsReadCommand $command): void
     {

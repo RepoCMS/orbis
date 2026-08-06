@@ -23,7 +23,8 @@ final readonly class NotificationTemplateRenderer
     public function __construct(
         private NotificationTemplateRepositoryInterface $templateRepository,
         private TemplateVariableResolver $variableResolver,
-    ) {}
+    ) {
+    }
 
     /**
      * Renderiza una plantilla para un evento y canal dados.

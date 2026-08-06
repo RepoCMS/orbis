@@ -8,5 +8,6 @@ final readonly class GetCashAdvanceDetailQuery
 {
     public function __construct(
         public string $cashAdvanceId,
-    ) {}
+    ) {
+    }
 }

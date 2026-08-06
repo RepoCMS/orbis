@@ -9,5 +9,6 @@ final readonly class ImportOperatingExpensesCommand
     public function __construct(
         public string $filePath,
         public bool $dryRun = false,
-    ) {}
+    ) {
+    }
 }

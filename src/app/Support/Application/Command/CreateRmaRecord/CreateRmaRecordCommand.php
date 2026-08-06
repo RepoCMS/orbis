@@ -13,5 +13,6 @@ final readonly class CreateRmaRecordCommand
         public ?string $serialNumber = null,
         public int     $quantity = 1,
         public ?string $notes = null,
-    ) {}
+    ) {
+    }
 }

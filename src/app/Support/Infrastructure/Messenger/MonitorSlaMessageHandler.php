@@ -15,7 +15,8 @@ final readonly class MonitorSlaMessageHandler
     public function __construct(
         private MonitorSlaHandler $handler,
         private LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     public function __invoke(MonitorSlaMessage $message): void
     {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Inventory\Presentation\Http;
 
+use App\Identity\Infrastructure\Security\SymfonySecurityUser;
 use App\Inventory\Application\Command\AddPurchaseOrderItem\AddPurchaseOrderItemCommand;
 use App\Inventory\Application\Command\AddPurchaseOrderItem\AddPurchaseOrderItemHandler;
 use App\Inventory\Application\Command\CancelPurchaseOrder\CancelPurchaseOrderCommand;
@@ -22,7 +23,6 @@ use App\Inventory\Application\Query\GeneratePurchaseSuggestions\GeneratePurchase
 use App\Inventory\Application\Query\ListPurchaseOrders\ListPurchaseOrdersHandler;
 use App\Inventory\Application\Query\ListPurchaseOrders\ListPurchaseOrdersQuery;
 use App\Inventory\Application\Query\Response\PurchaseSuggestionResponse;
-use App\Identity\Infrastructure\Security\SymfonySecurityUser;
 use App\Shared\Exceptions\DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -153,7 +153,7 @@ final class ApiInventoryPurchaseOrderController extends AbstractController
     ): JsonResponse {
         $suggestions  = $handler(new GeneratePurchaseSuggestionsQuery());
         $responseData = array_map(
-            static fn($suggestion) => PurchaseSuggestionResponse::fromSuggestion($suggestion),
+            static fn ($suggestion) => PurchaseSuggestionResponse::fromSuggestion($suggestion),
             $suggestions,
         );
 

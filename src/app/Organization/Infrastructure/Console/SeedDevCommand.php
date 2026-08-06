@@ -17,7 +17,15 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 final class SeedDevCommand extends Command
 {
-    private const PASSWORD = 'Orbis2026!';
+    private static function devPassword(): string
+    {
+        $password = getenv('ORBIS_DEV_SEED_PASSWORD');
+        if ($password === false || $password === '') {
+            throw new \RuntimeException('Define ORBIS_DEV_SEED_PASSWORD en el entorno para ejecutar el seed dev.');
+        }
+
+        return $password;
+    }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -38,7 +46,7 @@ final class SeedDevCommand extends Command
 
         $io->section('Admin inicial');
         $this->runSeedCommand('app:seed:admin', $input, $output, [
-            '--password' => self::PASSWORD,
+            '--password' => self::devPassword(),
         ]);
 
         $io->section('Roles predefinidos');
@@ -60,8 +68,8 @@ final class SeedDevCommand extends Command
         $io->table(
             ['Usuario', 'Password', 'Rol'],
             [
-                ['admin', self::PASSWORD, 'Administrador'],
-                ['carlos', self::PASSWORD, 'Técnico'],
+                ['admin', self::devPassword(), 'Administrador'],
+                ['carlos', self::devPassword(), 'Técnico'],
             ],
         );
 

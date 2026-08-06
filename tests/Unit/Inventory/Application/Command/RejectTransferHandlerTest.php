@@ -51,6 +51,7 @@ final class RejectTransferHandlerTest extends TestCase
             quantity: $quantity,
         );
         $movement->startTransit();
+
         return $movement;
     }
 
@@ -73,6 +74,7 @@ final class RejectTransferHandlerTest extends TestCase
             initialQuantity: $quantity,
         );
         $stock->reserve();
+
         return $stock;
     }
 

@@ -13,7 +13,8 @@ final readonly class CitySearchResponse
         public string $name,
         public string $provinceId,
         public string $provinceName,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(City $city): self
     {

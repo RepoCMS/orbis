@@ -6,4 +6,6 @@ namespace App\Inventory\Domain\Exceptions;
 
 use App\Shared\Exceptions\DomainException;
 
-final class ProductIdException extends DomainException {}
+final class ProductIdException extends DomainException
+{
+}

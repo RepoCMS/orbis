@@ -22,7 +22,8 @@ final class ExpenseItemResponse
         public readonly ?string $rejectionReason,
         public readonly ?string $reviewedBy,
         public readonly ?string $reviewedAt,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(ExpenseItem $item): self
     {

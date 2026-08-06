@@ -8,5 +8,6 @@ final readonly class FindQuickTemplateQuery
 {
     public function __construct(
         public string $templateId,
-    ) {}
+    ) {
+    }
 }

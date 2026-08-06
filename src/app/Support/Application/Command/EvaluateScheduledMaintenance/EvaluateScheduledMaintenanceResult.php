@@ -11,5 +11,6 @@ final readonly class EvaluateScheduledMaintenanceResult
         public int $alertsSent,
         public int $dueMaintenances,
         public int $upcomingAlerts,
-    ) {}
+    ) {
+    }
 }

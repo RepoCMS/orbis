@@ -104,7 +104,7 @@ final readonly class CreateCustodyAssignmentHandler
                 // no se puede crear una de custodia.
                 $otherLocations = array_filter(
                     $custodyLocations,
-                    static fn($l) => !$l->isCustody(),
+                    static fn ($l) => !$l->isCustody(),
                 );
 
                 if (!empty($otherLocations)) {

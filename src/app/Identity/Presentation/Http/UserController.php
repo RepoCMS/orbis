@@ -6,8 +6,16 @@ namespace App\Identity\Presentation\Http;
 
 use App\Identity\Application\Command\ActivateUser\ActivateUserCommand;
 use App\Identity\Application\Command\ActivateUser\ActivateUserHandler;
+use App\Identity\Application\Command\AssignRoleToUser\AssignRoleToUserCommand;
+use App\Identity\Application\Command\AssignRoleToUser\AssignRoleToUserHandler;
+use App\Identity\Application\Command\ChangePassword\ChangePasswordCommand;
+use App\Identity\Application\Command\ChangePassword\ChangePasswordHandler;
+use App\Identity\Application\Command\ChangeUsername\ChangeUsernameCommand;
+use App\Identity\Application\Command\ChangeUsername\ChangeUsernameHandler;
 use App\Identity\Application\Command\DeactivateUser\DeactivateUserCommand;
 use App\Identity\Application\Command\DeactivateUser\DeactivateUserHandler;
+use App\Identity\Application\Command\GenerateActivationToken\GenerateActivationTokenCommand;
+use App\Identity\Application\Command\GenerateActivationToken\GenerateActivationTokenHandler;
 use App\Identity\Application\Command\ReactivateUser\ReactivateUserCommand;
 use App\Identity\Application\Command\ReactivateUser\ReactivateUserHandler;
 use App\Identity\Application\Command\RegisterUser\RegisterUserCommand;
@@ -18,16 +26,8 @@ use App\Identity\Application\Command\UnlockUser\UnlockUserCommand;
 use App\Identity\Application\Command\UnlockUser\UnlockUserHandler;
 use App\Identity\Application\Command\VerifyUser\VerifyUserCommand;
 use App\Identity\Application\Command\VerifyUser\VerifyUserHandler;
-use App\Identity\Application\Command\GenerateActivationToken\GenerateActivationTokenCommand;
-use App\Identity\Application\Command\GenerateActivationToken\GenerateActivationTokenHandler;
-use App\Identity\Application\Command\ChangeUsername\ChangeUsernameCommand;
-use App\Identity\Application\Command\ChangeUsername\ChangeUsernameHandler;
-use App\Identity\Application\Command\ChangePassword\ChangePasswordCommand;
-use App\Identity\Application\Command\ChangePassword\ChangePasswordHandler;
-use App\Identity\Application\Command\AssignRoleToUser\AssignRoleToUserCommand;
-use App\Identity\Application\Command\AssignRoleToUser\AssignRoleToUserHandler;
-use App\Identity\Application\Exception\UsernameAlreadyExistsException;
 use App\Identity\Application\Exception\RoleNotFoundException;
+use App\Identity\Application\Exception\UsernameAlreadyExistsException;
 use App\Identity\Application\Query\FindUserById\FindUserByIdHandler;
 use App\Identity\Application\Query\FindUserById\FindUserByIdQuery;
 use App\Identity\Application\Query\ListRoles\ListRolesHandler;
@@ -36,10 +36,10 @@ use App\Identity\Application\Query\ListUsers\ListUsersHandler;
 use App\Identity\Application\Query\ListUsers\ListUsersQuery;
 use App\Shared\Exceptions\DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/users')]
 final class UserController extends AbstractController
@@ -181,6 +181,7 @@ final class UserController extends AbstractController
             }
 
             $this->addFlash('success', 'Datos del usuario actualizados.');
+
             return $this->redirectToRoute('user_show', ['id' => $id]);
         } catch (\App\Identity\Application\Exception\UserNotFoundException) {
             throw $this->createNotFoundException('Usuario no encontrado.');

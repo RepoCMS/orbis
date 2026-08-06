@@ -9,7 +9,6 @@ use App\Expense\Application\Command\CreateCashAdvance\CreateCashAdvanceHandler;
 use App\Expense\Application\Service\EmployeeResolverInterface;
 use App\Expense\Application\Service\UserResolverInterface;
 use App\Expense\Domain\Repositories\CashAdvanceRepositoryInterface;
-use App\Expense\Domain\ValueObjects\CashAdvanceIdValueObject;
 use App\Shared\Application\Service\IdempotencyServiceInterface;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
@@ -35,7 +34,10 @@ final class CreateCashAdvanceHandlerTest extends TestCase
         $idempotency->method('tryProcess')->willReturn(true);
 
         $handler = new CreateCashAdvanceHandler(
-            $repo, $idGenerator, $employeeResolver, $userResolver,
+            $repo,
+            $idGenerator,
+            $employeeResolver,
+            $userResolver,
             $this->createMock(DomainEventPublisherInterface::class),
             $idempotency,
         );

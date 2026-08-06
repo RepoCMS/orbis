@@ -14,5 +14,6 @@ final class ClientSearchCriteria
         public readonly ?ClientStatus $status = null,
         public readonly int $page = 1,
         public readonly int $limit = 20,
-    ) {}
+    ) {
+    }
 }

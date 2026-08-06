@@ -250,7 +250,7 @@ enum EventType: string
             self::PASSWORD_CHANGED,
             self::MFA_SETUP_COMPLETED,
             self::MFA_DISABLED_BY_ADMIN,
-                => true,
+            => true,
             default => false,
         };
     }

@@ -96,7 +96,7 @@ final class UserTokenTest extends TestCase
         if ($hoursOffset < 0) {
             $ref = new \ReflectionProperty($result['entity'], 'expiresAt');
             $ref->setAccessible(true);
-            $ref->setValue($result['entity'], new \DateTimeImmutable("-" . abs($hoursOffset) . " hours"));
+            $ref->setValue($result['entity'], new \DateTimeImmutable('-' . abs($hoursOffset) . ' hours'));
         }
 
         return $result;

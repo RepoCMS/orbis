@@ -17,7 +17,8 @@ final readonly class OvertimeReportGenerator implements ReportGeneratorInterface
 
     public function __construct(
         private Connection $connection,
-    ) {}
+    ) {
+    }
 
     public function getTitle(): string
     {

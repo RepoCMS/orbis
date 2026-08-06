@@ -8,13 +8,12 @@ use App\Identity\Application\Command\RequestPasswordReset\RequestPasswordResetCo
 use App\Identity\Application\Command\RequestPasswordReset\RequestPasswordResetHandler;
 use App\Identity\Application\Exception\EmailNotFoundException;
 use App\Identity\Domain\Entities\User;
-use App\Identity\Domain\Enums\UserTokenType;
-use App\Identity\Domain\Service\ForgotPasswordEmailSenderInterface;
-use App\Identity\Domain\Service\UserByEmailResolverInterface;
-use App\Identity\Domain\Service\UserEmailResolverInterface;
 use App\Identity\Domain\Repositories\AuthLogRepositoryInterface;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;
 use App\Identity\Domain\Repositories\UserTokenRepositoryInterface;
+use App\Identity\Domain\Service\ForgotPasswordEmailSenderInterface;
+use App\Identity\Domain\Service\UserByEmailResolverInterface;
+use App\Identity\Domain\Service\UserEmailResolverInterface;
 use App\Identity\Domain\ValueObjects\HashedPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
@@ -64,8 +63,14 @@ final class RequestPasswordResetHandlerTest extends TestCase
         $authLogRepo->expects($this->once())->method('append');
 
         $handler = new RequestPasswordResetHandler(
-            $emailResolver, $userRepo, $tokenRepo, $idGenerator, $publisher,
-            $emailSender, $userEmailResolver, $authLogRepo,
+            $emailResolver,
+            $userRepo,
+            $tokenRepo,
+            $idGenerator,
+            $publisher,
+            $emailSender,
+            $userEmailResolver,
+            $authLogRepo,
         );
         ($handler)(new RequestPasswordResetCommand('juan@example.com'));
 

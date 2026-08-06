@@ -17,7 +17,8 @@ final class OrganizationDashboardController extends AbstractController
 {
     public function __construct(
         private readonly GetOrganizationDashboardHandler $handler,
-    ) {}
+    ) {
+    }
 
     #[Route('', name: 'index', methods: ['GET'])]
     public function __invoke(): Response

@@ -50,6 +50,7 @@ final readonly class SendNotificationMessageHandler
         if ($sender === null) {
             $log->markFailed(sprintf('No hay sender configurado para el canal: %s', $log->channel()->value));
             $this->logRepository->save($log);
+
             return;
         }
 

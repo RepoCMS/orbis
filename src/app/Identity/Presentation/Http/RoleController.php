@@ -25,10 +25,10 @@ use App\Identity\Application\Query\ListRoles\ListRolesQuery;
 use App\Identity\Domain\Exceptions\RoleIdException;
 use App\Shared\Exceptions\DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/roles')]
 final class RoleController extends AbstractController

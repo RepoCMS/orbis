@@ -75,6 +75,7 @@ final class SeedGeographyCommand extends Command
 
         if (count($this->regionRepository->findAll()) > 0) {
             $io->success('Los datos geográficos ya existen. Nada que hacer.');
+
             return Command::SUCCESS;
         }
 
@@ -104,6 +105,7 @@ final class SeedGeographyCommand extends Command
         }
 
         $io->success('Datos geográficos sembrados correctamente.');
+
         return Command::SUCCESS;
     }
 }

@@ -19,7 +19,8 @@ final readonly class ImportOperatingExpensesHandler
         private OperatingExpenseRowValidator $rowValidator,
         private CreateOperatingExpenseHandler $createExpenseHandler,
         private AddExpenseItemHandler $addItemHandler,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ImportOperatingExpensesCommand $command): ImportResult
     {

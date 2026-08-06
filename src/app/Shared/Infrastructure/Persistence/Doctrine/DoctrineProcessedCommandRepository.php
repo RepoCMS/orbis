@@ -13,7 +13,8 @@ final readonly class DoctrineProcessedCommandRepository implements ProcessedComm
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-    ) {}
+    ) {
+    }
 
     public function exists(string $commandType, string $idempotencyKey): bool
     {

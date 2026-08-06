@@ -11,7 +11,8 @@ final readonly class ResumeTicketHandler
 {
     public function __construct(
         private TicketRepositoryInterface $ticketRepo,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ResumeTicketCommand $command): void
     {

@@ -10,5 +10,6 @@ final readonly class ListNotificationTemplatesQuery
         public ?string $eventType = null,
         public ?string $channel = null,
         public ?bool $isActive = null,
-    ) {}
+    ) {
+    }
 }

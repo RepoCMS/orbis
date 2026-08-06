@@ -12,7 +12,8 @@ final readonly class TemplateVariableResolver
 
     public function __construct(
         private ContactResolverInterface $contactResolver,
-    ) {}
+    ) {
+    }
 
     public function resolve(string $bodyTemplate, string $recipientType, string $recipientId, array $additionalVars = []): string
     {
@@ -29,6 +30,7 @@ final readonly class TemplateVariableResolver
 
         return preg_replace_callback(self::PATTERN, static function (array $matches) use ($vars): string {
             $key = $matches[1];
+
             return $vars[$key] ?? $matches[0];
         }, $bodyTemplate);
     }

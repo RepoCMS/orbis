@@ -11,7 +11,8 @@ final readonly class ValuedInventoryReportGenerator implements ReportGeneratorIn
 {
     public function __construct(
         private Connection $connection,
-    ) {}
+    ) {
+    }
 
     public function getTitle(): string
     {

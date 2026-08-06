@@ -9,5 +9,6 @@ final readonly class ImportNonserializedStockCommand
     public function __construct(
         public string $filePath,
         public bool $dryRun = false,
-    ) {}
+    ) {
+    }
 }

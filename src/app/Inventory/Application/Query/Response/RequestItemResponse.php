@@ -18,7 +18,8 @@ final readonly class RequestItemResponse
         public string $status,
         public string $statusLabel,
         public ?string $fulfilledMovementId,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(RequestItem $item): self
     {

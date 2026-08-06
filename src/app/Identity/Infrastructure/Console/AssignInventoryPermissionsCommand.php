@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Assigns all inventory.* permissions to every active role that already has
  * at least one permission (i.e. non-empty roles, which are the "super/admin" ones).
@@ -63,9 +64,10 @@ final class AssignInventoryPermissionsCommand extends Command
             $io->error(sprintf('Rol "%s" no encontrado.', $roleName));
             $io->writeln('Roles disponibles:');
             $io->listing(array_map(
-                static fn($r) => (string) $r->name(),
+                static fn ($r) => (string) $r->name(),
                 $this->roleRepository->findAll(),
             ));
+
             return Command::FAILURE;
         }
 

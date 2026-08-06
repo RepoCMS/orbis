@@ -9,7 +9,6 @@ use App\Inventory\Application\Query\ListPhysicalCounts\ListPhysicalCountsQuery;
 use App\Inventory\Application\Query\Response\PhysicalCountResponse;
 use App\Inventory\Domain\Entities\PhysicalCount;
 use App\Inventory\Domain\Entities\PhysicalCountItem;
-use App\Inventory\Domain\Enums\PhysicalCountStatus;
 use App\Inventory\Domain\Repositories\PhysicalCountRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\PhysicalCountIdValueObject;
 use App\Inventory\Domain\ValueObjects\PhysicalCountItemIdValueObject;

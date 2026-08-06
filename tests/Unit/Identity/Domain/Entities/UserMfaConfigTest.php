@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Identity\Domain\Entities;
 
 use App\Identity\Domain\Entities\UserMfaConfig;
-use App\Identity\Domain\ValueObjects\UserMfaConfigIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
+use App\Identity\Domain\ValueObjects\UserMfaConfigIdValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class UserMfaConfigTest extends TestCase

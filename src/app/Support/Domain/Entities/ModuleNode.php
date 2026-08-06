@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Support\Domain\Entities;
 
 use App\Support\Domain\AtmModel\AtmModel;
-use App\Support\Domain\Exceptions\ModuleNodeNotFoundException;
 use App\Support\Domain\ValueObjects\ModuleNodeIdValueObject;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;

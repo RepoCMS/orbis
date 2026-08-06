@@ -8,5 +8,6 @@ final readonly class DeleteOperatingExpenseCommand
 {
     public function __construct(
         public string $expenseId,
-    ) {}
+    ) {
+    }
 }

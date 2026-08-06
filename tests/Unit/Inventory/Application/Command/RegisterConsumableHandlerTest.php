@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Inventory\Application\Command;
 
+use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Inventory\Application\Command\RegisterConsumable\RegisterConsumableCommand;
 use App\Inventory\Application\Command\RegisterConsumable\RegisterConsumableHandler;
 use App\Inventory\Application\Exception\RepairNotFoundException;
-use App\Identity\Domain\ValueObjects\UserIdValueObject;
-use App\Inventory\Domain\Enums\RepairPriority;
 use App\Inventory\Domain\Entities\Repair;
 use App\Inventory\Domain\Repositories\ConsumableRepositoryInterface;
 use App\Inventory\Domain\Repositories\RepairRepositoryInterface;

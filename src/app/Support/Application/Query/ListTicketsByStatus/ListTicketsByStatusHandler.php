@@ -11,7 +11,8 @@ final readonly class ListTicketsByStatusHandler
 {
     public function __construct(
         private TicketRepositoryInterface $ticketRepo,
-    ) {}
+    ) {
+    }
 
     /** @return TicketResponse[] */
     public function __invoke(ListTicketsByStatusQuery $query): array

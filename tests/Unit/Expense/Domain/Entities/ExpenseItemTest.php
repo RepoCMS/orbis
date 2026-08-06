@@ -9,8 +9,8 @@ use App\Expense\Domain\Enums\ExpenseItemStatus;
 use App\Expense\Domain\Enums\ExpenseItemType;
 use App\Expense\Domain\Exceptions\InvalidAmountException;
 use App\Expense\Domain\Exceptions\ItemAlreadyApprovedException;
-use App\Expense\Domain\Exceptions\MissingRejectionReasonException;
 use App\Expense\Domain\Exceptions\ItemNotInPendingStatusException;
+use App\Expense\Domain\Exceptions\MissingRejectionReasonException;
 use App\Expense\Domain\ValueObjects\ExpenseItemIdValueObject;
 use PHPUnit\Framework\TestCase;
 

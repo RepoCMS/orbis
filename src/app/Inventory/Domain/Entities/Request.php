@@ -159,7 +159,7 @@ final class Request
         return array_values(
             array_filter(
                 $this->items->toArray(),
-                static fn(RequestItem $item) => $item->isPending(),
+                static fn (RequestItem $item) => $item->isPending(),
             ),
         );
     }
@@ -169,7 +169,7 @@ final class Request
         return array_values(
             array_filter(
                 $this->items->toArray(),
-                static fn(RequestItem $item) => $item->isFulfilled(),
+                static fn (RequestItem $item) => $item->isFulfilled(),
             ),
         );
     }

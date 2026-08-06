@@ -15,9 +15,10 @@ final class LoginController extends AbstractController
 {
     public function __construct(
         private readonly LandingRouteResolver $landingRouteResolver,
-    ) {}
+    ) {
+    }
 
-    #[Route("/login", name: "app_login", methods: ["GET", "POST"])]
+    #[Route('/login', name: 'app_login', methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         /** @var SymfonySecurityUser|null $user */
@@ -29,13 +30,13 @@ final class LoginController extends AbstractController
             );
         }
 
-        return $this->render("security/login.html.twig", [
-            "last_username" => $authenticationUtils->getLastUsername(),
-            "error" => $authenticationUtils->getLastAuthenticationError(),
+        return $this->render('security/login.html.twig', [
+            'last_username' => $authenticationUtils->getLastUsername(),
+            'error' => $authenticationUtils->getLastAuthenticationError(),
         ]);
     }
 
-    #[Route("/logout", name: "app_logout")]
+    #[Route('/logout', name: 'app_logout')]
     public function logout(): void
     {
         // Este método nunca se ejecuta; el firewall de Symfony intercepta la ruta.

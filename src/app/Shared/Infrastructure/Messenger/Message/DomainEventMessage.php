@@ -19,7 +19,8 @@ final readonly class DomainEventMessage
         public string $eventClass,
         public string $serializedEvent,
         public string $occurredAt,
-    ) {}
+    ) {
+    }
 
     public static function fromEvent(DomainEvent $event): self
     {

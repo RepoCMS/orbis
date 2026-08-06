@@ -10,5 +10,6 @@ final readonly class RequestItemCommandInput
         public string $productId,
         public ?string $serializedStockId,
         public int $quantity,
-    ) {}
+    ) {
+    }
 }

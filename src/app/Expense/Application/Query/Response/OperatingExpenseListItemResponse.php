@@ -26,7 +26,8 @@ final class OperatingExpenseListItemResponse
         public readonly ?float $positiveBalance,
         public readonly ?float $negativeBalance,
         public readonly ?string $submittedAt,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(OperatingExpense $expense, ?float $cashAdvanceAmount = null): self
     {

@@ -31,6 +31,7 @@ final class OrbisFormatExtension extends AbstractExtension
         if ($value === null) {
             return '—';
         }
+
         return number_format($value, $decimals, '.', ',');
     }
 
@@ -43,6 +44,7 @@ final class OrbisFormatExtension extends AbstractExtension
         if ($value === null) {
             return '—';
         }
+
         return '$' . number_format($value, $decimals, '.', ',');
     }
 
@@ -55,6 +57,7 @@ final class OrbisFormatExtension extends AbstractExtension
         if ($value === null) {
             return '—';
         }
+
         return number_format($value, $decimals, '.', ',') . '%';
     }
 
@@ -72,6 +75,7 @@ final class OrbisFormatExtension extends AbstractExtension
         if ($m === 0) {
             return sprintf('%d h', (int) $h);
         }
+
         return sprintf('%d h %d min', (int) $h, $m);
     }
 }

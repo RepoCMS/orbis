@@ -11,7 +11,6 @@ use App\Support\Application\Exception\TicketNotFoundException;
 use App\Support\Domain\Entities\Ticket;
 use App\Support\Domain\Enums\ServiceType;
 use App\Support\Domain\Repositories\TicketRepositoryInterface;
-use App\Support\Domain\ValueObjects\TicketEvidenceIdValueObject;
 use App\Support\Domain\ValueObjects\TicketIdValueObject;
 use PHPUnit\Framework\TestCase;
 

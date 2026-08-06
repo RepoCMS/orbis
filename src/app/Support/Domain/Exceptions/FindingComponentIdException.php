@@ -6,4 +6,6 @@ namespace App\Support\Domain\Exceptions;
 
 use App\Shared\Exceptions\DomainException;
 
-class FindingComponentIdException extends DomainException {}
+class FindingComponentIdException extends DomainException
+{
+}

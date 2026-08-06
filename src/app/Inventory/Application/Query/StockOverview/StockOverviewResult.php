@@ -16,7 +16,8 @@ final class StockOverviewResult
         public readonly int   $totalDamaged,
         public readonly int   $totalReserved,
         public readonly int   $totalDecommissioned,
-    ) {}
+    ) {
+    }
 
     public function totalPages(): int
     {

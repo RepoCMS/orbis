@@ -16,7 +16,6 @@ use App\Inventory\Domain\ValueObjects\ProductCodeAssignedBySupplierValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 
-
 final readonly class ApprovePhysicalCountHandler
 {
     public function __construct(

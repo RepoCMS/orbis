@@ -23,7 +23,7 @@ final readonly class ListAuthLogHandler
         $dateTo = $query->dateTo !== null ? new DateTimeImmutable($query->dateTo) : null;
 
         $items = array_map(
-            static fn($authLog) => AuthLogResponse::fromEntity($authLog),
+            static fn ($authLog) => AuthLogResponse::fromEntity($authLog),
             $this->authLogRepository->findByFilters($userId, $dateFrom, $dateTo, $query->page, $query->limit),
         );
 

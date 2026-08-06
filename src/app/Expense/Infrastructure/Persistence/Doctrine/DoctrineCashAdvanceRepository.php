@@ -14,7 +14,8 @@ final class DoctrineCashAdvanceRepository implements CashAdvanceRepositoryInterf
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function findById(CashAdvanceIdValueObject $id): ?CashAdvance
     {
@@ -22,6 +23,7 @@ final class DoctrineCashAdvanceRepository implements CashAdvanceRepositoryInterf
         if ($cashAdvance !== null && $cashAdvance->isDeleted()) {
             return null;
         }
+
         return $cashAdvance;
     }
 

@@ -16,5 +16,6 @@ final readonly class AssignTicketCommand
         public string              $inChargeId,
         public ?\DateTimeImmutable $scheduledAt,
         public int                 $slaMaxResponseHours = 0,
-    ) {}
+    ) {
+    }
 }

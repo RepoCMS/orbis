@@ -15,7 +15,8 @@ final readonly class EvaluateScheduledMaintenanceMessageHandler
     public function __construct(
         private EvaluateScheduledMaintenanceHandler $handler,
         private LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     public function __invoke(EvaluateScheduledMaintenanceMessage $message): void
     {

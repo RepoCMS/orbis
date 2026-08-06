@@ -4,23 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Support\Application\Query;
 
-use App\Inventory\Domain\Entities\NonserializedStock;
-use App\Inventory\Domain\Entities\Product;
-use App\Inventory\Domain\Enums\ProductTrackingType;
 use App\Inventory\Domain\Repositories\NonserializedStockRepositoryInterface;
 use App\Inventory\Domain\Repositories\ProductRepositoryInterface;
 use App\Inventory\Domain\Repositories\SerializedStockRepositoryInterface;
-use App\Inventory\Domain\ValueObjects\ProductCodeAssignedBySupplierValueObject;
-use App\Inventory\Domain\ValueObjects\ProductIdValueObject;
-use App\Inventory\Domain\ValueObjects\ProductNameValueObject;
 use App\Support\Application\Query\ListQuickTemplatesByModel\ListQuickTemplatesByModelHandler;
 use App\Support\Application\Query\ListQuickTemplatesByModel\ListQuickTemplatesByModelQuery;
-use App\Support\Application\Query\Response\QuickTemplateItemResponse;
 use App\Support\Domain\Entities\QuickTemplate;
-use App\Support\Domain\Entities\QuickTemplateItem;
 use App\Support\Domain\Repositories\QuickTemplateRepositoryInterface;
 use App\Support\Domain\ValueObjects\QuickTemplateIdValueObject;
-use App\Support\Domain\ValueObjects\QuickTemplateItemIdValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class ListQuickTemplatesByModelHandlerTest extends TestCase

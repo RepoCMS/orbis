@@ -10,7 +10,9 @@ use App\Location\Domain\ValueObjects\CityIdValueObject;
 
 final readonly class FindCityByIdHandler
 {
-    public function __construct(private CityRepositoryInterface $cityRepository) {}
+    public function __construct(private CityRepositoryInterface $cityRepository)
+    {
+    }
 
     public function __invoke(FindCityByIdQuery $query): ?CityResponse
     {

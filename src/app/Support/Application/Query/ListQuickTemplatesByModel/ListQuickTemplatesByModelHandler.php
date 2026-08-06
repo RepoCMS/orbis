@@ -20,7 +20,8 @@ final readonly class ListQuickTemplatesByModelHandler
         private ProductRepositoryInterface $productRepo,
         private SerializedStockRepositoryInterface $serializedStockRepo,
         private NonserializedStockRepositoryInterface $nonserializedStockRepo,
-    ) {}
+    ) {
+    }
 
     /** @return QuickTemplateResponse[] */
     public function __invoke(ListQuickTemplatesByModelQuery $query): array

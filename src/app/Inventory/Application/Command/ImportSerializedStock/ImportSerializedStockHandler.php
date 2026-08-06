@@ -32,7 +32,8 @@ final readonly class ImportSerializedStockHandler
         private SerializedStockRepositoryInterface $serializedStockRepository,
         private MovementRepositoryInterface $movementRepository,
         private IdGeneratorInterface $idGenerator,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ImportSerializedStockCommand $command): ImportResult
     {

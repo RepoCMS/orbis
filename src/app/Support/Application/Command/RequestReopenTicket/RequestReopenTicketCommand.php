@@ -10,5 +10,6 @@ final readonly class RequestReopenTicketCommand
         public string $ticketId,
         public string $reason,
         public string $requestedBy,
-    ) {}
+    ) {
+    }
 }

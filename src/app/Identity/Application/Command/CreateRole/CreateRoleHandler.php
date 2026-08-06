@@ -54,7 +54,7 @@ final readonly class CreateRoleHandler
     private function resolvePermissionIds(array $ids): array
     {
         $permissionIds = array_map(
-            static fn(string $id) => new PermissionIdValueObject($id),
+            static fn (string $id) => new PermissionIdValueObject($id),
             $ids,
         );
 

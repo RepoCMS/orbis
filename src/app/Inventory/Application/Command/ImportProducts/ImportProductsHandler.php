@@ -25,7 +25,8 @@ final readonly class ImportProductsHandler
         private ProductRepositoryInterface $productRepository,
         private IdGeneratorInterface $idGenerator,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ImportProductsCommand $command): ImportResult
     {

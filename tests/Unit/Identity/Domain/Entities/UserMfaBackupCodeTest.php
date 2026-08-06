@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Identity\Domain\Entities;
 
 use App\Identity\Domain\Entities\UserMfaBackupCode;
-use App\Identity\Domain\ValueObjects\UserMfaBackupCodeIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
+use App\Identity\Domain\ValueObjects\UserMfaBackupCodeIdValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class UserMfaBackupCodeTest extends TestCase

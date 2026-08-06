@@ -9,6 +9,12 @@ use App\Support\Domain\ValueObjects\TicketRescheduleIdValueObject;
 
 final class TicketRescheduleIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'ticket_reschedule_id'; }
-    protected function getValueObjectClass(): string { return TicketRescheduleIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'ticket_reschedule_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return TicketRescheduleIdValueObject::class;
+    }
 }

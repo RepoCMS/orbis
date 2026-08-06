@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 
 final class ConsumableIdType extends AbstractUlidType
 {
-    public function getName(): string { return 'consumable_id'; }
-    protected function getValueObjectClass(): string { return ConsumableIdValueObject::class; }
+    public function getName(): string
+    {
+        return 'consumable_id';
+    }
+    protected function getValueObjectClass(): string
+    {
+        return ConsumableIdValueObject::class;
+    }
 }

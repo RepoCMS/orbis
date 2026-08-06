@@ -11,7 +11,8 @@ final readonly class StartAssistanceFromWaitingHandler
 {
     public function __construct(
         private TicketRepositoryInterface $ticketRepo,
-    ) {}
+    ) {
+    }
 
     public function __invoke(StartAssistanceFromWaitingCommand $command): void
     {

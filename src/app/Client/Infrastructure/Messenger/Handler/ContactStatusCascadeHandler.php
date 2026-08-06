@@ -10,7 +10,6 @@ use App\Client\Domain\Repositories\ContactRepositoryInterface;
 use App\Client\Domain\ValueObjects\ContactIdValueObject;
 use App\Identity\Domain\Enums\UserStatus;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;
-use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Shared\Infrastructure\Messenger\Message\DomainEventMessage;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -30,7 +29,8 @@ final readonly class ContactStatusCascadeHandler
     public function __construct(
         private ContactRepositoryInterface $contactRepository,
         private UserRepositoryInterface $userRepository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(DomainEventMessage $message): void
     {
@@ -47,6 +47,7 @@ final readonly class ContactStatusCascadeHandler
         if ($contact === null || $contact->userId() === null) {
             return null;
         }
+
         return $this->userRepository->findById($contact->userId());
     }
 

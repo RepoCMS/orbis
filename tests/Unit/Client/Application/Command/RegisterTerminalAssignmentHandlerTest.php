@@ -14,9 +14,9 @@ use App\Client\Domain\Enums\TerminalType;
 use App\Client\Domain\Enums\TerminalVendor;
 use App\Client\Domain\Repositories\TerminalAssignmentRepositoryInterface;
 use App\Client\Domain\Repositories\TerminalRepositoryInterface;
-use App\Client\Domain\ValueObjects\TerminalIdValueObject;
-use App\Client\Domain\ValueObjects\SerialNumberValueObject;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
+use App\Client\Domain\ValueObjects\SerialNumberValueObject;
+use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\TestCase;
@@ -56,7 +56,10 @@ final class RegisterTerminalAssignmentHandlerTest extends TestCase
         $eventPublisher->expects($this->once())->method('publish');
 
         $handler = new RegisterTerminalAssignmentHandler(
-            $terminalRepo, $assignmentRepo, $idGenerator, $eventPublisher,
+            $terminalRepo,
+            $assignmentRepo,
+            $idGenerator,
+            $eventPublisher,
         );
         $result = ($handler)(new RegisterTerminalAssignmentCommand(
             terminalId: self::TERMINAL_ID,

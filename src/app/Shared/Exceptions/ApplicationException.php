@@ -19,7 +19,7 @@ class ApplicationException extends RuntimeException
     public function withContext(array $context): self
     {
         $this->context = $context;
-        
+
         return $this;
     }
 

@@ -11,7 +11,8 @@ final readonly class TicketsByRouteHandler
 {
     public function __construct(
         private TicketRepositoryInterface $ticketRepo,
-    ) {}
+    ) {
+    }
 
     /** @return TicketResponse[] */
     public function __invoke(TicketsByRouteQuery $query): array

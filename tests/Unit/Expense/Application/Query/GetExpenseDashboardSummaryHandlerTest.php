@@ -62,7 +62,14 @@ final class GetExpenseDashboardSummaryHandlerTest extends TestCase
         $dbal = $this->createMock(Connection::class);
 
         $dbal->method('fetchOne')->willReturnOnConsecutiveCalls(
-            '0', '0', '0', '0', '0', '0', '0', '0',
+            '0',
+            '0',
+            '0',
+            '0',
+            '0',
+            '0',
+            '0',
+            '0',
         );
 
         $dbal->method('fetchAllAssociative')->willReturn([]);

@@ -17,7 +17,8 @@ final readonly class AssignTicketHandler
         private TicketRepositoryInterface     $ticketRepo,
         private IdGeneratorInterface          $idGenerator,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(AssignTicketCommand $command): void
     {

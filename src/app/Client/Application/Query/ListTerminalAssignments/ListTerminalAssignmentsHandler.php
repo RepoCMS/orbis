@@ -22,7 +22,7 @@ final readonly class ListTerminalAssignmentsHandler
         $assignments = $this->assignmentRepository->findAll();
 
         return array_map(
-            static fn($assignment) => TerminalAssignmentResponse::fromEntity($assignment),
+            static fn ($assignment) => TerminalAssignmentResponse::fromEntity($assignment),
             $assignments,
         );
     }

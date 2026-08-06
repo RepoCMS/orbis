@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Organization\Application\Service;
 
-use App\Identity\Domain\Exceptions\UserAlreadyBoundException;
 use App\Identity\Domain\Service\UserBindingCheckerInterface;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Organization\Domain\Entities\Employee;

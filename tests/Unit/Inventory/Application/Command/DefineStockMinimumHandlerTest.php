@@ -9,8 +9,8 @@ use App\Inventory\Application\Command\DefineStockMinimum\DefineStockMinimumHandl
 use App\Inventory\Domain\Entities\Location;
 use App\Inventory\Domain\Entities\Product;
 use App\Inventory\Domain\Entities\StockMinimum;
-use App\Inventory\Domain\Enums\ProductTrackingType;
 use App\Inventory\Domain\Enums\LocationType;
+use App\Inventory\Domain\Enums\ProductTrackingType;
 use App\Inventory\Domain\Repositories\LocationRepositoryInterface;
 use App\Inventory\Domain\Repositories\ProductRepositoryInterface;
 use App\Inventory\Domain\Repositories\StockMinimumRepositoryInterface;

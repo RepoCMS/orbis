@@ -18,7 +18,8 @@ final readonly class AddExpenseItemHandler
         private OperatingExpenseRepositoryInterface $expenseRepository,
         private IdGeneratorInterface $idGenerator,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(AddExpenseItemCommand $command): string
     {

@@ -14,7 +14,8 @@ final readonly class RequestReopenTicketHandler
     public function __construct(
         private TicketRepositoryInterface     $ticketRepo,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(RequestReopenTicketCommand $command): void
     {

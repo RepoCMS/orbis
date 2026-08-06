@@ -10,8 +10,8 @@ use App\Client\Application\Command\ImportClients\ImportClientsMessageHandler;
 use App\Client\Domain\Repositories\ClientRepositoryInterface;
 use App\Client\Infrastructure\Import\ClientCsvFileParser;
 use App\Client\Infrastructure\Import\ClientRowValidator;
-use App\Shared\Domain\Service\IdGeneratorInterface;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
+use App\Shared\Domain\Service\IdGeneratorInterface;
 use App\Shared\Infrastructure\Import\CsvFileParser;
 use PHPUnit\Framework\TestCase;
 
@@ -23,6 +23,7 @@ final class ImportClientsMessageHandlerTest extends TestCase
     {
         $path = tempnam(sys_get_temp_dir(), 'import_test_');
         file_put_contents($path, $content);
+
         return $path;
     }
 

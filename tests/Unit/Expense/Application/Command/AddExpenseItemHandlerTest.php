@@ -7,7 +7,6 @@ namespace App\Tests\Unit\Expense\Application\Command;
 use App\Expense\Application\Command\AddExpenseItem\AddExpenseItemCommand;
 use App\Expense\Application\Command\AddExpenseItem\AddExpenseItemHandler;
 use App\Expense\Domain\Entities\OperatingExpense;
-use App\Expense\Domain\Enums\ExpenseStatus;
 use App\Expense\Domain\Repositories\OperatingExpenseRepositoryInterface;
 use App\Expense\Domain\ValueObjects\OperatingExpenseIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
@@ -39,7 +38,9 @@ final class AddExpenseItemHandlerTest extends TestCase
         $idGenerator->method('generate')->willReturn(self::ITEM_ID);
 
         $handler = new AddExpenseItemHandler(
-            $repo, $idGenerator, $this->createMock(DomainEventPublisherInterface::class),
+            $repo,
+            $idGenerator,
+            $this->createMock(DomainEventPublisherInterface::class),
         );
 
         $result = ($handler)(new AddExpenseItemCommand(

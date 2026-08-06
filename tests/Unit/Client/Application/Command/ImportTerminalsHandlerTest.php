@@ -30,6 +30,7 @@ final class ImportTerminalsHandlerTest extends TestCase
     {
         $path = tempnam(sys_get_temp_dir(), 'import_test_');
         file_put_contents($path, $content);
+
         return $path;
     }
 
@@ -76,6 +77,7 @@ final class ImportTerminalsHandlerTest extends TestCase
     {
         $idGen = $this->createMock(IdGeneratorInterface::class);
         $idGen->method('generate')->willReturn(self::GENERATED_ID);
+
         return $idGen;
     }
 

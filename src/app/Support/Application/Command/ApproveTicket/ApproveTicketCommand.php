@@ -15,5 +15,6 @@ final readonly class ApproveTicketCommand
         public string $cityCode,
         /** Terminal code portion, e.g. "ATM01" */
         public string $terminalCode,
-    ) {}
+    ) {
+    }
 }

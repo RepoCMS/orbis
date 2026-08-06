@@ -25,7 +25,8 @@ final class OrganizationReportController extends AbstractController
         private readonly OvertimeReportGenerator $overtimeReportGenerator,
         private readonly ExcelExportService $excelExport,
         private readonly PdfExportService $pdfExport,
-    ) {}
+    ) {
+    }
 
     #[Route('/active-personnel.{_format}', name: 'organization_report_active_personnel', methods: ['GET'], requirements: ['_format' => 'xlsx|pdf'])]
     public function activePersonnel(Request $request, string $_format = 'xlsx'): Response

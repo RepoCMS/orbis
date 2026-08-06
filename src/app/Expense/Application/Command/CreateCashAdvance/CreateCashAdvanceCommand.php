@@ -11,5 +11,6 @@ final readonly class CreateCashAdvanceCommand
         public string $givenBy,
         public float $amount,
         public string $givenAt,
-    ) {}
+    ) {
+    }
 }

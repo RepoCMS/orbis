@@ -52,7 +52,7 @@ final class TicketRescheduleTest extends TestCase
             previousScheduledAt: new \DateTimeImmutable('yesterday'),
             newScheduledAt: new \DateTimeImmutable('+5 days'),
             reason: '',
-                requestedBy: RescheduleRequestedBy::CMS,
+            requestedBy: RescheduleRequestedBy::CMS,
             rescheduledBy: self::RESCHEDULED_BY,
         );
     }
@@ -68,7 +68,7 @@ final class TicketRescheduleTest extends TestCase
             previousScheduledAt: new \DateTimeImmutable('yesterday'),
             newScheduledAt: new \DateTimeImmutable('+5 days'),
             reason: 'Cliente solicitó cambio',
-                requestedBy: RescheduleRequestedBy::CMS,
+            requestedBy: RescheduleRequestedBy::CMS,
             rescheduledBy: '',
         );
     }
@@ -81,7 +81,7 @@ final class TicketRescheduleTest extends TestCase
             previousScheduledAt: new \DateTimeImmutable('yesterday'),
             newScheduledAt: new \DateTimeImmutable('+5 days'),
             reason: 'Reasignación interna',
-                requestedBy: RescheduleRequestedBy::CMS,
+            requestedBy: RescheduleRequestedBy::CMS,
             rescheduledBy: self::RESCHEDULED_BY,
         );
 

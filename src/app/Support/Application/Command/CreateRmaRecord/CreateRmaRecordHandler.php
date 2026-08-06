@@ -17,7 +17,8 @@ final readonly class CreateRmaRecordHandler
         private RmaRecordRepositoryInterface $rmaRecordRepo,
         private TicketRepositoryInterface    $ticketRepo,
         private IdGeneratorInterface         $idGenerator,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CreateRmaRecordCommand $command): string
     {

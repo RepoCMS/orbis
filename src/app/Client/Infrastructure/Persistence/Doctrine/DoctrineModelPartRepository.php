@@ -13,7 +13,8 @@ final class DoctrineModelPartRepository implements ModelPartRepositoryInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function findById(ModelPartIdValueObject $id): ?ModelPart
     {

@@ -14,8 +14,8 @@ use App\Client\Domain\ValueObjects\TerminalAssignmentIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdAssignedByClientValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalNameValueObject;
-use App\Shared\Domain\Service\IdGeneratorInterface;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
+use App\Shared\Domain\Service\IdGeneratorInterface;
 
 final readonly class RegisterTerminalAssignmentHandler
 {

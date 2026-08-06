@@ -8,5 +8,6 @@ final readonly class ListEvidencesQuery
 {
     public function __construct(
         public string $ticketId,
-    ) {}
+    ) {
+    }
 }

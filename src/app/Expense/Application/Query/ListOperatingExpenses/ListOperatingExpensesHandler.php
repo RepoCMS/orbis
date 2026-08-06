@@ -12,7 +12,8 @@ final readonly class ListOperatingExpensesHandler
 {
     public function __construct(
         private OperatingExpenseRepositoryInterface $expenseRepo,
-    ) {}
+    ) {
+    }
 
     /**
      * @return OperatingExpenseResponse[]

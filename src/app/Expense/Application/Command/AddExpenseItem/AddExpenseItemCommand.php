@@ -12,5 +12,6 @@ final readonly class AddExpenseItemCommand
         public float $amount,
         public array $ticketIds = [],
         public ?string $notes = null,
-    ) {}
+    ) {
+    }
 }

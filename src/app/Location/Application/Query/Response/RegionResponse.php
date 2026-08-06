@@ -11,7 +11,8 @@ final readonly class RegionResponse
     public function __construct(
         public string $id,
         public string $name,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(Region $region): self
     {

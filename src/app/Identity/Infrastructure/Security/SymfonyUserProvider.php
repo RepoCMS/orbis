@@ -87,7 +87,7 @@ final class SymfonyUserProvider implements UserProviderInterface
         }
 
         return array_map(
-            static fn(Permission $permission): string => (string) $permission->key(),
+            static fn (Permission $permission): string => (string) $permission->key(),
             $this->permissionRepository->findByIds($role->permissionIds()),
         );
     }

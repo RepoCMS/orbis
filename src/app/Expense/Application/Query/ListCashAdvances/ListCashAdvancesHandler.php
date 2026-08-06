@@ -12,7 +12,8 @@ final readonly class ListCashAdvancesHandler
 {
     public function __construct(
         private CashAdvanceRepositoryInterface $cashAdvanceRepo,
-    ) {}
+    ) {
+    }
 
     /**
      * @return CashAdvanceResponse[]

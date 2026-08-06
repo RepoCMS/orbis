@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Organization\Application\Command;
 
+use App\Identity\Domain\Repositories\UserRepositoryInterface;
+use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Organization\Application\Command\UnlinkUserFromEmployee\UnlinkUserFromEmployeeCommand;
 use App\Organization\Application\Command\UnlinkUserFromEmployee\UnlinkUserFromEmployeeHandler;
 use App\Organization\Application\Exception\EmployeeNotFoundException;
 use App\Organization\Domain\Entities\Employee;
-use App\Organization\Domain\Events\EmployeeUserUnlinked;
 use App\Organization\Domain\Enums\EmployeeProfile;
+use App\Organization\Domain\Events\EmployeeUserUnlinked;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
-use App\Identity\Domain\ValueObjects\UserIdValueObject;
-use App\Identity\Domain\Repositories\UserRepositoryInterface;
+use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use PHPUnit\Framework\TestCase;
 

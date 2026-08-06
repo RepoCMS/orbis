@@ -16,7 +16,8 @@ final class FindingComponent
         private FindingComponentIdValueObject $id,
         private TicketFindingIdValueObject $findingId,
         private string $componentId,
-    ) {}
+    ) {
+    }
 
     public static function create(
         FindingComponentIdValueObject $id,

@@ -17,7 +17,8 @@ final readonly class StartOutwardJourneyHandler
         private TicketRepositoryInterface  $ticketRepo,
         private JourneyRepositoryInterface $journeyRepo,
         private IdGeneratorInterface       $idGenerator,
-    ) {}
+    ) {
+    }
 
     public function __invoke(StartOutwardJourneyCommand $command): void
     {

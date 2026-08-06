@@ -11,7 +11,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrineTicketAuditLogRepository implements TicketAuditLogRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager) {}
+    public function __construct(private readonly EntityManagerInterface $entityManager)
+    {
+    }
 
     public function findById(TicketAuditLogIdValueObject $id): ?TicketAuditLog
     {

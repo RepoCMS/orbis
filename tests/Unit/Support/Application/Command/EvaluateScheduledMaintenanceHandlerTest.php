@@ -9,7 +9,6 @@ use App\Support\Application\Command\EvaluateScheduledMaintenance\EvaluateSchedul
 use App\Support\Application\Command\EvaluateScheduledMaintenance\EvaluateScheduledMaintenanceHandler;
 use App\Support\Domain\Entities\ScheduledMaintenance;
 use App\Support\Domain\Enums\MaintenanceFrequencyType;
-use App\Support\Domain\Enums\ServiceType;
 use App\Support\Domain\Repositories\ScheduledMaintenanceRepositoryInterface;
 use App\Support\Domain\Repositories\TicketRepositoryInterface;
 use App\Support\Domain\ValueObjects\ScheduledMaintenanceIdValueObject;

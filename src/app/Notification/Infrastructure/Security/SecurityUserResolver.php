@@ -12,7 +12,8 @@ final readonly class SecurityUserResolver implements SecurityUserResolverInterfa
 {
     public function __construct(
         private TokenStorageInterface $tokenStorage,
-    ) {}
+    ) {
+    }
 
     public function getUserId(): ?string
     {

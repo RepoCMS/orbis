@@ -9,6 +9,12 @@ use App\Shared\Infrastructure\Doctrine\Types\AbstractStringEnumType;
 
 final class TerminalFunctionalityType extends AbstractStringEnumType
 {
-    public function getName(): string { return 'terminal_functionality'; }
-    protected function getEnumClass(): string { return TerminalFunctionality::class; }
+    public function getName(): string
+    {
+        return 'terminal_functionality';
+    }
+    protected function getEnumClass(): string
+    {
+        return TerminalFunctionality::class;
+    }
 }

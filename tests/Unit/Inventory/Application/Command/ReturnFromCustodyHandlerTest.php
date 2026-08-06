@@ -11,7 +11,6 @@ use App\Inventory\Domain\Entities\Movement;
 use App\Inventory\Domain\Entities\SerializedStock;
 use App\Inventory\Domain\Enums\LocationType;
 use App\Inventory\Domain\Enums\MovementType;
-use App\Inventory\Domain\Exceptions\InventoryDomainException;
 use App\Inventory\Domain\Repositories\LocationRepositoryInterface;
 use App\Inventory\Domain\Repositories\MovementRepositoryInterface;
 use App\Inventory\Domain\Repositories\SerializedStockRepositoryInterface;
@@ -74,7 +73,7 @@ final class ReturnFromCustodyHandlerTest extends TestCase
 
         $locationRepo = $this->createMock(LocationRepositoryInterface::class);
         $locationRepo->method('findById')->willReturnCallback(
-            fn(LocationIdValueObject $id) => match ((string) $id) {
+            fn (LocationIdValueObject $id) => match ((string) $id) {
                 self::CUSTODY_LOCATION_ID => $custodyLocation,
                 self::RETURN_LOCATION_ID => $returnLocation,
                 default => null,
@@ -160,7 +159,7 @@ final class ReturnFromCustodyHandlerTest extends TestCase
 
         $locationRepo = $this->createMock(LocationRepositoryInterface::class);
         $locationRepo->method('findById')->willReturnCallback(
-            fn(LocationIdValueObject $id) => match ((string) $id) {
+            fn (LocationIdValueObject $id) => match ((string) $id) {
                 self::CUSTODY_LOCATION_ID => $custodyLocation,
                 default => null,
             }
@@ -196,7 +195,7 @@ final class ReturnFromCustodyHandlerTest extends TestCase
 
         $locationRepo = $this->createMock(LocationRepositoryInterface::class);
         $locationRepo->method('findById')->willReturnCallback(
-            fn(LocationIdValueObject $id) => match ((string) $id) {
+            fn (LocationIdValueObject $id) => match ((string) $id) {
                 self::CUSTODY_LOCATION_ID => $custodyLocation,
                 self::RETURN_LOCATION_ID => $returnLocation,
                 default => null,
@@ -278,7 +277,7 @@ final class ReturnFromCustodyHandlerTest extends TestCase
 
         $locationRepo = $this->createMock(LocationRepositoryInterface::class);
         $locationRepo->method('findById')->willReturnCallback(
-            fn(LocationIdValueObject $id) => match ((string) $id) {
+            fn (LocationIdValueObject $id) => match ((string) $id) {
                 self::CUSTODY_LOCATION_ID => $custodyLocation,
                 self::RETURN_LOCATION_ID => $returnLocation,
                 default => null,

@@ -16,7 +16,8 @@ final class TicketAuditLog
         private ?string $newValue,
         private string $changedBy,
         private \DateTimeImmutable $changedAt,
-    ) {}
+    ) {
+    }
 
     public static function record(
         TicketAuditLogIdValueObject $id,
@@ -39,11 +40,32 @@ final class TicketAuditLog
         return new self($id, $ticketId, $fieldName, $oldValue, $newValue, $changedBy, new \DateTimeImmutable());
     }
 
-    public function id(): TicketAuditLogIdValueObject { return $this->id; }
-    public function ticketId(): string                 { return $this->ticketId; }
-    public function fieldName(): string                { return $this->fieldName; }
-    public function oldValue(): ?string                { return $this->oldValue; }
-    public function newValue(): ?string                { return $this->newValue; }
-    public function changedBy(): string                { return $this->changedBy; }
-    public function changedAt(): \DateTimeImmutable    { return $this->changedAt; }
+    public function id(): TicketAuditLogIdValueObject
+    {
+        return $this->id;
+    }
+    public function ticketId(): string
+    {
+        return $this->ticketId;
+    }
+    public function fieldName(): string
+    {
+        return $this->fieldName;
+    }
+    public function oldValue(): ?string
+    {
+        return $this->oldValue;
+    }
+    public function newValue(): ?string
+    {
+        return $this->newValue;
+    }
+    public function changedBy(): string
+    {
+        return $this->changedBy;
+    }
+    public function changedAt(): \DateTimeImmutable
+    {
+        return $this->changedAt;
+    }
 }

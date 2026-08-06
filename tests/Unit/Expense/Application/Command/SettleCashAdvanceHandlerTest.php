@@ -9,7 +9,6 @@ use App\Expense\Application\Command\SettleCashAdvance\SettleCashAdvanceHandler;
 use App\Expense\Application\Service\UserResolverInterface;
 use App\Expense\Domain\Entities\CashAdvance;
 use App\Expense\Domain\Enums\CashAdvanceStatus;
-use App\Expense\Domain\Enums\SettlementDirection;
 use App\Expense\Domain\Events\CashAdvanceSettled;
 use App\Expense\Domain\Repositories\CashAdvanceRepositoryInterface;
 use App\Expense\Domain\ValueObjects\CashAdvanceIdValueObject;

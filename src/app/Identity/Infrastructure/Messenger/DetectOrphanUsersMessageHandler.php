@@ -17,7 +17,8 @@ final readonly class DetectOrphanUsersMessageHandler
         private OrphanUserCheckerInterface $orphanUserChecker,
         private UserRepositoryInterface $userRepository,
         private LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     public function __invoke(DetectOrphanUsersMessage $message): void
     {

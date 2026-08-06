@@ -11,7 +11,8 @@ final readonly class ChainContactResolver implements ContactResolverInterface
     /** @param ContactResolverInterface[] $resolvers */
     public function __construct(
         private iterable $resolvers,
-    ) {}
+    ) {
+    }
 
     public function resolve(string $recipientType, string $recipientId): array
     {

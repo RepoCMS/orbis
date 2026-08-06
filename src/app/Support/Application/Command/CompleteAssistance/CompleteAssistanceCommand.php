@@ -8,5 +8,6 @@ final readonly class CompleteAssistanceCommand
 {
     public function __construct(
         public string $ticketId,
-    ) {}
+    ) {
+    }
 }

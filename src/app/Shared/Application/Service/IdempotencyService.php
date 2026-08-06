@@ -14,7 +14,8 @@ final readonly class IdempotencyService implements IdempotencyServiceInterface
     public function __construct(
         private ProcessedCommandRepositoryInterface $repository,
         private IdGeneratorInterface $idGenerator,
-    ) {}
+    ) {
+    }
 
     /**
      * Try to mark a command as processed. Returns true if this is the first time

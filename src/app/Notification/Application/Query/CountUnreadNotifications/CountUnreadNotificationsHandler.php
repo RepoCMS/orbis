@@ -10,7 +10,8 @@ final readonly class CountUnreadNotificationsHandler
 {
     public function __construct(
         private NotificationLogRepositoryInterface $logRepository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CountUnreadNotificationsQuery $query): int
     {

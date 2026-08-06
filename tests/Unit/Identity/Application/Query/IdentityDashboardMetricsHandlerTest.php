@@ -34,6 +34,7 @@ final class IdentityDashboardMetricsHandlerTest extends TestCase
             if (str_contains($sql, 'identity_users') && !str_contains($sql, 'status') && !str_contains($sql, 'locked')) {
                 return 100;
             }
+
             return 0;
         });
 
@@ -61,6 +62,7 @@ final class IdentityDashboardMetricsHandlerTest extends TestCase
                     ['date' => '2024-01-15', 'total' => 2],
                 ];
             }
+
             return [];
         });
 

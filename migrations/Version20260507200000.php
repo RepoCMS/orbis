@@ -19,16 +19,16 @@ final class Version20260507200000 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE regions (
                 id   VARCHAR(26)  NOT NULL,
                 name VARCHAR(100) NOT NULL,
                 UNIQUE INDEX idx_regions_name (name),
                 PRIMARY KEY (id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
-        ");
+        ');
 
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE provinces (
                 id        VARCHAR(26)  NOT NULL,
                 region_id VARCHAR(26)  NOT NULL,
@@ -36,9 +36,9 @@ final class Version20260507200000 extends AbstractMigration
                 INDEX idx_provinces_region_id (region_id),
                 PRIMARY KEY (id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
-        ");
+        ');
 
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE cities (
                 id          VARCHAR(26)  NOT NULL,
                 province_id VARCHAR(26)  NOT NULL,
@@ -47,7 +47,7 @@ final class Version20260507200000 extends AbstractMigration
                 INDEX idx_cities_name (name),
                 PRIMARY KEY (id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
-        ");
+        ');
     }
 
     public function down(Schema $schema): void

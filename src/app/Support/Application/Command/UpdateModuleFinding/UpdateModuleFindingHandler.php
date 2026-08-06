@@ -13,7 +13,8 @@ final readonly class UpdateModuleFindingHandler
 {
     public function __construct(
         private TicketModuleFindingRepositoryInterface $findingRepo,
-    ) {}
+    ) {
+    }
 
     public function __invoke(UpdateModuleFindingCommand $command): void
     {

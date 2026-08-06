@@ -12,7 +12,6 @@ use App\Inventory\Domain\Entities\SerialHistory;
 use App\Inventory\Domain\Entities\SerializedStock;
 use App\Inventory\Domain\Enums\LocationType;
 use App\Inventory\Domain\Enums\ProductTrackingType;
-use App\Inventory\Domain\Enums\SerialHistoryReason;
 use App\Inventory\Domain\Enums\SerializedStockStatus;
 use App\Inventory\Domain\Events\EmergencyPartUsed;
 use App\Inventory\Domain\Repositories\LocationRepositoryInterface;
@@ -82,7 +81,7 @@ final class RegisterEmergencyPartUsageHandlerTest extends TestCase
 
         $productRepo = $this->createMock(ProductRepositoryInterface::class);
         $productRepo->method('findByCode')
-            ->with(self::callback(fn(ProductCodeAssignedBySupplierValueObject $c) => (string) $c === self::PRODUCT_CODE))
+            ->with(self::callback(fn (ProductCodeAssignedBySupplierValueObject $c) => (string) $c === self::PRODUCT_CODE))
             ->willReturn($product);
 
         $locationRepo = $this->createMock(LocationRepositoryInterface::class);

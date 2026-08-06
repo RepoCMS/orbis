@@ -9,5 +9,6 @@ final readonly class SearchCitiesQuery
     public function __construct(
         public string $term,
         public int $limit = 20,
-    ) {}
+    ) {
+    }
 }

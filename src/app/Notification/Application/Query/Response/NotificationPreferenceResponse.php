@@ -15,7 +15,8 @@ final readonly class NotificationPreferenceResponse
         public string $channel,
         public string $eventType,
         public bool $isEnabled,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(NotificationPreference $preference): self
     {

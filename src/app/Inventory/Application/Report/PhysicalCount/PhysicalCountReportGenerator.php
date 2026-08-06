@@ -18,7 +18,8 @@ final readonly class PhysicalCountReportGenerator implements ReportGeneratorInte
 
     public function __construct(
         private Connection $connection,
-    ) {}
+    ) {
+    }
 
     public function getTitle(): string
     {

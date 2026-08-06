@@ -11,7 +11,6 @@ use App\Identity\Domain\Entities\Role;
 use App\Identity\Domain\Repositories\RoleRepositoryInterface;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
-use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class FindRoleBySlugHandlerTest extends TestCase

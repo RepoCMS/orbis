@@ -15,7 +15,8 @@ final readonly class ApproveOperatingExpenseHandler
         private OperatingExpenseRepositoryInterface $expenseRepository,
         private UserResolverInterface $userResolver,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ApproveOperatingExpenseCommand $command): void
     {

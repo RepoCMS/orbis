@@ -9,15 +9,14 @@ use App\Client\Domain\Enums\TerminalStatus;
 use App\Client\Domain\Enums\TerminalType;
 use App\Client\Domain\Enums\TerminalVendor;
 use App\Client\Domain\ValueObjects\AtmModelCodeValueObject;
-use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
 use App\Client\Domain\ValueObjects\SerialNumberValueObject;
+use App\Client\Domain\ValueObjects\TerminalIdValueObject;
 use DateTimeImmutable;
 
 /**
  * Terminal de un cliente.
  * Representa un terminal de cajero automático perteneciente a un cliente.
- *
  */
 final class Terminal
 {

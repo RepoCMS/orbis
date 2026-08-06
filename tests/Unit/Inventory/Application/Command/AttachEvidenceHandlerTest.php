@@ -8,7 +8,6 @@ use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Inventory\Application\Command\AttachEvidence\AttachEvidenceCommand;
 use App\Inventory\Application\Command\AttachEvidence\AttachEvidenceHandler;
 use App\Inventory\Application\Exception\RepairNotFoundException;
-use App\Inventory\Domain\Enums\RepairPriority;
 use App\Inventory\Domain\Entities\Repair;
 use App\Inventory\Domain\Enums\EvidenceType;
 use App\Inventory\Domain\Repositories\RepairEvidenceRepositoryInterface;

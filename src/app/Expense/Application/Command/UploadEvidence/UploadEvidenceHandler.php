@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Expense\Application\Command\UploadEvidence;
 
 use App\Expense\Domain\Repositories\OperatingExpenseRepositoryInterface;
-use App\Expense\Domain\ValueObjects\ExpenseItemIdValueObject;
 use App\Expense\Domain\ValueObjects\OperatingExpenseIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 
@@ -14,7 +13,8 @@ final readonly class UploadEvidenceHandler
     public function __construct(
         private OperatingExpenseRepositoryInterface $expenseRepository,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(UploadEvidenceCommand $command): string
     {

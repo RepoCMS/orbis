@@ -49,6 +49,7 @@ final class CancelTransferHandlerTest extends TestCase
             quantity: $quantity,
         );
         $movement->startTransit();
+
         return $movement;
     }
 

@@ -12,7 +12,8 @@ final readonly class UpdateModuleNodeHandler
 {
     public function __construct(
         private ModuleNodeRepositoryInterface $repository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(UpdateModuleNodeCommand $command): void
     {

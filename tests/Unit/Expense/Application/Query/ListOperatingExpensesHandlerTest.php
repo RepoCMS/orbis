@@ -9,7 +9,6 @@ use App\Expense\Application\Query\ListOperatingExpenses\ListOperatingExpensesQue
 use App\Expense\Domain\Entities\ExpenseItem;
 use App\Expense\Domain\Entities\OperatingExpense;
 use App\Expense\Domain\Enums\ExpenseItemType;
-use App\Expense\Domain\Enums\ExpenseStatus;
 use App\Expense\Domain\Repositories\OperatingExpenseRepositoryInterface;
 use App\Expense\Domain\ValueObjects\ExpenseItemIdValueObject;
 use App\Expense\Domain\ValueObjects\OperatingExpenseIdValueObject;
@@ -24,6 +23,7 @@ final class ListOperatingExpensesHandlerTest extends TestCase
         for ($i = 0; $i < 26; $i++) {
             $ulid .= $chars[random_int(0, 31)];
         }
+
         return $ulid;
     }
 

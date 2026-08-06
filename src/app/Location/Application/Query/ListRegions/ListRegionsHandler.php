@@ -9,7 +9,9 @@ use App\Location\Domain\Repositories\RegionRepositoryInterface;
 
 final readonly class ListRegionsHandler
 {
-    public function __construct(private RegionRepositoryInterface $regionRepository) {}
+    public function __construct(private RegionRepositoryInterface $regionRepository)
+    {
+    }
 
     /** @return RegionResponse[] */
     public function __invoke(ListRegionsQuery $query): array

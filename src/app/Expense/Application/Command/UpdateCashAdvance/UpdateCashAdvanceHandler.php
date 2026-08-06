@@ -14,7 +14,8 @@ final readonly class UpdateCashAdvanceHandler
     public function __construct(
         private CashAdvanceRepositoryInterface $cashAdvanceRepository,
         private DomainEventPublisherInterface $eventPublisher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(UpdateCashAdvanceCommand $command): void
     {

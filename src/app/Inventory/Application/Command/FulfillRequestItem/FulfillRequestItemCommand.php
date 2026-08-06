@@ -9,5 +9,6 @@ final readonly class FulfillRequestItemCommand
     public function __construct(
         public string $requestId,
         public string $itemId,
-    ) {}
+    ) {
+    }
 }

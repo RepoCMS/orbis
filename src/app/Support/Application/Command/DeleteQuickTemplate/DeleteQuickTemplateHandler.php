@@ -12,7 +12,8 @@ final readonly class DeleteQuickTemplateHandler
 {
     public function __construct(
         private QuickTemplateRepositoryInterface $templateRepo,
-    ) {}
+    ) {
+    }
 
     public function __invoke(DeleteQuickTemplateCommand $command): void
     {

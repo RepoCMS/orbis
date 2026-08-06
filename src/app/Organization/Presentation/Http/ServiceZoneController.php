@@ -8,8 +8,6 @@ use App\Location\Application\Query\ListCities\ListCitiesHandler;
 use App\Location\Application\Query\ListCities\ListCitiesQuery;
 use App\Organization\Application\Command\AddCityToZone\AddCityToZoneCommand;
 use App\Organization\Application\Command\AddCityToZone\AddCityToZoneHandler;
-use App\Organization\Application\Command\RemoveCityFromZone\RemoveCityFromZoneCommand;
-use App\Organization\Application\Command\RemoveCityFromZone\RemoveCityFromZoneHandler;
 use App\Organization\Application\Command\AssignTechnicianToZone\AssignTechnicianToZoneCommand;
 use App\Organization\Application\Command\AssignTechnicianToZone\AssignTechnicianToZoneHandler;
 use App\Organization\Application\Command\CreateServiceZone\CreateServiceZoneCommand;
@@ -18,6 +16,8 @@ use App\Organization\Application\Command\DeactivateServiceZone\DeactivateService
 use App\Organization\Application\Command\DeactivateServiceZone\DeactivateServiceZoneHandler;
 use App\Organization\Application\Command\ReactivateServiceZone\ReactivateServiceZoneCommand;
 use App\Organization\Application\Command\ReactivateServiceZone\ReactivateServiceZoneHandler;
+use App\Organization\Application\Command\RemoveCityFromZone\RemoveCityFromZoneCommand;
+use App\Organization\Application\Command\RemoveCityFromZone\RemoveCityFromZoneHandler;
 use App\Organization\Application\Command\RemoveTechnicianFromZone\RemoveTechnicianFromZoneCommand;
 use App\Organization\Application\Command\RemoveTechnicianFromZone\RemoveTechnicianFromZoneHandler;
 use App\Organization\Application\Command\UpdateServiceZone\UpdateServiceZoneCommand;
@@ -98,17 +98,17 @@ final class ServiceZoneController extends AbstractController
 
         $technicians = array_filter(
             $listEmployees(new ListEmployeesQuery()),
-            static fn($e) => $e->profile === 'technician',
+            static fn ($e) => $e->profile === 'technician',
         );
 
         $assignedTechnicians = array_filter(
             $technicians,
-            static fn($e) => $e->serviceZoneId === $id,
+            static fn ($e) => $e->serviceZoneId === $id,
         );
 
         $availableTechnicians = array_filter(
             $technicians,
-            static fn($e) => $e->serviceZoneId === null,
+            static fn ($e) => $e->serviceZoneId === null,
         );
 
         $allCities = $listCities(new ListCitiesQuery());

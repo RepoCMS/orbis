@@ -8,7 +8,6 @@ use App\Inventory\Application\Command\RejectPhysicalCount\RejectPhysicalCountCom
 use App\Inventory\Application\Command\RejectPhysicalCount\RejectPhysicalCountHandler;
 use App\Inventory\Domain\Entities\PhysicalCount;
 use App\Inventory\Domain\Entities\PhysicalCountItem;
-use App\Inventory\Domain\Enums\PhysicalCountStatus;
 use App\Inventory\Domain\Events\PhysicalCountRejected;
 use App\Inventory\Domain\Exceptions\InventoryDomainException;
 use App\Inventory\Domain\Repositories\PhysicalCountRepositoryInterface;

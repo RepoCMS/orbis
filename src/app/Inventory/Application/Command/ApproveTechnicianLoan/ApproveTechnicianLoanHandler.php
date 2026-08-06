@@ -11,12 +11,10 @@ use App\Inventory\Domain\Repositories\MovementRepositoryInterface;
 use App\Inventory\Domain\Repositories\SerializedStockRepositoryInterface;
 use App\Inventory\Domain\Repositories\TechnicianLoanRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\MovementIdValueObject;
-use App\Inventory\Domain\ValueObjects\ProductIdValueObject;
 use App\Inventory\Domain\ValueObjects\SerializedStockIdValueObject;
 use App\Inventory\Domain\ValueObjects\TechnicianLoanIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
-
 
 final readonly class ApproveTechnicianLoanHandler
 {

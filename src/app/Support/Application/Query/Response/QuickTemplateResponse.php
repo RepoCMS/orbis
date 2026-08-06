@@ -21,7 +21,8 @@ final readonly class QuickTemplateResponse
         public string $createdAt,
         public ?string $updatedAt,
         public array  $items = [],
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(QuickTemplate $template): self
     {

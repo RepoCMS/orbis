@@ -14,7 +14,8 @@ final readonly class TicketEvidenceResponse
         public string  $uploadedAt,
         public string  $visibility,
         public string  $visibilityLabel,
-    ) {}
+    ) {
+    }
 
     public static function fromEntity(\App\Support\Domain\Entities\TicketEvidence $evidence): self
     {

@@ -23,7 +23,8 @@ final class ExpenseReportController extends AbstractController
         private readonly AdvanceReportGenerator $advanceReportGenerator,
         private readonly ExcelExportService $excelExport,
         private readonly PdfExportService $pdfExport,
-    ) {}
+    ) {
+    }
 
     #[Route('/expenses.{_format}', name: 'expense_report_expenses', methods: ['GET'], requirements: ['_format' => 'xlsx|pdf'])]
     public function expenses(Request $request, string $_format = 'xlsx'): Response

@@ -11,7 +11,8 @@ final readonly class ListQuickTemplatesHandler
 {
     public function __construct(
         private QuickTemplateRepositoryInterface $templateRepo,
-    ) {}
+    ) {
+    }
 
     /** @return QuickTemplateResponse[] */
     public function __invoke(ListQuickTemplatesQuery $query): array

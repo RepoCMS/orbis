@@ -6,5 +6,7 @@ namespace App\Expense\Application\Command\CheckOverdueCashAdvances;
 
 final readonly class CheckOverdueCashAdvancesCommand
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 }

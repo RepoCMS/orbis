@@ -15,5 +15,6 @@ final readonly class SendNotificationCommand
         public string $body,
         public ?string $referenceType = null,
         public ?string $referenceId = null,
-    ) {}
+    ) {
+    }
 }

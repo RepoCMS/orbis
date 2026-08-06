@@ -39,12 +39,30 @@ final class TerminalModel
         );
     }
 
-    public function id(): TerminalModelIdValueObject { return $this->id; }
-    public function name(): string { return $this->name; }
-    public function description(): ?string { return $this->description; }
-    public function createdAt(): DateTimeImmutable { return $this->createdAt; }
-    public function updatedAt(): ?DateTimeImmutable { return $this->updatedAt; }
-    public function deletedAt(): ?DateTimeImmutable { return $this->deletedAt; }
+    public function id(): TerminalModelIdValueObject
+    {
+        return $this->id;
+    }
+    public function name(): string
+    {
+        return $this->name;
+    }
+    public function description(): ?string
+    {
+        return $this->description;
+    }
+    public function createdAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    public function updatedAt(): ?DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+    public function deletedAt(): ?DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
 
     public function rename(string $name): void
     {

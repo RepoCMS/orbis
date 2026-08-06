@@ -15,7 +15,8 @@ final class DoctrineNotificationLogRepository implements NotificationLogReposito
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function findById(NotificationLogIdValueObject $id): ?NotificationLog
     {

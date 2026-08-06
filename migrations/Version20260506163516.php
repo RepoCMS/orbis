@@ -25,17 +25,17 @@ final class Version20260506163516 extends AbstractMigration
         // Solo añade las columnas si aún no existen (puede que ya estén en la DB)
         $clientsTable = $schema->getTable('clients');
         if (!$clientsTable->hasColumn('created_at')) {
-            $this->addSql("ALTER TABLE clients ADD created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, ADD updated_at DATETIME DEFAULT NULL");
+            $this->addSql('ALTER TABLE clients ADD created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, ADD updated_at DATETIME DEFAULT NULL');
         }
-        $this->addSql("ALTER TABLE employees MODIFY COLUMN status VARCHAR(30) NOT NULL");
+        $this->addSql('ALTER TABLE employees MODIFY COLUMN status VARCHAR(30) NOT NULL');
     }
 
     public function down(Schema $schema): void
     {
         $clientsTable = $schema->getTable('clients');
         if ($clientsTable->hasColumn('created_at')) {
-            $this->addSql("ALTER TABLE clients DROP COLUMN created_at, DROP COLUMN updated_at");
+            $this->addSql('ALTER TABLE clients DROP COLUMN created_at, DROP COLUMN updated_at');
         }
-        $this->addSql("ALTER TABLE employees MODIFY COLUMN status VARCHAR(20) NOT NULL");
+        $this->addSql('ALTER TABLE employees MODIFY COLUMN status VARCHAR(20) NOT NULL');
     }
 }

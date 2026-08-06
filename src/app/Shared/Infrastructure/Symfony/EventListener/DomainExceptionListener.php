@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Event Listener para convertir automáticamente DomainExceptions 
+ * Event Listener para convertir automáticamente DomainExceptions
  * en respuestas HTTP 400 Bad Request con formato JSON.
  */
 #[AsEventListener(event: KernelEvents::EXCEPTION, priority: 0)]
@@ -50,6 +50,7 @@ final class DomainExceptionListener
     private function getExceptionType(\Throwable $exception): string
     {
         $reflection = new \ReflectionClass($exception);
+
         return $reflection->getShortName();
     }
 }

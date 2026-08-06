@@ -44,7 +44,8 @@ final readonly class MonitorSlaHandler
         private readonly TicketAuditLogRepositoryInterface $auditLogRepository,
         private readonly DomainEventPublisherInterface $eventPublisher,
         private readonly IdGeneratorInterface $idGenerator,
-    ) {}
+    ) {
+    }
 
     public function __invoke(MonitorSlaCommand $command): MonitorSlaResult
     {

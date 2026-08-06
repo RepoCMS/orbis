@@ -27,7 +27,8 @@ final readonly class CreateOperatingExpenseHandler
         private TicketResolverInterface $ticketResolver,
         private DomainEventPublisherInterface $eventPublisher,
         private IdempotencyServiceInterface $idempotencyService,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CreateOperatingExpenseCommand $command): string
     {

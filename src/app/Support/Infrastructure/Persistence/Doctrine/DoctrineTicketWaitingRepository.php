@@ -13,7 +13,8 @@ final class DoctrineTicketWaitingRepository implements TicketWaitingRepositoryIn
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function findById(TicketWaitingIdValueObject $id): ?TicketWaiting
     {

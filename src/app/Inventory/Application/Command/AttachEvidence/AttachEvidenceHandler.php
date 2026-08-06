@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Inventory\Application\Command\AttachEvidence;
 
+use App\Inventory\Application\Exception\RepairNotFoundException;
 use App\Inventory\Domain\Entities\RepairEvidence;
 use App\Inventory\Domain\Enums\EvidenceType;
 use App\Inventory\Domain\Repositories\RepairEvidenceRepositoryInterface;
 use App\Inventory\Domain\Repositories\RepairRepositoryInterface;
 use App\Inventory\Domain\ValueObjects\RepairEvidenceIdValueObject;
 use App\Inventory\Domain\ValueObjects\RepairIdValueObject;
-use App\Inventory\Application\Exception\RepairNotFoundException;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use App\Shared\Infrastructure\DbExceptionHandlerTrait;
 

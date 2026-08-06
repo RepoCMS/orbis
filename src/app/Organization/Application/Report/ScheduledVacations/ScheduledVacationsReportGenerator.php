@@ -19,7 +19,8 @@ final readonly class ScheduledVacationsReportGenerator implements ReportGenerato
 
     public function __construct(
         private Connection $connection,
-    ) {}
+    ) {
+    }
 
     public function getTitle(): string
     {

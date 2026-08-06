@@ -6,4 +6,6 @@ namespace App\Location\Domain\Exceptions;
 
 use App\Shared\Exceptions\DomainException;
 
-class RegionIdException extends DomainException {}
+class RegionIdException extends DomainException
+{
+}

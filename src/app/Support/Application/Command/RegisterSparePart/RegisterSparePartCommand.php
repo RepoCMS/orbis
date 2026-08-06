@@ -15,5 +15,6 @@ final readonly class RegisterSparePartCommand
         public int     $quantity = 1,
         public bool    $isIncoming = true,
         public bool    $isVisibleToClient = true,
-    ) {}
+    ) {
+    }
 }

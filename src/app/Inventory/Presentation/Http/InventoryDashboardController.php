@@ -16,7 +16,8 @@ final class InventoryDashboardController extends AbstractController
 {
     public function __construct(
         private readonly InventoryDashboardMetricsHandler $handler,
-    ) {}
+    ) {
+    }
 
     #[Route('', name: 'inventory_dashboard', methods: ['GET'])]
     public function __invoke(): Response

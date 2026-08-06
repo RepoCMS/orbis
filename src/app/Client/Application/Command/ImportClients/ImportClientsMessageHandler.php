@@ -11,7 +11,8 @@ final readonly class ImportClientsMessageHandler
 {
     public function __construct(
         private ImportClientsHandler $handler,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ImportClientsMessage $message): void
     {

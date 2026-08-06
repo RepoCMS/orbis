@@ -10,5 +10,6 @@ final readonly class ApproveExpenseItemCommand
         public string $expenseId,
         public string $itemId,
         public string $reviewedBy,
-    ) {}
+    ) {
+    }
 }

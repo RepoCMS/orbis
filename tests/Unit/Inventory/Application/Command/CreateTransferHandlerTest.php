@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Inventory\Application\Command;
 
-use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Inventory\Application\Command\CreateTransfer\CreateTransferCommand;
 use App\Inventory\Application\Command\CreateTransfer\CreateTransferHandler;
 use App\Inventory\Application\Service\TransferAuthorizationService;
@@ -33,8 +32,8 @@ use App\Organization\Domain\Enums\EmployeeProfile;
 use App\Organization\Domain\Enums\EmployeeStatus;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
-use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
+use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use App\Shared\Application\Service\TransactionManagerInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use DateTimeImmutable;
@@ -62,6 +61,7 @@ final class CreateTransferHandlerTest extends TestCase
             type: LocationType::WAREHOUSE,
         );
         $location->update('Warehouse', 'City', 'Address', self::EMPLOYEE_ID);
+
         return $location;
     }
 

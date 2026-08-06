@@ -13,5 +13,6 @@ final readonly class RecordModuleFindingCommand
         public string  $findingType,
         public string  $registeredBy,
         public ?string $notes = null,
-    ) {}
+    ) {
+    }
 }

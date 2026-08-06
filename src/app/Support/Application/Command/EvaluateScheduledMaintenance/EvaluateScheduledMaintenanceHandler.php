@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Support\Application\Command\EvaluateScheduledMaintenance;
 
 use App\Shared\Domain\Service\IdGeneratorInterface;
-use App\Support\Domain\Enums\ServiceType;
 use App\Support\Domain\Entities\Ticket;
+use App\Support\Domain\Enums\ServiceType;
 use App\Support\Domain\Repositories\ScheduledMaintenanceRepositoryInterface;
 use App\Support\Domain\Repositories\TicketRepositoryInterface;
 use App\Support\Domain\ValueObjects\TicketIdValueObject;
@@ -17,7 +17,8 @@ final readonly class EvaluateScheduledMaintenanceHandler
         private ScheduledMaintenanceRepositoryInterface $scheduledMaintenanceRepo,
         private TicketRepositoryInterface               $ticketRepo,
         private IdGeneratorInterface                    $idGenerator,
-    ) {}
+    ) {
+    }
 
     public function __invoke(EvaluateScheduledMaintenanceCommand $command): EvaluateScheduledMaintenanceResult
     {

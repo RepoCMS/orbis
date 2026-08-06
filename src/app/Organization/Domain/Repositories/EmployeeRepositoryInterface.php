@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Organization\Domain\Repositories;
 
+use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Organization\Domain\Entities\Employee;
 use App\Organization\Domain\Enums\EmployeeProfile;
 use App\Organization\Domain\Enums\EmployeeStatus;
 use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
-use App\Identity\Domain\ValueObjects\UserIdValueObject;
 
 interface EmployeeRepositoryInterface
 {

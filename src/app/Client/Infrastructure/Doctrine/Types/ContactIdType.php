@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Client\Infrastructure\Doctrine\Types;
 
-use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 use App\Client\Domain\ValueObjects\ContactIdValueObject;
+use App\Shared\Infrastructure\Doctrine\Types\AbstractUlidType;
 
 final class ContactIdType extends AbstractUlidType
 {

@@ -15,7 +15,8 @@ final class TicketPendingSparePart
         private string                              $productCode,
         private int                                 $quantity,
         private ?string                             $notes,
-    ) {}
+    ) {
+    }
 
     public static function register(
         TicketPendingSparePartIdValueObject $id,
@@ -34,9 +35,24 @@ final class TicketPendingSparePart
         return new self($id, $ticketId, $productCode, $quantity, $notes);
     }
 
-    public function id(): TicketPendingSparePartIdValueObject { return $this->id; }
-    public function ticketId(): TicketIdValueObject           { return $this->ticketId; }
-    public function productCode(): string                     { return $this->productCode; }
-    public function quantity(): int                           { return $this->quantity; }
-    public function notes(): ?string                          { return $this->notes; }
+    public function id(): TicketPendingSparePartIdValueObject
+    {
+        return $this->id;
+    }
+    public function ticketId(): TicketIdValueObject
+    {
+        return $this->ticketId;
+    }
+    public function productCode(): string
+    {
+        return $this->productCode;
+    }
+    public function quantity(): int
+    {
+        return $this->quantity;
+    }
+    public function notes(): ?string
+    {
+        return $this->notes;
+    }
 }
