@@ -4,7 +4,7 @@
 >
 > **Actualizado:** 2026-08-06
 > **Rama activa:** `main` (remote: `https://github.com/RepoCMS/orbis.git`)
-> **Último commit:** `4cc2c35` — Checkpoint antes de estructurar
+> **Último commit:** ciclo de enforcement de máquina (spec 014) — gates CI, PHPStan, CS-Fixer, wiring check
 
 ---
 
@@ -15,11 +15,16 @@
 | BCs activos | 13 + Shared Kernel |
 | Total archivos PHP | 1411 (CodeGraph) |
 | Total test files | 452 (reales, no inflados) |
-| Specs existentes | 14 |
+| Specs existentes | 15 (incl. 014-governance) |
 | Specs con discrepancia vs AGENTS.md | **5** (ver §3) |
 | Reportes implementados | 14 |
 | Importers implementados | 11 |
-| Comandos huérfagos conocidos | 0 (todos wireados) |
+| Comandos huérfagos conocidos | 0 (todos wireados — verificado por CI `wiring`) |
+| Tests verdes (baseline 2026-08-06) | 2033 tests / 5047 assertions |
+| PHPStan nivel 5 (baseline) | 159 errores preexistentes permitidos; nuevos bloquean CI |
+| PHP-CS-Fixer | 2020/2360 archivos normalizados (commit del ciclo) |
+| Gates CI | 5 jobs en `.github/workflows/ci.yml` (test, stan, cs, wiring, validate) + security (audit) |
+| Contrato de calidad | `specs/014-governance/spec.md` (DoR §2, DoD §3, gates §5) |
 
 ---
 

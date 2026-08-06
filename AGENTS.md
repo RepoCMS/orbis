@@ -58,6 +58,7 @@ DEVELOPER ──► FRONTEND ──► SECURITY-REVIEWER ──► QA-REVIEWER F
 
 **Regla:** Una tarea NO avanza sin aprobación de la etapa actual.
 **Regla de wiring:** Todo Command, Query, Domain Event y Subscriber debe tener al menos un caller real — verificado por QA-Reviewer antes de aprobar.
+**Regla de gates (specs/014-governance):** Todo cambio entra a `main` por PR con CI verde. Los gates se corren con `composer check` (= test + stan + cs + wiring + validate) y en GitHub Actions (`.github/workflows/ci.yml`). DoR/DoD completos en `specs/014-governance/spec.md` §2-3. El agente propone, la máquina decide.
 
 ### Ciclo por tarea
 1. **Planner**: escribe spec en `specs/{num}-{bc}/spec.md` — incluye sección **Wiring** (desde dónde se dispara cada Command/Query)
@@ -65,6 +66,8 @@ DEVELOPER ──► FRONTEND ──► SECURITY-REVIEWER ──► QA-REVIEWER F
 3. **Developer**: implementa Domain → App → Infra, corre tests, verifica wiring (grep/CodeGraph)
 4. **Frontend**: implementa UI (si aplica)
 5. **QA-Reviewer**: revisa código final → verifica wiring → commit o feedback
+6. **CI**: gates automáticos en cada PR (test, stan, cs, wiring, validate) — el PR no se mergea sin CI verde
+7. **Docs**: tablero + CONTEXT.md actualizados (DoD de `specs/014-governance/spec.md` §3)
 
 ### QA Checklist por capa DDD+CQRS
 

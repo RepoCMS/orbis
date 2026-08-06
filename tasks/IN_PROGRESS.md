@@ -4,34 +4,32 @@
 
 ---
 
-## En curso: Transición a AI-Native Repository (2026-08-06)
+## En curso: Enforcement de máquina — ciclo de bases (spec 014, 2026-08-06)
 
-**Objetivo:** convertir Orbis en un AI-Native Repository — contexto estructurado para agentes (documentación arquitectónica + tablero de tareas + gobernanza de decisiones).
+**Objetivo:** el agente propone, la máquina decide. Contrato (DoR/DoD), calidad estática y CI como gates en cada PR.
 
-### Checklist del plan
+### Checklist del plan (specs/014-governance/tasks.md)
 
-| # | Elemento | Estado | Evidencia (verificada 2026-08-06) |
-|---|----------|--------|-----------------------------------|
-| 1 | **PROJECT_CONTEXT.md** (contexto primario para IAs) | ✅ Completado | Existe, v1.0.0, 2026-08-06 (git `5b49841`); discrepancias corregidas (ORM 3.x, Alpine.js, `tasks/`) |
-| 2 | **docs/adr/** — ADR-001..008 (nuevos) | ✅ Completado | 8 archivos + README con índice (git `5b49841`, `26d84d0`) |
-| 3 | **docs/adr/** — ADR-009..011 (viejos 011-013 migrados al formato nuevo) | ✅ Completado | `ADR-009.md` (TransactionManager), `ADR-010.md` (Cross-BC cascade), `ADR-011.md` (Table Prefixes) + archivos legacy `git rm` + README actualizado |
-| 4 | **docs/modules/** — 8 módulos por BC | ✅ Completado | client, expense, identity, inventory, location, notification, organization, support |
-| 5 | **CHANGELOG_AI.md** — changelog de la transformación | ✅ Completado | Este ciclo (v1.0.0) |
-| 6 | **ROADMAP.md** — hoja de ruta con fases y estado por BC | ✅ Completado | Este ciclo (v1.0.0) |
-| 7 | **Tablero tasks/** — TODO.md + IN_PROGRESS.md + DONE.md | ✅ Completado | Estructura lista; TODOs marcados `[TODO-REAL]`/`[TODO: validar]` |
-| 8 | **docs core** — architecture.md, folder-structure.md, dependencies.md | ✅ Completado | 3 archivos en `docs/` raíz (no `docs/core/`), verificados contra disco |
-| 9 | **docs standards** — coding-standards.md, conventions.md, glossary.md | ✅ Completado | 3 archivos en `docs/` raíz (no `docs/standards/`) |
-| 10 | **.ai/** — 6 prompts especializados | ✅ Completado | architect, backend, frontend, reviewer, security, qa (verificados contra código real) |
-| 11 | **docs/decisions/** — decisiones no arquitectónicas | ✅ Completado | `README.md` con formato y reglas de gobernanza |
-| 12 | **Sync AGENTS.md** con la estructura AI-Native | ✅ Completado | Bootstrap de 8 pasos + Regla no negociable ADR + Relevant Files actualizado |
-| 13 | **Sync PROJECT_CONTEXT.md** §6.1 (flujo de trabajo + `TASKS/`→`tasks/`) | ✅ Completado | Corregido + discrepancias factuales arregladas |
-| 14 | **Validación final** (validate_project.ps1 + revisión QA de los archivos creados) | ⬜ Pendiente | Se ejecuta antes del commit de este ciclo |
+| # | Elemento | Estado | Evidencia |
+|---|----------|--------|-----------|
+| 1 | PHPStan + PHP-CS-Fixer instalados | ✅ | composer require-dev (2026-08-06) |
+| 2 | `phpstan.neon` nivel 5 + baseline (159 errores) | ✅ | `phpstan-baseline.neon` versionado |
+| 3 | `.php-cs-fixer.dist.php` PSR-12 + reglas | ✅ | 2020/2360 archivos normalizados |
+| 4 | Composer scripts (test, stan, cs, wiring, validate, audit, check) | ✅ | composer.json |
+| 5 | `bin/wiring-check.php` — 346 targets, 0 huérfanos | ✅ | exit 0 verificado |
+| 6 | `bin/validate-project.php` + baseline — 0 errores, 6 warnings | ✅ | exit 2 verificado |
+| 7 | `.github/workflows/ci.yml` (5 jobs) | ✅ | archivo creado |
+| 8 | `.github/workflows/security.yml` (composer audit) | ✅ | archivo creado |
+| 9 | AGENTS.md gates + DoD referenciados | ✅ | §Workflow + Regla de gates |
+| 10 | CONTEXT.md + tasks/ + CHANGELOG_AI v1.3.0 | ✅ | actualizados |
+| 11 | Commit + push a main | ⬜ | pendiente |
 
 ### Próximos pasos inmediatos
 
-1. Ejecutar `& .\validate_project.ps1` y commit del ciclo de transformación.
-2. Continuar con T01-T06 (specs de BCs con discrepancia + remote GitHub + #42 bcrypt vs argon2) según prioridad.
-3. Revisar `docs/bc/`, `docs/api/`, `docs/runbooks/` (directorios vacíos) — decidir si forman parte del plan de documentación.
+1. Commit + push del ciclo (verificado local: test 2033 ✅, stan ✅, cs ✅, wiring ✅, validate ✅).
+2. Probar el CI real en GitHub (primer push activa los 5 jobs).
+3. Continuar con T01-T03 (specs de BCs con discrepancia) bajo el nuevo flujo con PR + CI.
+4. Deuda detectada por gates: T24-T29 (enums UPPERCASE, VOs, baseline PHPStan, dompdf, coverage).
 
 ---
 

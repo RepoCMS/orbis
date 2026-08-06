@@ -1,0 +1,20 @@
+name: Security
+
+on:
+  pull_request:
+  schedule:
+    - cron: '0 6 * * 1'  # lunes 06:00 UTC
+
+jobs:
+  audit:
+    name: Composer audit
+    runs-on: ubuntu-latest
+    continue-on-error: true  # informativo: 10 advisories conocidos (2026-08-06); fixear en T28
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+      - name: Composer audit
+        run: composer audit --no-interaction

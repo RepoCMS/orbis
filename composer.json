@@ -36,6 +36,8 @@
         "twig/extra-bundle": ">=3.24"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "phpstan/phpstan": "^2.2",
         "phpunit/phpunit": "11",
         "symfony/browser-kit": "8.0.*",
         "symfony/css-selector": "8.0.*",
@@ -99,6 +101,22 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "test": "@php vendor/bin/phpunit",
+        "test:unit": "@php vendor/bin/phpunit --testsuite Client,Expense,Identity,Inventory,Location,Notification,Organization,Support",
+        "test:integration": "@php vendor/bin/phpunit --testsuite Integration,Functional",
+        "stan": "@php -d memory_limit=1G vendor/bin/phpstan analyse --no-progress",
+        "cs": "@php vendor/bin/php-cs-fixer fix --dry-run --diff --using-cache=no",
+        "cs:fix": "@php vendor/bin/php-cs-fixer fix --using-cache=no",
+        "wiring": "@php bin/wiring-check.php",
+        "validate:project": "@php bin/validate-project.php || exit 0",
+        "audit": "@composer audit --no-interaction",
+        "check": [
+            "@test",
+            "@stan",
+            "@cs",
+            "@wiring",
+            "@validate:project"
         ]
     },
     "conflict": {

@@ -1,0 +1,27 @@
+# Baseline de reglas del validador (bin/validate-project.php)
+#
+# Errores preexistentes CONOCIDOS: se reportan como WARN y no bloquean CI.
+# La política es reducirlo a cero progresivamente (ver specs/014-governance §6).
+# Formato: {regla}|{archivo} — agregar fila SOLO con justificación (ver tasks/TODO.md).
+# Reglas: regla1 (strict_types), regla2 (enum lowercase), regla6 (final readonly),
+#         regla9 (sufijo ValueObject), secrets, wiring, dupglobal.
+
+# AuthEvent usa values UPPERCASE persistidos en auth_logs.event — cambiar a
+# lowercase requiere migración de datos (T24, specs/014-governance).
+regla2|src/app/Identity/Domain/Enums/AuthEvent.php
+
+# UserTokenType: values UPPERCASE persistidos en user_tokens.type (T24).
+regla2|src/app/Identity/Domain/Enums/UserTokenType.php
+
+# NonserializedStockStatus: values en español con acentos/espacios persistidos
+# en la columna de stock (T25).
+regla2|src/app/Inventory/Domain/Enums/NonserializedStockStatus.php
+
+# SerializedStockStatus: values en español con acentos/espacios persistidos
+# en la columna de stock (T25).
+regla2|src/app/Inventory/Domain/Enums/SerializedStockStatus.php
+
+# VOs históricos sin sufijo ValueObject (regla 9): renombrar toca callers en
+# varios BCs — tarea de deuda (T26).
+regla9|src/app/Inventory/Domain/ValueObjects/PurchaseSuggestion.php
+regla9|src/app/Shared/Domain/ValueObjects/ProcessedCommandId.php

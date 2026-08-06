@@ -1,0 +1,871 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Property App\\Client\\Domain\\Entities\\Client\:\:\$createdAt is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: src/app/Client/Domain/Entities/Client.php
+
+		-
+			message: '#^Property App\\Client\\Domain\\Entities\\Client\:\:\$updatedAt \(DateTimeImmutable\|null\) is never assigned DateTimeImmutable so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: src/app/Client/Domain/Entities/Client.php
+
+		-
+			message: '#^Property App\\Client\\Domain\\Entities\\Client\:\:\$updatedAt is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/app/Client/Domain/Entities/Client.php
+
+		-
+			message: '#^Property App\\Client\\Domain\\Entities\\Contract\:\:\$createdAt is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: src/app/Client/Domain/Entities/Contract.php
+
+		-
+			message: '#^Property App\\Client\\Domain\\Entities\\Contract\:\:\$updatedAt \(DateTimeImmutable\|null\) is never assigned DateTimeImmutable so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: src/app/Client/Domain/Entities/Contract.php
+
+		-
+			message: '#^Property App\\Client\\Domain\\Entities\\Contract\:\:\$updatedAt is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/app/Client/Domain/Entities/Contract.php
+
+		-
+			message: '#^Property App\\Client\\Domain\\Entities\\Terminal\:\:\$atmModelCode is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/app/Client/Domain/Entities/Terminal.php
+
+		-
+			message: '#^Result of callable App\\Client\\Application\\Command\\AddContact\\AddContactHandler \(void\) is used\.$#'
+			identifier: callable.void
+			count: 1
+			path: src/app/Client/Presentation/Http/ApiClientContactController.php
+
+		-
+			message: '#^Unknown parameter \$atmModelCode in call to App\\Client\\Application\\Command\\RegisterTerminal\\RegisterTerminalCommand constructor\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: src/app/Client/Presentation/Http/ApiClientTerminalController.php
+
+		-
+			message: '#^Unknown parameter \$atmModelCode in call to App\\Client\\Application\\Command\\RegisterTerminal\\RegisterTerminalCommand constructor\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: src/app/Client/Presentation/Http/TerminalController.php
+
+		-
+			message: '#^Constant App\\Expense\\Application\\Query\\GetExpenseDashboardSummary\\GetExpenseDashboardSummaryHandler\:\:TABLE_ADVANCES is unused\.$#'
+			identifier: classConstant.unused
+			count: 1
+			path: src/app/Expense/Application/Query/GetExpenseDashboardSummary/GetExpenseDashboardSummaryHandler.php
+
+		-
+			message: '#^Constant App\\Expense\\Application\\Query\\GetExpenseDashboardSummary\\GetExpenseDashboardSummaryHandler\:\:TABLE_EXPENSES is unused\.$#'
+			identifier: classConstant.unused
+			count: 1
+			path: src/app/Expense/Application/Query/GetExpenseDashboardSummary/GetExpenseDashboardSummaryHandler.php
+
+		-
+			message: '#^Constant App\\Expense\\Application\\Query\\GetExpenseDashboardSummary\\GetExpenseDashboardSummaryHandler\:\:TABLE_ITEMS is unused\.$#'
+			identifier: classConstant.unused
+			count: 1
+			path: src/app/Expense/Application/Query/GetExpenseDashboardSummary/GetExpenseDashboardSummaryHandler.php
+
+		-
+			message: '#^Property App\\Expense\\Domain\\Entities\\ExpenseItem\:\:\$expense \(App\\Expense\\Domain\\Entities\\OperatingExpense\|null\) is never assigned App\\Expense\\Domain\\Entities\\OperatingExpense so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: src/app/Expense/Domain/Entities/ExpenseItem.php
+
+		-
+			message: '#^Property App\\Expense\\Domain\\Entities\\ExpenseItem\:\:\$expense is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/app/Expense/Domain/Entities/ExpenseItem.php
+
+		-
+			message: '#^Offset ''employeeId'' on array\{filters\?\: array, page\?\: int, limit\?\: int\} in isset\(\) does not exist\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/app/Expense/Infrastructure/Persistence/Doctrine/DoctrineOperatingExpenseRepository.php
+
+		-
+			message: '#^Offset ''status'' on array\{filters\?\: array, page\?\: int, limit\?\: int\} in isset\(\) does not exist\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/app/Expense/Infrastructure/Persistence/Doctrine/DoctrineOperatingExpenseRepository.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 1
+			path: src/app/Expense/Infrastructure/Persistence/Doctrine/DoctrineOperatingExpenseRepository.php
+
+		-
+			message: '#^Missing parameter \$settlementConfirmedBy \(string\) in call to App\\Expense\\Application\\Command\\SettleCashAdvance\\SettleCashAdvanceCommand constructor\.$#'
+			identifier: argument.missing
+			count: 1
+			path: src/app/Expense/Presentation/Http/ExpenseController.php
+
+		-
+			message: '#^Missing parameter \$settlementDirection \(string\) in call to App\\Expense\\Application\\Command\\SettleCashAdvance\\SettleCashAdvanceCommand constructor\.$#'
+			identifier: argument.missing
+			count: 1
+			path: src/app/Expense/Presentation/Http/ExpenseController.php
+
+		-
+			message: '#^Unknown parameter \$confirmedBy in call to App\\Expense\\Application\\Command\\SettleCashAdvance\\SettleCashAdvanceCommand constructor\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: src/app/Expense/Presentation/Http/ExpenseController.php
+
+		-
+			message: '#^Unknown parameter \$direction in call to App\\Expense\\Application\\Command\\SettleCashAdvance\\SettleCashAdvanceCommand constructor\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: src/app/Expense/Presentation/Http/ExpenseController.php
+
+		-
+			message: '#^Unknown parameter \$limit in call to App\\Organization\\Application\\Query\\ListEmployees\\ListEmployeesQuery constructor\.$#'
+			identifier: argument.unknown
+			count: 4
+			path: src/app/Expense/Presentation/Http/ExpenseController.php
+
+		-
+			message: '#^Access to an undefined property App\\Identity\\Domain\\Entities\\User\:\:\$createdAt\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/app/Identity/Infrastructure/Console/DetectOrphanUsersCommand.php
+
+		-
+			message: '#^Unknown parameter \$slug in call to App\\Identity\\Application\\Command\\CreateRole\\CreateRoleCommand constructor\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: src/app/Identity/Infrastructure/Console/SeedRolesCommand.php
+
+		-
+			message: '#^Constant App\\Identity\\Infrastructure\\Security\\LandingRouteResolver\:\:ROUTES_BY_PERMISSION is unused\.$#'
+			identifier: classConstant.unused
+			count: 1
+			path: src/app/Identity/Infrastructure/Security/LandingRouteResolver.php
+
+		-
+			message: '#^Method App\\Identity\\Infrastructure\\Security\\SymfonySecurityUser\:\:getPassword\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/app/Identity/Infrastructure/Security/SymfonySecurityUser.php
+
+		-
+			message: '#^Call to an undefined method App\\Client\\Domain\\Repositories\\ContactRepositoryInterface\:\:findByEmail\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/app/Identity/Infrastructure/Service/CrossBcUserByEmailResolver.php
+
+		-
+			message: '#^Parameter \#1 \$id of class App\\Identity\\Domain\\ValueObjects\\UserIdValueObject constructor expects string, App\\Identity\\Domain\\ValueObjects\\UserIdValueObject given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/app/Identity/Infrastructure/Service/CrossBcUserByEmailResolver.php
+
+		-
+			message: '#^Parameter \#1 \$userId of method App\\Client\\Domain\\Repositories\\ContactRepositoryInterface\:\:findByUserId\(\) expects App\\Identity\\Domain\\ValueObjects\\UserIdValueObject, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/app/Identity/Infrastructure/Service/OrphanUserChecker.php
+
+		-
+			message: '#^Parameter \#1 \$userId of method App\\Organization\\Domain\\Repositories\\EmployeeRepositoryInterface\:\:findByUserId\(\) expects App\\Identity\\Domain\\ValueObjects\\UserIdValueObject, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/app/Identity/Infrastructure/Service/OrphanUserChecker.php
+
+		-
+			message: '#^Cannot access property \$items on array\<App\\Identity\\Application\\Query\\Response\\UserResponse\>\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/app/Identity/Presentation/Http/ApiIdentityUserController.php
+
+		-
+			message: '#^Cannot access property \$limit on array\<App\\Identity\\Application\\Query\\Response\\UserResponse\>\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/app/Identity/Presentation/Http/ApiIdentityUserController.php
+
+		-
+			message: '#^Cannot access property \$page on array\<App\\Identity\\Application\\Query\\Response\\UserResponse\>\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/app/Identity/Presentation/Http/ApiIdentityUserController.php
+
+		-
+			message: '#^Cannot access property \$total on array\<App\\Identity\\Application\\Query\\Response\\UserResponse\>\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/app/Identity/Presentation/Http/ApiIdentityUserController.php
+
+		-
+			message: '#^Class App\\Identity\\Application\\Command\\DeactivateUser\\DeactivateUserCommand constructor invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/app/Identity/Presentation/Http/ApiIdentityUserController.php
+
+		-
+			message: '#^Class App\\Identity\\Application\\Command\\SoftDeleteUser\\SoftDeleteUserCommand constructor invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/app/Identity/Presentation/Http/ApiIdentityUserController.php
+
+		-
+			message: '#^Class App\\Identity\\Application\\Query\\ListUsers\\ListUsersQuery does not have a constructor and must be instantiated without any parameters\.$#'
+			identifier: new.noConstructor
+			count: 1
+			path: src/app/Identity/Presentation/Http/ApiIdentityUserController.php
+
+		-
+			message: '#^Instantiated class App\\Identity\\Presentation\\Http\\RevokeMfaCommand not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Identity/Presentation/Http/ApiIdentityUserController.php
+
+		-
+			message: '#^Invoking callable on an unknown class App\\Identity\\Presentation\\Http\\RevokeMfaHandler\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Identity/Presentation/Http/ApiIdentityUserController.php
+
+		-
+			message: '#^Missing parameter \$newRawPassword \(string\) in call to App\\Identity\\Application\\Command\\ChangePassword\\ChangePasswordCommand constructor\.$#'
+			identifier: argument.missing
+			count: 1
+			path: src/app/Identity/Presentation/Http/ApiIdentityUserController.php
+
+		-
+			message: '#^Parameter \$handler of method App\\Identity\\Presentation\\Http\\ApiIdentityUserController\:\:revokeMfa\(\) has invalid type App\\Identity\\Presentation\\Http\\RevokeMfaHandler\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Identity/Presentation/Http/ApiIdentityUserController.php
+
+		-
+			message: '#^Unknown parameter \$rawPassword in call to App\\Identity\\Application\\Command\\ChangePassword\\ChangePasswordCommand constructor\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: src/app/Identity/Presentation/Http/ApiIdentityUserController.php
+
+		-
+			message: '#^Parameter \#1 \$user of method App\\Identity\\Infrastructure\\Security\\LandingRouteResolver\:\:resolveFor\(\) expects App\\Identity\\Infrastructure\\Security\\SymfonySecurityUser\|null, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/app/Identity/Presentation/Http/MfaController.php
+
+		-
+			message: '#^Variable \$errors on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.variable
+			count: 1
+			path: src/app/Identity/Presentation/Http/UserController.php
+
+		-
+			message: '#^Caught class Doctrine\\ORM\\ORMException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Inventory/Application/Command/AttachEvidence/AttachEvidenceHandler.php
+
+		-
+			message: '#^Anonymous function has an unused use \$locationId\.$#'
+			identifier: closure.unusedUse
+			count: 1
+			path: src/app/Inventory/Application/Command/CreatePurchaseOrderFromSuggestion/CreatePurchaseOrderFromSuggestionHandler.php
+
+		-
+			message: '#^Caught class Doctrine\\ORM\\ORMException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Inventory/Application/Command/CreatePurchaseOrderFromSuggestion/CreatePurchaseOrderFromSuggestionHandler.php
+
+		-
+			message: '#^Caught class Doctrine\\ORM\\ORMException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Inventory/Application/Command/CreatePurchaseOrderWithItems/CreatePurchaseOrderWithItemsHandler.php
+
+		-
+			message: '#^Method App\\Inventory\\Application\\Command\\CreateTransfer\\CreateTransferHandler\:\:resolveAssignedUser\(\) never returns string so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/app/Inventory/Application/Command/CreateTransfer/CreateTransferHandler.php
+
+		-
+			message: '#^Method App\\Inventory\\Application\\Command\\CreateTransfer\\CreateTransferHandler\:\:resolveAssignedUser\(\) should return string\|null but returns App\\Identity\\Domain\\ValueObjects\\UserIdValueObject\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/app/Inventory/Application/Command/CreateTransfer/CreateTransferHandler.php
+
+		-
+			message: '#^Caught class Doctrine\\ORM\\ORMException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Inventory/Application/Command/DeleteSubLocation/DeleteSubLocationHandler.php
+
+		-
+			message: '#^Instantiated class App\\Shared\\Exceptions\\DomainException is abstract\.$#'
+			identifier: new.abstract
+			count: 2
+			path: src/app/Inventory/Application/Command/FulfillRequestItem/FulfillRequestItemHandler.php
+
+		-
+			message: '#^Caught class Doctrine\\ORM\\ORMException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Inventory/Application/Command/RegisterConsumable/RegisterConsumableHandler.php
+
+		-
+			message: '#^Caught class Doctrine\\ORM\\ORMException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Inventory/Application/Command/RemoveConsumable/RemoveConsumableHandler.php
+
+		-
+			message: '#^Caught class Doctrine\\ORM\\ORMException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Inventory/Application/Command/RemoveEvidence/RemoveEvidenceHandler.php
+
+		-
+			message: '#^Caught class Doctrine\\ORM\\ORMException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Inventory/Application/Command/StartPhysicalCount/StartPhysicalCountHandler.php
+
+		-
+			message: '#^Parameter \#1 \$newType of method App\\Inventory\\Domain\\Entities\\Product\:\:changeTrackingType\(\) expects App\\Inventory\\Domain\\Enums\\ProductTrackingType, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/app/Inventory/Application/Command/UpdateProduct/UpdateProductHandler.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between string and App\\Inventory\\Domain\\Enums\\ProductTrackingType will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/app/Inventory/Application/Command/UpdateProduct/UpdateProductHandler.php
+
+		-
+			message: '#^Caught class Doctrine\\ORM\\ORMException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Inventory/Application/Command/UpdatePurchaseOrder/UpdatePurchaseOrderHandler.php
+
+		-
+			message: '#^Caught class Doctrine\\ORM\\ORMException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Inventory/Application/Command/UpdateSubLocation/UpdateSubLocationHandler.php
+
+		-
+			message: '#^Offset ''fill_rate'' on array\{total_items\: int, fulfilled\: int, fill_rate\: float\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/app/Inventory/Application/Query/InventoryDashboardMetrics/InventoryDashboardMetricsHandler.php
+
+		-
+			message: '#^Offset ''total_items'' on array\{total_items\: int, fulfilled\: int, fill_rate\: float\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/app/Inventory/Application/Query/InventoryDashboardMetrics/InventoryDashboardMetricsHandler.php
+
+		-
+			message: '#^Parameter \$fillRate of class App\\Inventory\\Application\\Query\\InventoryDashboardMetrics\\InventoryDashboardMetrics constructor expects array\<array\{total\: int, fulfilled\: int, fill_rate\: float\}\>, array\{array\{total_items\: int, fulfilled\: int, fill_rate\: float\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/app/Inventory/Application/Query/InventoryDashboardMetrics/InventoryDashboardMetricsHandler.php
+
+		-
+			message: '#^Match expression does not handle remaining value\: App\\Inventory\\Domain\\Enums\\LocationType\:\:CUSTODY$#'
+			identifier: match.unhandled
+			count: 1
+			path: src/app/Inventory/Application/Query/Response/LocationResponse.php
+
+		-
+			message: '#^Match expression does not handle remaining values\: App\\Inventory\\Domain\\Enums\\MovementType\:\:ADJUSTMENT\|App\\Inventory\\Domain\\Enums\\MovementType\:\:LOAN$#'
+			identifier: match.unhandled
+			count: 1
+			path: src/app/Inventory/Application/Query/Response/MovementResponse.php
+
+		-
+			message: '#^Match arm comparison between App\\Inventory\\Domain\\Enums\\EvidenceType\:\:PHOTO\|App\\Inventory\\Domain\\Enums\\EvidenceType\:\:VIDEO and ''photo'' is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: src/app/Inventory/Application/Query/Response/RepairEvidenceResponse.php
+
+		-
+			message: '#^Match arm comparison between App\\Inventory\\Domain\\Enums\\EvidenceType\:\:PHOTO\|App\\Inventory\\Domain\\Enums\\EvidenceType\:\:VIDEO and ''video'' is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 1
+			path: src/app/Inventory/Application/Query/Response/RepairEvidenceResponse.php
+
+		-
+			message: '#^Match expression does not handle remaining values\: App\\Inventory\\Domain\\Enums\\RequestStatus\:\:AWAITING_TECHNICIAN_ACCEPTANCE\|App\\Inventory\\Domain\\Enums\\RequestStatus\:\:PARTIALLY_FULFILLED$#'
+			identifier: match.unhandled
+			count: 1
+			path: src/app/Inventory/Application/Query/Response/RequestResponse.php
+
+		-
+			message: '#^Parameter \#1 \$userId of method App\\Organization\\Domain\\Repositories\\EmployeeRepositoryInterface\:\:findByUserId\(\) expects App\\Identity\\Domain\\ValueObjects\\UserIdValueObject, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/app/Inventory/Application/Service/LocationRequestScopeResolver.php
+
+		-
+			message: '#^Parameter \#1 \$userId of method App\\Organization\\Domain\\Repositories\\EmployeeRepositoryInterface\:\:findByUserId\(\) expects App\\Identity\\Domain\\ValueObjects\\UserIdValueObject, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/app/Inventory/Application/Service/MovementViewScopeResolver.php
+
+		-
+			message: '#^Parameter \#1 \$userId of method App\\Organization\\Domain\\Repositories\\EmployeeRepositoryInterface\:\:findByUserId\(\) expects App\\Identity\\Domain\\ValueObjects\\UserIdValueObject, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/app/Inventory/Application/Service/StockViewScopeResolver.php
+
+		-
+			message: '#^Property App\\Inventory\\Domain\\Entities\\Entry\:\:\$updatedAt is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/app/Inventory/Domain/Entities/Entry.php
+
+		-
+			message: '#^Property App\\Inventory\\Domain\\Entities\\PhysicalCountItem\:\:\$physicalCount is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/app/Inventory/Domain/Entities/PhysicalCountItem.php
+
+		-
+			message: '#^Property App\\Inventory\\Domain\\Entities\\RequestItem\:\:\$request is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/app/Inventory/Domain/Entities/RequestItem.php
+
+		-
+			message: '#^Property App\\Inventory\\Infrastructure\\Console\\EvaluateRepairSlaCommand\:\:\$serializedStockRepository is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/app/Inventory/Infrastructure/Console/EvaluateRepairSlaCommand.php
+
+		-
+			message: '#^Access to an undefined property App\\Organization\\Domain\\Events\\EmployeeCreated\:\:\$profile\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/app/Inventory/Infrastructure/Messenger/Handler/AutoCreateBackpackHandler.php
+
+		-
+			message: '#^Caught class Doctrine\\ORM\\ORMException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Inventory/Infrastructure/Messenger/Handler/AutoCreateBackpackHandler.php
+
+		-
+			message: '#^Callable App\\Inventory\\Application\\Query\\ListPurchaseOrders\\ListPurchaseOrdersHandler invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/app/Inventory/Presentation/Http/ApiInventoryPurchaseOrderController.php
+
+		-
+			message: '#^Callable App\\Inventory\\Application\\Query\\ListPurchaseOrders\\ListPurchaseOrdersHandler invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/app/Inventory/Presentation/Http/ApiInventoryStockController.php
+
+		-
+			message: '#^Unknown parameter \$limit in call to App\\Organization\\Application\\Query\\ListEmployees\\ListEmployeesQuery constructor\.$#'
+			identifier: argument.unknown
+			count: 5
+			path: src/app/Inventory/Presentation/Http/CustodyController.php
+
+		-
+			message: '#^Variable \$errors on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.variable
+			count: 2
+			path: src/app/Inventory/Presentation/Http/CustodyController.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 3
+			path: src/app/Inventory/Presentation/Http/MovementController.php
+
+		-
+			message: '#^Class App\\Inventory\\Application\\Command\\SubmitRequest\\SubmitRequestCommand constructor invoked with 7 parameters, 5 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/app/Inventory/Presentation/Http/StockRequestController.php
+
+		-
+			message: '#^Parameter \#1 \$items of class App\\Inventory\\Application\\Command\\SubmitRequest\\SubmitRequestCommand constructor expects array\<App\\Inventory\\Application\\ValueObjects\\RequestItemCommandInput\>, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/app/Inventory/Presentation/Http/StockRequestController.php
+
+		-
+			message: '#^Parameter \#3 \$destinationLocationId of class App\\Inventory\\Application\\Command\\SubmitRequest\\SubmitRequestCommand constructor expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/app/Inventory/Presentation/Http/StockRequestController.php
+
+		-
+			message: '#^Property App\\Notification\\Domain\\Entities\\NotificationLog\:\:\$updatedAt \(DateTimeImmutable\|null\) is never assigned DateTimeImmutable so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: src/app/Notification/Domain/Entities/NotificationLog.php
+
+		-
+			message: '#^Property App\\Notification\\Domain\\Entities\\NotificationTemplate\:\:\$updatedAt \(DateTimeImmutable\|null\) is never assigned DateTimeImmutable so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: src/app/Notification/Domain/Entities/NotificationTemplate.php
+
+		-
+			message: '#^Property App\\Notification\\Infrastructure\\EventListener\\SendNotificationMessageHandler\:\:\$senders on left side of \?\? is not nullable nor uninitialized\.$#'
+			identifier: nullCoalesce.initializedProperty
+			count: 1
+			path: src/app/Notification/Infrastructure/EventListener/SendNotificationMessageHandler.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between App\\Notification\\Infrastructure\\Channel\\EmailChannelSender\|App\\Notification\\Infrastructure\\Channel\\InAppChannelSender\|App\\Notification\\Infrastructure\\Channel\\SmsChannelSender\|App\\Notification\\Infrastructure\\Channel\\WhatsAppChannelSender and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/app/Notification/Infrastructure/EventListener/SendNotificationMessageHandler.php
+
+		-
+			message: '#^Unknown parameter \$reason in call to App\\Client\\Application\\Command\\SoftDeleteContact\\SoftDeleteContactCommand constructor\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: src/app/Notification/Infrastructure/Messenger/Handler/CrossBcDomainEventHandler.php
+
+		-
+			message: '#^Parameter \#1 \$userId of method App\\Client\\Domain\\Repositories\\ContactRepositoryInterface\:\:findByUserId\(\) expects App\\Identity\\Domain\\ValueObjects\\UserIdValueObject, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/app/Notification/Infrastructure/Service/UserContactResolver.php
+
+		-
+			message: '#^Parameter \#1 \$userId of method App\\Organization\\Domain\\Repositories\\EmployeeRepositoryInterface\:\:findByUserId\(\) expects App\\Identity\\Domain\\ValueObjects\\UserIdValueObject, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/app/Notification/Infrastructure/Service/UserContactResolver.php
+
+		-
+			message: '#^Access to constant HTTP_CONFLICT on an unknown class App\\Notification\\Presentation\\Http\\Response\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Notification/Presentation/Http/ApiNotificationTemplateController.php
+
+		-
+			message: '#^Access to constant HTTP_CREATED on an unknown class App\\Notification\\Presentation\\Http\\Response\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Notification/Presentation/Http/ApiNotificationTemplateController.php
+
+		-
+			message: '#^Deprecated in PHP 8\.0\: Required parameter \$hiredAt follows optional parameter \$status\.$#'
+			identifier: parameter.requiredAfterOptional
+			count: 1
+			path: src/app/Organization/Domain/Entities/Employee.php
+
+		-
+			message: '#^Deprecated in PHP 8\.0\: Required parameter \$terminatedAt follows optional parameter \$status\.$#'
+			identifier: parameter.requiredAfterOptional
+			count: 1
+			path: src/app/Organization/Domain/Entities/Employee.php
+
+		-
+			message: '#^Property App\\Organization\\Domain\\Entities\\Employee\:\:\$createdAt is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: src/app/Organization/Domain/Entities/Employee.php
+
+		-
+			message: '#^Property App\\Organization\\Domain\\Entities\\Employee\:\:\$updatedAt \(DateTimeImmutable\|null\) is never assigned DateTimeImmutable so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: src/app/Organization/Domain/Entities/Employee.php
+
+		-
+			message: '#^Property App\\Organization\\Domain\\Entities\\Employee\:\:\$updatedAt is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/app/Organization/Domain/Entities/Employee.php
+
+		-
+			message: '#^Property App\\Organization\\Domain\\Entities\\EmploymentPeriod\:\:\$deletedAt \(DateTimeImmutable\|null\) is never assigned DateTimeImmutable so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: src/app/Organization/Domain/Entities/EmploymentPeriod.php
+
+		-
+			message: '#^Property App\\Organization\\Domain\\Entities\\ServiceZone\:\:\$createdAt is never written, only read\.$#'
+			identifier: property.onlyRead
+			count: 1
+			path: src/app/Organization/Domain/Entities/ServiceZone.php
+
+		-
+			message: '#^Property App\\Organization\\Domain\\Entities\\ServiceZone\:\:\$updatedAt \(DateTimeImmutable\|null\) is never assigned DateTimeImmutable so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: src/app/Organization/Domain/Entities/ServiceZone.php
+
+		-
+			message: '#^Method App\\Organization\\Domain\\Entities\\ServiceZoneAssignment\:\:deletedAt\(\) never returns DateTimeImmutable so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/app/Organization/Domain/Entities/ServiceZoneAssignment.php
+
+		-
+			message: '#^Access to undefined constant App\\Organization\\Domain\\Enums\\EmployeeProfile\:\:SUPERVISOR_TECHNICIAN\.$#'
+			identifier: classConstant.notFound
+			count: 1
+			path: src/app/Organization/Infrastructure/Console/SeedDemoDataCommand.php
+
+		-
+			message: '#^Access to undefined constant App\\Organization\\Domain\\Enums\\EmployeeProfile\:\:TECHNICIAN_FIELD\.$#'
+			identifier: classConstant.notFound
+			count: 1
+			path: src/app/Organization/Infrastructure/Console/SeedDemoDataCommand.php
+
+		-
+			message: '#^Call to an undefined method App\\Organization\\Domain\\Entities\\Employee\:\:linkToUser\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/app/Organization/Infrastructure/Console/SeedDemoDataCommand.php
+
+		-
+			message: '#^Constant App\\Organization\\Infrastructure\\Console\\SeedDemoDataCommand\:\:TICKET_ULID is unused\.$#'
+			identifier: classConstant.unused
+			count: 1
+			path: src/app/Organization/Infrastructure/Console/SeedDemoDataCommand.php
+
+		-
+			message: '#^Unknown parameter \$slug in call to static method App\\Identity\\Domain\\Entities\\Role\:\:create\(\)\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: src/app/Organization/Infrastructure/Console/SeedDemoDataCommand.php
+
+		-
+			message: '#^Constant App\\Organization\\Infrastructure\\Console\\SeedFullDataCommand\:\:PASSWORD_PLAIN is unused\.$#'
+			identifier: classConstant.unused
+			count: 1
+			path: src/app/Organization/Infrastructure/Console/SeedFullDataCommand.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: src/app/Organization/Infrastructure/Console/SeedFullDataCommand.php
+
+		-
+			message: '#^Property App\\Organization\\Infrastructure\\Console\\SeedFullDataCommand\:\:\$roleRepo is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/app/Organization/Infrastructure/Console/SeedFullDataCommand.php
+
+		-
+			message: '#^Property App\\Organization\\Infrastructure\\Console\\SeedFullDataCommand\:\:\$ticketAssignmentRepo is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/app/Organization/Infrastructure/Console/SeedFullDataCommand.php
+
+		-
+			message: '#^Property App\\Organization\\Infrastructure\\Console\\SeedFullDataCommand\:\:\$ticketFindingRepo is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/app/Organization/Infrastructure/Console/SeedFullDataCommand.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between non\-falsy\-string and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/app/Organization/Infrastructure/Console/SeedFullDataCommand.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between string and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/app/Organization/Infrastructure/Console/SeedFullDataCommand.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between ''dado de baja''\|''dañado''\|''disponible''\|''reservado''\|''sospechoso'' and ''available'' will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/app/Organization/Infrastructure/Console/SeedFullDataCommand.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between non\-empty\-list\<App\\Client\\Domain\\Entities\\TerminalAssignment\> and false will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/app/Organization/Infrastructure/Console/SeedFullDataCommand.php
+
+		-
+			message: '#^Variable \$clientTerminals in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/app/Organization/Infrastructure/Console/SeedFullDataCommand.php
+
+		-
+			message: '#^Caught class Doctrine\\ORM\\ORMException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/app/Organization/Infrastructure/Messenger/Handler/EmployeeStatusCascadeHandler.php
+
+		-
+			message: '#^Parameter \$profile of class App\\Organization\\Application\\Query\\ListEmployees\\ListEmployeesQuery constructor expects App\\Organization\\Domain\\Enums\\EmployeeProfile\|null, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/app/Organization/Presentation/Http/ApiOrganizationController.php
+
+		-
+			message: '#^Parameter \$status of class App\\Organization\\Application\\Query\\ListEmployees\\ListEmployeesQuery constructor expects App\\Organization\\Domain\\Enums\\EmployeeStatus\|null, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/app/Organization/Presentation/Http/ApiOrganizationController.php
+
+		-
+			message: '#^Unknown parameter \$limit in call to App\\Organization\\Application\\Query\\ListEmployees\\ListEmployeesQuery constructor\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: src/app/Organization/Presentation/Http/ApiOrganizationController.php
+
+		-
+			message: '#^Unknown parameter \$page in call to App\\Organization\\Application\\Query\\ListEmployees\\ListEmployeesQuery constructor\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: src/app/Organization/Presentation/Http/ApiOrganizationController.php
+
+		-
+			message: '#^Unknown parameter \$q in call to App\\Organization\\Application\\Query\\ListEmployees\\ListEmployeesQuery constructor\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: src/app/Organization/Presentation/Http/ApiOrganizationController.php
+
+		-
+			message: '#^Unknown parameter \$serviceZoneId in call to App\\Organization\\Application\\Query\\ListEmployees\\ListEmployeesQuery constructor\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: src/app/Organization/Presentation/Http/ApiOrganizationController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$errors with type array\<int, string\> is incompatible with native type int\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: src/app/Shared/Application/Import/ImportResult.php
+
+		-
+			message: '#^PHPDoc type for property App\\Shared\\Application\\Import\\ImportResult\:\:\$errors with type array\<int, string\> is incompatible with native type int\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/app/Shared/Application/Import/ImportResult.php
+
+		-
+			message: '#^Parameter \$stockAlerts of class App\\Shared\\Application\\Query\\Dashboard\\DashboardMetrics constructor expects array\<array\{productName\: string, code\: string, locationName\: string, current\: int, alert_threshold\: int\}\>, array\<array\{productName\: string, code\: string, locationName\: string, current\: int, minimum\: int\}\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/app/Shared/Application/Query/Dashboard/DashboardMetricsHandler.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/app/Shared/Domain/AbstractUlid.php
+
+		-
+			message: '#^Method App\\Shared\\Infrastructure\\Console\\CrossBcConsistencyCheckCommand\:\:addIssue\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: src/app/Shared/Infrastructure/Console/CrossBcConsistencyCheckCommand.php
+
+		-
+			message: '#^Binary operation "\+" between string and 1 results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/app/Shared/Infrastructure/Export/ExcelExportService.php
+
+		-
+			message: '#^Call to an undefined method PhpOffice\\PhpSpreadsheet\\Worksheet\\Worksheet\:\:getCellByColumnAndRow\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/app/Shared/Infrastructure/Export/ExcelExportService.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between float and 0 will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/app/Shared/Presentation/Twig/Extension/OrbisFormatExtension.php
+
+		-
+			message: '#^Property App\\Support\\Application\\Command\\RegisterSparePart\\RegisterSparePartHandler\:\:\$employeeRepository is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/app/Support/Application/Command/RegisterSparePart/RegisterSparePartHandler.php
+
+		-
+			message: '#^Call to an undefined method App\\Support\\Domain\\Repositories\\TicketRepositoryInterface\:\:findByParentTicketId\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/app/Support/Application/Query/ListTicketChildren/ListTicketChildrenHandler.php
+
+		-
+			message: '#^PHPDoc tag @return with type array\<App\\Support\\Application\\Query\\Response\\ModuleTreeResponse\> is incompatible with native type App\\Support\\Application\\Query\\Response\\ModuleTreeResponse\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/app/Support/Application/Query/Response/ModuleTreeResponse.php
+
+		-
+			message: '#^PHPDoc tag @return with type array\<App\\Support\\Application\\Query\\Response\\FindingEvidenceResponse\> is incompatible with native type App\\Support\\Application\\Query\\Response\\TicketModuleFindingResponse\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/app/Support/Application/Query/Response/TicketModuleFindingResponse.php
+
+		-
+			message: '#^Call to an undefined method App\\Support\\Domain\\Repositories\\TicketRepositoryInterface\:\:findByRouteGroupId\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/app/Support/Application/Query/TicketsByRoute/TicketsByRouteHandler.php
+
+		-
+			message: '#^Constant App\\Support\\Application\\Report\\TicketsByClient\\TicketsByClientReportGenerator\:\:SERVICE_TYPE_LABELS is unused\.$#'
+			identifier: classConstant.unused
+			count: 1
+			path: src/app/Support/Application/Report/TicketsByClient/TicketsByClientReportGenerator.php
+
+		-
+			message: '#^Instanceof between App\\Support\\Domain\\Entities\\TicketAssignment and App\\Support\\Domain\\Entities\\TicketAssignment will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/app/Support/Domain/Entities/Ticket.php
+
+		-
+			message: '#^Property App\\Support\\Domain\\Entities\\TicketModuleFinding\:\:\$ticket \(App\\Support\\Domain\\Entities\\Ticket\|null\) is never assigned App\\Support\\Domain\\Entities\\Ticket so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: src/app/Support/Domain/Entities/TicketModuleFinding.php
+
+		-
+			message: '#^Unknown parameter \$componentIds in call to App\\Support\\Application\\Command\\RegisterFinding\\RegisterFindingCommand constructor\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: src/app/Support/Presentation/Http/ApiSupportTicketController.php
+
+		-
+			message: '#^Dead catch \- InvalidArgumentException is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 2
+			path: src/app/Support/Presentation/Http/ApiSupportTicketModuleFindingController.php
+
+		-
+			message: '#^Unknown parameter \$componentIds in call to App\\Support\\Application\\Command\\RegisterFinding\\RegisterFindingCommand constructor\.$#'
+			identifier: argument.unknown
+			count: 1
+			path: src/app/Support/Presentation/Http/TicketActionController.php

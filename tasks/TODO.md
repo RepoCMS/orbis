@@ -33,6 +33,12 @@
 | T21 | - [ ] ~~Completar `docs/core/`, `docs/standards/` y `.ai/`~~ → ✅ Completado 2026-08-06 (ver DONE.md) | ALTA | docs | plan de transformación 2026-08-06 (ver IN_PROGRESS.md) | ✅ |
 | T22 | - [ ] ~~Sync `AGENTS.md`/`PROJECT_CONTEXT.md` con tablero `tasks/`~~ → ✅ Completado 2026-08-06 (ver DONE.md) | BAJA | docs | PROJECT_CONTEXT.md §6.1 vs filesystem | ✅ |
 | T23 | - [ ] Migrar documentación existente en inglés a español (convención §Idioma de AGENTS.md): `PROJECT_CONTEXT.md`, `docs/adr/README.md`, `docs/adr/ADR-001..008`, títulos de `docs/modules/*.md` | MEDIA | docs | AGENTS.md §Idioma (regla 1) | [TODO-REAL] |
+| T24 | - [ ] Migrar enum values UPPERCASE a lowercase con migración de datos (AuthEvent, UserTokenType) — detectado por `bin/validate-project.php` (baseline regla2) | MEDIA | Identity | validate-baseline.txt, specs/014-governance §6 | [TODO-REAL] |
+| T25 | - [ ] Migrar enum values en español/acentos a lowercase snake_case (NonserializedStockStatus, SerializedStockStatus) con migración de datos — detectado por validador | MEDIA | Inventory | validate-baseline.txt | [TODO-REAL] |
+| T26 | - [ ] Renombrar VOs históricos sin sufijo ValueObject (`PurchaseSuggestion`, `ProcessedCommandId`) — detectado por validador (baseline regla9) | BAJA | Cross-BC | validate-baseline.txt | [TODO-REAL] |
+| T27 | - [ ] Reducir baseline PHPStan (159 errores nivel 5) en ciclos de a ~20 — objetivo nivel 9 | BAJA | Cross-BC | phpstan-baseline.neon, specs/014-governance §6 | [TODO-REAL] |
+| T28 | - [ ] Actualizar dependencias con advisories: dompdf (<3.1.6, 3 CVEs medium) + 2 paquetes más — `composer audit` (10 advisories, 2026-08-06) | MEDIA | infra | composer audit, .github/workflows/security.yml | [TODO-REAL] |
+| T29 | - [ ] Implementar coverage de Domain ≥ 80% en CI (DD-3 del spec 014) — requiere Xdebug/PCOV + job de coverage en ci.yml | MEDIA | infra | specs/014-governance/spec.md §3 DD-3 | [TODO-REAL] |
 
 ---
 

@@ -2,7 +2,30 @@
 
 > **Propósito:** Registro específico de la evolución de Orbis como **AI-Native Repository** — documentación arquitectónica, contexto para agentes, estructura de tablero y convenciones.
 > **Diferencia con CHANGELOG.md:** `CHANGELOG.md` registra cambios de producto/código (features, BCs, tests). Este changelog registra cambios de **documentación arquitectónica y de gobernanza de IA**.
-> **Versión actual:** v1.2.0
+> **Versión actual:** v1.3.0
+
+---
+
+## [v1.3.0] — 2026-08-06 — Enforcement de máquina: gates de CI + calidad estática
+
+### Added
+
+- **`specs/014-governance/`** — Spec del contrato de calidad: Definition of Ready, Definition of Done medible (12 criterios), flujo Spec→CI→Merge, gates de CI, tabla regla-Apéndice A → chequeo automatizable, wiring check automático.
+- **`bin/wiring-check.php`** — Verifica la regla 11 (todo Command/Query/Event/Subscriber con caller real): 346 targets, 0 huérfanos. Excepciones documentadas (CLI commands y EventSubscriberInterface via autoconfigure).
+- **`bin/validate-project.php`** + `validate-baseline.txt` — Validador unificado cross-platform: strict_types (regla 1), enums lowercase (regla 2), Commands/Queries final readonly (regla 6), sufijo ValueObject (regla 9), secrets trackeados/en código, duplicados globales (regla global vs repo), tablero. Errores preexistentes → baseline (6 warnings), nuevos bloquean.
+- **`.github/workflows/ci.yml`** — 5 jobs (test con MySQL 8 service, stan, cs, wiring, validate) + **`security.yml`** (composer audit semanal, informativo).
+- **Composer scripts** — `test`, `test:unit`, `test:integration`, `stan`, `cs`, `cs:fix`, `wiring`, `validate`, `audit`, `check` (= test+stan+cs+wiring+validate).
+- **PHPStan 2.2** (nivel 5) + `phpstan-baseline.neon` (159 errores preexistentes) + **PHP-CS-Fixer 3.95** con PSR-12 + reglas del proyecto.
+
+### Changed
+
+- **AGENTS.md** — Regla de gates (spec 014) en el workflow multi-agente: "el agente propone, la máquina decide"; ciclo por tarea ampliado con pasos CI y Docs.
+- **Fixes detectados por los gates**: `src/Kernel.php` + strict_types; `ListClientsQuery` → `final readonly`; `SeedDevCommand` sin password hardcodeado (usa `ORBIS_DEV_SEED_PASSWORD`, falla si no existe).
+- **2020 de 2360 archivos PHP** corregidos de estilo (PSR-12, imports ordenados, trailing commas, etc.) — un solo commit de normalización.
+
+### Added (deuda detectada → tablero)
+
+- **T24-T29** — Migraciones de enums UPPERCASE/español a lowercase (AuthEvent, UserTokenType, stock statuses), renombrar VOs sin sufijo, reducir baseline PHPStan, actualizar dompdf (<3.1.6, 3 CVEs), coverage Domain ≥ 80% en CI.
 
 ---
 
