@@ -21,7 +21,7 @@ Este repositorio es **AI-Native**: Git es la única fuente de verdad. Ningún ag
 8. cat tasks/IN_PROGRESS.md     # tareas en curso
 ```
 
-Referencia bajo demanda: `docs/analytics.md` (dashboards/reportes/importers), `docs/history.md` (issues y deuda técnica), `docs/glossary.md` (términos), `docs/dependencies.md` (stack), `docs/conventions.md` (convenciones), `.ai/` (prompts especializados por rol), `.claude/skills/` (skills compartidos versionados — frontend-design, caveman, find-skills; ver README del directorio).
+Referencia bajo demanda: `docs/analytics.md` (dashboards/reportes/importers), `docs/history.md` (issues y deuda técnica), `docs/glossary.md` (términos), `docs/dependencies.md` (stack), `docs/conventions.md` (convenciones), `.ai/` (prompts especializados por rol), `~/.agents/` (hub global de agentes y skills — fuente única compartida por opencode, Claude Code y Codex; ver README del directorio).
 
 **Regla no negociable:** Ningún agente puede tomar una decisión arquitectónica sin crear/actualizar un ADR en `docs/adr/` y actualizar `PROJECT_CONTEXT.md`. Si existe una contradicción entre el código y la documentación, debe reportarla ANTES de continuar.
 
@@ -227,13 +227,13 @@ On CANCEL/REJECT:
 - **Docs:** `docs/architecture.md`, `docs/coding-standards.md`, `docs/conventions.md`, `docs/glossary.md`, `docs/dependencies.md`, `docs/folder-structure.md`, `docs/analytics.md`, `docs/history.md`
 - **ADRs:** `docs/adr/README.md` (índice), `docs/adr/ADR-001..011`; decisiones no arquitectónicas en `docs/decisions/`
 - **Modules:** `docs/modules/{bc}.md` (uno por Bounded Context)
-- **AI prompts por rol (fuente única):** `.ai/README.md` (índice), `.ai/{architect,planner,backend,frontend,reviewer,security,qa,docs}.md`; `.opencode/agent/*.md` son wrappers delgados que los cargan
+- **AI prompts por rol (fuente única):** `.ai/README.md` (índice), `.ai/{architect,planner,backend,frontend,reviewer,security,qa,docs}.md`; los agentes del hub global (`~/.agents/agents/`) los cargan si existen en el proyecto
 - **Routes:** `config/routes/` (uno por BC)
 - **Services:** `config/services.yaml`
 - **Doctrine:** `config/packages/doctrine.yaml`
 - **Messenger:** `config/packages/messenger.yaml`
 - **DBAL types:** `src/app/Identity/Infrastructure/Doctrine/Types/{UserTokenTypeType|AuthEventType}.php`
-- **Agent configs:** `.opencode/agent/*.md`
+- **Agent configs:** `~/.agents/agents/` (hub global — fuente única, junctions en `~/.claude/agents/` y `~/.config/opencode/agent(s)/`; sync con `& ~/.agents/sync.ps1`)
 - **Modal controller:** `assets/controllers/modal_controller.js`
 - **View scope resolvers:** `src/app/Inventory/Application/Service/{StockViewScopeResolver,MovementViewScopeResolver}.php`, `src/app/Support/Application/Service/SparePartViewScopeResolver.php`
 - **Transfer lifecycle:** `src/app/Inventory/Application/Command/{CreateTransfer,ConfirmTransfer,CancelTransfer,RejectTransfer}/`

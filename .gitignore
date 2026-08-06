@@ -28,7 +28,6 @@
 ###< lexik/jwt-authentication-bundle ###
 
 ###> local tool config ###
-/.claude/*
-!/.claude/skills/
+/.claude/
 /opencode.local.json
 ###< local tool config ###

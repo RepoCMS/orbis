@@ -2,7 +2,7 @@
 
 > **Este directorio es la ÚNICA fuente de prompts para agentes de IA** en Orbis, independiente de la herramienta (opencode, Claude Code, ChatGPT, etc.).
 >
-> Los archivos `.opencode/agent/*.md` son **wrappers delgados** que cargan estos prompts (solo contienen configuración nativa de opencode: `mode`, `temperature`, `permission`). Claude Code los consume vía `CLAUDE.md`.
+> Los agentes del hub global (`~/.agents/agents/`, fuente única compartida entre opencode, Claude Code y Codex) cargan estos prompts cuando el proyecto los tiene (solo contienen configuración nativa: `mode`, `temperature`, `permission`).
 
 ## Índice
 
@@ -20,7 +20,7 @@
 ## Reglas
 
 1. **Todo prompt nuevo vive aquí**, no en configs de herramientas.
-2. Los wrappers en `.opencode/agent/` y las referencias en `CLAUDE.md` solo apuntan a estos archivos.
+2. Los agentes del hub global (`~/.agents/agents/`) y las referencias en `CLAUDE.md` solo apuntan a estos archivos.
 3. Si cambia una convención o checklist → actualizar SOLO `.ai/` (y `AGENTS.md` si es una regla de código), no los wrappers.
 4. Todo prompt termina con la sección "Fuentes" citando los archivos consultados.
 
