@@ -66,7 +66,7 @@ Cross-Bounded Context interactions use:
 |-----------|------------|
 | **Language** | PHP 8.4 |
 | **Framework** | Symfony 8.0 |
-| **ORM** | Doctrine ORM 2.x |
+| **ORM** | Doctrine ORM 3.x (`^3.6.7`) |
 | **Database** | MySQL 8+ |
 | **Tests** | PHPUnit 11 |
 | **Security** | Symfony Security, JWT, TOTP (MFA) |
@@ -77,7 +77,7 @@ Cross-Bounded Context interactions use:
 | Component | Technology |
 |-----------|------------|
 | **Templates** | Twig |
-| **Assets** | Stimulus, Alpine.js |
+| **Assets** | Stimulus (Turbo) — verificados en `importmap.php`; Alpine.js NO está registrado |
 | **Styling** | Tailwind CSS |
 
 ---
@@ -123,12 +123,20 @@ Cross-Bounded Context interactions use:
 Spec → Implementation → Test → Wire → Document → Commit → Push
 ```
 
-### 6.1 Before Starting Work
+### 6.1 Before Starting Work (AI-Native bootstrap order)
 
-1. Read `AGENTS.md` for guidance
-2. Read relevant specification in `specs/`
-3. Check current status in `TASKS/`
-4. Verify test framework is running
+1. Read `AGENTS.md` (reglas y convenciones de código)
+2. Read `PROJECT_CONTEXT.md` (este archivo — contexto general)
+3. Read `docs/architecture.md` (arquitectura completa)
+4. Read `docs/coding-standards.md` (reglas obligatorias) y `docs/conventions.md`
+5. Read `docs/adr/` (decisiones arquitectónicas; índice en `docs/adr/README.md`)
+6. Read the relevant specification in `specs/{num}-{bc}/spec.md`
+7. Check current status in `tasks/TODO.md`, `tasks/IN_PROGRESS.md` y `CONTEXT.md` (verdad única de estado)
+8. Verify test framework is running: `php vendor/bin/phpunit`
+
+**Reglas no negociables:**
+- Ninguna decisión arquitectónica sin crear/actualizar un ADR en `docs/adr/` y actualizar este archivo.
+- Si existe contradicción entre código y documentación, reportarla ANTES de continuar (formato en `docs/decisions/README.md`).
 
 ### 6.2 After Making Changes
 

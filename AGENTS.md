@@ -6,15 +6,24 @@ Orbis es una aplicación tipo ERP para la gestión de procesos de Automated Cash
 
 Se aplica **Spec Driven Development**: spec primero (`specs/`), implementación después.
 
-## Lectura obligatoria al iniciar sesión
+## Lectura obligatoria al iniciar sesión (AI-Native bootstrap)
+
+Este repositorio es **AI-Native**: Git es la única fuente de verdad. Ningún agente asume información que no esté documentada. Cualquier IA debe poder incorporarse leyendo SOLO estos archivos:
 
 ```
-cat CONTEXT.md   # estado REAL del proyecto (única fuente de verdad)
-cat CLAUDE.md    # protocolo de coordinación entre herramientas
-cat TODOS.md     # tareas en progreso
+1. cat AGENTS.md                # reglas y convenciones de código (este archivo)
+2. cat PROJECT_CONTEXT.md       # contexto general del proyecto
+3. cat docs/architecture.md     # arquitectura completa
+4. cat docs/coding-standards.md # reglas obligatorias de codificación
+5. cat docs/adr/README.md       # índice de decisiones arquitectónicas (ADRs)
+6. cat specs/{num}-{bc}/spec.md # spec correspondiente a tu tarea
+7. cat CONTEXT.md               # estado REAL del proyecto (única fuente de verdad de estado)
+8. cat tasks/IN_PROGRESS.md     # tareas en curso
 ```
 
-Referencia bajo demanda: `docs/analytics.md` (dashboards/reportes/importers), `docs/history.md` (issues y deuda técnica).
+Referencia bajo demanda: `docs/analytics.md` (dashboards/reportes/importers), `docs/history.md` (issues y deuda técnica), `docs/glossary.md` (términos), `docs/dependencies.md` (stack), `docs/conventions.md` (convenciones), `.ai/` (prompts especializados por rol).
+
+**Regla no negociable:** Ningún agente puede tomar una decisión arquitectónica sin crear/actualizar un ADR en `docs/adr/` y actualizar `PROJECT_CONTEXT.md`. Si existe una contradicción entre el código y la documentación, debe reportarla ANTES de continuar.
 
 ## Stack
 
@@ -199,8 +208,12 @@ On CANCEL/REJECT:
 ## Relevant Files
 
 - **Specs:** `specs/{num}-{bc}/spec.md` (spec), `plan.md` (plan), `tasks.md` (tasks)
-- **Context:** `CONTEXT.md` (verdad única), `TODOS.md` (tareas), `HANDOFF.md` (protocolo), `CLAUDE.md` (entry point)
-- **Docs:** `docs/analytics.md`, `docs/history.md`
+- **Context:** `CONTEXT.md` (verdad única de estado), `PROJECT_CONTEXT.md` (contexto general), `ROADMAP.md` (hoja de ruta), `CHANGELOG_AI.md` (cambios de la transformación)
+- **Task board:** `tasks/TODO.md`, `tasks/IN_PROGRESS.md`, `tasks/DONE.md` — mover filas entre tableros al cerrar tareas
+- **Docs:** `docs/architecture.md`, `docs/coding-standards.md`, `docs/conventions.md`, `docs/glossary.md`, `docs/dependencies.md`, `docs/folder-structure.md`, `docs/analytics.md`, `docs/history.md`
+- **ADRs:** `docs/adr/README.md` (índice), `docs/adr/ADR-001..011`; decisiones no arquitectónicas en `docs/decisions/`
+- **Modules:** `docs/modules/{bc}.md` (uno por Bounded Context)
+- **AI prompts por rol:** `.ai/{architect,backend,frontend,reviewer,security,qa}.md`
 - **Routes:** `config/routes/` (uno por BC)
 - **Services:** `config/services.yaml`
 - **Doctrine:** `config/packages/doctrine.yaml`

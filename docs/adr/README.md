@@ -14,6 +14,9 @@ This directory contains Architecture Decision Records (ADRs) for the Orbis proje
 | ADR-006 | Symfony Messenger for Event Bus | Accepted | 2026-08-06 |
 | ADR-007 | Shared Kernel for Cross-BC Integration | Accepted | 2026-08-06 |
 | ADR-008 | Soft Delete Pattern | Accepted | 2026-08-06 |
+| ADR-009 | TransactionManagerInterface for Application Layer Transactions | Accepted | 2026-08-06 |
+| ADR-010 | Cross-BC Event-Driven Cascade | Accepted | 2026-08-06 |
+| ADR-011 | Table Prefixes per Bounded Context | Accepted | 2026-08-06 |
 
 ---
 
@@ -47,6 +50,13 @@ This directory contains Architecture Decision Records (ADRs) for the Orbis proje
 ### Neutral
 - [Consideration 1]
 ```
+
+---
+
+## Convention
+
+- Los ADRs se numeran secuencialmente `ADR-XXX.md`. Toda decisión nueva requiere su ADR.
+- Los ADRs documentan decisiones **arquitectónicas**; las decisiones de proceso/producto/equipo (no arquitectónicas) viven en [`docs/decisions/`](../decisions/).
 
 ---
 
