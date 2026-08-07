@@ -41,6 +41,7 @@ use App\Notification\Infrastructure\Service\NotificationDispatcher;
 use App\Organization\Domain\Events\SpecialPeriodAutoProcessed;
 use App\Organization\Domain\Events\SpecialPeriodScheduled;
 use App\Shared\Application\Service\TransactionManagerInterface;
+use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use App\Shared\Infrastructure\Messenger\Message\DomainEventMessage;
 use App\Support\Domain\Events\SlaAboutToExpire;
@@ -128,14 +129,20 @@ final class CrossBcDomainEventHandlerTest extends TestCase
     {
         $contactRepo = $this->createMock(ContactRepositoryInterface::class);
 
-        return new DeactivateContactHandler($contactRepo);
+        return new DeactivateContactHandler(
+            $contactRepo,
+            $this->createStub(DomainEventPublisherInterface::class),
+        );
     }
 
     private function createReactivateHandler(): ReactivateContactHandler
     {
         $contactRepo = $this->createMock(ContactRepositoryInterface::class);
 
-        return new ReactivateContactHandler($contactRepo);
+        return new ReactivateContactHandler(
+            $contactRepo,
+            $this->createStub(DomainEventPublisherInterface::class),
+        );
     }
 
     private function createSoftDeleteHandler(): SoftDeleteContactHandler

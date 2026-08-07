@@ -9,12 +9,14 @@ use App\Client\Application\Command\ReactivateContact\ReactivateContactHandler;
 use App\Client\Application\Exception\ContactNotFoundException;
 use App\Client\Domain\Entities\Contact;
 use App\Client\Domain\Enums\ContactStatus;
+use App\Client\Domain\Events\ContactReactivated;
 use App\Client\Domain\Repositories\ContactRepositoryInterface;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
 use App\Client\Domain\ValueObjects\ContactEmailValueObject;
 use App\Client\Domain\ValueObjects\ContactIdValueObject;
 use App\Client\Domain\ValueObjects\ContactPhoneNumberValueObject;
 use App\Client\Domain\ValueObjects\ContactRoleValueObject;
+use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use PHPUnit\Framework\TestCase;
 
 final class ReactivateContactHandlerTest extends TestCase
@@ -52,7 +54,14 @@ final class ReactivateContactHandlerTest extends TestCase
                 $savedContact = $c;
             });
 
-        $handler = new ReactivateContactHandler($contactRepo);
+        $eventPublisher = $this->createMock(DomainEventPublisherInterface::class);
+        $eventPublisher->expects($this->once())->method('publish')
+            ->with($this->callback(function (ContactReactivated $event): bool {
+                return $event->contactId === self::CONTACT_ID
+                    && $event->clientId === self::CLIENT_ID;
+            }));
+
+        $handler = new ReactivateContactHandler($contactRepo, $eventPublisher);
         ($handler)(new ReactivateContactCommand(self::CONTACT_ID));
 
         self::assertNotNull($savedContact);
@@ -66,7 +75,10 @@ final class ReactivateContactHandlerTest extends TestCase
         $contactRepo->method('findById')->willReturn(null);
         $contactRepo->expects($this->never())->method('save');
 
-        $handler = new ReactivateContactHandler($contactRepo);
+        $eventPublisher = $this->createMock(DomainEventPublisherInterface::class);
+        $eventPublisher->expects($this->never())->method('publish');
+
+        $handler = new ReactivateContactHandler($contactRepo, $eventPublisher);
 
         $this->expectException(ContactNotFoundException::class);
         $this->expectExceptionMessage(self::CONTACT_ID);

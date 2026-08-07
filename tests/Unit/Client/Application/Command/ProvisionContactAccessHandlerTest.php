@@ -96,7 +96,7 @@ final class ProvisionContactAccessHandlerTest extends TestCase
         $accountNotifier->expects($this->once())->method('sendActivationEmail');
 
         $publisher = $this->createMock(DomainEventPublisherInterface::class);
-        $publisher->expects($this->exactly(2))->method('publish');
+        $publisher->expects($this->exactly(3))->method('publish');
 
         $registerUser = new RegisterUserHandler(
             $userRepo,
@@ -110,6 +110,7 @@ final class ProvisionContactAccessHandlerTest extends TestCase
             $contactRepo,
             $userRepo,
             $bindingChecker,
+            $publisher,
         );
 
         $generateToken = new GenerateActivationTokenHandler(
@@ -192,7 +193,7 @@ final class ProvisionContactAccessHandlerTest extends TestCase
         $accountNotifier = $this->createMock(AccountNotifierInterface::class);
 
         $publisher = $this->createMock(DomainEventPublisherInterface::class);
-        $publisher->expects($this->exactly(2))->method('publish');
+        $publisher->expects($this->exactly(3))->method('publish');
 
         $registerUser = new RegisterUserHandler(
             $userRepo,
@@ -206,6 +207,7 @@ final class ProvisionContactAccessHandlerTest extends TestCase
             $contactRepo,
             $userRepo,
             $bindingChecker,
+            $publisher,
         );
 
         $generateToken = new GenerateActivationTokenHandler(

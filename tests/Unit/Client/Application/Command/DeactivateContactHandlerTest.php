@@ -9,6 +9,7 @@ use App\Client\Application\Command\DeactivateContact\DeactivateContactHandler;
 use App\Client\Application\Exception\ContactNotFoundException;
 use App\Client\Domain\Entities\Contact;
 use App\Client\Domain\Enums\ContactStatus;
+use App\Client\Domain\Events\ContactDeactivated;
 use App\Client\Domain\Repositories\ContactRepositoryInterface;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
 use App\Client\Domain\ValueObjects\ContactEmailValueObject;
@@ -16,6 +17,7 @@ use App\Client\Domain\ValueObjects\ContactIdValueObject;
 use App\Client\Domain\ValueObjects\ContactPhoneNumberValueObject;
 use App\Client\Domain\ValueObjects\ContactRoleValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
+use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use PHPUnit\Framework\TestCase;
 
 final class DeactivateContactHandlerTest extends TestCase
@@ -46,7 +48,14 @@ final class DeactivateContactHandlerTest extends TestCase
         $contactRepo->method('findById')->willReturn($contact);
         $contactRepo->expects($this->once())->method('save');
 
-        $handler = new DeactivateContactHandler($contactRepo);
+        $eventPublisher = $this->createMock(DomainEventPublisherInterface::class);
+        $eventPublisher->expects($this->once())->method('publish')
+            ->with($this->callback(function (ContactDeactivated $event): bool {
+                return $event->contactId === self::CONTACT_ID_1
+                    && $event->clientId === self::CLIENT_ID;
+            }));
+
+        $handler = new DeactivateContactHandler($contactRepo, $eventPublisher);
         ($handler)(new DeactivateContactCommand(self::CONTACT_ID_1));
 
         self::assertFalse($contact->isActive());
@@ -62,7 +71,14 @@ final class DeactivateContactHandlerTest extends TestCase
         $contactRepo->method('findById')->willReturn($contact);
         $contactRepo->expects($this->once())->method('save');
 
-        $handler = new DeactivateContactHandler($contactRepo);
+        $eventPublisher = $this->createMock(DomainEventPublisherInterface::class);
+        $eventPublisher->expects($this->once())->method('publish')
+            ->with($this->callback(function (ContactDeactivated $event): bool {
+                return $event->contactId === self::CONTACT_ID_1
+                    && $event->clientId === self::CLIENT_ID;
+            }));
+
+        $handler = new DeactivateContactHandler($contactRepo, $eventPublisher);
         ($handler)(new DeactivateContactCommand(self::CONTACT_ID_1));
 
         self::assertFalse($contact->isActive());
@@ -75,7 +91,10 @@ final class DeactivateContactHandlerTest extends TestCase
         $contactRepo->method('findById')->willReturn(null);
         $contactRepo->expects($this->never())->method('save');
 
-        $handler = new DeactivateContactHandler($contactRepo);
+        $eventPublisher = $this->createMock(DomainEventPublisherInterface::class);
+        $eventPublisher->expects($this->never())->method('publish');
+
+        $handler = new DeactivateContactHandler($contactRepo, $eventPublisher);
 
         $this->expectException(ContactNotFoundException::class);
         $this->expectExceptionMessage(self::CONTACT_ID_1);
@@ -91,7 +110,10 @@ final class DeactivateContactHandlerTest extends TestCase
         $contactRepo = $this->createMock(ContactRepositoryInterface::class);
         $contactRepo->method('findById')->willReturn($contact);
 
-        $handler = new DeactivateContactHandler($contactRepo);
+        $eventPublisher = $this->createMock(DomainEventPublisherInterface::class);
+        $eventPublisher->expects($this->never())->method('publish');
+
+        $handler = new DeactivateContactHandler($contactRepo, $eventPublisher);
 
         $this->expectException(\App\Client\Domain\Exceptions\ContactStatusException::class);
         $this->expectExceptionMessage('El contacto ya se encuentra inactivo.');

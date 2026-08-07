@@ -5,19 +5,22 @@ declare(strict_types=1);
 namespace App\Client\Application\Command\LinkUserToContact;
 
 use App\Client\Application\Exception\ContactNotFoundException;
+use App\Client\Domain\Events\ContactUserLinked;
 use App\Client\Domain\Repositories\ContactRepositoryInterface;
 use App\Client\Domain\ValueObjects\ContactIdValueObject;
 use App\Identity\Application\Exception\UserNotFoundException;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;
 use App\Identity\Domain\Service\UserBindingCheckerInterface;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
+use App\Shared\Domain\Event\DomainEventPublisherInterface;
 
 final readonly class LinkUserToContactHandler
 {
     public function __construct(
-        private ContactRepositoryInterface  $contactRepository,
-        private UserRepositoryInterface     $userRepository,
-        private UserBindingCheckerInterface $bindingChecker,
+        private ContactRepositoryInterface    $contactRepository,
+        private UserRepositoryInterface       $userRepository,
+        private UserBindingCheckerInterface   $bindingChecker,
+        private DomainEventPublisherInterface $eventPublisher,
     ) {
     }
 
@@ -41,5 +44,10 @@ final readonly class LinkUserToContactHandler
         $contact->linkUser($userId);
 
         $this->contactRepository->save($contact);
+
+        $this->eventPublisher->publish(new ContactUserLinked(
+            contactId: $command->contactId,
+            userId: $command->userId,
+        ));
     }
 }

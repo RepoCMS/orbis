@@ -8,6 +8,7 @@ use App\Client\Application\Command\LinkUserToContact\LinkUserToContactCommand;
 use App\Client\Application\Command\LinkUserToContact\LinkUserToContactHandler;
 use App\Client\Application\Exception\ContactNotFoundException;
 use App\Client\Domain\Entities\Contact;
+use App\Client\Domain\Events\ContactUserLinked;
 use App\Client\Domain\Repositories\ContactRepositoryInterface;
 use App\Client\Domain\ValueObjects\ClientIdValueObject;
 use App\Client\Domain\ValueObjects\ContactEmailValueObject;
@@ -22,6 +23,7 @@ use App\Identity\Domain\ValueObjects\HashedPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Identity\Domain\ValueObjects\UsernameValueObject;
+use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use PHPUnit\Framework\TestCase;
 
 final class LinkUserToContactHandlerTest extends TestCase
@@ -64,7 +66,14 @@ final class LinkUserToContactHandlerTest extends TestCase
         $bindingChecker = $this->createMock(UserBindingCheckerInterface::class);
         $bindingChecker->expects($this->once())->method('ensureNotBound');
 
-        $handler = new LinkUserToContactHandler($contactRepo, $userRepo, $bindingChecker);
+        $eventPublisher = $this->createMock(DomainEventPublisherInterface::class);
+        $eventPublisher->expects($this->once())->method('publish')
+            ->with($this->callback(function (ContactUserLinked $event): bool {
+                return $event->contactId === self::CONTACT_ID
+                    && $event->userId === self::USER_ID;
+            }));
+
+        $handler = new LinkUserToContactHandler($contactRepo, $userRepo, $bindingChecker, $eventPublisher);
         ($handler)(new LinkUserToContactCommand(
             contactId: self::CONTACT_ID,
             userId: self::USER_ID,
@@ -79,10 +88,14 @@ final class LinkUserToContactHandlerTest extends TestCase
         $contactRepo = $this->createMock(ContactRepositoryInterface::class);
         $contactRepo->method('findById')->willReturn(null);
 
+        $eventPublisher = $this->createMock(DomainEventPublisherInterface::class);
+        $eventPublisher->expects($this->never())->method('publish');
+
         $handler = new LinkUserToContactHandler(
             $contactRepo,
             $this->createMock(UserRepositoryInterface::class),
             $this->createMock(UserBindingCheckerInterface::class),
+            $eventPublisher,
         );
 
         $this->expectException(ContactNotFoundException::class);
@@ -104,10 +117,14 @@ final class LinkUserToContactHandlerTest extends TestCase
         $userRepo = $this->createMock(UserRepositoryInterface::class);
         $userRepo->method('findById')->willReturn(null);
 
+        $eventPublisher = $this->createMock(DomainEventPublisherInterface::class);
+        $eventPublisher->expects($this->never())->method('publish');
+
         $handler = new LinkUserToContactHandler(
             $contactRepo,
             $userRepo,
             $this->createMock(UserBindingCheckerInterface::class),
+            $eventPublisher,
         );
 
         $this->expectException(UserNotFoundException::class);
