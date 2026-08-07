@@ -2,7 +2,26 @@
 
 > **Propósito:** Registro específico de la evolución de Orbis como **AI-Native Repository** — documentación arquitectónica, contexto para agentes, estructura de tablero y convenciones.
 > **Diferencia con CHANGELOG.md:** `CHANGELOG.md` registra cambios de producto/código (features, BCs, tests). Este changelog registra cambios de **documentación arquitectónica y de gobernanza de IA**.
-> **Versión actual:** v1.3.0
+> **Versión actual:** v1.4.0
+
+---
+
+## [v1.4.0] — 2026-08-07 — Ciclo de alineación de specs T01-T03 (Notification, Organization, Client)
+
+### Changed
+
+- **`specs/006-notification/spec.md`** (T01, aprobado por QA-Reviewer) — Reescrito de esqueleto desactualizado (~60% → **~75%**): describe el BC real (Domain 100%, Application 100%: 8 commands / 5 queries, Persistence 100%, Channels 50% con SMS/WhatsApp stubs, Cross-BC ~55%: 107 eventos mapeados, 68 con destinatario, 53 con plantilla; 81 tests). Gaps documentados G-01..G-05.
+- **`specs/001-organization-spec/spec.md`** (T02, aprobado) — Actualizado (~67% → **~90%** verificado contra disco 2026-08-07): 33 commands, 8 queries, 8 controllers, 3 reportes, dashboard completo. 1 corrección aplicada: **G-09** (3 archivos basura `*-DESKTOP-GU1L412.php` en tests: 2 en `tests/Unit/Organization/`, 1 en `tests/Unit/Inventory/Application/Query/`). Gaps G-06..G-14, **G-06 crítico** (parámetros fantasma en `ListEmployeesQuery` → `Error: Unknown named parameter`).
+- **`specs/002-client/spec.md`** + **`specs/002-client/tasks.md`** (T03, aprobado) — Actualizado (~70% → **~92%**): 37 commands, 16 queries, **43 rutas API**, **4 importers** (CONTEXT.md §2 corregido de 3), 2 reportes, 84 tests. 1 corrección aplicada: **G-11** (falso negativo del wiring-check por FQCN importado). Gaps G-04 (cascada Contact→User rota), G-06, G-10, G-11.
+- **CONTEXT.md** — §2 tabla maestra (Notification ~75%, Organization ~90%, Client ~92%, Client importers 3→4, tests reales), §3 discrepancias specs, §7 Blockers (B3-B5 resueltos; nuevos B6-G-06, B7-G-04, B8-punto ciego wiring-check), §10 próximos pasos.
+
+### Added (deuda detectada → tablero)
+
+- **T30** — G-06 crítico `ListEmployeesQuery` (parámetros fantasma) · **T31** — G-04 cascada Contact→User · **T32** — punto ciego de `bin/wiring-check.php` · **T33** — gaps Notification G-01..G-05 · **T34** — gaps Organization G-07..G-14 · **T35** — gaps Client G-06/G-10/G-11.
+
+### Known issue (hallazgo estructural)
+
+- **`bin/wiring-check.php` tiene un punto ciego**: no detecta Queries huérfanas cuyo handler pareja importe su FQCN (verificado: `ListContactsByClientQuery` pasa el gate con 0 huérfanos pese a no tener caller). Documentado como deuda (T32) — el gate es condición necesaria pero no suficiente para la regla 11.
 
 ---
 

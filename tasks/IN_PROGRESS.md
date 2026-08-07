@@ -1,10 +1,10 @@
 # tasks/IN_PROGRESS.md — Trabajo en Curso
 
-> **Actualizado:** 2026-08-06
+> **Actualizado:** 2026-08-07
 
 ---
 
-## En curso: Enforcement de máquina — ciclo de bases (spec 014, 2026-08-06)
+## En curso: Enforcement de máquina — ciclo de bases (spec 014, 2026-08-06) + ciclo de alineación de specs T01-T03
 
 **Objetivo:** el agente propone, la máquina decide. Contrato (DoR/DoD), calidad estática y CI como gates en cada PR.
 
@@ -16,20 +16,31 @@
 | 2 | `phpstan.neon` nivel 5 + baseline (159 errores) | ✅ | `phpstan-baseline.neon` versionado |
 | 3 | `.php-cs-fixer.dist.php` PSR-12 + reglas | ✅ | 2020/2360 archivos normalizados |
 | 4 | Composer scripts (test, stan, cs, wiring, validate, audit, check) | ✅ | composer.json |
-| 5 | `bin/wiring-check.php` — 346 targets, 0 huérfanos | ✅ | exit 0 verificado |
-| 6 | `bin/validate-project.php` + baseline — 0 errores, 6 warnings | ✅ | exit 2 verificado |
+| 5 | `bin/wiring-check.php` — 346 targets, 0 huérfanos | ✅ | exit 0 verificado 2026-08-07 |
+| 6 | `bin/validate-project.php` + baseline — 0 errores, 6 warnings | ✅ | exit 2 verificado 2026-08-07 |
 | 7 | `.github/workflows/ci.yml` (5 jobs) | ✅ | archivo creado |
 | 8 | `.github/workflows/security.yml` (composer audit) | ✅ | archivo creado |
 | 9 | AGENTS.md gates + DoD referenciados | ✅ | §Workflow + Regla de gates |
 | 10 | CONTEXT.md + tasks/ + CHANGELOG_AI v1.3.0 | ✅ | actualizados |
-| 11 | Commit + push a main | ⬜ | pendiente |
+| 11 | Commit + push a main | ✅ | commit `29c4d83` (2026-08-06) |
+
+### Ciclo T01-T03 (2026-08-07): alineación de specs con discrepancia
+
+| Tarea | Spec | Estado | Evidencia |
+|-------|------|--------|-----------|
+| T01 | `006-notification` (~60% → ~75%) | ✅ Aprobada por QA-Reviewer | spec.md + 81 tests OK |
+| T02 | `001-organization-spec` (~67% → ~90%) | ✅ Aprobada (corrección G-09: 3 archivos basura) | spec.md + gates verdes |
+| T03 | `002-client` (~92%, antes ~70%) | ✅ Aprobada (corrección G-11: falso negativo wiring-check) | spec.md + tasks.md + 84 tests OK |
 
 ### Próximos pasos inmediatos
 
-1. Commit + push del ciclo (verificado local: test 2033 ✅, stan ✅, cs ✅, wiring ✅, validate ✅).
-2. Probar el CI real en GitHub (primer push activa los 5 jobs).
-3. Continuar con T01-T03 (specs de BCs con discrepancia) bajo el nuevo flujo con PR + CI.
-4. Deuda detectada por gates: T24-T29 (enums UPPERCASE, VOs, baseline PHPStan, dompdf, coverage).
+1. Implementar **G-06 (crítico)** — corregir `ListEmployeesQuery` (parámetros fantasma → `Error: Unknown named parameter`); desbloquea API list de Organization + cross-BC (Custody, Expense, Support). → T30
+2. Implementar **G-04 Client** — reparar cascada Contact→User (eventos nunca publicados). → T31
+3. Corregir **punto ciego de `bin/wiring-check.php`** (no detecta Queries huérfanas con handler pareja que importe su FQCN — verificado con `ListContactsByClientQuery`). → T32
+4. Continuar con gaps restantes de Notification (T33), Organization (T34) y Client (T35).
+5. Probar el CI real en GitHub (primer push activa los 5 jobs).
+6. Deuda detectada por gates: T24-T29 (enums UPPERCASE, VOs, baseline PHPStan, dompdf, coverage).
+7. ⚠️ **Pendiente de commit:** specs T01-T03 + este ciclo de documentación (CONTEXT.md, tasks/, CHANGELOG_AI).
 
 ---
 

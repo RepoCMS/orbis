@@ -2,9 +2,9 @@
 
 > **Propósito:** Este documento es la referencia que toda IA, agente o desarrollador debe consultar antes de actuar. Contiene el estado REAL del proyecto. AGENTS.md (reglas de código) ya no publica % de BCs — esta es la única tabla de estado.
 >
-> **Actualizado:** 2026-08-06
+> **Actualizado:** 2026-08-07
 > **Rama activa:** `main` (remote: `https://github.com/RepoCMS/orbis.git`)
-> **Último commit:** ciclo de enforcement de máquina (spec 014) — gates CI, PHPStan, CS-Fixer, wiring check
+> **Último commit:** `29c4d83` — ciclo de enforcement de máquina (spec 014), gates CI, PHPStan, CS-Fixer, wiring check. Specs T01-T03 actualizados y aprobados el 2026-08-07 (ver §2/§3) — pendientes de commit
 
 ---
 
@@ -35,13 +35,13 @@
 | BC | Spec Status (real) | AGENTS.md decía (pre-refactor 2026-08-05) | Tests reales | Commands (reales) | Queries (reales) | Controllers (reales) | Reportes | Importers | Dashboard |
 |----|--------------------|----------------|-------------|-------------------|------------------|---------------------|----------|-----------|-----------|
 | **Identity** | ~85% | ~97% | 77 | 32 | 13 | 15 | 1 (SecurityEvents) | 1 (Import Users) | ✅ Web + API |
-| **Client** | ~70% | ~96% | 79 | 37 | 16 | 18 | 2 (ContractsExpiring, TerminalsByClient) | 3 (Clientes, Terminales, Modelos) | ✅ Web + API |
-| **Organization** | ~67% | ~99% | 61 | 33 | 8 | 8 | 3 (ActivePersonnel, Overtime, ScheduledVacations) | 1 (Import Employees) | ✅ Web + API |
+| **Client** | ~92% | ~96% | 84 | 37 | 16 | 18 | 2 (ContractsExpiring, TerminalsByClient) | 4 (Clientes, Terminales, Modelos, Partes de Modelo) | ✅ Web + API |
+| **Organization** | ~90% | ~99% | 61 | 33 | 8 | 8 | 3 (ActivePersonnel, Overtime, ScheduledVacations) | 1 (Import Employees) | ✅ Web + API |
 | **Support** | ~85% | ~98% | 93 | 35 | 20 | 12 | 2 (Technician, TicketsByClient) | 0 | ✅ Web + API |
 | **Inventory** | ~95% | ~96% | 96 | 60 | 29 | 28 | 4 (ValuedInventory, Movement, ResignationReturn, PhysicalCount) | 3 (Productos, Stock serializado, Stock no serializado) | ✅ API + Web |
 | **Expense** | 100% | 100% | 30 | 15 | 8 | 5 | 2 (Expense, Advance) | 1 (Import Operating Expenses) | ✅ Web + API |
 | **Location** | ~95% | 100% | 7 | — | — | 1 | — | — | ❌ API-only |
-| **Notification** | ~60% | ~95% | 8 | 8 | 5 | 8 | — | — | ✅ Web + API |
+| **Notification** | ~75% | ~95% | 81 | 8 | 5 | 8 | — | — | ✅ Web + API |
 | **Cross-BC** | ~90% | ~98% | — | — | — | — | — | — | — |
 | **010a Employee-User** | ~95% | ~98% | 3 | — | — | — | — | — | — |
 | **010b SparePart Scope** | ~95% | ~98% | 1 | — | — | — | — | — | — |
@@ -49,13 +49,15 @@
 | **012 Multi-Item Request** | 100% | 100% | 75 | — | — | — | — | — | — |
 | **013 ATM Module Tree** | 100% | 100% | 18 | — | — | — | — | — | ✅ Web |
 
+> **Nota de verificación (2026-08-07):** % de Client, Organization y Notification actualizados tras el ciclo de alineación de specs T01-T03 (specs `002-client`, `001-organization-spec`, `006-notification` aprobados por QA-Reviewer). Verificado con CodeGraph + phpunit (696 tests de los 3 BCs OK) + wiring-check (346 targets, 0 huérfanos).
+
 ### Discrepancias históricas (AGENTS.md pre-refactor vs realidad)
 
 | # | BC | AGENTS.md dice | Real | Impacto |
 |---|----|----------------|------|---------|
-| 1 | **Client** | ~96% | ~70% | AGENTS.md sobreestima en 26 puntos. Una IA que lea AGENTS.md cree que Client está casi listo cuando aún tiene gaps importantes. |
-| 2 | **Organization** | ~99% | ~67% | AGENTS.md sobreestima en 32 puntos. Organization tiene mucho código pero specs incompletos. |
-| 3 | **Notification** | ~95% | ~60% | AGENTS.md sobreestima en 35 puntos. Notification BC tiene código pero la spec no refleja el progreso real. |
+| 1 | **Client** | ~96% | ~92% (antes ~70%) | ✅ Spec `002-client` alineada 2026-08-07 (T03). Discrepancia residual de 4 puntos por gaps funcionales (G-04, G-10, G-11). |
+| 2 | **Organization** | ~99% | ~90% (antes ~67%) | ✅ Spec `001-organization-spec` alineada 2026-08-07 (T02). Discrepancia residual de 9 puntos (G-06 crítico bloquea list API). |
+| 3 | **Notification** | ~95% | ~75% (antes ~60%) | ✅ Spec `006-notification` alineada 2026-08-07 (T01). Discrepancia residual de 20 puntos: cadena cross-BC ~55% funcional (68/107 con destinatario, 53/107 con plantilla). |
 | 4 | **Identity** | ~97% | ~85% | AGENTS.md sobreestima en 12 puntos. Identity tiene dashboards pendientes y algunos KPIs sin implementar. |
 | 5 | **Support** | ~98% | ~85% | AGENTS.md sobreestima en 13 puntos. |
 | 6 | **Support tests** | 89 files | 93 files | Menor, pero AGENTS.md subestima. |
@@ -74,12 +76,12 @@
 | `012-multi-item-request` | Implemented (100%) | ✅ Completo | Match |
 | `013-atm-module-tree` | Implementado — 100% | ✅ Completo | Match |
 | `001-identity-spec` | In Development (~85%) | Dashboard KPIs pendientes | AGENTS.md dice ~97% — discrepancia |
-| `001-organization-spec` | In Development (~67%) | Reportes P2 pendientes | AGENTS.md dice ~99% — gran discrepancia |
-| `002-client` | In Development (~70%) | Importers P2/P3 pendientes | AGENTS.md dice ~96% — gran discrepancia |
+| `001-organization-spec` | Aprobado (~90% — verificado 2026-08-07) | Reportes P2 + gaps G-06..G-14 (G-06 crítico: parámetros fantasma en ListEmployeesQuery) | ✅ Spec alineada (T02) — implementar gaps |
+| `002-client` | Aprobado (~92% — verificado 2026-08-07) | 43 rutas API, 4 importers, 84 tests; gaps G-04 (cascada Contact→User), G-10, G-11 | ✅ Spec alineada (T03) — implementar gaps |
 | `003-support` | In Development (~85%) | Scoping parcial | AGENTS.md dice ~98% — discrepancia |
 | `004-inventory` | Implementado (~95%) | Casi completo | AGENTS.md dice ~96% — aceptable |
 | `005-location` | Completado ~95% | API-only, sin tests | AGENTS.md dice 100% — discrepancia |
-| `006-notification` | In Development (~60%) | Cross-BC wiring pendiente | AGENTS.md dice ~95% — gran discrepancia |
+| `006-notification` | Aprobado (~75% — verificado 2026-08-07) | Cross-BC wiring ~55% (107 eventos mapeados, 68 con destinatario, 53 con plantilla); gaps G-01..G-05 (G-03: retry no re-despacha) | ✅ Spec alineada (T01) — implementar gaps |
 | `009-cross-bc` | Completado ~90% | Integration tests OK | AGENTS.md dice ~98% — discrepancia |
 
 ---
@@ -186,10 +188,13 @@ cat tasks/IN_PROGRESS.md
 | #70 | Seed missing permissions | Dashboards/reports inaccesibles | ✅ Resuelto |
 | #42 | bcrypt vs argon2 decisión | Password hashing | ❓ Pendiente |
 | B1 | `ClientContractExpiringReportGenerator` nombre incorrecto en TODOS.md | Confusión de agentes | ⚠️ Nombrar correctamente |
-| B2 | 5 specs con discrepancia vs AGENTS.md | IAs leen status incorrecto | ⚠️ Corregir AGENTS.md |
-| B3 | Notification BC ~60% pero AGENTS.md dice ~95% | IAs sobreestiman progreso | ⚠️ Actualizar AGENTS.md |
-| B4 | Organization BC ~67% pero AGENTS.md dice ~99% | IAs sobreestiman progreso | ⚠️ Actualizar AGENTS.md |
-| B5 | Client BC ~70% pero AGENTS.md dice ~96% | IAs sobreestiman progreso | ⚠️ Actualizar AGENTS.md |
+| B2 | 5 specs con discrepancia vs AGENTS.md | IAs leen status incorrecto | ✅ Specs de Client/Organization/Notification alineadas 2026-08-07 (T01-T03); restan Identity y Support |
+| B3 | Notification BC ~60% pero AGENTS.md dice ~95% | IAs sobreestiman progreso | ✅ Spec `006-notification` aprobada (~75%) 2026-08-07 (T01) |
+| B4 | Organization BC ~67% pero AGENTS.md dice ~99% | IAs sobreestiman progreso | ✅ Spec `001-organization-spec` aprobada (~90%) 2026-08-07 (T02) |
+| B5 | Client BC ~70% pero AGENTS.md dice ~96% | IAs sobreestiman progreso | ✅ Spec `002-client` aprobada (~92%) 2026-08-07 (T03) |
+| B6 | **G-06 (crítico)**: `ListEmployeesQuery` con parámetros fantasma (`serviceZoneId`, `q`, `page`, `limit`) → `Error: Unknown named parameter` en runtime | Bloquea API list de Organization + cross-BC (Custody, Expense, Support) | 🔴 Crítico — tarea T30 |
+| B7 | **G-04 Client**: cascada Contact→User rota (eventos nunca publicados) | Desactivación de cliente no propaga a User | 🔴 ALTA — tarea T31 |
+| B8 | **Punto ciego `bin/wiring-check.php`**: no detecta Queries huérfanas cuyo handler pareja importe su FQCN (verificado con `ListContactsByClientQuery`) | Gate de wiring da falsos negativos (regla 11) | ⚠️ Deuda — tarea T32 |
 
 ---
 
@@ -254,9 +259,12 @@ src/app/{BC}/
 
 1. **[URGENTE]** Corregir AGENTS.md — actualizar porcentajes de 5 BCs con discrepancia. ✅ Verificado 2026-08-05
 2. **[URGENTE]** Corregir nombre `ClientContractExpiringReportGenerator` → `ContractsExpiringReportGenerator` en TODOS.md. ✅ Corregido 2026-08-05
-3. **[ALTA]** Configurar remote GitHub (sin él, el handoff push/pull no funciona). Ver HANDOFF.md §13.
-4. **[ALTA]** Completar specs de Notification BC (~60% → objetivo 95%).
-5. **[ALTA]** Completar specs de Organization BC (~67% → objetivo 95%).
-6. **[ALTA]** Completar specs de Client BC (~70% → objetivo 95%).
-7. **[MEDIA]** Implementar Identity Dashboard KPIs (pendientes según TODOS.md).
-8. **[BAJA]** Actualizar `.opencode/opencode.jsonc` con roles de agentes si se expande. ✅ Hecho 2026-08-05: `.opencode/agent/{planner,qa-reviewer,developer,test-engineer,frontend,security-reviewer,docs}.md`
+3. **[ALTA]** Configurar remote GitHub (sin él, el handoff push/pull no funciona). Ver HANDOFF.md §13. ✅ Hecho 2026-08-06
+4. **[ALTA]** Completar specs de Notification BC (~60% → objetivo 95%). ✅ Spec `006-notification` aprobada (~75%) 2026-08-07 — implementar gaps G-01..G-05 (ver §7 B6-B8).
+5. **[ALTA]** Completar specs de Organization BC (~67% → objetivo 95%). ✅ Spec `001-organization-spec` aprobada (~90%) 2026-08-07 — implementar gaps G-06..G-14 (G-06 crítico, ver §7 B6).
+6. **[ALTA]** Completar specs de Client BC (~70% → objetivo 95%). ✅ Spec `002-client` aprobada (~92%) 2026-08-07 — implementar gaps G-04, G-06, G-10, G-11 (ver §7 B7).
+7. **[URGENTE]** Implementar **G-06** (crítico): corregir `ListEmployeesQuery` (parámetros fantasma) — desbloquea API list de Organization y cross-BC (Custody, Expense, Support). → tarea T30
+8. **[ALTA]** Implementar **G-04 Client**: reparar cascada Contact→User (eventos nunca publicados). → tarea T31
+9. **[ALTA]** Corregir **punto ciego de `bin/wiring-check.php`** (queries huérfanas con handler pareja que importe su FQCN). → tarea T32
+10. **[MEDIA]** Implementar Identity Dashboard KPIs (pendientes según TODOS.md).
+11. **[BAJA]** Actualizar `.opencode/opencode.jsonc` con roles de agentes si se expande. ✅ Hecho 2026-08-05: `.opencode/agent/{planner,qa-reviewer,developer,test-engineer,frontend,security-reviewer,docs}.md`

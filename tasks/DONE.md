@@ -1,6 +1,6 @@
 # tasks/DONE.md — Trabajo Completado
 
-> **Actualizado:** 2026-08-06
+> **Actualizado:** 2026-08-07
 > Tabla cronológica de tareas/hitos cerrados. Fuente = evidencia (git commit, CONTEXT.md, docs/history.md, CHANGELOG.md).
 
 ---
@@ -9,6 +9,9 @@
 
 | Fecha | Tarea | Fuente |
 |-------|-------|--------|
+| 2026-08-07 | **T01 — Spec de Notification BC aprobada**: `specs/006-notification/spec.md` actualizado (~60% → ~75% verificado). Estado real: Domain 100%, Application 100% (8 commands, 5 queries), Persistence 100%, Channels 50% (SMS/WhatsApp stubs), Cross-BC ~55% (107 eventos mapeados, 68 con destinatario, 53 con plantilla), 81 tests. Gaps documentados G-01..G-05 → tablero T33 | QA-Reviewer aprobó spec; wiring 346/0; phpunit Notification OK |
+| 2026-08-07 | **T02 — Spec de Organization BC aprobada**: `specs/001-organization-spec/spec.md` actualizado (~67% → ~90% verificado, 1 corrección: G-09 archivos basura). 33 commands, 8 queries, 8 controllers, 3 reportes, dashboard completo. Gaps G-06..G-14 (G-06 crítico) → tablero T30/T34 | QA-Reviewer aprobó spec; 3 archivos basura `*-DESKTOP-GU1L412.php` verificados en filesystem |
+| 2026-08-07 | **T03 — Spec de Client BC aprobada**: `specs/002-client/spec.md` + `tasks.md` actualizados (~70% → ~92% verificado, 1 corrección: G-11 falso negativo de wiring-check). 37 commands, 16 queries, 43 rutas API, **4 importers** (CONTEXT.md §2 corregido de 3), 2 reportes, 84 tests. Gaps G-04, G-06, G-10, G-11 → tablero T31/T35 | QA-Reviewer aprobó spec; 4 importers verificados en filesystem |
 | 2026-08-06 | **Enforcement de máquina (spec 014)**: spec de gobernanza (DoR/DoD + gates), PHPStan nivel 5 + baseline (159), PHP-CS-Fixer (2020 archivos corregidos), `bin/wiring-check.php` (346 targets, 0 huérfanos), `bin/validate-project.php` (reglas Apéndice A automatizables + baseline), composer scripts (`test/stan/cs/wiring/validate/audit/check`), CI GitHub Actions (5 jobs + security audit). Fixes: strict_types en Kernel, `ListClientsQuery` final readonly, `SeedDevCommand` sin password hardcodeado (`ORBIS_DEV_SEED_PASSWORD`) | phpunit 2033 tests verdes, phpstan OK, validate exit 2 (6 warnings baseline) |
 | 2026-08-06 | **Regla global vs repo**: AGENTS.md §Configuración global vs repo (agentes/skills globales en `~/.agents/`, prohibido duplicar en repo; excepciones `.codex/agents/*.toml` + `.ai/*.md`) + regla universal en `~/.agents/context/AGENTS.md`. Limpieza: `.claude/skills/` y `.opencode/agent/` sobrantes del repo eliminados | git, CHANGELOG_AI v1.2.0 |
 | 2026-08-06 | **Hub global de agentes/skills (`~/.agents/`)**: fuente única multi-herramienta (opencode, Claude Code, Codex) con junctions (planner, qa-reviewer, developer, test-engineer, frontend, security-reviewer, docs + skills find-skills/frontend-design/caveman + context). `~/.agents/sync.ps1` idempotente. Wrappers `.opencode/agent/` y `.claude/skills/` del repo movidos a global; `.codex/agents/*.toml` generados por proyecto (cargar `.ai/{rol}.md`) | filesystem (junctions), git (deletions) |
