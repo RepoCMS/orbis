@@ -192,8 +192,8 @@ cat tasks/IN_PROGRESS.md
 | B3 | Notification BC ~60% pero AGENTS.md dice ~95% | IAs sobreestiman progreso | ✅ Spec `006-notification` aprobada (~75%) 2026-08-07 (T01) |
 | B4 | Organization BC ~67% pero AGENTS.md dice ~99% | IAs sobreestiman progreso | ✅ Spec `001-organization-spec` aprobada (~90%) 2026-08-07 (T02) |
 | B5 | Client BC ~70% pero AGENTS.md dice ~96% | IAs sobreestiman progreso | ✅ Spec `002-client` aprobada (~92%) 2026-08-07 (T03) |
-| B6 | **G-06 (crítico)**: `ListEmployeesQuery` con parámetros fantasma (`serviceZoneId`, `q`, `page`, `limit`) → `Error: Unknown named parameter` en runtime | Bloquea API list de Organization + cross-BC (Custody, Expense, Support) | 🔴 Crítico — tarea T30 |
-| B7 | **G-04 Client**: cascada Contact→User rota (eventos nunca publicados) | Desactivación de cliente no propaga a User | 🔴 ALTA — tarea T31 |
+| B6 | **G-06 (crítico)**: `ListEmployeesQuery` con parámetros fantasma → `Error: Unknown named parameter` en runtime | Bloquea API list de Organization + cross-BC (Custody, Expense, Support) | ✅ Resuelto — T30 (commit `b5a860e`, 2026-08-07) |
+| B7 | **G-04 Client**: cascada Contact→User rota (eventos nunca publicados) | Desactivación de cliente no propaga a User | ✅ Resuelto — T31 (commit `d15eab3`, 2026-08-07) |
 | B8 | **Punto ciego `bin/wiring-check.php`**: no detecta Queries huérfanas cuyo handler pareja importe su FQCN (verificado con `ListContactsByClientQuery`) | Gate de wiring da falsos negativos (regla 11) | ⚠️ Deuda — tarea T32 |
 
 ---
@@ -262,9 +262,9 @@ src/app/{BC}/
 3. **[ALTA]** Configurar remote GitHub (sin él, el handoff push/pull no funciona). Ver HANDOFF.md §13. ✅ Hecho 2026-08-06
 4. **[ALTA]** Completar specs de Notification BC (~60% → objetivo 95%). ✅ Spec `006-notification` aprobada (~75%) 2026-08-07 — implementar gaps G-01..G-05 (ver §7 B6-B8).
 5. **[ALTA]** Completar specs de Organization BC (~67% → objetivo 95%). ✅ Spec `001-organization-spec` aprobada (~90%) 2026-08-07 — implementar gaps G-06..G-14 (G-06 crítico, ver §7 B6).
-6. **[ALTA]** Completar specs de Client BC (~70% → objetivo 95%). ✅ Spec `002-client` aprobada (~92%) 2026-08-07 — implementar gaps G-04, G-06, G-10, G-11 (ver §7 B7).
-7. **[URGENTE]** Implementar **G-06** (crítico): corregir `ListEmployeesQuery` (parámetros fantasma) — desbloquea API list de Organization y cross-BC (Custody, Expense, Support). → tarea T30
-8. **[ALTA]** Implementar **G-04 Client**: reparar cascada Contact→User (eventos nunca publicados). → tarea T31
+6. **[ALTA]** Completar specs de Client BC (~70% → objetivo 95%). ✅ Spec `002-client` aprobada (~92%) 2026-08-07 — implementar gaps G-06, G-10, G-11 (G-04 ✅ T31, ver §7 B7).
+7. ✅ **G-06** (crítico) implementado — T30 (commit `b5a860e`): `ListEmployeesQuery` con paginación real + filtros (`serviceZoneId`/`page`/`limit`); API list de Organization y cross-BC desbloqueadas.
+8. ✅ **G-04 Client** implementado — T31 (commit `d15eab3`): cascada Contact→User operativa (handlers publican `ContactDeactivated`/`ContactReactivated`/`ContactUserLinked`).
 9. **[ALTA]** Corregir **punto ciego de `bin/wiring-check.php`** (queries huérfanas con handler pareja que importe su FQCN). → tarea T32
 10. **[MEDIA]** Implementar Identity Dashboard KPIs (pendientes según TODOS.md).
 11. **[BAJA]** Actualizar `.opencode/opencode.jsonc` con roles de agentes si se expande. ✅ Hecho 2026-08-05: `.opencode/agent/{planner,qa-reviewer,developer,test-engineer,frontend,security-reviewer,docs}.md`

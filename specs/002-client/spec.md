@@ -183,8 +183,8 @@ Responsabilidades:
 | C‑05 | `DeleteClient` | Soft delete cliente | API + Web |
 | C‑06 | `AddContact` | Agrega contacto a cliente | API + Web |
 | C‑07 | `UpdateContact` | Actualiza datos de contacto + publica `ContactUpdated` | API + Web |
-| C‑08 | `DeactivateContact` | Desactiva contacto. ⚠️ NO publica `ContactDeactivated` (la cascada Contact→User está inerte — G‑04) | API + Web |
-| C‑09 | `ReactivateContact` | Reactiva contacto. ⚠️ NO publica `ContactReactivated` | API + Web |
+| C‑08 | `DeactivateContact` | Desactiva contacto + publica `ContactDeactivated` (T31) | API + Web |
+| C‑09 | `ReactivateContact` | Reactiva contacto + publica `ContactReactivated` (T31) | API + Web |
 | C‑10 | `SoftDeleteContact` | Soft delete contacto | API + Web |
 | C‑11 | `LinkUserToContact` | Vincula User de Identity a Contact | API + Web |
 | C‑12 | `UnlinkUserFromContact` | Desvincula User + publica `ContactUserUnlinked` | API + Web |
@@ -272,9 +272,9 @@ Responsabilidades:
 | `ClientSaleOrderCompleted` | ⚠️ **dead event** — sin publisher en todo el código (G‑09) | Notification |
 | `ContactAdded` | ⚠️ sin publisher (C‑06 no lo publica) | Notification |
 | `ContactUpdated` | `UpdateContactHandler` | Notification |
-| `ContactDeactivated` | ⚠️ sin publisher (C‑08 no lo publica) → **cascada Contact→User inerte** (G‑04) | Notification + `ContactStatusCascadeHandler` |
-| `ContactReactivated` | ⚠️ sin publisher (C‑09 no lo publica) → **cascada inerte** (G‑04) | Notification + `ContactStatusCascadeHandler` |
-| `ContactUserLinked` | ⚠️ sin publisher (C‑11 no lo publica) | Notification |
+| `ContactDeactivated` | `DeactivateContactHandler` (C‑08, T31) → **cascada Contact→User activa** | Notification + `ContactStatusCascadeHandler` |
+| `ContactReactivated` | `ReactivateContactHandler` (C‑09, T31) → **cascada activa** | Notification + `ContactStatusCascadeHandler` |
+| `ContactUserLinked` | `LinkUserToContactHandler` (C‑11, T31) | Notification |
 | `ContactUserUnlinked` | `UnlinkUserFromContactHandler` | Notification |
 | `ContactAccessProvisioned` | `ProvisionContactAccessHandler` | Notification |
 | `TerminalRegistered` | ⚠️ sin publisher (C‑14 no lo publica) | Notification |
@@ -293,7 +293,7 @@ Responsabilidades:
 | `WarrantyExpired` | ⚠️ sin publisher — `CheckExpiringWarrantiesCommand` solo imprime (G‑08) | Notification |
 | `SlaPolicyCreated` | ⚠️ **dead event** — sin publisher en todo el código (G‑09) | Notification |
 
-**Subscriber intra-BC:** `ContactStatusCascadeHandler` (`Infrastructure/Messenger/Handler/`, `#[AsMessageHandler]` async) — cascada Contact → User (REQ-CST-002). Escucha `ContactDeactivated` / `ContactReactivated`. ⚠️ **Nunca se dispara con el código actual** porque ningún handler publica esos eventos (G‑04).
+**Subscriber intra-BC:** `ContactStatusCascadeHandler` (`Infrastructure/Messenger/Handler/`, `#[AsMessageHandler]` async) — cascada Contact → User (REQ-CST-002). Escucha `ContactDeactivated` / `ContactReactivated` (publicados por C‑08/C‑09, T31).
 
 ---
 
@@ -385,7 +385,7 @@ Responsabilidades:
 | Evento/Subscriber | Caller real |
 |-------------------|-------------|
 | 29 Domain Events | Publisher: handlers de §6 (16 reales). Consumidor: `Notification/.../CrossBcDomainEventHandler.php` (routing async_events en `messenger.yaml`) |
-| `ContactStatusCascadeHandler` | `#[AsMessageHandler]` (Messenger) — escucha `ContactDeactivated`/`ContactReactivated` (⚠️ sin publisher — G‑04) |
+| `ContactStatusCascadeHandler` | `#[AsMessageHandler]` (Messenger) — escucha `ContactDeactivated`/`ContactReactivated` (publicados por C‑08/C‑09, T31) |
 
 ### 8.4 Reportes → Callers
 
@@ -532,7 +532,7 @@ Responsabilidades:
 
 | # | Gap | Prioridad | Detalle |
 |---|-----|-----------|---------|
-| G‑04 | **Publicación inconsistente de Domain Events** | 🔴 Alta | Solo 16 de 29 eventos se publican. `RegisterClient`, `UpdateClient`, `Activate/DeactivateClient`, `DeleteClient`, `AddContact`, `Deactivate/ReactivateContact`, `LinkUserToContact`, `RegisterTerminal` NO publican sus eventos. La **cascada Contact→User (REQ-CST-002) está inerte**: `ContactStatusCascadeHandler` escucha `ContactDeactivated`/`ContactReactivated` que nunca se emiten → CL‑05/CL‑10 no se cumplen de facto |
+| G‑04 | **Publicación inconsistente de Domain Events** | 🟡 Media | **Cascada Contact→User ✅ resuelta (T31)** — `DeactivateContact`/`ReactivateContact`/`LinkUserToContact` publican sus eventos (CL‑05/CL‑10 operativas). Pendiente (19/29 publicados): `RegisterClient`, `UpdateClient`, `Activate/DeactivateClient`, `DeleteClient`, `AddContact`, `RegisterTerminal` aún no publican |
 | G‑08 | **`WarrantyExpired` sin publisher** | 🟡 Media | `CheckExpiringWarrantiesCommand` detecta garantías próximas a vencer pero solo imprime; el evento `WarrantyExpired` (consumido por Notification) nunca se publica |
 | G‑09 | **Dead events** | 🟡 Media | `ClientSaleOrderCreated`, `ClientSaleOrderCompleted`, `SlaPolicyCreated` definidos y consumidos por Notification pero sin ningún publisher en todo el código |
 | G‑10 | **Bug SQL en dashboard (KPIs de contactos)** | 🟡 Media | `GetClientDashboardSummaryHandler::countActiveContacts()` y `contactsByStatus()` consultan tabla `contacts`; el mapping real es `client_contacts` → error/resultado incorrecto en runtime |
@@ -550,7 +550,7 @@ Responsabilidades:
 | **Domain** | Entities | 9 (Client, Contact, Terminal, TerminalAssignment, Site, Contract, TerminalModel, TerminalWarranty, ModelPart) | ✅ |
 | **Domain** | ValueObjects | 17 | ✅ |
 | **Domain** | Enums | 10 | ✅ |
-| **Domain** | Domain Events | 29 definidos (16 publicados) | ⚠️ G‑04/G‑08/G‑09 |
+| **Domain** | Domain Events | 29 definidos (19 publicados) | ⚠️ G‑04 (parcial)/G‑08/G‑09 |
 | **Domain** | Repository interfaces | 8 | ✅ |
 | **Domain** | Exceptions | 22 | ✅ |
 | **Application** | Commands | 37 (35 sync + 2 async) | ✅ |

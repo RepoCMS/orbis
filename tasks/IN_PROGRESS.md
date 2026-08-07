@@ -34,13 +34,13 @@
 
 ### Próximos pasos inmediatos
 
-1. Implementar **G-06 (crítico)** — corregir `ListEmployeesQuery` (parámetros fantasma → `Error: Unknown named parameter`); desbloquea API list de Organization + cross-BC (Custody, Expense, Support). → T30
-2. Implementar **G-04 Client** — reparar cascada Contact→User (eventos nunca publicados). → T31
+1. ✅ **G-06 (crítico)** implementado — `ListEmployeesQuery` con paginación real + filtros (`serviceZoneId`/`page`/`limit`); API list de Organization + cross-BC desbloqueadas. → commit `b5a860e` (T30)
+2. ✅ **G-04 Client** implementado — cascada Contact→User operativa (REQ-CST-002). → commit `d15eab3` (T31)
 3. Corregir **punto ciego de `bin/wiring-check.php`** (no detecta Queries huérfanas con handler pareja que importe su FQCN — verificado con `ListContactsByClientQuery`). → T32
 4. Continuar con gaps restantes de Notification (T33), Organization (T34) y Client (T35).
 5. Probar el CI real en GitHub (primer push activa los 5 jobs).
 6. Deuda detectada por gates: T24-T29 (enums UPPERCASE, VOs, baseline PHPStan, dompdf, coverage).
-7. ✅ Commit + push del ciclo: `7d8e4fa` (specs T01-T03 + CONTEXT.md + tasks/ + CHANGELOG_AI v1.4.0), pusheado 2026-08-07.
+7. ✅ Commits del ciclo: `7d8e4fa` (specs T01-T03), `b5a860e` (T30), `d15eab3` (T31), pusheados a origin main 2026-08-07.
 
 ---
 
