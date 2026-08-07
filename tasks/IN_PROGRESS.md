@@ -40,7 +40,7 @@
 4. Continuar con gaps restantes de Notification (T33), Organization (T34) y Client (T35).
 5. Probar el CI real en GitHub (primer push activa los 5 jobs).
 6. Deuda detectada por gates: T24-T29 (enums UPPERCASE, VOs, baseline PHPStan, dompdf, coverage).
-7. ⚠️ **Pendiente de commit:** specs T01-T03 + este ciclo de documentación (CONTEXT.md, tasks/, CHANGELOG_AI).
+7. ✅ Commit + push del ciclo: `7d8e4fa` (specs T01-T03 + CONTEXT.md + tasks/ + CHANGELOG_AI v1.4.0), pusheado 2026-08-07.
 
 ---
 

@@ -13,6 +13,9 @@ final readonly class ListEmployeesQuery
         public ?EmployeeProfile $profile = null,
         public ?EmployeeStatus $status = null,
         public ?string $search = null,
+        public ?string $serviceZoneId = null,
+        public int $page = 1,
+        public ?int $limit = null,
     ) {
     }
 }

@@ -11,6 +11,7 @@ use App\Organization\Domain\Enums\EmployeeStatus;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 
 final class DoctrineEmployeeRepository implements EmployeeRepositoryInterface
 {
@@ -76,12 +77,50 @@ final class DoctrineEmployeeRepository implements EmployeeRepositoryInterface
         ?EmployeeProfile $profile = null,
         ?EmployeeStatus $status = null,
         ?string $search = null,
+        ?string $serviceZoneId = null,
+        int $page = 1,
+        ?int $limit = null,
     ): array {
         $qb = $this->em->createQueryBuilder()
             ->select('e')
             ->from(Employee::class, 'e')
             ->where('e.deletedAt IS NULL');
 
+        $this->applyEmployeeFilters($qb, $profile, $status, $search, $serviceZoneId);
+
+        if ($limit !== null) {
+            $qb->setMaxResults($limit)
+                ->setFirstResult(max(0, ($page - 1) * $limit));
+        }
+
+        return $qb->orderBy('e.lastName', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countByFilters(
+        ?EmployeeProfile $profile = null,
+        ?EmployeeStatus $status = null,
+        ?string $search = null,
+        ?string $serviceZoneId = null,
+    ): int {
+        $qb = $this->em->createQueryBuilder()
+            ->select('COUNT(e.id)')
+            ->from(Employee::class, 'e')
+            ->where('e.deletedAt IS NULL');
+
+        $this->applyEmployeeFilters($qb, $profile, $status, $search, $serviceZoneId);
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    private function applyEmployeeFilters(
+        QueryBuilder $qb,
+        ?EmployeeProfile $profile,
+        ?EmployeeStatus $status,
+        ?string $search,
+        ?string $serviceZoneId,
+    ): void {
         if ($profile !== null) {
             $qb->andWhere('e.profile = :profile')
                 ->setParameter('profile', $profile->value);
@@ -97,9 +136,10 @@ final class DoctrineEmployeeRepository implements EmployeeRepositoryInterface
                 ->setParameter('search', '%' . mb_strtolower($search) . '%');
         }
 
-        return $qb->orderBy('e.lastName', 'ASC')
-            ->getQuery()
-            ->getResult();
+        if ($serviceZoneId !== null) {
+            $qb->andWhere('e.serviceZoneId = :zone')
+                ->setParameter('zone', $serviceZoneId);
+        }
     }
 
     public function save(Employee $employee): void

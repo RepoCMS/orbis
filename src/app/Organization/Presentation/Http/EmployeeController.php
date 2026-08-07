@@ -62,7 +62,7 @@ final class EmployeeController extends AbstractController
         }
 
         return $this->render('employee/list.html.twig', [
-            'employees'     => $listEmployees(new ListEmployeesQuery()),
+            'employees'     => $listEmployees(new ListEmployeesQuery())->items,
             'usernamesById' => $usernamesById,
         ]);
     }

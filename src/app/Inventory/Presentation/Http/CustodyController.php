@@ -41,7 +41,7 @@ final class CustodyController extends AbstractController
             locationId: $locationId !== null ? (string) $locationId : null,
         ));
 
-        $employees = $listEmployees(new ListEmployeesQuery(limit: 500))['data'] ?? [];
+        $employees = $listEmployees(new ListEmployeesQuery(limit: 500))->items;
 
         return $this->render('inventory/custody/list.html.twig', [
             'assignments' => $assignments,
@@ -62,7 +62,7 @@ final class CustodyController extends AbstractController
     ): Response {
         $assignments = $handler(new ListCustodyAssignmentsQuery(employeeId: $employeeId));
 
-        $employees = $listEmployees(new ListEmployeesQuery(limit: 500))['data'] ?? [];
+        $employees = $listEmployees(new ListEmployeesQuery(limit: 500))->items;
 
         return $this->render('inventory/custody/list.html.twig', [
             'assignments' => $assignments,
@@ -83,7 +83,7 @@ final class CustodyController extends AbstractController
     ): Response {
         $assignments = $handler(new ListCustodyAssignmentsQuery(locationId: $locationId));
 
-        $employees = $listEmployees(new ListEmployeesQuery(limit: 500))['data'] ?? [];
+        $employees = $listEmployees(new ListEmployeesQuery(limit: 500))->items;
 
         return $this->render('inventory/custody/list.html.twig', [
             'assignments' => $assignments,
@@ -101,7 +101,7 @@ final class CustodyController extends AbstractController
         ListEmployeesHandler $listEmployees,
         ListLocationsHandler $listLocations,
     ): Response {
-        $employees = $listEmployees(new ListEmployeesQuery(limit: 500))['data'] ?? [];
+        $employees = $listEmployees(new ListEmployeesQuery(limit: 500))->items;
         $locations = $listLocations();
 
         return $this->render('inventory/custody/form.html.twig', [
@@ -142,7 +142,7 @@ final class CustodyController extends AbstractController
             $errors = [$e->getMessage()];
         }
 
-        $employees = $listEmployees(new ListEmployeesQuery(limit: 500))['data'] ?? [];
+        $employees = $listEmployees(new ListEmployeesQuery(limit: 500))->items;
         $locations = $listLocations();
 
         return $this->render('inventory/custody/form.html.twig', [

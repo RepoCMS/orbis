@@ -30,7 +30,20 @@ interface EmployeeRepositoryInterface
         ?EmployeeProfile $profile = null,
         ?EmployeeStatus $status = null,
         ?string $search = null,
+        ?string $serviceZoneId = null,
+        int $page = 1,
+        ?int $limit = null,
     ): array;
+
+    /**
+     * @return int
+     */
+    public function countByFilters(
+        ?EmployeeProfile $profile = null,
+        ?EmployeeStatus $status = null,
+        ?string $search = null,
+        ?string $serviceZoneId = null,
+    ): int;
 
     public function save(Employee $employee): void;
 

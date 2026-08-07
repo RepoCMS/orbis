@@ -137,7 +137,7 @@ final class TicketController extends AbstractController
             throw $this->createNotFoundException('Ticket no encontrado.');
         }
 
-        $employees = $employeesHandler(new ListEmployeesQuery());
+        $employees = $employeesHandler(new ListEmployeesQuery())->items;
 
         return $this->render('support/ticket/show.html.twig', [
             'ticket'    => $ticket,

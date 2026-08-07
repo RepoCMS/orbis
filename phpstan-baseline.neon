@@ -133,12 +133,6 @@ parameters:
 			path: src/app/Expense/Presentation/Http/ExpenseController.php
 
 		-
-			message: '#^Unknown parameter \$limit in call to App\\Organization\\Application\\Query\\ListEmployees\\ListEmployeesQuery constructor\.$#'
-			identifier: argument.unknown
-			count: 4
-			path: src/app/Expense/Presentation/Http/ExpenseController.php
-
-		-
 			message: '#^Access to an undefined property App\\Identity\\Domain\\Entities\\User\:\:\$createdAt\.$#'
 			identifier: property.notFound
 			count: 1
@@ -481,12 +475,6 @@ parameters:
 			path: src/app/Inventory/Presentation/Http/ApiInventoryStockController.php
 
 		-
-			message: '#^Unknown parameter \$limit in call to App\\Organization\\Application\\Query\\ListEmployees\\ListEmployeesQuery constructor\.$#'
-			identifier: argument.unknown
-			count: 5
-			path: src/app/Inventory/Presentation/Http/CustodyController.php
-
-		-
 			message: '#^Variable \$errors on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.variable
 			count: 2
@@ -719,42 +707,6 @@ parameters:
 			identifier: class.notFound
 			count: 1
 			path: src/app/Organization/Infrastructure/Messenger/Handler/EmployeeStatusCascadeHandler.php
-
-		-
-			message: '#^Parameter \$profile of class App\\Organization\\Application\\Query\\ListEmployees\\ListEmployeesQuery constructor expects App\\Organization\\Domain\\Enums\\EmployeeProfile\|null, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/app/Organization/Presentation/Http/ApiOrganizationController.php
-
-		-
-			message: '#^Parameter \$status of class App\\Organization\\Application\\Query\\ListEmployees\\ListEmployeesQuery constructor expects App\\Organization\\Domain\\Enums\\EmployeeStatus\|null, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/app/Organization/Presentation/Http/ApiOrganizationController.php
-
-		-
-			message: '#^Unknown parameter \$limit in call to App\\Organization\\Application\\Query\\ListEmployees\\ListEmployeesQuery constructor\.$#'
-			identifier: argument.unknown
-			count: 1
-			path: src/app/Organization/Presentation/Http/ApiOrganizationController.php
-
-		-
-			message: '#^Unknown parameter \$page in call to App\\Organization\\Application\\Query\\ListEmployees\\ListEmployeesQuery constructor\.$#'
-			identifier: argument.unknown
-			count: 1
-			path: src/app/Organization/Presentation/Http/ApiOrganizationController.php
-
-		-
-			message: '#^Unknown parameter \$q in call to App\\Organization\\Application\\Query\\ListEmployees\\ListEmployeesQuery constructor\.$#'
-			identifier: argument.unknown
-			count: 1
-			path: src/app/Organization/Presentation/Http/ApiOrganizationController.php
-
-		-
-			message: '#^Unknown parameter \$serviceZoneId in call to App\\Organization\\Application\\Query\\ListEmployees\\ListEmployeesQuery constructor\.$#'
-			identifier: argument.unknown
-			count: 1
-			path: src/app/Organization/Presentation/Http/ApiOrganizationController.php
 
 		-
 			message: '#^PHPDoc tag @param for parameter \$errors with type array\<int, string\> is incompatible with native type int\.$#'

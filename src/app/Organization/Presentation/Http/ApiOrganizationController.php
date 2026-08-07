@@ -58,6 +58,8 @@ use App\Organization\Application\Query\ListOvertimeRecordsByEmployee\ListOvertim
 use App\Organization\Application\Query\ListOvertimeRecordsByEmployee\ListOvertimeRecordsByEmployeeQuery;
 use App\Organization\Application\Query\ListVacationRequestsByEmployee\ListVacationRequestsByEmployeeHandler;
 use App\Organization\Application\Query\ListVacationRequestsByEmployee\ListVacationRequestsByEmployeeQuery;
+use App\Organization\Domain\Enums\EmployeeProfile;
+use App\Organization\Domain\Enums\EmployeeStatus;
 use App\Shared\Exceptions\DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -75,16 +77,26 @@ final class ApiOrganizationController extends AbstractController
         Request $request,
         ListEmployeesHandler $handler,
     ): JsonResponse {
+        $profile = $request->query->get('profile');
+        $status = $request->query->get('status');
+
         $result = $handler(new ListEmployeesQuery(
-            profile:       $request->query->get('profile') ?: null,
-            status:        $request->query->get('status') ?: null,
+            profile:       \is_string($profile) ? EmployeeProfile::tryFrom($profile) : null,
+            status:        \is_string($status) ? EmployeeStatus::tryFrom($status) : null,
+            search:        $request->query->get('q') ?: null,
             serviceZoneId: $request->query->get('serviceZoneId') ?: null,
-            q:             $request->query->get('q') ?: null,
             page:          (int) $request->query->get('page', '1'),
             limit:         (int) $request->query->get('limit', '20'),
         ));
 
-        return $this->json($result);
+        return $this->json([
+            'data'       => $result->items,
+            'pagination' => [
+                'page'  => $result->page,
+                'limit' => $result->limit,
+                'total' => $result->total,
+            ],
+        ]);
     }
 
     #[IsGranted('employee.create')]

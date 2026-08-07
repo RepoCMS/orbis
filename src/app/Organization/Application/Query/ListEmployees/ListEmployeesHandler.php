@@ -14,22 +14,32 @@ final readonly class ListEmployeesHandler
     ) {
     }
 
-    /**
-     * @return EmployeeResponse[]
-     */
-    public function __invoke(ListEmployeesQuery $query): array
+    public function __invoke(ListEmployeesQuery $query): ListEmployeesResult
     {
-        $employees = $query->profile !== null || $query->status !== null || $query->search !== null
-            ? $this->employeeRepository->findByFilters(
-                profile: $query->profile,
-                status: $query->status,
-                search: $query->search,
-            )
-            : $this->employeeRepository->findAll();
+        $employees = $this->employeeRepository->findByFilters(
+            profile: $query->profile,
+            status: $query->status,
+            search: $query->search,
+            serviceZoneId: $query->serviceZoneId,
+            page: $query->page,
+            limit: $query->limit,
+        );
 
-        return array_map(
-            static fn ($employee) => EmployeeResponse::fromEntity($employee),
-            $employees,
+        $total = $this->employeeRepository->countByFilters(
+            profile: $query->profile,
+            status: $query->status,
+            search: $query->search,
+            serviceZoneId: $query->serviceZoneId,
+        );
+
+        return new ListEmployeesResult(
+            items: array_map(
+                static fn ($employee) => EmployeeResponse::fromEntity($employee),
+                $employees,
+            ),
+            total: $total,
+            page: $query->page,
+            limit: $query->limit,
         );
     }
 }

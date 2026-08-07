@@ -97,7 +97,7 @@ final class ServiceZoneController extends AbstractController
         }
 
         $technicians = array_filter(
-            $listEmployees(new ListEmployeesQuery()),
+            $listEmployees(new ListEmployeesQuery())->items,
             static fn ($e) => $e->profile === 'technician',
         );
 

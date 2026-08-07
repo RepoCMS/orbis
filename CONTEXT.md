@@ -4,7 +4,7 @@
 >
 > **Actualizado:** 2026-08-07
 > **Rama activa:** `main` (remote: `https://github.com/RepoCMS/orbis.git`)
-> **Último commit:** `29c4d83` — ciclo de enforcement de máquina (spec 014), gates CI, PHPStan, CS-Fixer, wiring check. Specs T01-T03 actualizados y aprobados el 2026-08-07 (ver §2/§3) — pendientes de commit
+> **Último commit:** `7d8e4fa` — ciclo T01-T03: specs Notification/Organization/Client realineadas y aprobadas (2026-08-07), docs + CHANGELOG_AI v1.4.0 (ver §2/§3)
 
 ---
 

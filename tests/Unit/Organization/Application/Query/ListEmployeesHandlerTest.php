@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Organization\Application\Query;
 
 use App\Organization\Application\Query\ListEmployees\ListEmployeesHandler;
 use App\Organization\Application\Query\ListEmployees\ListEmployeesQuery;
+use App\Organization\Application\Query\ListEmployees\ListEmployeesResult;
 use App\Organization\Application\Query\Response\EmployeeResponse;
 use App\Organization\Domain\Entities\Employee;
 use App\Organization\Domain\Enums\EmployeeProfile;
@@ -44,32 +45,43 @@ final class ListEmployeesHandlerTest extends TestCase
             profile:              EmployeeProfile::COORDINATOR,
         );
 
-        $employeeRepo->method('findAll')->willReturn([$employee1, $employee2]);
+        $employeeRepo->method('findByFilters')
+            ->with(null, null, null, null, 1, null)
+            ->willReturn([$employee1, $employee2]);
+        $employeeRepo->method('countByFilters')
+            ->with(null, null, null, null)
+            ->willReturn(2);
 
         $handler = new ListEmployeesHandler($employeeRepo);
 
         $result = ($handler)(new ListEmployeesQuery());
 
-        self::assertCount(2, $result);
-        self::assertInstanceOf(EmployeeResponse::class, $result[0]);
-        self::assertInstanceOf(EmployeeResponse::class, $result[1]);
-        self::assertSame('Juan Carlos Pérez García', $result[0]->fullName);
-        self::assertSame('María Elena García López', $result[1]->fullName);
-        self::assertSame('technician', $result[0]->profile);
-        self::assertSame('coordinator', $result[1]->profile);
+        self::assertInstanceOf(ListEmployeesResult::class, $result);
+        self::assertCount(2, $result->items);
+        self::assertInstanceOf(EmployeeResponse::class, $result->items[0]);
+        self::assertInstanceOf(EmployeeResponse::class, $result->items[1]);
+        self::assertSame('Juan Carlos Pérez García', $result->items[0]->fullName);
+        self::assertSame('María Elena García López', $result->items[1]->fullName);
+        self::assertSame('technician', $result->items[0]->profile);
+        self::assertSame('coordinator', $result->items[1]->profile);
+        self::assertSame(2, $result->total);
+        self::assertSame(1, $result->page);
+        self::assertNull($result->limit);
     }
 
     public function testHandlesEmptyResultSet(): void
     {
         $employeeRepo = $this->createMock(EmployeeRepositoryInterface::class);
-        $employeeRepo->method('findAll')->willReturn([]);
+        $employeeRepo->method('findByFilters')->willReturn([]);
+        $employeeRepo->method('countByFilters')->willReturn(0);
 
         $handler = new ListEmployeesHandler($employeeRepo);
 
         $result = ($handler)(new ListEmployeesQuery());
 
-        self::assertIsArray($result);
-        self::assertCount(0, $result);
+        self::assertInstanceOf(ListEmployeesResult::class, $result);
+        self::assertCount(0, $result->items);
+        self::assertSame(0, $result->total);
     }
 
     public function testReturnsCorrectResponseTypes(): void
@@ -87,21 +99,22 @@ final class ListEmployeesHandlerTest extends TestCase
             profile:              EmployeeProfile::ADMINISTRATIVE,
         );
 
-        $employeeRepo->method('findAll')->willReturn([$employee]);
+        $employeeRepo->method('findByFilters')->willReturn([$employee]);
+        $employeeRepo->method('countByFilters')->willReturn(1);
 
         $handler = new ListEmployeesHandler($employeeRepo);
 
         $result = ($handler)(new ListEmployeesQuery());
 
-        self::assertCount(1, $result);
-        self::assertInstanceOf(EmployeeResponse::class, $result[0]);
-        self::assertIsString($result[0]->id);
-        self::assertIsString($result[0]->firstName);
-        self::assertIsString($result[0]->lastName);
-        self::assertIsString($result[0]->email);
-        self::assertIsString($result[0]->status);
-        self::assertIsString($result[0]->profile);
-        self::assertSame('active', $result[0]->status);
+        self::assertCount(1, $result->items);
+        self::assertInstanceOf(EmployeeResponse::class, $result->items[0]);
+        self::assertIsString($result->items[0]->id);
+        self::assertIsString($result->items[0]->firstName);
+        self::assertIsString($result->items[0]->lastName);
+        self::assertIsString($result->items[0]->email);
+        self::assertIsString($result->items[0]->status);
+        self::assertIsString($result->items[0]->profile);
+        self::assertSame('active', $result->items[0]->status);
     }
 
     public function testUsesFindByFiltersWhenProfileProvided(): void
@@ -110,10 +123,11 @@ final class ListEmployeesHandlerTest extends TestCase
 
         $employeeRepo->expects($this->once())
             ->method('findByFilters')
-            ->with(EmployeeProfile::TECHNICIAN, null, null)
+            ->with(EmployeeProfile::TECHNICIAN, null, null, null, 1, null)
             ->willReturn([]);
-
-        $employeeRepo->expects($this->never())->method('findAll');
+        $employeeRepo->method('countByFilters')
+            ->with(EmployeeProfile::TECHNICIAN, null, null, null)
+            ->willReturn(0);
 
         $handler = new ListEmployeesHandler($employeeRepo);
         ($handler)(new ListEmployeesQuery(profile: EmployeeProfile::TECHNICIAN));
@@ -127,8 +141,11 @@ final class ListEmployeesHandlerTest extends TestCase
 
         $employeeRepo->expects($this->once())
             ->method('findByFilters')
-            ->with(null, EmployeeStatus::ACTIVE, null)
+            ->with(null, EmployeeStatus::ACTIVE, null, null, 1, null)
             ->willReturn([]);
+        $employeeRepo->method('countByFilters')
+            ->with(null, EmployeeStatus::ACTIVE, null, null)
+            ->willReturn(0);
 
         $handler = new ListEmployeesHandler($employeeRepo);
         ($handler)(new ListEmployeesQuery(status: EmployeeStatus::ACTIVE));
@@ -142,8 +159,11 @@ final class ListEmployeesHandlerTest extends TestCase
 
         $employeeRepo->expects($this->once())
             ->method('findByFilters')
-            ->with(null, null, 'Juan')
+            ->with(null, null, 'Juan', null, 1, null)
             ->willReturn([]);
+        $employeeRepo->method('countByFilters')
+            ->with(null, null, 'Juan', null)
+            ->willReturn(0);
 
         $handler = new ListEmployeesHandler($employeeRepo);
         ($handler)(new ListEmployeesQuery(search: 'Juan'));
@@ -151,15 +171,43 @@ final class ListEmployeesHandlerTest extends TestCase
         self::assertTrue(true);
     }
 
-    public function testUsesFindAllWhenNoFiltersProvided(): void
+    public function testPassesServiceZoneIdAndPagination(): void
     {
         $employeeRepo = $this->createMock(EmployeeRepositoryInterface::class);
 
         $employeeRepo->expects($this->once())
-            ->method('findAll')
+            ->method('findByFilters')
+            ->with(null, null, null, '01ZONE1234567890', 3, 50)
             ->willReturn([]);
+        $employeeRepo->expects($this->once())
+            ->method('countByFilters')
+            ->with(null, null, null, '01ZONE1234567890')
+            ->willReturn(0);
 
-        $employeeRepo->expects($this->never())->method('findByFilters');
+        $handler = new ListEmployeesHandler($employeeRepo);
+        $result = ($handler)(new ListEmployeesQuery(
+            serviceZoneId: '01ZONE1234567890',
+            page:          3,
+            limit:         50,
+        ));
+
+        self::assertSame(3, $result->page);
+        self::assertSame(50, $result->limit);
+        self::assertSame(0, $result->total);
+    }
+
+    public function testUsesFindByFiltersWhenNoFiltersProvided(): void
+    {
+        $employeeRepo = $this->createMock(EmployeeRepositoryInterface::class);
+
+        $employeeRepo->expects($this->once())
+            ->method('findByFilters')
+            ->with(null, null, null, null, 1, null)
+            ->willReturn([]);
+        $employeeRepo->method('countByFilters')
+            ->with(null, null, null, null)
+            ->willReturn(0);
+        $employeeRepo->expects($this->never())->method('findAll');
 
         $handler = new ListEmployeesHandler($employeeRepo);
         ($handler)(new ListEmployeesQuery());

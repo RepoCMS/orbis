@@ -138,7 +138,7 @@ final class ExpenseController extends AbstractController
     public function newForm(
         ListEmployeesHandler $employees,
     ): Response {
-        $allEmployees = $employees(new ListEmployeesQuery(limit: 500));
+        $allEmployees = $employees(new ListEmployeesQuery(limit: 500))->items;
 
         return $this->render('expense/operating_expense/form.html.twig', [
             'errors' => [],
@@ -170,7 +170,7 @@ final class ExpenseController extends AbstractController
 
             return $this->redirectToRoute('expense_oe_show', ['id' => $id]);
         } catch (DomainException | \InvalidArgumentException $e) {
-            $allEmployees = $employees(new ListEmployeesQuery(limit: 500));
+            $allEmployees = $employees(new ListEmployeesQuery(limit: 500))->items;
 
             return $this->render('expense/operating_expense/form.html.twig', [
                 'errors' => [$e->getMessage()],
@@ -398,7 +398,7 @@ final class ExpenseController extends AbstractController
     public function newAdvance(
         ListEmployeesHandler $employees,
     ): Response {
-        $allEmployees = $employees(new ListEmployeesQuery(limit: 500));
+        $allEmployees = $employees(new ListEmployeesQuery(limit: 500))->items;
 
         return $this->render('expense/cash_advance/form.html.twig', [
             'errors' => [],
@@ -428,7 +428,7 @@ final class ExpenseController extends AbstractController
 
             return $this->redirectToRoute('expense_ca_list');
         } catch (DomainException | \InvalidArgumentException $e) {
-            $allEmployees = $employees(new ListEmployeesQuery(limit: 500));
+            $allEmployees = $employees(new ListEmployeesQuery(limit: 500))->items;
 
             return $this->render('expense/cash_advance/form.html.twig', [
                 'errors' => [$e->getMessage()],
