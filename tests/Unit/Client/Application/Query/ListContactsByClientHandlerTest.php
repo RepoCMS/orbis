@@ -31,10 +31,10 @@ final class ListContactsByClientHandlerTest extends TestCase
         );
 
         $repo = $this->createMock(ContactRepositoryInterface::class);
-        $repo->method('findAll')->willReturn([$contact]);
+        $repo->method('findByClientId')->willReturn([$contact]);
 
         $handler = new ListContactsByClientHandler($repo);
-        $result = ($handler)(new ListContactsByClientQuery());
+        $result = ($handler)(new ListContactsByClientQuery(new ClientIdValueObject('01ARZ3NDEKTSV4RRFFQ69G5FAW')));
 
         self::assertCount(1, $result);
         self::assertInstanceOf(ContactResponse::class, $result[0]);
@@ -43,10 +43,10 @@ final class ListContactsByClientHandlerTest extends TestCase
     public function testReturnsEmptyArray(): void
     {
         $repo = $this->createMock(ContactRepositoryInterface::class);
-        $repo->method('findAll')->willReturn([]);
+        $repo->method('findByClientId')->willReturn([]);
 
         $handler = new ListContactsByClientHandler($repo);
-        $result = ($handler)(new ListContactsByClientQuery());
+        $result = ($handler)(new ListContactsByClientQuery(new ClientIdValueObject('01ARZ3NDEKTSV4RRFFQ69G5FAW')));
 
         self::assertCount(0, $result);
     }

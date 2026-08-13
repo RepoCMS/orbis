@@ -8,6 +8,7 @@ use App\Organization\Application\Command\CreateEmployee\CreateEmployeeHandler;
 use App\Organization\Application\Command\ImportEmployees\ImportEmployeesCommand;
 use App\Organization\Application\Command\ImportEmployees\ImportEmployeesHandler;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
+use App\Organization\Domain\Repositories\EmploymentPeriodRepositoryInterface;
 use App\Organization\Infrastructure\Import\EmployeeCsvFileParser;
 use App\Organization\Infrastructure\Import\EmployeeRowValidator;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
@@ -39,6 +40,7 @@ final class ImportEmployeesHandlerTest extends TestCase
 
         return new CreateEmployeeHandler(
             $this->createMock(EmployeeRepositoryInterface::class),
+            $this->createMock(EmploymentPeriodRepositoryInterface::class),
             $idGenerator,
             $this->createMock(DomainEventPublisherInterface::class),
         );

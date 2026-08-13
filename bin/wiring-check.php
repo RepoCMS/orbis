@@ -119,15 +119,30 @@ function hasCaller(array $target, array $contents, array $shortNameCount): bool
         return true; // archivo sin clase (no verificable) — no bloquear
     }
 
+    // Pre-compute handler pair stem for exclusion (robust stem-based matching)
+    // Pattern: {Name}Query.php <-> {Name}Handler.php, {Name}Command.php <-> {Name}Handler.php
+    $targetStem = basename($file, '.php');
+    $handlerPairStem = '';
+    if (str_ends_with($targetStem, 'Query')) {
+        $handlerPairStem = substr($targetStem, 0, -5) . 'Handler';
+    } elseif (str_ends_with($targetStem, 'Command')) {
+        $handlerPairStem = substr($targetStem, 0, -7) . 'Handler';
+    }
+
     foreach ($contents as $otherFile => $content) {
         $otherFileNorm = str_replace('\\', '/', $otherFile);
         if ($otherFileNorm === str_replace('\\', '/', $file)) {
             continue;
         }
-        $basename = basename($file);
-        if ($target['kind'] !== 'Subscriber' && str_contains(basename($otherFile), $basename)) {
-            continue; // Handler pareja ({Name}Command.php ↔ {Name}Handler.php)
+
+        // Robust handler pair exclusion: match by stem, not by substring
+        if ($target['kind'] !== 'Subscriber' && $handlerPairStem !== '') {
+            $otherStem = basename($otherFile, '.php');
+            if ($otherStem === $handlerPairStem) {
+                continue; // Handler pareja excluido correctamente
+            }
         }
+
         if (str_contains($otherFileNorm, '/tests/')) {
             continue;
         }
@@ -140,7 +155,7 @@ function hasCaller(array $target, array $contents, array $shortNameCount): bool
                 continue;
             }
         }
-        if ($fqcn !== '' && str_contains($content, $fqcn)) {
+        if (str_contains($content, $fqcn)) {
             return true;
         }
         // nombre corto: solo cuenta si el FQCN es único en el proyecto (evita homónimos)

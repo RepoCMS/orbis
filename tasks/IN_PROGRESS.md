@@ -36,11 +36,14 @@
 
 1. ✅ **G-06 (crítico)** implementado — `ListEmployeesQuery` con paginación real + filtros (`serviceZoneId`/`page`/`limit`); API list de Organization + cross-BC desbloqueadas. → commit `b5a860e` (T30)
 2. ✅ **G-04 Client** implementado — cascada Contact→User operativa (REQ-CST-002). → commit `d15eab3` (T31)
-3. Corregir **punto ciego de `bin/wiring-check.php`** (no detecta Queries huérfanas con handler pareja que importe su FQCN — verificado con `ListContactsByClientQuery`). → T32
-4. Continuar con gaps restantes de Notification (T33), Organization (T34) y Client (T35).
-5. Probar el CI real en GitHub (primer push activa los 5 jobs).
-6. Deuda detectada por gates: T24-T29 (enums UPPERCASE, VOs, baseline PHPStan, dompdf, coverage).
-7. ✅ Commits del ciclo: `7d8e4fa` (specs T01-T03), `b5a860e` (T30), `d15eab3` (T31), pusheados a origin main 2026-08-07.
+3. ✅ **T32** — Fix punto ciego `bin/wiring-check.php` (stem-based matching). Verificado: 22 orfanos detectados.
+4. ✅ **T33 (parcial)** — Notification G-03: `RetryNotificationHandler` re-despacha `SendNotificationMessage`. Tests 5/5 verdes.
+5. ✅ **T34 (parcial)** — Organization G-07/G-08/G-09: `EmploymentPeriod::start()` en Create/Reactivate, `SpecialPeriodAutoProcessed` desde cron, 3 archivos basura eliminados.
+6. ✅ **T35 (parcial)** — Client G-10/G-11: bug SQL `contacts`→`client_contacts` corregido, `ListContactsByClientQuery` reparada.
+7. Probar el CI real en GitHub (push activará los 5 jobs).
+8. Deuda detectada por gates: T24-T29 (enums UPPERCASE, VOs, baseline PHPStan, dompdf, coverage).
+9. Pendientes en backlog: T33 (G-01/G-02/G-04/G-05), T34 (G-10..G-14), T35 (G-06 tests 13 handlers).
+10. ✅ Commits del ciclo: `7d8e4fa` (specs T01-T03), `b5a860e` (T30), `d15eab3` (T31), pusheados a origin main 2026-08-07.
 
 ---
 

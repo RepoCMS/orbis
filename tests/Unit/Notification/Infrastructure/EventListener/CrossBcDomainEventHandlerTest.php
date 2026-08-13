@@ -659,7 +659,10 @@ final class CrossBcDomainEventHandlerTest extends TestCase
 
         // Use SpecialPeriodAutoProcessed which is NOT handled by CrossBcDomainEventHandler
         $unhandledEvent = new SpecialPeriodAutoProcessed(
-            count: 5,
+            periodId: '01PR0PR0PR0PR0PR0PR0PR0PR0',
+            employeeId: '01EMP0EMP0EMP0EMP0EMP0EMP0EMP0',
+            type: 'vacation',
+            transition: 'started',
         );
 
         $handler = new CrossBcDomainEventHandler(

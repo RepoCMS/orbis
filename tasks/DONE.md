@@ -1,6 +1,6 @@
 # tasks/DONE.md — Trabajo Completado
 
-> **Actualizado:** 2026-08-07
+> **Actualizado:** 2026-08-12
 > Tabla cronológica de tareas/hitos cerrados. Fuente = evidencia (git commit, CONTEXT.md, docs/history.md, CHANGELOG.md).
 
 ---
@@ -9,6 +9,10 @@
 
 | Fecha | Tarea | Fuente |
 |-------|-------|--------|
+| 2026-08-12 | **T32 — Fix punto ciego `bin/wiring-check.php`**: stem-based matching (Query↔Handler, Command↔Handler) reemplaza `str_contains`; ahora detecta 22 orfanos correctamente (antes falsos negativos). Verificado local: `bin/wiring-check.php` exit 1, 22 orfanos listados | filesystem: `bin/wiring-check.php` líneas 122-144; wiring 22 orfanos detectados |
+| 2026-08-12 | **T33 — Notification G-03 (retry re-despacha)**: `RetryNotificationHandler` inyecta `MessageBusInterface` y despacha `SendNotificationMessage` tras `retry()`+`save()`. Tests actualizados (5/5 verdes): mock de bus + assert dispatch con `Envelope`. G-01/G-02/G-04/G-05 pendientes en T33 (backlog) | filesystem: `RetryNotificationHandler.php` + `ApiNotificationLogControllerTest.php`; phpunit 5/5 OK |
+| 2026-08-12 | **T34 — Organization G-07/G-08/G-09**: `EmploymentPeriod::start()` invocado en `CreateEmployeeHandler` (startedAt=hiredAt) y `ReactivateEmployeeHandler` (startedAt=now); `SpecialPeriodAutoProcessed` publicado desde cron `org:process-special-periods` (transiciones started/completed); 3 archivos basura `*-DESKTOP-GU1L412.php` eliminados de tests. G-10..G-14 pendientes | filesystem: `CreateEmployeeHandler.php`, `ReactivateEmployeeHandler.php`, `ProcessEmployeeSpecialPeriodsCommand.php`, `git rm` 3 archivos; spec 001 actualizado |
+| 2026-08-12 | **T35 — Client G-10/G-11**: bug SQL `contacts`→`client_contacts` corregido en `GetClientDashboardSummaryHandler::countActiveContacts()` + `contactsByStatus()`; `ListContactsByClientQuery` reparada (ahora acepta `clientId`, handler usa `findByClientId`). G-06 (tests de 13 handlers) pendiente | filesystem: `GetClientDashboardSummaryHandler.php`, `ListContactsByClientQuery.php`, `ListContactsByClientHandler.php`; spec 002 actualizado |
 | 2026-08-07 | **T30 — Fix G-06 (crítico) Organization**: `ListEmployeesQuery` ampliado (`serviceZoneId`/`page`/`limit`), `ListEmployeesResult` nuevo, repo `findByFilters` paginado + `countByFilters`, handler devuelve Result, 6 callers usan `->items`, API `GET /employees` paginado + filtros `profile/status/search(q)/serviceZoneId`; `phpstan-baseline.neon` −8 entradas obsoletas | commit `b5a860e`; wiring 346/0; phpunit 2034 OK; phpstan 0 errores |
 | 2026-08-07 | **T31 — Fix G-04 Client (cascada Contact→User)**: `DeactivateContact`/`ReactivateContact`/`LinkUserToContact` publican `ContactDeactivated`/`ContactReactivated`/`ContactUserLinked` → `ContactStatusCascadeHandler` (REQ-CST-002) operativo | commit `d15eab3`; wiring 346/0; phpunit Client+CrossBc 355 OK; phpstan 0 errores |
 | 2026-08-07 | **T01 — Spec de Notification BC aprobada**: `specs/006-notification/spec.md` actualizado (~60% → ~75% verificado). Estado real: Domain 100%, Application 100% (8 commands, 5 queries), Persistence 100%, Channels 50% (SMS/WhatsApp stubs), Cross-BC ~55% (107 eventos mapeados, 68 con destinatario, 53 con plantilla), 81 tests. Gaps documentados G-01..G-05 → tablero T33 | QA-Reviewer aprobó spec; wiring 346/0; phpunit Notification OK |

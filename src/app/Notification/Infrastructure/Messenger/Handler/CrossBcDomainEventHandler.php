@@ -863,10 +863,9 @@ final readonly class CrossBcDomainEventHandler
         /** @var PartRepaired $event */
         $event = $message->restoreEvent();
 
-        // TODO: PartRepaired solo contiene serializedStockId, no tiene datos
-        //       del destinatario (ej: assignedToUserId, technicianId).
-        //       Se necesita ampliar el evento o resolver el destinatario
-        //       desde el serializedStock para notificar al técnico responsable.
+        // PartRepaired only contains serializedStockId, no recipient data (e.g., assignedToUserId, technicianId).
+        // Need to extend the event or resolve recipient from serializedStock to notify responsible technician.
+        // For now, no notifications are dispatched.
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::PART_REPAIRED,
             recipients: [],
@@ -885,6 +884,8 @@ final readonly class CrossBcDomainEventHandler
         /** @var RequestApproved $event */
         $event = $message->restoreEvent();
 
+        // G-01: RequestApproved event has no requester field yet
+        // (pending inventory domain event enrichment)
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::REQUEST_APPROVED,
             recipients: [],

@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Organization\Infrastructure\Console;
 
 use App\Organization\Domain\Enums\EmployeeSpecialPeriodType;
+use App\Organization\Domain\Events\SpecialPeriodAutoProcessed;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
 use App\Organization\Domain\Repositories\EmployeeSpecialPeriodRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
+use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -39,6 +41,7 @@ final class ProcessEmployeeSpecialPeriodsCommand extends Command
     public function __construct(
         private readonly EmployeeSpecialPeriodRepositoryInterface $periodRepository,
         private readonly EmployeeRepositoryInterface $employeeRepository,
+        private readonly DomainEventPublisherInterface $publisher,
     ) {
         parent::__construct();
     }
@@ -76,6 +79,14 @@ final class ProcessEmployeeSpecialPeriodsCommand extends Command
                     $period->employeeId(),
                     $period->type()->label(),
                 ));
+
+                // G-08: publish SpecialPeriodAutoProcessed for auto-processed start
+                $this->publisher->publish(new SpecialPeriodAutoProcessed(
+                    periodId: (string) $period->id(),
+                    employeeId: (string) $period->employeeId(),
+                    type: $period->type()->value,
+                    transition: 'started',
+                ));
             } catch (Throwable $e) {
                 $errors++;
                 $io->error(sprintf('Error al iniciar período %s: %s', $period->id(), $e->getMessage()));
@@ -105,6 +116,14 @@ final class ProcessEmployeeSpecialPeriodsCommand extends Command
                     $period->id(),
                     $period->employeeId(),
                     $period->type()->label(),
+                ));
+
+                // G-08: publish SpecialPeriodAutoProcessed for auto-processed completion
+                $this->publisher->publish(new SpecialPeriodAutoProcessed(
+                    periodId: (string) $period->id(),
+                    employeeId: (string) $period->employeeId(),
+                    type: $period->type()->value,
+                    transition: 'completed',
                 ));
             } catch (Throwable $e) {
                 $errors++;

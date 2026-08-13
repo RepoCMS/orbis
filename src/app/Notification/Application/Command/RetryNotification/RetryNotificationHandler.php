@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace App\Notification\Application\Command\RetryNotification;
 
+use App\Notification\Application\Command\SendNotification\SendNotificationMessage;
 use App\Notification\Application\Exception\InvalidNotificationStatusException;
 use App\Notification\Application\Exception\NotificationLogNotFoundException;
 use App\Notification\Domain\Enums\NotificationStatus;
 use App\Notification\Domain\Repositories\NotificationLogRepositoryInterface;
 use App\Notification\Domain\ValueObjects\NotificationLogIdValueObject;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 final readonly class RetryNotificationHandler
 {
     public function __construct(
         private NotificationLogRepositoryInterface $logRepository,
+        private MessageBusInterface $messageBus,
     ) {
     }
 
@@ -37,5 +40,7 @@ final readonly class RetryNotificationHandler
         $log->retry();
 
         $this->logRepository->save($log);
+
+        $this->messageBus->dispatch(new SendNotificationMessage((string) $id));
     }
 }

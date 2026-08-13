@@ -2,9 +2,10 @@
 
 > **Propósito:** Este documento es la referencia que toda IA, agente o desarrollador debe consultar antes de actuar. Contiene el estado REAL del proyecto. AGENTS.md (reglas de código) ya no publica % de BCs — esta es la única tabla de estado.
 >
-> **Actualizado:** 2026-08-07
+> **Actualizado:** 2026-08-12
 > **Rama activa:** `main` (remote: `https://github.com/RepoCMS/orbis.git`)
 > **Último commit:** `7d8e4fa` — ciclo T01-T03: specs Notification/Organization/Client realineadas y aprobadas (2026-08-07), docs + CHANGELOG_AI v1.4.0 (ver §2/§3)
+> **Commits pendientes (working tree):** T32 wiring-check fix, T33 Notification G-03, T34 Organization G-07..G-09, T35 Client G-10/G-11
 
 ---
 
@@ -35,8 +36,8 @@
 | BC | Spec Status (real) | AGENTS.md decía (pre-refactor 2026-08-05) | Tests reales | Commands (reales) | Queries (reales) | Controllers (reales) | Reportes | Importers | Dashboard |
 |----|--------------------|----------------|-------------|-------------------|------------------|---------------------|----------|-----------|-----------|
 | **Identity** | ~85% | ~97% | 77 | 32 | 13 | 15 | 1 (SecurityEvents) | 1 (Import Users) | ✅ Web + API |
-| **Client** | ~92% | ~96% | 84 | 37 | 16 | 18 | 2 (ContractsExpiring, TerminalsByClient) | 4 (Clientes, Terminales, Modelos, Partes de Modelo) | ✅ Web + API |
-| **Organization** | ~90% | ~99% | 61 | 33 | 8 | 8 | 3 (ActivePersonnel, Overtime, ScheduledVacations) | 1 (Import Employees) | ✅ Web + API |
+| **Client** | ~95% | ~96% | 84 | 37 | 16 | 18 | 2 (ContractsExpiring, TerminalsByClient) | 4 (Clientes, Terminales, Modelos, Partes de Modelo) | ✅ Web + API |
+| **Organization** | ~95% | ~99% | 60 | 33 | 8 | 8 | 3 (ActivePersonnel, Overtime, ScheduledVacations) | 1 (Import Employees) | ✅ Web + API |
 | **Support** | ~85% | ~98% | 93 | 35 | 20 | 12 | 2 (Technician, TicketsByClient) | 0 | ✅ Web + API |
 | **Inventory** | ~95% | ~96% | 96 | 60 | 29 | 28 | 4 (ValuedInventory, Movement, ResignationReturn, PhysicalCount) | 3 (Productos, Stock serializado, Stock no serializado) | ✅ API + Web |
 | **Expense** | 100% | 100% | 30 | 15 | 8 | 5 | 2 (Expense, Advance) | 1 (Import Operating Expenses) | ✅ Web + API |
@@ -194,7 +195,7 @@ cat tasks/IN_PROGRESS.md
 | B5 | Client BC ~70% pero AGENTS.md dice ~96% | IAs sobreestiman progreso | ✅ Spec `002-client` aprobada (~92%) 2026-08-07 (T03) |
 | B6 | **G-06 (crítico)**: `ListEmployeesQuery` con parámetros fantasma → `Error: Unknown named parameter` en runtime | Bloquea API list de Organization + cross-BC (Custody, Expense, Support) | ✅ Resuelto — T30 (commit `b5a860e`, 2026-08-07) |
 | B7 | **G-04 Client**: cascada Contact→User rota (eventos nunca publicados) | Desactivación de cliente no propaga a User | ✅ Resuelto — T31 (commit `d15eab3`, 2026-08-07) |
-| B8 | **Punto ciego `bin/wiring-check.php`**: no detecta Queries huérfanas cuyo handler pareja importe su FQCN (verificado con `ListContactsByClientQuery`) | Gate de wiring da falsos negativos (regla 11) | ⚠️ Deuda — tarea T32 |
+| B8 | **Punto ciego `bin/wiring-check.php`**: no detecta Queries huérfanas cuyo handler pareja importe su FQCN (verificado con `ListContactsByClientQuery`) | Gate de wiring da falsos negativos (regla 11) | ✅ Resuelto — T32 (stem-based matching, 22 orfanos detectados 2026-08-12) |
 
 ---
 
@@ -265,6 +266,9 @@ src/app/{BC}/
 6. **[ALTA]** Completar specs de Client BC (~70% → objetivo 95%). ✅ Spec `002-client` aprobada (~92%) 2026-08-07 — implementar gaps G-06, G-10, G-11 (G-04 ✅ T31, ver §7 B7).
 7. ✅ **G-06** (crítico) implementado — T30 (commit `b5a860e`): `ListEmployeesQuery` con paginación real + filtros (`serviceZoneId`/`page`/`limit`); API list de Organization y cross-BC desbloqueadas.
 8. ✅ **G-04 Client** implementado — T31 (commit `d15eab3`): cascada Contact→User operativa (handlers publican `ContactDeactivated`/`ContactReactivated`/`ContactUserLinked`).
-9. **[ALTA]** Corregir **punto ciego de `bin/wiring-check.php`** (queries huérfanas con handler pareja que importe su FQCN). → tarea T32
-10. **[MEDIA]** Implementar Identity Dashboard KPIs (pendientes según TODOS.md).
+9. ✅ **T32** — Fix punto ciego `bin/wiring-check.php` (stem-based matching detecta 22 orfanos correctamente). Verificado 2026-08-12.
+10. ✅ **T33 (G-03)** — `RetryNotificationHandler` re-despacha `SendNotificationMessage` vía `MessageBusInterface`. Tests 5/5 verdes. Verificado 2026-08-12.
+11. ✅ **T34 (G-07/G-08/G-09)** — `EmploymentPeriod::start()` en Create/Reactivate, `SpecialPeriodAutoProcessed` desde cron `org:process-special-periods`, 3 archivos basura eliminados. Verificado 2026-08-12.
+12. ✅ **T35 (G-10/G-11)** — Bug SQL `contacts`→`client_contacts` corregido en dashboard, `ListContactsByClientQuery` reparada. Verificado 2026-08-12.
+13. **[MEDIA]** Implementar Identity Dashboard KPIs (pendientes según TODOS.md).
 11. **[BAJA]** Actualizar `.opencode/opencode.jsonc` con roles de agentes si se expande. ✅ Hecho 2026-08-05: `.opencode/agent/{planner,qa-reviewer,developer,test-engineer,frontend,security-reviewer,docs}.md`

@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace App\Organization\Application\Command\CreateEmployee;
 
 use App\Organization\Domain\Entities\Employee;
+use App\Organization\Domain\Entities\EmploymentPeriod;
 use App\Organization\Domain\Enums\EmployeeProfile;
 use App\Organization\Domain\Events\EmployeeCreated;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
+use App\Organization\Domain\Repositories\EmploymentPeriodRepositoryInterface;
 use App\Organization\Domain\ValueObjects\EmployeeEmailValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdentificationNumberValueObject;
 use App\Organization\Domain\ValueObjects\EmployeeIdValueObject;
+use App\Organization\Domain\ValueObjects\EmploymentPeriodIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 
@@ -18,6 +21,7 @@ final readonly class CreateEmployeeHandler
 {
     public function __construct(
         private EmployeeRepositoryInterface $employeeRepository,
+        private EmploymentPeriodRepositoryInterface $employmentPeriodRepository,
         private IdGeneratorInterface $idGenerator,
         private DomainEventPublisherInterface $publisher,
     ) {
@@ -42,6 +46,14 @@ final readonly class CreateEmployeeHandler
         );
 
         $this->employeeRepository->save($employee);
+
+        // G-07: create EmploymentPeriod on hire (startedAt = hiredAt)
+        $period = EmploymentPeriod::start(
+            new EmploymentPeriodIdValueObject($this->idGenerator->generate()),
+            new EmployeeIdValueObject($id),
+            $hiredAt,
+        );
+        $this->employmentPeriodRepository->save($period);
 
         $this->publisher->publish(new EmployeeCreated(
             employeeId: $id,

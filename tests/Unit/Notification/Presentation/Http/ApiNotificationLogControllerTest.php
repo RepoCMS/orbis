@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Notification\Presentation\Http;
 
 use App\Notification\Application\Command\RetryNotification\RetryNotificationHandler;
+use App\Notification\Application\Command\SendNotification\SendNotificationMessage;
 use App\Notification\Application\Query\ListNotificationLogs\ListNotificationLogsHandler;
 use App\Notification\Domain\Repositories\NotificationLogRepositoryInterface;
 use App\Notification\Presentation\Http\ApiNotificationLogController;
@@ -12,6 +13,8 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 final class ApiNotificationLogControllerTest extends TestCase
 {
@@ -106,7 +109,13 @@ final class ApiNotificationLogControllerTest extends TestCase
         $repo->expects($this->once())
             ->method('save');
 
-        $handler = new RetryNotificationHandler($repo);
+        $bus = $this->createMock(MessageBusInterface::class);
+        $bus->expects($this->once())
+            ->method('dispatch')
+            ->with($this->isInstanceOf(SendNotificationMessage::class))
+            ->willReturnCallback(static fn (object $message): Envelope => new Envelope($message));
+
+        $handler = new RetryNotificationHandler($repo, $bus);
 
         $response = $this->createController()->retry(self::LOG_ID, $handler);
 
@@ -124,7 +133,9 @@ final class ApiNotificationLogControllerTest extends TestCase
             ->method('findById')
             ->willReturn(null);
 
-        $handler = new RetryNotificationHandler($repo);
+        $bus = $this->createMock(MessageBusInterface::class);
+
+        $handler = new RetryNotificationHandler($repo, $bus);
 
         $response = $this->createController()->retry(self::LOG_ID, $handler);
 
@@ -152,7 +163,9 @@ final class ApiNotificationLogControllerTest extends TestCase
             ->method('findById')
             ->willReturn($log);
 
-        $handler = new RetryNotificationHandler($repo);
+        $bus = $this->createMock(MessageBusInterface::class);
+
+        $handler = new RetryNotificationHandler($repo, $bus);
 
         $response = $this->createController()->retry(self::LOG_ID, $handler);
 

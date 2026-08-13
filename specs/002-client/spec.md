@@ -4,9 +4,9 @@
 
 **Created**: 2026-06-17
 
-**Última actualización**: 2026-08-07 (revisión T03 — alineación con código real verificada en disco + CodeGraph + `php bin/wiring-check.php`)
+**Última actualización**: 2026-08-12 (T35 — G-10/G-11 resueltos, verificado en disco + CodeGraph + `php bin/wiring-check.php`)
 
-**Status**: In Development (~92% implementado)
+**Status**: In Development (~95% implementado)
 
 ---
 
@@ -244,14 +244,14 @@ Responsabilidades:
 | KPI | Estado |
 |-----|--------|
 | Total clientes | ✅ |
-| Contactos activos | ⚠️ bug: consulta tabla `contacts` (real: `client_contacts`) — G‑10 |
+| Contactos activos | ✅ |
 | Total terminales | ✅ |
 | Terminales por estado | ✅ |
 | Clientes recientes (5) | ✅ |
 | Clientes por estado | ✅ |
 | Contratos por vencer (30/60/90 días) | ✅ |
 | Top clientes por terminales (10) | ✅ |
-| Contactos por estado | ⚠️ bug: tabla `contacts` — G‑10 |
+| Contactos por estado | ✅ |
 | Terminales sin asignación | ✅ |
 | Crecimiento mensual (12 meses) | ✅ |
 
@@ -313,9 +313,9 @@ Responsabilidades:
 
 ---
 
-## 8. Wiring (verificado 2026-08-07)
+## 8. Wiring (verificado 2026-08-12)
 
-> Verificación: `php bin/wiring-check.php` → **346 targets, 0 huérfanos** (exit 0). Callers confirmados con grep + CodeGraph sobre `src/` y `config/`. Excepciones detectadas: G‑11 (ListContactsByClient, falso negativo del script) y dead events (G‑08/G‑09).
+> Verificación: `php bin/wiring-check.php` → **346 targets, 0 huérfanos** (exit 0) tras fix T32 (stem-based matching). G‑11 resuelto: `ListContactsByClientQuery` reparada y detectada correctamente. Excepciones restantes: G‑08/G‑09 (dead events `WarrantyExpired`, `ClientSaleOrderCreated`, `ClientSaleOrderCompleted`, `SlaPolicyCreated`).
 
 ### 8.1 Commands → Callers
 
@@ -365,7 +365,7 @@ Responsabilidades:
 |-------|------------------------|
 | `ListClients` | `ApiClientController.php::list`, `ClientController.php::list`, **`src/app/Support/Presentation/Http/TicketController.php`** (cross-BC) |
 | `FindClientById` | `ApiClientController.php::show`, `ClientController.php::show`, `SiteController.php` |
-| `ListContactsByClient` | ⚠️ **Ninguno en producción** (solo `tests/Unit/Client/Application/Query/ListContactsByClientHandlerTest.php`) — G‑11 |
+| `ListContactsByClient` | ✅ Query reparada (filtra por `clientId`), handler usa `findByClientId` — alternativa a `FindContactsByClient` |
 | `FindContactById` | `ApiClientContactController.php::show`, `ContactController.php` |
 | `FindContactsByClient` | `ApiClientContactController.php::list`, `ClientController.php::show` |
 | `FindTerminalsByClient` | `ApiClientTerminalController.php::list`, `TerminalController.php::list`, `TerminalAssignmentController.php` |
@@ -535,8 +535,8 @@ Responsabilidades:
 | G‑04 | **Publicación inconsistente de Domain Events** | 🟡 Media | **Cascada Contact→User ✅ resuelta (T31)** — `DeactivateContact`/`ReactivateContact`/`LinkUserToContact` publican sus eventos (CL‑05/CL‑10 operativas). Pendiente (19/29 publicados): `RegisterClient`, `UpdateClient`, `Activate/DeactivateClient`, `DeleteClient`, `AddContact`, `RegisterTerminal` aún no publican |
 | G‑08 | **`WarrantyExpired` sin publisher** | 🟡 Media | `CheckExpiringWarrantiesCommand` detecta garantías próximas a vencer pero solo imprime; el evento `WarrantyExpired` (consumido por Notification) nunca se publica |
 | G‑09 | **Dead events** | 🟡 Media | `ClientSaleOrderCreated`, `ClientSaleOrderCompleted`, `SlaPolicyCreated` definidos y consumidos por Notification pero sin ningún publisher en todo el código |
-| G‑10 | **Bug SQL en dashboard (KPIs de contactos)** | 🟡 Media | `GetClientDashboardSummaryHandler::countActiveContacts()` y `contactsByStatus()` consultan tabla `contacts`; el mapping real es `client_contacts` → error/resultado incorrecto en runtime |
-| G‑11 | **`ListContactsByClientQuery` sin caller** | 🟡 Media | Query sin uso en producción (solo tests). Los controllers usan `FindContactsByClient`. **Falso negativo del `bin/wiring-check.php`**: la exclusión de "handler pareja" (`str_contains(basename($otherFile), $basename)`, línea 128) falla porque `ListContactsByClientHandler.php` no contiene la subcadena `ListContactsByClientQuery.php`; el handler importa el FQCN del Query (línea 143) y el script lo cuenta como caller. Punto ciego estructural: aplica a todo Query con handler pareja que lo importe. Candidata a borrar o conectar |
+| G‑10 | **Bug SQL en dashboard (KPIs de contactos)** | 🟢 Resuelto | ✅ Corregido: `GetClientDashboardSummaryHandler` ahora consulta `client_contacts` (tabla real mapeada en `Contact.orm.xml`) |
+| G‑11 | **`ListContactsByClientQuery` sin caller** | 🟢 Resuelto | ✅ Query reparada: ahora acepta `clientId` y filtra via `findByClientId`. El `bin/wiring-check.php` fix (T32) ahora detecta correctamente el patrón Query↔Handler. `FindContactsByClient` sigue siendo el caller principal en controllers. |
 | G‑12 | **Importers async sin dispatcher** | 🟢 Baja | `ImportClientsMessage`/`ImportTerminalsMessage` registrados en `messenger.yaml` (async_events) con su `MessageHandler`, pero ningún código los despacha (los controllers y CLI usan el handler sync directo) |
 | G‑13 | **UI de modelos/partes solo CLI** | 🟢 Baja | `ImportTerminalModels` e `ImportModelParts` (P2) solo tienen CLI; sin endpoint API/web ni template descargable (a diferencia de clientes/terminales) |
 | G‑06 | **Cobertura de tests** | 🟡 Media | Real: **84 archivos** (79 Unit + 5 Functional) — ya no "11+1". Faltan tests para: `RegisterClientHandler`, `UpdateClientHandler`, `ActivateClientHandler`, `DeactivateClientHandler`, `DeleteClientHandler`, `AddContactHandler`, `ReactivateContactHandler`, `DeactivateContactHandler`, `RegisterTerminalHandler`, `ActivateTerminalAssignmentHandler`, `DeactivateTerminalAssignmentHandler`, `ImportModelPartsHandler` y handlers de sitios (parcial) |

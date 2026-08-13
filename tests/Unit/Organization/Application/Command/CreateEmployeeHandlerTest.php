@@ -7,9 +7,11 @@ namespace App\Tests\Unit\Organization\Application\Command;
 use App\Organization\Application\Command\CreateEmployee\CreateEmployeeCommand;
 use App\Organization\Application\Command\CreateEmployee\CreateEmployeeHandler;
 use App\Organization\Domain\Entities\Employee;
+use App\Organization\Domain\Entities\EmploymentPeriod;
 use App\Organization\Domain\Enums\EmployeeStatus;
 use App\Organization\Domain\Events\EmployeeCreated;
 use App\Organization\Domain\Repositories\EmployeeRepositoryInterface;
+use App\Organization\Domain\Repositories\EmploymentPeriodRepositoryInterface;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\TestCase;
@@ -28,6 +30,7 @@ final class CreateEmployeeHandlerTest extends TestCase
     public function testCreatesEmployeeSuccessfully(): void
     {
         $employeeRepo = $this->createMock(EmployeeRepositoryInterface::class);
+        $employmentPeriodRepo = $this->createMock(EmploymentPeriodRepositoryInterface::class);
         $idGenerator = $this->createMock(IdGeneratorInterface::class);
         $publisher = $this->createMock(DomainEventPublisherInterface::class);
 
@@ -40,11 +43,15 @@ final class CreateEmployeeHandlerTest extends TestCase
                 $savedEmployee = $e;
             });
 
+        $employmentPeriodRepo->expects($this->once())
+            ->method('save')
+            ->with($this->isInstanceOf(EmploymentPeriod::class));
+
         $publisher->expects($this->once())
             ->method('publish')
             ->with($this->isInstanceOf(EmployeeCreated::class));
 
-        $handler = new CreateEmployeeHandler($employeeRepo, $idGenerator, $publisher);
+        $handler = new CreateEmployeeHandler($employeeRepo, $employmentPeriodRepo, $idGenerator, $publisher);
 
         $result = ($handler)(new CreateEmployeeCommand(
             identificationNumber: self::ID_NUMBER,
@@ -68,12 +75,17 @@ final class CreateEmployeeHandlerTest extends TestCase
     public function testThrowsWhenInvalidDateFormat(): void
     {
         $employeeRepo = $this->createMock(EmployeeRepositoryInterface::class);
+        $employmentPeriodRepo = $this->createMock(EmploymentPeriodRepositoryInterface::class);
         $idGenerator = $this->createMock(IdGeneratorInterface::class);
         $publisher = $this->createMock(DomainEventPublisherInterface::class);
 
         $idGenerator->method('generate')->willReturn(self::GENERATED_ID);
 
-        $handler = new CreateEmployeeHandler($employeeRepo, $idGenerator, $publisher);
+        $employmentPeriodRepo->expects($this->any())
+            ->method('save')
+            ->with($this->isInstanceOf(EmploymentPeriod::class));
+
+        $handler = new CreateEmployeeHandler($employeeRepo, $employmentPeriodRepo, $idGenerator, $publisher);
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Fecha de contratación inválida');
@@ -92,12 +104,17 @@ final class CreateEmployeeHandlerTest extends TestCase
     public function testThrowsWhenIdentificationNumberIsEmpty(): void
     {
         $employeeRepo = $this->createMock(EmployeeRepositoryInterface::class);
+        $employmentPeriodRepo = $this->createMock(EmploymentPeriodRepositoryInterface::class);
         $idGenerator = $this->createMock(IdGeneratorInterface::class);
         $publisher = $this->createMock(DomainEventPublisherInterface::class);
 
         $idGenerator->method('generate')->willReturn(self::GENERATED_ID);
 
-        $handler = new CreateEmployeeHandler($employeeRepo, $idGenerator, $publisher);
+        $employmentPeriodRepo->expects($this->any())
+            ->method('save')
+            ->with($this->isInstanceOf(EmploymentPeriod::class));
+
+        $handler = new CreateEmployeeHandler($employeeRepo, $employmentPeriodRepo, $idGenerator, $publisher);
 
         $this->expectException(\App\Organization\Domain\Exceptions\EmployeeIdentificationNumberException::class);
         $this->expectExceptionMessage('El número de identificación no puede estar vacío.');
@@ -116,12 +133,17 @@ final class CreateEmployeeHandlerTest extends TestCase
     public function testThrowsWhenEmailIsInvalid(): void
     {
         $employeeRepo = $this->createMock(EmployeeRepositoryInterface::class);
+        $employmentPeriodRepo = $this->createMock(EmploymentPeriodRepositoryInterface::class);
         $idGenerator = $this->createMock(IdGeneratorInterface::class);
         $publisher = $this->createMock(DomainEventPublisherInterface::class);
 
         $idGenerator->method('generate')->willReturn(self::GENERATED_ID);
 
-        $handler = new CreateEmployeeHandler($employeeRepo, $idGenerator, $publisher);
+        $employmentPeriodRepo->expects($this->any())
+            ->method('save')
+            ->with($this->isInstanceOf(EmploymentPeriod::class));
+
+        $handler = new CreateEmployeeHandler($employeeRepo, $employmentPeriodRepo, $idGenerator, $publisher);
 
         $this->expectException(\App\Organization\Domain\Exceptions\EmployeeEmailException::class);
         $this->expectExceptionMessage('Formato de correo electrónico inválido.');
@@ -140,6 +162,7 @@ final class CreateEmployeeHandlerTest extends TestCase
     public function testCreatesEmployeeWithNoUserProvisioning(): void
     {
         $employeeRepo = $this->createMock(EmployeeRepositoryInterface::class);
+        $employmentPeriodRepo = $this->createMock(EmploymentPeriodRepositoryInterface::class);
         $idGenerator = $this->createMock(IdGeneratorInterface::class);
         $publisher = $this->createMock(DomainEventPublisherInterface::class);
 
@@ -152,11 +175,15 @@ final class CreateEmployeeHandlerTest extends TestCase
                 $savedEmployee = $e;
             });
 
+        $employmentPeriodRepo->expects($this->once())
+            ->method('save')
+            ->with($this->isInstanceOf(EmploymentPeriod::class));
+
         $publisher->expects($this->once())
             ->method('publish')
             ->with($this->isInstanceOf(EmployeeCreated::class));
 
-        $handler = new CreateEmployeeHandler($employeeRepo, $idGenerator, $publisher);
+        $handler = new CreateEmployeeHandler($employeeRepo, $employmentPeriodRepo, $idGenerator, $publisher);
 
         $result = ($handler)(new CreateEmployeeCommand(
             identificationNumber: self::ID_NUMBER,

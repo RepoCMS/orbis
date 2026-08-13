@@ -21,7 +21,7 @@ final readonly class ListContactsByClientHandler
     {
         return array_map(
             static fn ($contact) => ContactResponse::fromEntity($contact),
-            $this->contactRepository->findAll(),
+            $this->contactRepository->findByClientId($query->clientId),
         );
     }
 }

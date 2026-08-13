@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-17
 
-**Status**: In Development (~90% implementado — verificado contra disco 2026-08-07)
+**Status**: In Development (~95% implementado — G-06..G-09 resueltos 2026-08-12, pendientes G-10..G-14)
 
 > **Nota de trazabilidad:** Este spec fue alineado con la realidad del código el 2026-08-07 (tarea T02 del tablero). Conteos verificados: 33 Commands, 8 Queries, 8 Controllers, 3 Reportes, 1 Importer, 25 Domain Events, 7 ORM mappings, 63 archivos de test. El invariante Employee↔User está especificado por separado en `specs/010a-employee-user-invariant/spec.md`.
 
@@ -144,8 +144,7 @@ Los eventos `Overtime*` se registran en la entidad (pullDomainEvents) y se publi
 | `endedAt` | `?DateTimeImmutable` |
 | `status` | `EmploymentPeriodStatus` (ACTIVE / CLOSED) |
 
-**Factory:** `EmploymentPeriod::start(...)`. **Ciclo previsto:** crear ACTIVE al contratar, `close()` al terminar, nuevo al reactivar.
-**⚠️ Gap real:** el código solo ejecuta el `close()` (en `DeactivateEmployeeHandler`); **ningún handler instancia `EmploymentPeriod::start()`** — el registro de altas nunca se persiste (ver G-07).
+**Factory:** `EmploymentPeriod::start(...)`. **Ciclo:** crear ACTIVE al contratar (`CreateEmployeeHandler`), `close()` al terminar (`DeactivateEmployeeHandler`), nuevo al reactivar (`ReactivateEmployeeHandler`). ✅ G-07 resuelto.
 
 ### 3.7 ServiceZoneAssignment (historial de asignaciones de técnicos)
 
@@ -330,7 +329,7 @@ Los eventos `Overtime*` se registran en la entidad (pullDomainEvents) y se publi
 | **Domain — Entities** | ✅ Implementado | 7 entidades (Employee, ServiceZone, VacationRequest, OvertimeRecord, EmployeeSpecialPeriod, EmploymentPeriod, ServiceZoneAssignment) |
 | **Domain — ValueObjects** | ✅ Implementado | 10 VOs |
 | **Domain — Enums** | ✅ Implementado | 8 enums string-backed (custom DBAL types) |
-| **Domain — Events** | ⚠️ Parcial | 25 eventos; **24 se publican** desde handlers; `SpecialPeriodAutoProcessed` no tiene emisor (G-08) |
+| **Domain — Events** | ✅ Implementado | 25 eventos; todos publican desde handlers/consores (`SpecialPeriodAutoProcessed` → `org:process-special-periods` cron) |
 | **Domain — Exceptions** | ✅ Implementado | 23 excepciones de dominio (verificadas) + 6 de aplicación |
 | **Domain — Repositories** | ✅ Implementado | 7 interfaces |
 | **Application — Commands** | ✅ Implementado | 33 commands + handlers, todos con caller real (wiring-check 0 huérfanos) |
@@ -345,7 +344,7 @@ Los eventos `Overtime*` se registran en la entidad (pullDomainEvents) y se publi
 | **Presentation — Web** | ✅ Implementado | 5 controllers web + 8 templates |
 | **Dashboard** | ✅ Implementado | Web (`OrganizationDashboardController`) + API (`/dashboard/summary`); 7 KPIs de analytics.md F.1.2 Organization todos cubiertos |
 | **Reportes exportables** | ✅ Implementado | xlsx (3) + pdf (2: ActivePersonnel, ScheduledVacations) |
-| **Tests** | ⚠️ Parcial | 63 archivos (60 válidos + **3 duplicados basura** `*-DESKTOP-GU1L412.php` — G-09) |
+| **Tests** | ✅ Implementado | 60 archivos válidos (3 basura `*-DESKTOP-GU1L412.php` eliminados — G-09 resuelto) |
 | **Wiring** | ✅ OK | `php bin/wiring-check.php`: 346 targets, 0 huérfanos (exit 0) |
 
 ---
@@ -425,7 +424,7 @@ Los eventos `Overtime*` se registran en la entidad (pullDomainEvents) y se publi
 | SpecialPeriodCancelled | CancelEmployeeSpecialPeriodHandler | Notification |
 | SpecialPeriodEdited | EditEmployeeSpecialPeriodHandler | Notification |
 | CityTransferred | TransferCityHandler | Notification |
-| **SpecialPeriodAutoProcessed** | ⚠️ **NINGUNO (sin emisor)** | — (evento muerto, ver G-08) |
+| **SpecialPeriodAutoProcessed** | `org:process-special-periods` (cron) | Notification |
 
 **Transporte:** `SymfonyDomainEventPublisher` → EventDispatcher → `DomainEventBridgeSubscriber` → `DomainEventMessage` → Messenger `async_events`. El proceso cron `org:process-special-periods` NO publica eventos.
 
@@ -463,9 +462,9 @@ Export vía `ExcelExportService`/`PdfExportService` (Shared Kernel). Permiso `or
 ### Camino al 95% (pendientes reales)
 
 1. **G-06 (crítico):** corregir firma de `ListEmployeesQuery` (agregar `serviceZoneId`, `page`, `limit` y paginación real) o ajustar callers — desbloquea list API y cross-BC (Custody, Expense, Support).
-2. **G-07:** crear `EmploymentPeriod::start()` en `CreateEmployeeHandler` y `ReactivateEmployeeHandler`.
-3. **G-08:** publicar `SpecialPeriodAutoProcessed` desde `ProcessEmployeeSpecialPeriodsCommand`.
-4. **G-09:** eliminar los 3 archivos basura de tests (2 en `tests/Unit/Organization/`, 1 en `tests/Unit/Inventory/Application/Query/`).
+2. **G-07:** ✅ crear `EmploymentPeriod::start()` en `CreateEmployeeHandler` y `ReactivateEmployeeHandler`.
+3. **G-08:** ✅ publicar `SpecialPeriodAutoProcessed` desde `ProcessEmployeeSpecialPeriodsCommand`.
+4. **G-09:** ✅ eliminar los 3 archivos basura de tests (2 en `tests/Unit/Organization/`, 1 en `tests/Unit/Inventory/Application/Query/`).
 5. **G-10/G-11:** variante async del import (>100 filas) y validación/vinculación cross-BC.
 6. **G-12/G-13:** unificar prefijos de tablas y labels de perfil (deuda de naming).
 

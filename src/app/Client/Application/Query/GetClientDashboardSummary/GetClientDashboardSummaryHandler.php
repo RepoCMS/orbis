@@ -43,7 +43,7 @@ final readonly class GetClientDashboardSummaryHandler
 
     private function countActiveContacts(): int
     {
-        $sql = "SELECT COUNT(*) FROM contacts WHERE status = 'active' AND deleted_at IS NULL";
+        $sql = "SELECT COUNT(*) FROM client_contacts WHERE status = 'active' AND deleted_at IS NULL";
 
         return (int) $this->connection->fetchOne($sql);
     }
@@ -225,7 +225,7 @@ final readonly class GetClientDashboardSummaryHandler
     {
         $sql = '
             SELECT status, COUNT(*) as total
-            FROM contacts
+            FROM client_contacts
             WHERE deleted_at IS NULL
             GROUP BY status
             ORDER BY total DESC
