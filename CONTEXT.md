@@ -2,10 +2,10 @@
 
 > **Propósito:** Este documento es la referencia que toda IA, agente o desarrollador debe consultar antes de actuar. Contiene el estado REAL del proyecto. AGENTS.md (reglas de código) ya no publica % de BCs — esta es la única tabla de estado.
 >
-> **Actualizado:** 2026-08-12
+> **Actualizado:** 2026-08-14
 > **Rama activa:** `main` (remote: `https://github.com/RepoCMS/orbis.git`)
-> **Último commit:** `7d8e4fa` — ciclo T01-T03: specs Notification/Organization/Client realineadas y aprobadas (2026-08-07), docs + CHANGELOG_AI v1.4.0 (ver §2/§3)
-> **Commits pendientes (working tree):** T32 wiring-check fix, T33 Notification G-03, T34 Organization G-07..G-09, T35 Client G-10/G-11
+> **Último commit:** `64d456b` — wiring-baseline + migration newline — CI gates green (2026-08-14)
+> **Commits pendientes (working tree):** ninguno (working tree limpio)
 
 ---
 
@@ -270,5 +270,6 @@ src/app/{BC}/
 10. ✅ **T33 (G-03)** — `RetryNotificationHandler` re-despacha `SendNotificationMessage` vía `MessageBusInterface`. Tests 5/5 verdes. Verificado 2026-08-12.
 11. ✅ **T34 (G-07/G-08/G-09)** — `EmploymentPeriod::start()` en Create/Reactivate, `SpecialPeriodAutoProcessed` desde cron `org:process-special-periods`, 3 archivos basura eliminados. Verificado 2026-08-12.
 12. ✅ **T35 (G-10/G-11)** — Bug SQL `contacts`→`client_contacts` corregido en dashboard, `ListContactsByClientQuery` reparada. Verificado 2026-08-12.
-13. **[MEDIA]** Implementar Identity Dashboard KPIs (pendientes según TODOS.md).
-11. **[BAJA]** Actualizar `.opencode/opencode.jsonc` con roles de agentes si se expande. ✅ Hecho 2026-08-05: `.opencode/agent/{planner,qa-reviewer,developer,test-engineer,frontend,security-reviewer,docs}.md`
+13. ✅ **T32-T35 CI gates green** — wiring-baseline.txt + bin/wiring-check.php accept baseline; migration newline fixed; all 5 CI jobs pass locally (PHPStan 0 errors, CS-Fixer 0 files, PHPUnit 2034 OK, Wiring 0 orphans, Validate exit 2). Commit `64d456b` pushed to origin main 2026-08-14.
+14. **[MEDIA]** Implementar Identity Dashboard KPIs (pendientes según TODOS.md).
+15. **[BAJA]** Actualizar `.opencode/opencode.jsonc` con roles de agentes si se expande. ✅ Hecho 2026-08-05: `.opencode/agent/{planner,qa-reviewer,developer,test-engineer,frontend,security-reviewer,docs}.md`
