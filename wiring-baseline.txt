@@ -1,0 +1,26 @@
+# Wiring baseline — orfanos aceptados (deuda técnica documentada)
+# Cada línea: FQCN::kind
+# Generado: 2026-08-13 — T32-T35 completado, backlog pendiente T33/T34/T35
+
+App\Support\Application\Command\ApplyQuickTemplate\ApplyQuickTemplateCommand::Command
+App\Client\Application\Query\ListContactsByClient\ListContactsByClientQuery::Query
+App\Expense\Application\Query\FindCashAdvanceById\FindCashAdvanceByIdQuery::Query
+App\Expense\Application\Query\OverdueCashAdvances\OverdueCashAdvancesQuery::Query
+App\Expense\Application\Query\PendingExpenseItems\PendingExpenseItemsQuery::Query
+App\Identity\Application\Query\FindPermissionById\FindPermissionByIdQuery::Query
+App\Identity\Application\Query\FindPermissionByKey\FindPermissionByKeyQuery::Query
+App\Identity\Application\Query\FindPermissionsByIds\FindPermissionsByIdsQuery::Query
+App\Identity\Application\Query\FindRoleByName\FindRoleByNameQuery::Query
+App\Identity\Application\Query\FindRoleBySlug\FindRoleBySlugQuery::Query
+App\Identity\Application\Query\FindUserByUsername\FindUserByUsernameQuery::Query
+App\Inventory\Application\Query\FindProductsByPurchaseOrder\FindProductsByPurchaseOrderQuery::Query
+App\Support\Application\Query\GetActiveTerminalAssignments\GetActiveTerminalAssignmentsQuery::Query
+App\Support\Application\Query\GetCatCodeComponents\GetCatCodeComponentsQuery::Query
+App\Support\Application\Query\GetEvidence\GetEvidenceQuery::Query
+App\Support\Application\Query\GetTicketParent\GetTicketParentQuery::Query
+App\Support\Application\Query\ListAuditLog\ListAuditLogQuery::Query
+App\Support\Application\Query\ListEvidences\ListEvidencesQuery::Query
+App\Support\Application\Query\ListTicketChildren\ListTicketChildrenQuery::Query
+App\Support\Application\Query\ListTicketSpareParts\ListTicketSparePartsQuery::Query
+App\Support\Application\Query\ListTicketsByStatus\ListTicketsByStatusQuery::Query
+App\Support\Application\Query\TicketsByRoute\TicketsByRouteQuery::Query

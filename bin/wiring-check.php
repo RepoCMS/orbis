@@ -17,6 +17,18 @@ $root = dirname(__DIR__);
 $src = $root.'/src';
 $config = $root.'/config';
 
+// Load wiring baseline (orphans accepted as tech debt)
+$baselineFile = $root.'/wiring-baseline.txt';
+$baseline = [];
+if (file_exists($baselineFile)) {
+    foreach (file($baselineFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+        $line = trim($line);
+        if ($line !== '' && !str_starts_with($line, '#')) {
+            $baseline[$line] = true;
+        }
+    }
+}
+
 $allFiles = array_merge(
     findFiles($src, '*.php'),
     findFiles($config, '*.php'),
@@ -62,6 +74,7 @@ foreach ($targets as $t) {
 }
 
 $orphans = [];
+$baselined = [];
 foreach ($targets as $t) {
     if (isCliCommand($t['file'])) {
         continue; // CLI commands: caller = registro console.command en services.yaml (framework)
@@ -70,12 +83,21 @@ foreach ($targets as $t) {
         continue; // EventSubscriberInterface + autoconfigure: true en services.yaml (framework)
     }
     if (!hasCaller($t, $contents, $shortNameCount)) {
+        $key = $t['fqcn'].'::'.$t['kind'];
+        if (isset($baseline[$key])) {
+            $baselined[] = $key;
+            continue;
+        }
         $orphans[] = sprintf('%s (%s)', $t['fqcn'], str_replace($root, '.', $t['file']));
     }
 }
 
 if ($orphans === []) {
-    fwrite(STDOUT, sprintf("Wiring OK: %d targets verificados, 0 huerfanos.\n", count($targets)));
+    $msg = sprintf("Wiring OK: %d targets verificados, 0 huerfanos", count($targets));
+    if ($baselined !== []) {
+        $msg .= sprintf(" (%d en baseline)", count($baselined));
+    }
+    fwrite(STDOUT, $msg.".\n");
     exit(0);
 }
 
