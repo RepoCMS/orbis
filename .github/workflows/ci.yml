@@ -41,10 +41,6 @@ jobs:
           restore-keys: composer-
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
-      - name: Debug test environment
-        run: |
-          pwd
-          ls -la
       - name: Wait for MySQL
         run: |
           for i in $(seq 1 30); do
@@ -79,10 +75,6 @@ jobs:
           restore-keys: composer-
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
-      - name: Debug PHPStan
-        run: |
-          pwd
-          ls -la phpstan.neon phpstan-baseline.neon
       - name: Run PHPStan
         run: php -d memory_limit=1G vendor/bin/phpstan analyse --no-progress
 
@@ -103,10 +95,6 @@ jobs:
           restore-keys: composer-
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
-      - name: Debug CS-Fixer
-        run: |
-          pwd
-          ls -la .php-cs-fixer.dist.php
       - name: Check style
         run: php vendor/bin/php-cs-fixer fix --dry-run --diff --using-cache=no
 
@@ -121,11 +109,6 @@ jobs:
           coverage: none
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
-      - name: Debug wiring baseline
-        run: |
-          pwd
-          ls -la wiring-baseline.txt
-          head -5 wiring-baseline.txt
       - name: Wiring check
         run: php bin/wiring-check.php
 
@@ -140,11 +123,6 @@ jobs:
           coverage: none
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
-      - name: Debug validate baseline
-        run: |
-          pwd
-          ls -la validate-baseline.txt 2>/dev/null || echo "No validate-baseline.txt"
-          head -10 validate-baseline.txt 2>/dev/null || true
       - name: Project validation
         run: |
           php bin/validate-project.php
