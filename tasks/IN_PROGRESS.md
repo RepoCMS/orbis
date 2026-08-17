@@ -40,10 +40,11 @@
 4. ✅ **T33 (parcial)** — Notification G-03: `RetryNotificationHandler` re-despacha `SendNotificationMessage`. Tests 5/5 verdes.
 5. ✅ **T34 (parcial)** — Organization G-07/G-08/G-09: `EmploymentPeriod::start()` en Create/Reactivate, `SpecialPeriodAutoProcessed` desde cron, 3 archivos basura eliminados.
 6. ✅ **T35 (parcial)** — Client G-10/G-11: bug SQL `contacts`→`client_contacts` corregido, `ListContactsByClientQuery` reparada.
-7. Probar el CI real en GitHub (push activará los 5 jobs).
-8. Deuda detectada por gates: T24-T29 (enums UPPERCASE, VOs, baseline PHPStan, dompdf, coverage).
-9. Pendientes en backlog: T33 (G-01/G-02/G-04/G-05), T34 (G-10..G-14), T35 (G-06 tests 13 handlers).
-10. ✅ Commits del ciclo: `7d8e4fa` (specs T01-T03), `b5a860e` (T30), `d15eab3` (T31), pusheados a origin main 2026-08-07.
+7. ✅ **T35-G06** — Tests para handlers de Client: `ImportModelPartsHandlerTest.php` (6 test cases). Commit `7de182c` pusheado a origin main 2026-08-17.
+8. ✅ **CI fix** — Root cause de fallos: falta `doctrine:migrations:migrate` en job test. Agregado + debug output removido. Commits `8b98100`, `39fa197` pusheados 2026-08-17.
+9. Deuda detectada por gates: T24-T29 (enums UPPERCASE, VOs, baseline PHPStan, dompdf, coverage).
+10. Pendientes en backlog: T33 (G-01/G-02/G-04/G-05), T34 (G-10..G-14).
+11. ✅ Commits del ciclo: `7d8e4fa` (specs T01-T03), `b5a860e` (T30), `d15eab3` (T31), `7de182c` (T35-G06), `8b98100` (CI fix), `39fa197` (CI cleanup), pusheados a origin main.
 
 ---
 

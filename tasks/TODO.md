@@ -40,6 +40,7 @@
 | T33 | - [x] **Notification G-03 (retry no re-despacha)** ✅ Completado 2026-08-12: `RetryNotificationHandler` inyecta `MessageBusInterface` y despacha `SendNotificationMessage`. Tests actualizados (5/5 verdes). G-01/G-02/G-04/G-05 pendientes en backlog. | ALTA | Notification | specs/006-notification/spec.md, CONTEXT.md §2 | ✅ (parcial G-03) |
 | T34 | - [x] **Organization G-07/G-08/G-09** ✅ Completado 2026-08-12: `EmploymentPeriod::start()` en Create/Reactivate, `SpecialPeriodAutoProcessed` publicado desde cron `org:process-special-periods`, 3 archivos basura eliminados. G-10..G-14 pendientes. | MEDIA | Organization | specs/001-organization-spec/spec.md §9-10, CONTEXT.md §2 | ✅ (parcial G-07..G-09) |
 | T35 | - [x] **Client G-10/G-11** ✅ Completado 2026-08-12: bug SQL `contacts`→`client_contacts` corregido en dashboard, `ListContactsByClientQuery` reparada (filtra por clientId). G-06 pendiente. | MEDIA | Client | specs/002-client/spec.md, CONTEXT.md §2 | ✅ (parcial G-10..G-11) |
+| T35-G06 | - [x] **Tests para handlers de Client** ✅ Completado 2026-08-17: `ImportModelPartsHandlerTest.php` (6 test cases: happy path, dry-run, duplicate skip, invalid rows, empty file, missing headers) | MEDIA | Client | specs/002-client/spec.md §G-06 | ✅ |
 
 ---
 
