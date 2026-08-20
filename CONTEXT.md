@@ -4,8 +4,8 @@
 >
 > **Actualizado:** 2026-08-20
 > **Rama activa:** `main` (remote: `https://github.com/RepoCMS/orbis.git`)
-> **Último commit:** `bbd052f` — T36 UserContactResolver tests + AbstractUlid::equals + composer audit fix — CI gates green (2026-08-20)
-> **Commits pendientes (working tree):** composer.json + composer.lock (dependency updates: dompdf 3.1.6, phpspreadsheet 5.9.0, phpunit 11.5.56)
+> **Último commit:** `67c4eec` — T28 + T36: Fix composer audit advisories + UserContactResolver tests — CI gates green (2026-08-20)
+> **Commits pendientes (working tree):** ninguno (working tree limpio)
 
 ---
 

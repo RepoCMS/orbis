@@ -46,7 +46,7 @@
 10. Pendientes en backlog: T33 (G-01/G-02/G-04/G-05), T34 (G-10..G-14).
 11. ✅ Commits del ciclo: `7d8e4fa` (specs T01-T03), `b5a860e` (T30), `d15eab3` (T31), `7de182c` (T35-G06), `8b98100` (CI fix), `39fa197` (CI cleanup), `bbd052f` (UserContactResolver tests + AbstractUlid::equals) pusheados a origin main.
 12. ✅ **T36** — Fix UserContactResolver tests (Notification BC): convert string to UserIdValueObject, add AbstractUlid::equals(), fix test data. Commit `bbd052f` 2026-08-20.
-13. ✅ **T28** — Fix composer audit advisories: update `dompdf/dompdf` ^3.1.6 (6 CVEs fixed), `phpoffice/phpspreadsheet` ^5.9.0 (3 high CVEs fixed), `phpunit/phpunit` ^11.5.50 (1 high CVE fixed). All CI gates green: PHPUnit 2082 tests, PHPStan 0 errors, CS-Fixer 0 files, Wiring 0 orphans, Validate exit 2. Composer audit: 0 advisories. Commits pending push (composer.json + composer.lock).
+13. ✅ **T28** — Fix composer audit advisories: update `dompdf/dompdf` ^3.1.6 (6 CVEs fixed), `phpoffice/phpspreadsheet` ^5.9.0 (3 high CVEs fixed), `phpunit/phpunit` ^11.5.50 (1 high CVE fixed). All CI gates green: PHPUnit 2082 tests, PHPStan 0 errors, CS-Fixer 0 files, Wiring 0 orphans, Validate exit 2. Composer audit: 0 advisories. Commit `67c4eec` pushed to origin main 2026-08-20.
 
 ---
 
