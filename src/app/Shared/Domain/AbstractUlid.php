@@ -33,5 +33,10 @@ abstract readonly class AbstractUlid
         return $this->id;
     }
 
+    public function equals(object $other): bool
+    {
+        return $other instanceof static && (string) $other === $this->id;
+    }
+
     abstract protected static function invalidIdException(): DomainException;
 }

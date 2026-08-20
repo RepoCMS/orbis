@@ -535,18 +535,6 @@ parameters:
 			path: src/app/Notification/Infrastructure/Messenger/Handler/CrossBcDomainEventHandler.php
 
 		-
-			message: '#^Parameter \#1 \$userId of method App\\Client\\Domain\\Repositories\\ContactRepositoryInterface\:\:findByUserId\(\) expects App\\Identity\\Domain\\ValueObjects\\UserIdValueObject, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/app/Notification/Infrastructure/Service/UserContactResolver.php
-
-		-
-			message: '#^Parameter \#1 \$userId of method App\\Organization\\Domain\\Repositories\\EmployeeRepositoryInterface\:\:findByUserId\(\) expects App\\Identity\\Domain\\ValueObjects\\UserIdValueObject, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/app/Notification/Infrastructure/Service/UserContactResolver.php
-
-		-
 			message: '#^Access to constant HTTP_CONFLICT on an unknown class App\\Notification\\Presentation\\Http\\Response\.$#'
 			identifier: class.notFound
 			count: 1

@@ -14,9 +14,4 @@ final readonly class EntryIdValueObject extends AbstractUlid
     {
         return new EntryIdException('Formato de ID de entrada de inventario inválido.');
     }
-
-    public function equals(self $other): bool
-    {
-        return (string) $this === (string) $other;
-    }
 }

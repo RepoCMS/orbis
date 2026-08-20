@@ -33,8 +33,10 @@ final readonly class UserContactResolver implements ContactResolverInterface
             return ['email' => null, 'phone' => null, 'name' => null];
         }
 
+        $userId = UserIdValueObject::fromString($recipientId);
+
         // 1) Buscar como Employee vinculado
-        $employee = $this->employeeRepository->findByUserId($recipientId);
+        $employee = $this->employeeRepository->findByUserId($userId);
         if ($employee !== null) {
             return [
                 'email' => (string) $employee->email(),
@@ -44,7 +46,7 @@ final readonly class UserContactResolver implements ContactResolverInterface
         }
 
         // 2) Buscar como Contact vinculado
-        $contact = $this->contactRepository->findByUserId($recipientId);
+        $contact = $this->contactRepository->findByUserId($userId);
         if ($contact !== null) {
             return [
                 'email' => (string) $contact->email(),
@@ -54,9 +56,7 @@ final readonly class UserContactResolver implements ContactResolverInterface
         }
 
         // 3) Fallback: solo tenemos username del User
-        $user = $this->userRepository->findById(
-            UserIdValueObject::fromString($recipientId),
-        );
+        $user = $this->userRepository->findById($userId);
 
         if ($user === null) {
             return ['email' => null, 'phone' => null, 'name' => null];
