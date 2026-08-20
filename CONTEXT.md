@@ -2,10 +2,10 @@
 
 > **Propósito:** Este documento es la referencia que toda IA, agente o desarrollador debe consultar antes de actuar. Contiene el estado REAL del proyecto. AGENTS.md (reglas de código) ya no publica % de BCs — esta es la única tabla de estado.
 >
-> **Actualizado:** 2026-08-14
+> **Actualizado:** 2026-08-20
 > **Rama activa:** `main` (remote: `https://github.com/RepoCMS/orbis.git`)
-> **Último commit:** `64d456b` — wiring-baseline + migration newline — CI gates green (2026-08-14)
-> **Commits pendientes (working tree):** ninguno (working tree limpio)
+> **Último commit:** `bbd052f` — T36 UserContactResolver tests + AbstractUlid::equals + composer audit fix — CI gates green (2026-08-20)
+> **Commits pendientes (working tree):** composer.json + composer.lock (dependency updates: dompdf 3.1.6, phpspreadsheet 5.9.0, phpunit 11.5.56)
 
 ---
 
