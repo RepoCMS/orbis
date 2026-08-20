@@ -44,7 +44,8 @@
 8. ✅ **CI fix** — Root cause de fallos: falta `doctrine:migrations:migrate` en job test. Agregado + debug output removido. Commits `8b98100`, `39fa197` pusheados 2026-08-17.
 9. Deuda detectada por gates: T24-T29 (enums UPPERCASE, VOs, baseline PHPStan, dompdf, coverage).
 10. Pendientes en backlog: T33 (G-01/G-02/G-04/G-05), T34 (G-10..G-14).
-11. ✅ Commits del ciclo: `7d8e4fa` (specs T01-T03), `b5a860e` (T30), `d15eab3` (T31), `7de182c` (T35-G06), `8b98100` (CI fix), `39fa197` (CI cleanup), pusheados a origin main.
+11. ✅ Commits del ciclo: `7d8e4fa` (specs T01-T03), `b5a860e` (T30), `d15eab3` (T31), `7de182c` (T35-G06), `8b98100` (CI fix), `39fa197` (CI cleanup), `bbd052f` (UserContactResolver tests + AbstractUlid::equals) pusheados a origin main.
+12. ✅ **T36** — Fix UserContactResolver tests (Notification BC): convert string to UserIdValueObject, add AbstractUlid::equals(), fix test data. Commit `bbd052f` 2026-08-20.
 
 ---
 

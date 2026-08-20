@@ -271,5 +271,6 @@ src/app/{BC}/
 11. ✅ **T34 (G-07/G-08/G-09)** — `EmploymentPeriod::start()` en Create/Reactivate, `SpecialPeriodAutoProcessed` desde cron `org:process-special-periods`, 3 archivos basura eliminados. Verificado 2026-08-12.
 12. ✅ **T35 (G-10/G-11)** — Bug SQL `contacts`→`client_contacts` corregido en dashboard, `ListContactsByClientQuery` reparada. Verificado 2026-08-12.
 13. ✅ **T32-T35 CI gates green** — wiring-baseline.txt + bin/wiring-check.php accept baseline; migration newline fixed; all 5 CI jobs pass locally (PHPStan 0 errors, CS-Fixer 0 files, PHPUnit 2034 OK, Wiring 0 orphans, Validate exit 2). Commit `64d456b` pushed to origin main 2026-08-14.
-14. **[MEDIA]** Implementar Identity Dashboard KPIs (pendientes según TODOS.md).
+14. ✅ **T36 (2026-08-20)** — Fix UserContactResolver tests (Notification BC): convert string to UserIdValueObject before calling repositories, add AbstractUlid::equals() method (was missing causing test failures), fix test data (Employee min name length 5 chars), remove redundant equals() from EntryIdValueObject. Regenerated PHPStan baseline (159 → 142 errors). All CI gates green: PHPUnit 2082 tests, PHPStan 0 errors, CS-Fixer 0 files, Wiring 0 orphans, Validate exit 2. Commit `bbd052f` pushed to origin main 2026-08-20.
+15. **[MEDIA]** Implementar Identity Dashboard KPIs (pendientes según TODOS.md).
 15. **[BAJA]** Actualizar `.opencode/opencode.jsonc` con roles de agentes si se expande. ✅ Hecho 2026-08-05: `.opencode/agent/{planner,qa-reviewer,developer,test-engineer,frontend,security-reviewer,docs}.md`
