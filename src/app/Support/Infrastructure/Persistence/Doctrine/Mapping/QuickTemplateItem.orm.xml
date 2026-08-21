@@ -9,6 +9,10 @@
 
         <id name="id" type="quick_template_item_id" column="id" length="26" />
 
+        <many-to-one field="quickTemplate" target-entity="App\Support\Domain\Entities\QuickTemplate" inversed-by="items">
+            <join-column name="quick_template_id" referenced-column-name="id" nullable="false" />
+        </many-to-one>
+
         <field name="modelPartId" type="string"             column="model_part_id"  length="26"  nullable="true" />
         <field name="partNumber"  type="string"             column="part_number"    length="100" nullable="true" />
         <field name="productCode" type="string"             column="product_code"   length="50"  nullable="true" />

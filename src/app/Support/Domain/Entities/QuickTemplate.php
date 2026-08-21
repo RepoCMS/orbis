@@ -68,14 +68,15 @@ final class QuickTemplate
         int $sortOrder = 0,
     ): void {
         $item = QuickTemplateItem::register(
-            id:          $id,
-            modelPartId: $modelPartId,
-            partNumber:  $partNumber,
-            productCode: $productCode,
-            description: $description,
-            quantity:    $quantity,
-            notes:       $notes,
-            sortOrder:   $sortOrder,
+            id:             $id,
+            quickTemplate:  $this,
+            modelPartId:    $modelPartId,
+            partNumber:     $partNumber,
+            productCode:    $productCode,
+            description:    $description,
+            quantity:       $quantity,
+            notes:          $notes,
+            sortOrder:      $sortOrder,
         );
 
         $this->items->add($item);

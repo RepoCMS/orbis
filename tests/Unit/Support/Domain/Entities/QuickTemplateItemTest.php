@@ -4,18 +4,35 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Support\Domain\Entities;
 
+use App\Support\Domain\Entities\QuickTemplate;
 use App\Support\Domain\Entities\QuickTemplateItem;
+use App\Support\Domain\ValueObjects\QuickTemplateIdValueObject;
 use App\Support\Domain\ValueObjects\QuickTemplateItemIdValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class QuickTemplateItemTest extends TestCase
 {
     private const ID = '01HZ0000000000000000000001';
+    private const TEMPLATE_ID = '01HZ0000000000000000000002';
+
+    private function createQuickTemplate(): QuickTemplate
+    {
+        return QuickTemplate::create(
+            id: QuickTemplateIdValueObject::fromString(self::TEMPLATE_ID),
+            modelId: 'MODEL-001',
+            name: 'Plantilla de prueba',
+            createdBy: 'user-001',
+            description: null,
+        );
+    }
 
     public function testRegisterFactoryCreatesCorrectly(): void
     {
+        $template = $this->createQuickTemplate();
+
         $item = QuickTemplateItem::register(
             id: QuickTemplateItemIdValueObject::fromString(self::ID),
+            quickTemplate: $template,
             modelPartId: 'PART-001',
             partNumber: 'PN-001',
             productCode: 'PROD-001',
@@ -34,12 +51,16 @@ final class QuickTemplateItemTest extends TestCase
         self::assertSame('Verificar estado', $item->notes());
         self::assertSame(1, $item->sortOrder());
         self::assertInstanceOf(\DateTimeImmutable::class, $item->createdAt());
+        self::assertSame($template, $item->quickTemplate());
     }
 
     public function testRegisterWithMinimalParams(): void
     {
+        $template = $this->createQuickTemplate();
+
         $item = QuickTemplateItem::register(
             id: QuickTemplateItemIdValueObject::fromString(self::ID),
+            quickTemplate: $template,
             modelPartId: null,
             partNumber: null,
             productCode: null,
@@ -62,6 +83,7 @@ final class QuickTemplateItemTest extends TestCase
 
         QuickTemplateItem::register(
             id: QuickTemplateItemIdValueObject::fromString(self::ID),
+            quickTemplate: $this->createQuickTemplate(),
             modelPartId: null,
             partNumber: null,
             productCode: null,
@@ -76,6 +98,7 @@ final class QuickTemplateItemTest extends TestCase
 
         QuickTemplateItem::register(
             id: QuickTemplateItemIdValueObject::fromString(self::ID),
+            quickTemplate: $this->createQuickTemplate(),
             modelPartId: null,
             partNumber: null,
             productCode: null,
@@ -87,10 +110,11 @@ final class QuickTemplateItemTest extends TestCase
     public function testRegisterThrowsOnNegativeSortOrder(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('El orden debe ser un valor no negativo');
+        self::expectExceptionMessage('El orden debe ser un valor no negativo');
 
         QuickTemplateItem::register(
             id: QuickTemplateItemIdValueObject::fromString(self::ID),
+            quickTemplate: $this->createQuickTemplate(),
             modelPartId: null,
             partNumber: null,
             productCode: null,
@@ -103,6 +127,7 @@ final class QuickTemplateItemTest extends TestCase
     {
         $item = QuickTemplateItem::register(
             id: QuickTemplateItemIdValueObject::fromString(self::ID),
+            quickTemplate: $this->createQuickTemplate(),
             modelPartId: null,
             partNumber: null,
             productCode: null,
@@ -134,6 +159,7 @@ final class QuickTemplateItemTest extends TestCase
     {
         $item = QuickTemplateItem::register(
             id: QuickTemplateItemIdValueObject::fromString(self::ID),
+            quickTemplate: $this->createQuickTemplate(),
             modelPartId: null,
             partNumber: null,
             productCode: null,

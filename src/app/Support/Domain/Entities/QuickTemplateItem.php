@@ -10,6 +10,7 @@ final class QuickTemplateItem
 {
     private function __construct(
         private QuickTemplateItemIdValueObject $id,
+        private QuickTemplate                  $quickTemplate,
         private ?string                        $modelPartId,
         private ?string                        $partNumber,
         private ?string                        $productCode,
@@ -23,6 +24,7 @@ final class QuickTemplateItem
 
     public static function register(
         QuickTemplateItemIdValueObject $id,
+        QuickTemplate $quickTemplate,
         ?string $modelPartId,
         ?string $partNumber,
         ?string $productCode,
@@ -44,15 +46,16 @@ final class QuickTemplateItem
         }
 
         return new self(
-            id:          $id,
-            modelPartId: $modelPartId !== null ? (trim($modelPartId) ?: null) : null,
-            partNumber:  $partNumber !== null ? (trim($partNumber) ?: null) : null,
-            productCode: $productCode !== null ? (trim($productCode) ?: null) : null,
-            description: trim($description),
-            quantity:    $quantity,
-            notes:       $notes !== null ? (trim($notes) ?: null) : null,
-            sortOrder:   $sortOrder,
-            createdAt:   new \DateTimeImmutable(),
+            id:             $id,
+            quickTemplate:  $quickTemplate,
+            modelPartId:    $modelPartId !== null ? (trim($modelPartId) ?: null) : null,
+            partNumber:     $partNumber !== null ? (trim($partNumber) ?: null) : null,
+            productCode:    $productCode !== null ? (trim($productCode) ?: null) : null,
+            description:    trim($description),
+            quantity:       $quantity,
+            notes:          $notes !== null ? (trim($notes) ?: null) : null,
+            sortOrder:      $sortOrder,
+            createdAt:      new \DateTimeImmutable(),
         );
     }
 
@@ -121,5 +124,10 @@ final class QuickTemplateItem
     public function createdAt(): \DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function quickTemplate(): QuickTemplate
+    {
+        return $this->quickTemplate;
     }
 }

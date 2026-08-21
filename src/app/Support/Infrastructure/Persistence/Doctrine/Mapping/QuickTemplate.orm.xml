@@ -17,7 +17,7 @@
         <field name="createdAt"   type="datetime_immutable" column="created_at" />
         <field name="updatedAt"   type="datetime_immutable" column="updated_at"   nullable="true" />
 
-        <one-to-many field="items" target-entity="App\Support\Domain\Entities\QuickTemplateItem" />
+        <one-to-many field="items" target-entity="App\Support\Domain\Entities\QuickTemplateItem" mapped-by="quickTemplate" />
 
         <indexes>
             <index name="idx_qt_model_id"   columns="model_id" />
