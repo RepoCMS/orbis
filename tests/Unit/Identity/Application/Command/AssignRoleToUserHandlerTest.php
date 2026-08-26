@@ -15,6 +15,7 @@ use App\Identity\Domain\Repositories\UserRepositoryInterface;
 use App\Identity\Domain\ValueObjects\HashedPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
+use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Identity\Domain\ValueObjects\UsernameValueObject;
 use PHPUnit\Framework\TestCase;
@@ -42,6 +43,7 @@ final class AssignRoleToUserHandlerTest extends TestCase
         $role = Role::create(
             new RoleIdValueObject(self::NEW_ROLE_ID),
             new RoleNameValueObject('Supervisor'),
+            new RoleSlugValueObject('supervisor'),
         );
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
         $roleRepo->method('findById')->willReturn($role);

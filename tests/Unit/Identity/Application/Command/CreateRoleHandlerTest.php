@@ -13,6 +13,9 @@ use App\Identity\Domain\Repositories\PermissionRepositoryInterface;
 use App\Identity\Domain\Repositories\RoleRepositoryInterface;
 use App\Identity\Domain\ValueObjects\PermissionIdValueObject;
 use App\Identity\Domain\ValueObjects\PermissionKeyValueObject;
+use App\Identity\Domain\ValueObjects\RoleIdValueObject;
+use App\Identity\Domain\ValueObjects\RoleNameValueObject;
+use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -25,6 +28,7 @@ final class CreateRoleHandlerTest extends TestCase
     {
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
         $roleRepo->method('findByName')->willReturn(null);
+        $roleRepo->method('findBySlug')->willReturn(null);
         $roleRepo->expects($this->once())->method('save');
 
         $permissionRepo = $this->createMock(PermissionRepositoryInterface::class);
@@ -40,7 +44,7 @@ final class CreateRoleHandlerTest extends TestCase
         $idGenerator->method('generate')->willReturn(self::GENERATED_ROLE_ID);
 
         $handler = new CreateRoleHandler($roleRepo, $permissionRepo, $idGenerator);
-        ($handler)(new CreateRoleCommand('Admin', [self::PERMISSION_ID]));
+        ($handler)(new CreateRoleCommand('Admin', 'admin', [self::PERMISSION_ID]));
 
         self::assertTrue(true); // no exception means success
     }
@@ -50,8 +54,9 @@ final class CreateRoleHandlerTest extends TestCase
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
         $roleRepo->method('findByName')->willReturn(
             \App\Identity\Domain\Entities\Role::create(
-                new \App\Identity\Domain\ValueObjects\RoleIdValueObject(self::GENERATED_ROLE_ID),
-                new \App\Identity\Domain\ValueObjects\RoleNameValueObject('Admin'),
+                new RoleIdValueObject(self::GENERATED_ROLE_ID),
+                new RoleNameValueObject('Admin'),
+                new RoleSlugValueObject('admin'),
             ),
         );
 
@@ -62,7 +67,7 @@ final class CreateRoleHandlerTest extends TestCase
         );
 
         $this->expectException(RoleNameAlreadyExistsException::class);
-        ($handler)(new CreateRoleCommand('Admin', []));
+        ($handler)(new CreateRoleCommand('Admin', 'admin', []));
     }
 
     public function testThrowsWhenPermissionNotFound(): void
@@ -80,6 +85,6 @@ final class CreateRoleHandlerTest extends TestCase
         );
 
         $this->expectException(PermissionNotFoundException::class);
-        ($handler)(new CreateRoleCommand('Admin', [self::PERMISSION_ID]));
+        ($handler)(new CreateRoleCommand('Admin', 'admin', [self::PERMISSION_ID]));
     }
 }

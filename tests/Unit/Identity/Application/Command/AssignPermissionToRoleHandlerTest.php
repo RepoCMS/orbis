@@ -16,6 +16,7 @@ use App\Identity\Domain\ValueObjects\PermissionIdValueObject;
 use App\Identity\Domain\ValueObjects\PermissionKeyValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
+use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class AssignPermissionToRoleHandlerTest extends TestCase
@@ -28,6 +29,7 @@ final class AssignPermissionToRoleHandlerTest extends TestCase
         $role = Role::create(
             new RoleIdValueObject(self::ROLE_ID),
             new RoleNameValueObject('Admin'),
+            new RoleSlugValueObject('admin'),
         );
 
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
@@ -64,6 +66,7 @@ final class AssignPermissionToRoleHandlerTest extends TestCase
         $role = Role::create(
             new RoleIdValueObject(self::ROLE_ID),
             new RoleNameValueObject('Admin'),
+            new RoleSlugValueObject('admin'),
         );
 
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);

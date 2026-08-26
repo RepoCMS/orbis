@@ -70,8 +70,8 @@ final class DoctrineRoleRepository implements RoleRepositoryInterface
         $role = $this->em->createQueryBuilder()
             ->select('r')
             ->from(Role::class, 'r')
-            ->where('r.name = :name')
-            ->setParameter('name', (string) $slug)
+            ->where('r.slug = :slug')
+            ->setParameter('slug', (string) $slug)
             ->getQuery()
             ->getOneOrNullResult();
 

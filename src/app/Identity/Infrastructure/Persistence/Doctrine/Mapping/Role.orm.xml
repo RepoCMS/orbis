@@ -15,6 +15,7 @@
         <id name="id" type="role_id" column="id" length="26" />
 
         <field name="name"   type="role_name" column="name"   length="60" unique="true" />
+        <field name="slug"   type="role_slug" column="slug"   length="60" unique="true" />
         <field name="status" type="role_status" column="status" length="20" />
 
     </entity>

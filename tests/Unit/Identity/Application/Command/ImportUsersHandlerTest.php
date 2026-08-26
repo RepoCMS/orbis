@@ -16,6 +16,7 @@ use App\Identity\Domain\ValueObjects\HashedPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RawPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
+use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Identity\Domain\ValueObjects\UsernameValueObject;
 use App\Identity\Infrastructure\Import\UserCsvFileParser;
@@ -42,6 +43,7 @@ final class ImportUsersHandlerTest extends TestCase
         return Role::create(
             id: new RoleIdValueObject(self::GENERATED_ID),
             name: new RoleNameValueObject('test_role'),
+            slug: new RoleSlugValueObject('test_role'),
         );
     }
 

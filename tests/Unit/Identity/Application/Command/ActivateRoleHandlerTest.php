@@ -11,6 +11,7 @@ use App\Identity\Domain\Entities\Role;
 use App\Identity\Domain\Repositories\RoleRepositoryInterface;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
+use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class ActivateRoleHandlerTest extends TestCase
@@ -22,6 +23,7 @@ final class ActivateRoleHandlerTest extends TestCase
         $role = Role::create(
             new RoleIdValueObject(self::ROLE_ID),
             new RoleNameValueObject('Admin'),
+            new RoleSlugValueObject('admin'),
         );
         $role->deactivate();
 

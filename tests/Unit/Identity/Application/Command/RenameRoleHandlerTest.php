@@ -12,6 +12,7 @@ use App\Identity\Domain\Entities\Role;
 use App\Identity\Domain\Repositories\RoleRepositoryInterface;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
+use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class RenameRoleHandlerTest extends TestCase
@@ -23,6 +24,7 @@ final class RenameRoleHandlerTest extends TestCase
         $role = Role::create(
             new RoleIdValueObject(self::ROLE_ID),
             new RoleNameValueObject('Old Name'),
+            new RoleSlugValueObject('old-name'),
         );
 
         $repo = $this->createMock(RoleRepositoryInterface::class);
@@ -51,6 +53,7 @@ final class RenameRoleHandlerTest extends TestCase
         $role = Role::create(
             new RoleIdValueObject(self::ROLE_ID),
             new RoleNameValueObject('Old Name'),
+            new RoleSlugValueObject('old-name'),
         );
 
         $repo = $this->createMock(RoleRepositoryInterface::class);
@@ -59,6 +62,7 @@ final class RenameRoleHandlerTest extends TestCase
             Role::create(
                 new RoleIdValueObject('01ARZ3NDEKTSV4RRFFQ69G5FA2'),
                 new RoleNameValueObject('Existing'),
+                new RoleSlugValueObject('existing'),
             ),
         );
 

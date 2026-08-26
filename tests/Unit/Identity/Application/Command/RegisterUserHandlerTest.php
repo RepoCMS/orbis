@@ -16,6 +16,7 @@ use App\Identity\Domain\Service\PasswordHasherInterface;
 use App\Identity\Domain\ValueObjects\HashedPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
+use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\TestCase;
@@ -34,6 +35,7 @@ final class RegisterUserHandlerTest extends TestCase
         $role = Role::create(
             new RoleIdValueObject(self::ROLE_ID),
             new RoleNameValueObject('Admin'),
+            new RoleSlugValueObject('admin'),
         );
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
         $roleRepo->method('findById')->willReturn($role);

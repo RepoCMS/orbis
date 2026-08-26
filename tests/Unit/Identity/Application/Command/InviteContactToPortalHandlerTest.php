@@ -28,6 +28,7 @@ use App\Identity\Domain\Service\UserEmailResolverInterface;
 use App\Identity\Domain\ValueObjects\HashedPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
+use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 use PHPUnit\Framework\TestCase;
@@ -76,6 +77,7 @@ final class InviteContactToPortalHandlerTest extends TestCase
         $role = Role::create(
             new RoleIdValueObject(self::ROLE_ID),
             new RoleNameValueObject('Client Portal'),
+            new RoleSlugValueObject('client-portal'),
         );
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
         $roleRepo->method('findBySlug')->willReturn($role);

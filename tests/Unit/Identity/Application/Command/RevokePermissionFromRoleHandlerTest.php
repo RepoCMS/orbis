@@ -12,6 +12,7 @@ use App\Identity\Domain\Repositories\RoleRepositoryInterface;
 use App\Identity\Domain\ValueObjects\PermissionIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
+use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class RevokePermissionFromRoleHandlerTest extends TestCase
@@ -24,6 +25,7 @@ final class RevokePermissionFromRoleHandlerTest extends TestCase
         $role = Role::create(
             new RoleIdValueObject(self::ROLE_ID),
             new RoleNameValueObject('Admin'),
+            new RoleSlugValueObject('admin'),
             [new PermissionIdValueObject(self::PERMISSION_ID)],
         );
 

@@ -9,6 +9,7 @@ use App\Identity\Domain\Exceptions\RoleStatusException;
 use App\Identity\Domain\ValueObjects\PermissionIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
+use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 
 /**
  * Rol del sistema.
@@ -26,6 +27,7 @@ final class Role
     private function __construct(
         private RoleIdValueObject $id,
         private RoleNameValueObject $name,
+        private RoleSlugValueObject $slug,
         private RoleStatus $status = RoleStatus::ACTIVE,
         array $permissionIds = [],
     ) {
@@ -42,9 +44,10 @@ final class Role
     public static function create(
         RoleIdValueObject $id,
         RoleNameValueObject $name,
+        RoleSlugValueObject $slug,
         array $permissionIds = [],
     ): self {
-        return new self($id, $name, RoleStatus::ACTIVE, $permissionIds);
+        return new self($id, $name, $slug, RoleStatus::ACTIVE, $permissionIds);
     }
 
     public function id(): RoleIdValueObject
@@ -55,6 +58,11 @@ final class Role
     public function name(): RoleNameValueObject
     {
         return $this->name;
+    }
+
+    public function slug(): RoleSlugValueObject
+    {
+        return $this->slug;
     }
 
     public function status(): RoleStatus

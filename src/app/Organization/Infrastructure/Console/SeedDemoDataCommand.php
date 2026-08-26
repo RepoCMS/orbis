@@ -138,10 +138,13 @@ final class SeedDemoDataCommand extends Command
 
         foreach ($roleDefs as $def) {
             $slug = new RoleSlugValueObject($def['slug']);
-            if ($this->roleRepo->findBySlug($slug) === null) {
+            $name = new RoleNameValueObject($def['name']);
+
+            // Check both by slug and by name to avoid duplicates
+            if ($this->roleRepo->findBySlug($slug) === null && $this->roleRepo->findByName($name) === null) {
                 $role = Role::create(
                     id: new RoleIdValueObject($def['id']),
-                    name: new RoleNameValueObject($def['name']),
+                    name: $name,
                     slug: $slug,
                 );
                 $this->roleRepo->save($role);
@@ -187,7 +190,7 @@ final class SeedDemoDataCommand extends Command
                 'email'          => 'carlos@orbis.cms.com.ec',
                 'phone'          => '0990000002',
                 'hiredAt'        => new DateTimeImmutable('2024-01-15'),
-                'profile'        => EmployeeProfile::TECHNICIAN_FIELD,
+                'profile'        => EmployeeProfile::TECHNICIAN,
             ],
             [
                 'id'             => self::MARIA_EMPLOYEE_ULID,
@@ -197,7 +200,7 @@ final class SeedDemoDataCommand extends Command
                 'email'          => 'maria@orbis.cms.com.ec',
                 'phone'          => '0990000003',
                 'hiredAt'        => new DateTimeImmutable('2023-06-01'),
-                'profile'        => EmployeeProfile::SUPERVISOR_TECHNICIAN,
+                'profile'        => EmployeeProfile::COORDINATOR,
             ],
         ];
 
@@ -240,7 +243,7 @@ final class SeedDemoDataCommand extends Command
 
         $usersCreated = 0;
 
-        $adminRole = $this->roleRepo->findBySlug(new RoleSlugValueObject('admin'));
+        $adminRole = $this->roleRepo->findBySlug(new RoleSlugValueObject('administrador'));
         $techRole  = $this->roleRepo->findBySlug(new RoleSlugValueObject('technician'));
 
         $hashedPassword = new HashedPasswordValueObject(
@@ -279,7 +282,7 @@ final class SeedDemoDataCommand extends Command
                     $empIdVo = new EmployeeIdValueObject($def['employeeId']);
                     $employee = $this->employeeRepo->findById($empIdVo);
                     if ($employee !== null) {
-                        $employee->linkToUser((string) $user->id());
+                        $employee->linkUser(new UserIdValueObject((string) $user->id()));
                         $this->employeeRepo->save($employee);
                     }
                     $usersCreated++;

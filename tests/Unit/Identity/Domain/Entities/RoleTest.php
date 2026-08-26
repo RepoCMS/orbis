@@ -10,6 +10,7 @@ use App\Identity\Domain\Exceptions\RoleStatusException;
 use App\Identity\Domain\ValueObjects\PermissionIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
+use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class RoleTest extends TestCase
@@ -19,6 +20,7 @@ final class RoleTest extends TestCase
         return Role::create(
             new RoleIdValueObject('01ARZ3NDEKTSV4RRFFQ69G5FAV'),
             new RoleNameValueObject('Administrador'),
+            new RoleSlugValueObject('administrador'),
         );
     }
 
@@ -43,6 +45,7 @@ final class RoleTest extends TestCase
         $role = Role::create(
             new RoleIdValueObject('01ARZ3NDEKTSV4RRFFQ69G5FAV'),
             new RoleNameValueObject('Admin'),
+            new RoleSlugValueObject('admin'),
             [$perm1, $perm2],
         );
 

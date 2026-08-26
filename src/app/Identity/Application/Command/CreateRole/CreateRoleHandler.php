@@ -12,6 +12,7 @@ use App\Identity\Domain\Repositories\RoleRepositoryInterface;
 use App\Identity\Domain\ValueObjects\PermissionIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
+use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use App\Shared\Domain\Service\IdGeneratorInterface;
 
 final readonly class CreateRoleHandler
@@ -26,18 +27,28 @@ final readonly class CreateRoleHandler
     public function __invoke(CreateRoleCommand $command): void
     {
         $name = new RoleNameValueObject($command->name);
+        $slug = new RoleSlugValueObject($command->slug);
 
         $this->ensureNameIsUnique($name);
+        $this->ensureSlugIsUnique($slug);
 
         $permissionIds = $this->resolvePermissionIds($command->permissionIds);
 
         $role = Role::create(
             new RoleIdValueObject($this->idGenerator->generate()),
             $name,
+            $slug,
             $permissionIds,
         );
 
         $this->roleRepository->save($role);
+    }
+
+    private function ensureSlugIsUnique(RoleSlugValueObject $slug): void
+    {
+        if ($this->roleRepository->findBySlug($slug) !== null) {
+            throw RoleNameAlreadyExistsException::withName((string) $slug);
+        }
     }
 
     private function ensureNameIsUnique(RoleNameValueObject $name): void

@@ -22,6 +22,7 @@ use App\Identity\Domain\ValueObjects\HashedPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RefreshTokenIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
+use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Identity\Domain\ValueObjects\UserMfaConfigIdValueObject;
 use App\Identity\Domain\ValueObjects\UsernameValueObject;
@@ -72,6 +73,7 @@ final class JwtApiControllerTest extends TestCase
         $role = Role::create(
             new RoleIdValueObject(self::ROLE_ID),
             new RoleNameValueObject('Admin'),
+            new RoleSlugValueObject('admin'),
         );
 
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
