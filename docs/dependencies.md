@@ -37,7 +37,7 @@
 | Librería | Versión | Para qué se usa |
 |----------|---------|-----------------|
 | `doctrine/doctrine-bundle` | ^3.2.4 | Integración Doctrine con Symfony (DBAL + ORM) |
-| `doctrine/orm` | ^3.6.7 | ORM (⚠️ PROJECT_CONTEXT.md dice "ORM 2.x" — desactualizado) |
+| `doctrine/orm` | ^3.6.7 | ORM (documentación previa decía "ORM 2.x" — desactualizado) |
 | `doctrine/doctrine-migrations-bundle` | >=4 | Migraciones (`migrations/`, 31 versiones) |
 | `symfony/doctrine-messenger` | 8.0.* | Transporte Messenger sobre Doctrine (colas `events`/`notifications`/`failed`) |
 | `symfony/uid` | 8.0.* | Generación de ULIDs (IDs de 26 chars) |
@@ -117,7 +117,7 @@
 
 `csrf_protection`, `dashboard`, `hello`, `modal` (reemplaza `confirm()`), `module_finding`, `multi_item_form`, `notification_badge`, `prevent_double_submit`, `table_filter`, `tree` — registrados en `assets/controllers.json` junto con `@symfony/ux-turbo` (turbo-core eager).
 
-> ⚠️ PROJECT_CONTEXT.md menciona **Alpine.js**; no está en `importmap.php` ni en `package.json`. TODO: requiere validación.
+> ⚠️ Documentación previa mencionaba **Alpine.js**; no está en `importmap.php` ni en `package.json`. TODO: requiere validación.
 
 ---
 

@@ -95,7 +95,8 @@ final class CreateRoleHandlerTest extends TestCase
         self::assertSame('tecnico_de_campo', (string) $savedRole->slug());
     }
 
-    public function testThrowsWhenPermissionNotFound(): void    {
+    public function testThrowsWhenPermissionNotFound(): void
+    {
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
         $roleRepo->method('findByName')->willReturn(null);
 

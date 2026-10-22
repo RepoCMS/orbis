@@ -27,11 +27,13 @@ Usar CodeGraph para preguntas **estructurales** — qué llama a qué, qué se r
 - **No encadenar `codegraph_search` + `codegraph_node`** cuando solo quieres contexto — `codegraph_context` es una sola llamada.
 - **`codegraph_explore` es la herramienta pesada** para áreas desconocidas — devuelve el código fuente completo de todos los archivos relevantes en una llamada, pero consume muchos tokens. Si el harness soporta subagentes en paralelo (ej. el Task tool de Claude Code), usar un subagente para preguntas de tipo explore y mantener el contexto principal limpio.
 - **Index lag**: el watcher de archivos hace debounce ~500ms detrás de los writes; no consultar el índice inmediatamente después de editar un archivo en el mismo turno.
+- **Límite de `callers` con DI**: resuelve llamadas estáticas; los handlers inyectados por constructor pueden no aparecer. Para wiring, complementar con `bin/wiring-check.php` o `grep` del nombre de clase.
+- **Presupuesto**: `codegraph_context` para una tarea, `codegraph_search` para símbolos, `codegraph_node` para firmas. `codegraph_explore` solo para áreas desconocidas. Para strings/texto literal, usar `rg` (CodeGraph no indexa texto).
 
 ## En qué momento del flujo usarlo
 
 ```
-1. Contexto: AGENTS.md → PROJECT_CONTEXT.md → CONTEXT.md → docs/   (reglas y estado)
+1. Contexto: AGENTS.md → CONTEXT.md §0 → docs/ai-protocol.md      (reglas y estado)
 2. CodeGraph: codegraph_explore/search                              (explorar el código)
 3. Implementar / verificar wiring (codegraph_callers de cada Command/Query)
 ```

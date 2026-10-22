@@ -36,3 +36,27 @@
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
+
+###> local junk ###
+*.bak
+*.orig
+*.old
+*.tmp
+*.log
+/scratch/
+/.tmp/
+/coverage/
+/.phpunit.result.cache
+/.git.backup-*/
+###< local junk ###
+
+###> deprecated ai entry points ###
+/.ai/
+/.codex/
+/.specify/
+/.github/agents/
+/.github/prompts/
+/constitution.md
+/PROJECT_CONTEXT.md
+/HANDOFF.md
+###< deprecated ai entry points ###

@@ -11,31 +11,39 @@ Se aplica **Spec Driven Development**: spec primero (`specs/`), implementación 
 Este repositorio es **AI-Native**: Git es la única fuente de verdad. Ningún agente asume información que no esté documentada. Cualquier IA debe poder incorporarse leyendo SOLO estos archivos:
 
 ```
-1. cat AGENTS.md                # reglas y convenciones de código (este archivo)
-2. cat docs/ai-protocol.md      # protocolo de trabajo IA-humano (checkpoints de aprobación)
-3. cat PROJECT_CONTEXT.md       # contexto general del proyecto
-4. cat docs/architecture.md     # arquitectura completa
-5. cat docs/coding-standards.md # reglas obligatorias de codificación
-6. cat docs/adr/README.md       # índice de decisiones arquitectónicas (ADRs)
-7. cat specs/{num}-{bc}/spec.md # spec correspondiente a tu tarea
-8. cat CONTEXT.md               # estado REAL del proyecto (única fuente de verdad de estado)
-9. cat tasks/IN_PROGRESS.md     # tareas en curso
+1. cat AGENTS.md                # reglas + mapa de documentos (este archivo)
+2. cat docs/ai-protocol.md      # cómo trabajar: checkpoints, higiene, tokens
+3. cat CONTEXT.md               # §0 estado de sesión; §2 estado por BC
+4. cat tasks/IN_PROGRESS.md     # tarea activa y próximo paso
+5. cat specs/{num}-{bc}/spec.md # solo el spec de la tarea actual
 ```
+
+**Bajo demanda:** `docs/architecture.md`, `docs/coding-standards.md`, `docs/adr/README.md`, `docs/history.md`, `docs/codegraph.md`, `docs/analytics.md`.
+
+### Mapa canónico de documentos
+
+| Necesitas... | Archivo |
+|---|---|
+| Estado actual | `CONTEXT.md` §0 |
+| Reglas de código | `AGENTS.md` |
+| Cómo trabajar | `docs/ai-protocol.md` |
+| Arquitectura | `docs/architecture.md` |
+| Estándares | `docs/coding-standards.md` |
+| Decisiones | `docs/adr/README.md` |
+| Tareas | `tasks/` |
+| Spec de la tarea | `specs/{id}/spec.md` |
+| Historial/deuda | `docs/history.md` |
+| CodeGraph | `docs/codegraph.md` |
 
 **Arranque de tarea (obligatorio):** Antes de proponer plan o escribir código, la IA pregunta al humano: (1) tarea, (2) criterio de aceptación, (3) alcance permitido (BCs/archivos). Si falta alguno, no avanza. Detalle en [`docs/ai-protocol.md`](./docs/ai-protocol.md) §4.
 
-Referencia bajo demanda: `docs/analytics.md` (dashboards/reportes/importers), `docs/history.md` (issues y deuda técnica), `docs/glossary.md` (términos), `docs/dependencies.md` (stack), `docs/conventions.md` (convenciones), `.ai/` (prompts especializados por rol), `~/.agents/` (hub global de agentes y skills — fuente única compartida por opencode, Claude Code y Codex; ver README del directorio).
-
-**Regla no negociable:** Ningún agente puede tomar una decisión arquitectónica sin crear/actualizar un ADR en `docs/adr/` y actualizar `PROJECT_CONTEXT.md`. Si existe una contradicción entre el código y la documentación, debe reportarla ANTES de continuar.
+**Regla no negociable:** Ningún agente puede tomar una decisión arquitectónica sin crear/actualizar un ADR en `docs/adr/` y actualizar `docs/architecture.md` + `CONTEXT.md`. Si existe una contradicción entre el código y la documentación, debe reportarla ANTES de continuar.
 
 ## Configuración global vs repo (no duplicar)
 
 1. **Agentes y skills son GLOBALES**: fuente única en `~/.agents/` (agentes en `agents/`, skills en `skills/`). Las herramientas los descubren vía junctions (`~/.claude/agents|skills`, `~/.config/opencode/agent(s)|skills`, `~/.codex/skills`) — ver `~/.agents/README.md`.
-2. **PROHIBIDO versionar o crear agentes/skills en el repo** (`.opencode/agent/`, `.claude/skills/`, copias de `~/.agents/`, etc.). Si un agente los crea, son duplicados huérfanos: borrarlos y usar la fuente global.
-3. **Excepciones permitidas** (por limitación/rol de formato):
-   - `.codex/agents/*.toml` — Codex no soporta agentes globales Markdown (cargar `.ai/{rol}.md`).
-   - `.ai/*.md` — prompts de rol por proyecto (fuente única de prompts).
-4. **Editar agentes/skills** SOLO en `~/.agents/` y correr `& ~/.agents/sync.ps1` (idempotente, repara junctions). Reiniciar la herramienta después de agregar skills nuevos (no hay hot-reload).
+2. **PROHIBIDO versionar o crear agentes/skills/prompts en el repo** (`.opencode/agent/`, `.claude/agents|skills`, `.codex/`, `.ai/`, `.specify/`, `.github/agents|prompts/`, copias de `~/.agents/`). Si aparecen, son duplicados huérfanos: borrarlos y usar la fuente global.
+3. **Editar agentes/skills** SOLO en `~/.agents/` y correr `& ~/.agents/sync.ps1` (idempotente, repara junctions). Reiniciar la herramienta después de agregar skills nuevos (no hay hot-reload).
 
 ## Stack
 
@@ -101,14 +109,14 @@ DEVELOPER ──► FRONTEND ──► SECURITY-REVIEWER ──► QA-REVIEWER F
 | Contexto | Idioma | Ejemplos |
 |----------|--------|----------|
 | **Código** (PHP, JS, Twig, SQL, identificadores, clases, métodos, variables, mensajes de log) | **Inglés** | `CreateUserCommand`, `StockViewScopeResolver`, `findOpen()` |
-| **Documentación** (Markdown: AGENTS.md, CONTEXT.md, docs/, specs/, tasks/, .ai/, ADRs, README, comentarios de commits) | **Español** | este archivo, `CONTEXT.md`, `docs/architecture.md` |
+| **Documentación** (Markdown: AGENTS.md, CONTEXT.md, docs/, specs/, tasks/, ADRs, README, comentarios de commits) | **Español** | este archivo, `CONTEXT.md`, `docs/architecture.md` |
 | Mensajes visibles al usuario final (UI, validaciones) | Español (producto) | "Stock insuficiente", "Ticket no encontrado" |
 
 Reglas:
 1. **Todo archivo Markdown nuevo o editado se escribe en español** (los existentes en inglés migran progresivamente — ver `tasks/`).
 2. Código nuevo SIEMPRE en inglés (identificadores y strings de log). Nunca mezclar idiomas en un mismo archivo.
 3. Los ADRs existentes en inglés (ADR-001..008) se pueden migrar al español al editarlos; los nuevos se escriben en español (mantener el formato/template).
-4. `AGENTS.md` y `CLAUDE.md` se mantienen en español permanentemente (son la puerta de entrada de toda IA).
+4. `AGENTS.md` se mantiene en español permanentemente (es la puerta de entrada de toda IA).
 
 ## Reglas de Uso para Agentes
 
@@ -119,6 +127,15 @@ Reglas:
 5. Correr `php vendor/bin/phpunit` después de cambios
 6. Si un cambio toca múltiples BCs, involucrar al Planner primero
 7. DeviceCatalog BC está SUPERSEDED — no desarrollar ahí
+
+### Higiene de archivos
+
+- Tests SOLO en `tests/` (`Unit`, `Integration`, `Functional`). Prohibido crear scripts de prueba, debug o scratch en la raíz o dentro de `src/`.
+- Temporales en `var/` o en el directorio temporal del sistema; nunca trackeados.
+- Todo archivo nuevo debe justificarse en el reporte de cierre (qué es, por qué existe, quién lo usa).
+- Scripts de uso real van en `bin/` y deben tener un caller documentado; los one-off no se commitean.
+- Al cerrar una tarea, `git status` solo debe mostrar cambios intencionales.
+- Regla completa: [`docs/ai-protocol.md`](./docs/ai-protocol.md) §11.
 
 ## Arquitectura — Referencia Rápida
 
@@ -237,12 +254,11 @@ On CANCEL/REJECT:
 ## Relevant Files
 
 - **Specs:** `specs/{num}-{bc}/spec.md` (spec), `plan.md` (plan), `tasks.md` (tasks)
-- **Context:** `CONTEXT.md` (verdad única de estado), `PROJECT_CONTEXT.md` (contexto general), `ROADMAP.md` (hoja de ruta), `CHANGELOG_AI.md` (cambios de la transformación)
+- **Context:** `CONTEXT.md` (estado de sesión + estado por BC), `ROADMAP.md` (hoja de ruta), `CHANGELOG_AI.md` (cambios de la transformación)
 - **Task board:** `tasks/TODO.md`, `tasks/IN_PROGRESS.md`, `tasks/DONE.md` — mover filas entre tableros al cerrar tareas
-- **Docs:** `docs/architecture.md`, `docs/coding-standards.md`, `docs/conventions.md`, `docs/glossary.md`, `docs/dependencies.md`, `docs/folder-structure.md`, `docs/analytics.md`, `docs/history.md`
+- **Docs:** `docs/architecture.md`, `docs/coding-standards.md`, `docs/conventions.md`, `docs/glossary.md`, `docs/dependencies.md`, `docs/folder-structure.md`, `docs/analytics.md`, `docs/history.md`, `docs/ai-protocol.md`, `docs/codegraph.md`
 - **ADRs:** `docs/adr/README.md` (índice), `docs/adr/ADR-001..011`; decisiones no arquitectónicas en `docs/decisions/`
 - **Modules:** `docs/modules/{bc}.md` (uno por Bounded Context)
-- **AI prompts por rol (fuente única):** `.ai/README.md` (índice), `.ai/{architect,planner,backend,frontend,reviewer,security,qa,docs}.md`; los agentes del hub global (`~/.agents/agents/`) los cargan si existen en el proyecto
 - **Routes:** `config/routes/` (uno por BC)
 - **Services:** `config/services.yaml`
 - **Doctrine:** `config/packages/doctrine.yaml`

@@ -1,276 +1,108 @@
-# Orbis — Contexto Maestro (fuente única de verdad)
+# Orbis — Contexto Maestro (fuente única de estado)
 
-> **Propósito:** Este documento es la referencia que toda IA, agente o desarrollador debe consultar antes de actuar. Contiene el estado REAL del proyecto. AGENTS.md (reglas de código) ya no publica % de BCs — esta es la única tabla de estado.
+> **Propósito:** única fuente de verdad del estado actual. Reglas en [`AGENTS.md`](./AGENTS.md); protocolo de trabajo en [`docs/ai-protocol.md`](./docs/ai-protocol.md).
 >
-> **Actualizado:** 2026-08-27
-> **Rama activa:** `main` (remote: `https://github.com/RepoCMS/orbis.git`)
-> **Último commit:** `67c4eec` — T28 + T36: Fix composer audit advisories + UserContactResolver tests — CI gates green (2026-08-20)
-> **Commits pendientes (working tree):** Cambios en MFA dev bypass, templates dashboard, tests passing
+> **Actualizado:** 2026-10-22
 
 ---
 
-## 1. Resumen Ejecutivo
+## 0. Estado de sesión
+
+| Campo | Valor |
+|---|---|
+| Rama | `main` (origin: `https://github.com/RepoCMS/orbis.git`) |
+| Último commit | `194f914` — WIP: checkpoint before project cleanup |
+| Working tree | Consolidación de contexto IA en curso (sin commit) |
+| Tarea activa | Un solo entry point + optimización de tokens |
+| Próximo paso | Validar gates y commitear la limpieza |
+| Blockers | BD de test sin configurar; `compose.yaml` PostgreSQL vs MySQL; URL del repo nuevo pendiente |
+| Última actualización | 2026-10-22 |
+
+**Al iniciar sesión:** leer solo esta sección + [`tasks/IN_PROGRESS.md`](./tasks/IN_PROGRESS.md). Usar CodeGraph antes de abrir archivos.
+
+---
+
+## 1. Resumen ejecutivo
 
 | Métrica | Valor |
-|---------|-------|
+|---|---|
 | BCs activos | 13 + Shared Kernel |
-| Total archivos PHP | 1411 (CodeGraph) |
-| Total test files | 452 (reales, no inflados) |
-| Specs existentes | 15 (incl. 014-governance) |
-| Specs con discrepancia vs AGENTS.md | **5** (ver §3) |
-| Reportes implementados | 14 |
-| Importers implementados | 11 |
-| Comandos huérfagos conocidos | 0 (todos wireados — verificado por CI `wiring`) |
-| Tests verdes (baseline 2026-08-06) | 2082 tests / 5601 assertions |
-| PHPStan nivel 5 (baseline) | 159 errores preexistentes permitidos; nuevos bloquean CI |
-| PHP-CS-Fixer | 2020/2360 archivos normalizados (commit del ciclo) |
-| Gates CI | 5 jobs en `.github/workflows/ci.yml` (test, stan, cs, wiring, validate) + security (audit) |
-| Contrato de calidad | `specs/014-governance/spec.md` (DoR §2, DoD §3, gates §5) |
+| Archivos indexados (CodeGraph) | 2.382 |
+| Test files | 452 |
+| Specs | 15 (incl. `014-governance`) |
+| Reportes | 14 |
+| Importers | 11 |
+| Comandos huérfanos | 0 (verificado por CI `wiring`) |
+| Baseline de tests | 2.082 tests / 5.601 assertions (2026-08-20) |
+| PHPStan | Nivel 5 + baseline; 0 errores nuevos |
+| Gates CI | test, stan, cs, wiring, validate + security |
+| Contrato de calidad | [`specs/014-governance/spec.md`](./specs/014-governance/spec.md) |
 
 ---
 
-## 2. Estado Real por Bounded Context
+## 2. Estado por BC
 
-### Tabla maestra
+| BC | Status | Tests | Commands | Queries | Controllers | Reportes | Importers | Dashboard |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **Identity** | ~85% | 77 | 32 | 13 | 15 | 1 | 1 | Web + API |
+| **Client** | ~95% | 84 | 37 | 16 | 18 | 2 | 4 | Web + API |
+| **Organization** | ~95% | 60 | 33 | 8 | 8 | 3 | 1 | Web + API |
+| **Support** | ~85% | 93 | 35 | 20 | 12 | 2 | 0 | Web + API |
+| **Inventory** | ~95% | 96 | 60 | 29 | 28 | 4 | 3 | API + Web |
+| **Expense** | 100% | 30 | 15 | 8 | 5 | 2 | 1 | Web + API |
+| **Location** | ~95% | 7 | — | — | 1 | — | — | API-only |
+| **Notification** | ~75% | 81 | 8 | 5 | 8 | — | — | Web + API |
+| **Cross-BC** | ~90% | — | — | — | — | — | — | — |
+| **010a Employee-User** | ~95% | 3 | — | — | — | — | — | — |
+| **010b SparePart Scope** | ~95% | 1 | — | — | — | — | — | — |
+| **011 Notifications Stock** | 100% | — | — | — | — | — | — | — |
+| **012 Multi-Item Request** | 100% | 75 | — | — | — | — | — | — |
+| **013 ATM Module Tree** | 100% | 18 | — | — | — | — | — | Web |
 
-| BC | Spec Status (real) | AGENTS.md decía (pre-refactor 2026-08-05) | Tests reales | Commands (reales) | Queries (reales) | Controllers (reales) | Reportes | Importers | Dashboard |
-|----|--------------------|----------------|-------------|-------------------|------------------|---------------------|----------|-----------|-----------|
-| **Identity** | ~85% | ~97% | 77 | 32 | 13 | 15 | 1 (SecurityEvents) | 1 (Import Users) | ✅ Web + API |
-| **Client** | ~95% | ~96% | 84 | 37 | 16 | 18 | 2 (ContractsExpiring, TerminalsByClient) | 4 (Clientes, Terminales, Modelos, Partes de Modelo) | ✅ Web + API |
-| **Organization** | ~95% | ~99% | 60 | 33 | 8 | 8 | 3 (ActivePersonnel, Overtime, ScheduledVacations) | 1 (Import Employees) | ✅ Web + API |
-| **Support** | ~85% | ~98% | 93 | 35 | 20 | 12 | 2 (Technician, TicketsByClient) | 0 | ✅ Web + API |
-| **Inventory** | ~95% | ~96% | 96 | 60 | 29 | 28 | 4 (ValuedInventory, Movement, ResignationReturn, PhysicalCount) | 3 (Productos, Stock serializado, Stock no serializado) | ✅ API + Web |
-| **Expense** | 100% | 100% | 30 | 15 | 8 | 5 | 2 (Expense, Advance) | 1 (Import Operating Expenses) | ✅ Web + API |
-| **Location** | ~95% | 100% | 7 | — | — | 1 | — | — | ❌ API-only |
-| **Notification** | ~75% | ~95% | 81 | 8 | 5 | 8 | — | — | ✅ Web + API |
-| **Cross-BC** | ~90% | ~98% | — | — | — | — | — | — | — |
-| **010a Employee-User** | ~95% | ~98% | 3 | — | — | — | — | — | — |
-| **010b SparePart Scope** | ~95% | ~98% | 1 | — | — | — | — | — | — |
-| **011 Notifications Stock** | 100% | 100% | — | — | — | — | — | — | — |
-| **012 Multi-Item Request** | 100% | 100% | 75 | — | — | — | — | — | — |
-| **013 ATM Module Tree** | 100% | 100% | 18 | — | — | — | — | — | ✅ Web |
-
-> **Nota de verificación (2026-08-07):** % de Client, Organization y Notification actualizados tras el ciclo de alineación de specs T01-T03 (specs `002-client`, `001-organization-spec`, `006-notification` aprobados por QA-Reviewer). Verificado con CodeGraph + phpunit (696 tests de los 3 BCs OK) + wiring-check (346 targets, 0 huérfanos).
-
-### Discrepancias históricas (AGENTS.md pre-refactor vs realidad)
-
-| # | BC | AGENTS.md dice | Real | Impacto |
-|---|----|----------------|------|---------|
-| 1 | **Client** | ~96% | ~92% (antes ~70%) | ✅ Spec `002-client` alineada 2026-08-07 (T03). Discrepancia residual de 4 puntos por gaps funcionales (G-04, G-10, G-11). |
-| 2 | **Organization** | ~99% | ~90% (antes ~67%) | ✅ Spec `001-organization-spec` alineada 2026-08-07 (T02). Discrepancia residual de 9 puntos (G-06 crítico bloquea list API). |
-| 3 | **Notification** | ~95% | ~75% (antes ~60%) | ✅ Spec `006-notification` alineada 2026-08-07 (T01). Discrepancia residual de 20 puntos: cadena cross-BC ~55% funcional (68/107 con destinatario, 53/107 con plantilla). |
-| 4 | **Identity** | ~97% | ~85% | AGENTS.md sobreestima en 12 puntos. Identity tiene dashboards pendientes y algunos KPIs sin implementar. |
-| 5 | **Support** | ~98% | ~85% | AGENTS.md sobreestima en 13 puntos. |
-| 6 | **Support tests** | 89 files | 93 files | Menor, pero AGENTS.md subestima. |
-| 7 | **Client commands** | 34 (36 handlers) | 37 | AGENTS.md subestima. |
+> Detalle de specs, gaps históricos e inventario de reportes/importers: [`docs/history.md`](./docs/history.md). Estado por BC y specs: `specs/{id}/spec.md`.
 
 ---
 
-## 3. Discrepancias de Specs vs Código
+## 3. Referencias canónicas
 
-| Spec | Status en spec.md | Estado real del código | Nota |
-|------|-------------------|------------------------|------|
-| `007-expense` | Implementado (100%) | ✅ Completo | Match |
-| `010a-employee-user-invariant` | Implementado (~95%) | ✅ Completo (UI pending) | Match |
-| `010b-sparepart-request-scope` | Implementado (~95%) | ✅ Completo | Match |
-| `011-notifications-stock-requests` | Implementado (100%) | ✅ Completo | Match |
-| `012-multi-item-request` | Implemented (100%) | ✅ Completo | Match |
-| `013-atm-module-tree` | Implementado — 100% | ✅ Completo | Match |
-| `001-identity-spec` | In Development (~85%) | Dashboard KPIs pendientes | AGENTS.md dice ~97% — discrepancia |
-| `001-organization-spec` | Aprobado (~90% — verificado 2026-08-07) | Reportes P2 + gaps G-06..G-14 (G-06 crítico: parámetros fantasma en ListEmployeesQuery) | ✅ Spec alineada (T02) — implementar gaps |
-| `002-client` | Aprobado (~92% — verificado 2026-08-07) | 43 rutas API, 4 importers, 84 tests; gaps G-04 (cascada Contact→User), G-10, G-11 | ✅ Spec alineada (T03) — implementar gaps |
-| `003-support` | In Development (~85%) | Scoping parcial | AGENTS.md dice ~98% — discrepancia |
-| `004-inventory` | Implementado (~95%) | Casi completo | AGENTS.md dice ~96% — aceptable |
-| `005-location` | Completado ~95% | API-only, sin tests | AGENTS.md dice 100% — discrepancia |
-| `006-notification` | Aprobado (~75% — verificado 2026-08-07) | Cross-BC wiring ~55% (107 eventos mapeados, 68 con destinatario, 53 con plantilla); gaps G-01..G-05 (G-03: retry no re-despacha) | ✅ Spec alineada (T01) — implementar gaps |
-| `009-cross-bc` | Completado ~90% | Integration tests OK | AGENTS.md dice ~98% — discrepancia |
+| Necesitas... | Documento |
+|---|---|
+| Reglas de código | [`AGENTS.md`](./AGENTS.md) |
+| Protocolo de trabajo | [`docs/ai-protocol.md`](./docs/ai-protocol.md) |
+| Arquitectura | [`docs/architecture.md`](./docs/architecture.md) |
+| Estándares de código | [`docs/coding-standards.md`](./docs/coding-standards.md) |
+| Decisiones | [`docs/adr/README.md`](./docs/adr/README.md) |
+| Tareas | [`tasks/TODO.md`](./tasks/TODO.md), [`tasks/IN_PROGRESS.md`](./tasks/IN_PROGRESS.md), [`tasks/DONE.md`](./tasks/DONE.md) |
+| Spec de la tarea | `specs/{id}/spec.md` |
+| Historial y deuda | [`docs/history.md`](./docs/history.md) |
+| CodeGraph | [`docs/codegraph.md`](./docs/codegraph.md) |
 
 ---
 
-## 4. Reportes Implementados (verificados con CodeGraph)
-
-| Reporte | BC | Archivo | Status |
-|---------|----|---------|--------|
-| ContractsExpiring | Client | `Client/Application/Report/ContractsExpiring/ContractsExpiringReportGenerator.php` | ✅ |
-| TerminalsByClient | Client | `Client/Application/Report/TerminalsByClient/TerminalsByClientReportGenerator.php` | ✅ |
-| ActivePersonnel | Organization | `Organization/Application/Report/ActivePersonnel/ActivePersonnelReportGenerator.php` | ✅ |
-| Overtime | Organization | `Organization/Application/Report/Overtime/OvertimeReportGenerator.php` | ✅ |
-| ScheduledVacations | Organization | `Organization/Application/Report/ScheduledVacations/ScheduledVacationsReportGenerator.php` | ✅ |
-| Expense | Expense | `Expense/Application/Report/Expense/ExpenseReportGenerator.php` | ✅ |
-| Advance | Expense | `Expense/Application/Report/Advance/AdvanceReportGenerator.php` | ✅ |
-| ValuedInventory | Inventory | `Inventory/Application/Report/ValuedInventory/ValuedInventoryReportGenerator.php` | ✅ |
-| Movement | Inventory | `Inventory/Application/Report/Movement/MovementReportGenerator.php` | ✅ |
-| ResignationReturn | Inventory | `Inventory/Application/Report/ResignationReturn/ResignationReturnReportGenerator.php` | ✅ |
-| PhysicalCount | Inventory | `Inventory/Application/Report/PhysicalCount/PhysicalCountReportGenerator.php` | ✅ |
-| Technician | Support | `Support/Application/Report/Technician/TechnicianReportGenerator.php` | ✅ |
-| TicketsByClient | Support | `Support/Application/Report/TicketsByClient/TicketsByClientReportGenerator.php` | ✅ |
-| SecurityEvents | Identity | `Identity/Application/Report/SecurityEvents/SecurityEventsReportGenerator.php` | ✅ |
-
-### ⚠️ Nombre incorrecto en TODOS.md
-TODOS.md referencia `ClientContractExpiringReportGenerator` pero el nombre real es `ContractsExpiringReportGenerator`.
-
----
-
-## 5. Importers Implementados (verificados)
-
-| Importer | BC | Archivos | Status |
-|----------|----|---------|--------|
-| Import Clientes | Client | 10+ archivos | ✅ |
-| Import Terminales | Client | ✅ | ✅ |
-| Import Modelos de Terminal | Client | ✅ | ✅ |
-| Import Productos | Inventory | ✅ | ✅ |
-| Import Stock serializado | Inventory | ✅ | ✅ |
-| Import Stock no serializado | Inventory | ✅ | ✅ |
-| Import Empleados | Organization | ✅ | ✅ |
-| Import Usuarios | Identity | ✅ | ✅ |
-| Import Órdenes de Compra | Inventory | ✅ | ✅ |
-| Import Gastos Operativos | Expense | ✅ | ✅ |
-| Import Partes de Modelo | Client | 10+ archivos | ✅ |
-
----
-
-## 6. Handoff Protocol (actualizado)
-
-### Flujo entre agentes
-
-```
-1. PLANNER
-   → Lee CONTEXT.md + specs/{num}-{bc}/spec.md
-   → Escribe/actualiza spec.md con sección "Wiring"
-   → Actualiza `tasks/` (TODO/IN_PROGRESS/DONE) con estado real
-   ↓
-2. QA-REVIEWER
-   → Valida spec con checklist DDD (Apéndice A de AGENTS.md)
-   → Verifica wiring con CodeGraph (codegraph_callers)
-   → Confirma que cada Command/Query tiene al menos un caller real
-   ↓
-3. DEVELOPER
-   → Implementa Domain → Application → Infrastructure → Presentation
-   → Corre tests: php vendor/bin/phpunit
-   → Verifica wiring con CodeGraph
-   ↓
-4. HANDOFF CHECKPOINT
-   → git add -A + commit descriptivo
-   → Actualiza CONTEXT.md si cambió status de algún BC
-   → Push a rama
-```
-
-### Reglas no negociables del handoff
-
-1. **Nunca avanzar sin verificar wiring** — `codegraph_callers` de cada Command/Query nuevo.
-2. **Nunca confiar en AGENTS.md como fuente de verdad** — usar CONTEXT.md como fuente primaria.
-3. **Siempre actualizar `tasks/`** con el estado real después de cada checkpoint.
-4. **Nunca modificar dos BCs sin involucrar al Planner primero.**
-5. **Tests son obligatorios** — ningún Command/Query se entrega sin test.
-
-### Checkpoints de herramienta
-
-Cuando se alterna entre Claude Code y opencode:
-
-```bash
-# ANTES de cambiar herramienta:
-git add -A
-git commit -m "WIP: checkpoint - $(date +%H:%M)"
-git push origin 001-identity-spec
-
-# DESPUÉS de regresar:
-git pull origin 001-identity-spec
-cat CONTEXT.md
-cat tasks/IN_PROGRESS.md
-```
-
----
-
-## 7. Blockers Activos
+## 4. Blockers activos
 
 | # | Issue | Impacto | Estado |
-|---|-------|---------|--------|
-| #75 | MFA backup code verification en API | Security feature | ✅ Resuelto |
-| #70 | Seed missing permissions | Dashboards/reports inaccesibles | ✅ Resuelto |
-| #42 | bcrypt vs argon2 decisión | Password hashing | ❓ Pendiente |
-| B1 | `ClientContractExpiringReportGenerator` nombre incorrecto en TODOS.md | Confusión de agentes | ⚠️ Nombrar correctamente |
-| B2 | 5 specs con discrepancia vs AGENTS.md | IAs leen status incorrecto | ✅ Specs de Client/Organization/Notification alineadas 2026-08-07 (T01-T03); restan Identity y Support |
-| B3 | Notification BC ~60% pero AGENTS.md dice ~95% | IAs sobreestiman progreso | ✅ Spec `006-notification` aprobada (~75%) 2026-08-07 (T01) |
-| B4 | Organization BC ~67% pero AGENTS.md dice ~99% | IAs sobreestiman progreso | ✅ Spec `001-organization-spec` aprobada (~90%) 2026-08-07 (T02) |
-| B5 | Client BC ~70% pero AGENTS.md dice ~96% | IAs sobreestiman progreso | ✅ Spec `002-client` aprobada (~92%) 2026-08-07 (T03) |
-| B6 | **G-06 (crítico)**: `ListEmployeesQuery` con parámetros fantasma → `Error: Unknown named parameter` en runtime | Bloquea API list de Organization + cross-BC (Custody, Expense, Support) | ✅ Resuelto — T30 (commit `b5a860e`, 2026-08-07) |
-| B7 | **G-04 Client**: cascada Contact→User rota (eventos nunca publicados) | Desactivación de cliente no propaga a User | ✅ Resuelto — T31 (commit `d15eab3`, 2026-08-07) |
-| B8 | **Punto ciego `bin/wiring-check.php`**: no detecta Queries huérfanas cuyo handler pareja importe su FQCN (verificado con `ListContactsByClientQuery`) | Gate de wiring da falsos negativos (regla 11) | ✅ Resuelto — T32 (stem-based matching, 22 orfanos detectados 2026-08-12) |
+|---|---|---|---|
+| 1 | `.env.test` sin `DATABASE_URL` | `composer test` usaría la BD de desarrollo | ⚠️ Crear `orbis_test` y configurar |
+| 2 | `compose.yaml` define PostgreSQL 16 | Confunde el setup; la app usa MySQL 8 | ⚠️ Corregir o eliminar |
+| 3 | URL del repo nuevo no confirmada | No se puede cambiar `origin` | ⚠️ Pendiente |
+| 4 | `#42` bcrypt vs argon2 | Password hashing | ❓ Pendiente |
 
 ---
 
-## 8. Convenciones de Nomenclatura (resumen)
+## 5. Próximos pasos
 
-| Elemento | Patrón | Ejemplo |
-|----------|--------|---------|
-| Command | `{Action}{Resource}Command` | `CreateUserCommand` |
-| Handler | `{Action}{Resource}Handler` | `CreateUserHandler` |
-| Query | `{Find|List}{Resource}Query` | `ListUsersQuery` |
-| QueryHandler | `{Find|List}{Resource}Handler` | `ListUsersHandler` |
-| Response DTO | `{Resource}Response` | `UserResponse` |
-| Controller (API) | `Api{BC}{Entity}Controller` | `ApiIdentityUserController` |
-| Controller (Web) | `{BC}{Entity}Controller` | `IdentityDashboardController` |
-| Report Generator | `{Nombre}ReportGenerator` | `ContractsExpiringReportGenerator` |
-| Importer | `Import{Resource}Handler` | `ImportClientHandler` |
-| DBAL Type | `{FieldName}Type` | `UserTokenTypeType` |
-| Enum | `{Name}Enum` o `{Name}Status` | `UserStatus`, `TicketStatus` |
-| ValueObject | `{Name}ValueObject` | `UserIdValueObject` |
-| ViewScopeResolver | `{Resource}ViewScopeResolver` | `StockViewScopeResolver` |
+1. Configurar BD de test y correr `composer test`.
+2. Corregir `compose.yaml` (MySQL 8) o eliminarlo.
+3. Implementar gaps de Notification `G-01..G-05` (ver `docs/history.md`).
+4. Completar Identity Dashboard KPIs.
+5. Confirmar URL del repo nuevo y actualizar `origin`.
 
 ---
 
-## 9. Estructura de Directorios por BC
+## 6. Reglas de lectura
 
-```
-src/app/{BC}/
-├── Application/
-│   ├── Command/{Action}{Resource}/
-│   │   ├── {Action}{Resource}Command.php
-│   │   └── {Action}{Resource}Handler.php
-│   ├── Query/{Find|List}{Resource}/
-│   │   ├── {Find|List}{Resource}Query.php
-│   │   └── {Find|List}{Resource}Handler.php
-│   ├── Query/Response/{Resource}Response.php
-│   ├── Service/{Resource}ViewScopeResolver.php  (si aplica)
-│   └── Report/{Nombre}ReportGenerator.php       (si aplica)
-├── Domain/
-│   ├── Entities/{Entity}.php
-│   ├── ValueObjects/{Name}ValueObject.php
-│   ├── Enums/{Name}Enum.php
-│   ├── Repositories/{Resource}RepositoryInterface.php
-│   ├── Events/{EventName}.php
-│   └── Exceptions/{BC}DomainException.php
-├── Infrastructure/
-│   ├── Persistence/Doctrine/
-│   │   ├── Doctrine{Resource}Repository.php
-│   │   └── Mapping/{Entity}.orm.xml
-│   ├── Doctrine/Types/{Field}Type.php
-│   └── Service/{IntegrationService}.php
-└── Presentation/
-    ├── Http/
-    │   ├── Api{BC}{Entity}Controller.php
-    │   └── {BC}{Entity}Controller.php (web)
-    └── Console/
-        └── {CommandName}Command.php
-```
-
----
-
-## 10. Próximos Pasos Recomendados
-
-1. **[URGENTE]** Corregir AGENTS.md — actualizar porcentajes de 5 BCs con discrepancia. ✅ Verificado 2026-08-05
-2. **[URGENTE]** Corregir nombre `ClientContractExpiringReportGenerator` → `ContractsExpiringReportGenerator` en TODOS.md. ✅ Corregido 2026-08-05
-3. **[ALTA]** Configurar remote GitHub (sin él, el handoff push/pull no funciona). Ver HANDOFF.md §13. ✅ Hecho 2026-08-06
-4. **[ALTA]** Completar specs de Notification BC (~60% → objetivo 95%). ✅ Spec `006-notification` aprobada (~75%) 2026-08-07 — implementar gaps G-01..G-05 (ver §7 B6-B8).
-5. **[ALTA]** Completar specs de Organization BC (~67% → objetivo 95%). ✅ Spec `001-organization-spec` aprobada (~90%) 2026-08-07 — implementar gaps G-06..G-14 (G-06 crítico, ver §7 B6).
-6. **[ALTA]** Completar specs de Client BC (~70% → objetivo 95%). ✅ Spec `002-client` aprobada (~92%) 2026-08-07 — implementar gaps G-06, G-10, G-11 (G-04 ✅ T31, ver §7 B7).
-7. ✅ **G-06** (crítico) implementado — T30 (commit `b5a860e`): `ListEmployeesQuery` con paginación real + filtros (`serviceZoneId`/`page`/`limit`); API list de Organization y cross-BC desbloqueadas.
-8. ✅ **G-04 Client** implementado — T31 (commit `d15eab3`): cascada Contact→User operativa (handlers publican `ContactDeactivated`/`ContactReactivated`/`ContactUserLinked`).
-9. ✅ **T32** — Fix punto ciego `bin/wiring-check.php` (stem-based matching detecta 22 orfanos correctamente). Verificado 2026-08-12.
-10. ✅ **T33 (G-03)** — `RetryNotificationHandler` re-despacha `SendNotificationMessage` vía `MessageBusInterface`. Tests 5/5 verdes. Verificado 2026-08-12.
-11. ✅ **T34 (G-07/G-08/G-09)** — `EmploymentPeriod::start()` en Create/Reactivate, `SpecialPeriodAutoProcessed` desde cron `org:process-special-periods`, 3 archivos basura eliminados. Verificado 2026-08-12.
-12. ✅ **T35 (G-10/G-11)** — Bug SQL `contacts`→`client_contacts` corregido en dashboard, `ListContactsByClientQuery` reparada. Verificado 2026-08-12.
-13. ✅ **T32-T35 CI gates green** — wiring-baseline.txt + bin/wiring-check.php accept baseline; migration newline fixed; all 5 CI jobs pass locally (PHPStan 0 errors, CS-Fixer 0 files, PHPUnit 2034 OK, Wiring 0 orphans, Validate exit 2). Commit `64d456b` pushed to origin main 2026-08-14.
-14. ✅ **T36 (2026-08-20)** — Fix UserContactResolver tests (Notification BC): convert string to UserIdValueObject before calling repositories, add AbstractUlid::equals() method (was missing causing test failures), fix test data (Employee min name length 5 chars), remove redundant equals() from EntryIdValueObject. Regenerated PHPStan baseline (159 → 142 errors). All CI gates green: PHPUnit 2082 tests, PHPStan 0 errors, CS-Fixer 0 files, Wiring 0 orphans, Validate exit 2. Commit `bbd052f` pushed to origin main 2026-08-20.
-15. **[MEDIA]** Implementar Identity Dashboard KPIs (pendientes según TODOS.md).
-15. **[BAJA]** Actualizar `.opencode/opencode.jsonc` con roles de agentes si se expande. ✅ Hecho 2026-08-05: `.opencode/agent/{planner,qa-reviewer,developer,test-engineer,frontend,security-reviewer,docs}.md`
+- No leer documentos completos si basta una sección; usar la tabla de referencias.
+- CodeGraph primero para símbolos/estructura; `rg` para texto literal.
+- Leer solo el `specs/{id}/spec.md` de la tarea activa.
+- Actualizar §0 al cerrar cada sesión.

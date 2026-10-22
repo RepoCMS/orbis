@@ -1,10 +1,27 @@
 # tasks/IN_PROGRESS.md — Trabajo en Curso
 
-> **Actualizado:** 2026-08-27
+> **Actualizado:** 2026-10-22
 
 ---
 
-## En curso: Enforcement de máquina — ciclo de bases (spec 014, 2026-08-06) + ciclo de alineación de specs T01-T03
+## En curso: Consolidación de contexto IA (2026-10-22)
+
+**Objetivo:** un solo entry point, eliminar duplicados, optimizar tokens.
+
+| # | Elemento | Estado |
+|---|----------|--------|
+| 1 | Fusionar PROJECT_CONTEXT/HANDOFF en docs | ✅ |
+| 2 | CONTEXT.md con §0 estado de sesión | ✅ |
+| 3 | Eliminar `.ai/`, `.codex/`, `.specify/` y Spec Kit | ✅ |
+| 4 | Eliminar `CLAUDE.md` y `.claude/` (solo opencode) | ✅ |
+| 5 | Actualizar AGENTS.md, folder-structure, validator, .gitignore | 🔄 |
+| 6 | Validar gates y commitear | ⏳ |
+
+**Próximo paso:** correr `composer validate:project`, `wiring`, `cs`, `stan`; revisar `git status`; commit.
+
+---
+
+## Histórico: Enforcement de máquina — ciclo de bases (spec 014, 2026-08-06) + ciclo de alineación de specs T01-T03
 
 **Objetivo:** el agente propone, la máquina decide. Contrato (DoR/DoD), calidad estática y CI como gates en cada PR.
 

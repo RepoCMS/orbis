@@ -59,7 +59,7 @@ fwrite(STDOUT, "=======================\n\n");
 
 // ── 1. Archivos esenciales ────────────────────────────────────────────────
 fwrite(STDOUT, "1. Archivos esenciales\n");
-$required = ['CONTEXT.md', 'tasks/TODO.md', 'tasks/IN_PROGRESS.md', 'tasks/DONE.md', 'AGENTS.md', 'HANDOFF.md', 'composer.json', 'phpstan.neon', 'phpstan-baseline.neon', '.php-cs-fixer.dist.php'];
+$required = ['CONTEXT.md', 'tasks/TODO.md', 'tasks/IN_PROGRESS.md', 'tasks/DONE.md', 'AGENTS.md', 'docs/ai-protocol.md', 'composer.json', 'phpstan.neon', 'phpstan-baseline.neon', '.php-cs-fixer.dist.php'];
 foreach ($required as $f) {
     file_exists("$root/$f") ? ok($f) : fail("$f faltante");
 }
@@ -222,15 +222,21 @@ if ($secretFiles === []) {
 }
 
 // ── 10. Duplicados globales (regla: config global vs repo) ───────────────
-fwrite(STDOUT, "\n10. Regla global vs repo: sin agentes/skills duplicados\n");
-$forbidden = ['.opencode/agent', '.claude/skills', '.claude/agents', '.codex/skills', '.agents'];
+fwrite(STDOUT, "\n10. Regla global vs repo: sin entry points duplicados\n");
+$forbidden = ['.opencode/agent', '.claude/skills', '.claude/agents', '.codex', '.ai', '.specify', '.github/agents', '.github/prompts', '.agents'];
 foreach ($forbidden as $dup) {
     if (is_dir("$root/$dup")) {
         fail("duplicado global en repo: $dup (fuente unica: ~/.agents/) — borrar");
     }
 }
-if (count(array_filter($forbidden, fn ($d) => is_dir("$root/$d"))) === 0) {
-    ok('sin agentes/skills duplicados en repo');
+$forbiddenFiles = ['constitution.md', 'PROJECT_CONTEXT.md', 'HANDOFF.md'];
+foreach ($forbiddenFiles as $file) {
+    if (file_exists("$root/$file")) {
+        fail("entry point obsoleto en repo: $file — borrar");
+    }
+}
+if (count(array_filter($forbidden, fn ($d) => is_dir("$root/$d"))) === 0 && count(array_filter($forbiddenFiles, fn ($f) => file_exists("$root/$f"))) === 0) {
+    ok('sin entry points duplicados en repo');
 }
 
 // ── 11. Tablero sincronizado (básico) ────────────────────────────────────

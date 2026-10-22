@@ -15,7 +15,7 @@
 |---------|------------------------|
 | **Lenguaje** | PHP >= 8.4 (`composer.json`) |
 | **Framework** | Symfony 8.0 (`"symfony/framework-bundle": "8.0.*"`) |
-| **ORM** | Doctrine ORM `^3.6.7` (⚠️ PROJECT_CONTEXT.md dice "ORM 2.x" — desactualizado) |
+| **ORM** | Doctrine ORM `^3.6.7` (documentación previa decía "ORM 2.x" — desactualizado) |
 | **Base de datos** | MySQL 8.0 (`DATABASE_URL="mysql://root:change-me@127.0.0.1:3306/cmscomec_orbis?serverVersion=8.0&charset=utf8mb4"` en `.env.example`) |
 | **Arquitectura** | DDD + Hexagonal (Ports & Adapters) + CQRS ligero |
 | **IDs** | ULID de 26 chars (`AbstractUlid` en Shared Kernel, `symfony/uid`) |
@@ -216,7 +216,7 @@ DSN: `MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=0` (.env.example).
 | **Assets** | Asset Mapper (`asset_mapper.yaml`) — sin build de Webpack/Vite |
 | **JS runtime** | Navegador moderno: importmap nativo; sin bundler. `package.json` solo tiene `better-sqlite3` (herramienta dev) |
 
-> ⚠️ **Alpine.js**: PROJECT_CONTEXT.md §3.2 menciona "Stimulus, Alpine.js", pero `importmap.php` **no registra Alpine.js** — no hay evidencia de su uso. TODO: requiere validación.
+> ⚠️ **Alpine.js**: documentación previa mencionaba "Stimulus, Alpine.js", pero `importmap.php` **no registra Alpine.js** — no hay evidencia de su uso. TODO: requiere validación.
 
 ---
 
@@ -246,8 +246,8 @@ Fuente: `docs/adr/README.md` + archivos en `docs/adr/`.
 
 | # | Discrepancia | Detalle |
 |---|--------------|---------|
-| 1 | **Doctrine ORM versión** | `composer.json` declara `doctrine/orm: ^3.6.7` (ORM 3.x); PROJECT_CONTEXT.md dice "Doctrine ORM 2.x" → desactualizado |
-| 2 | **Alpine.js** | Mencionado en PROJECT_CONTEXT.md pero no registrado en `importmap.php` |
+| 1 | **Doctrine ORM versión** | `composer.json` declara `doctrine/orm: ^3.6.7` (ORM 3.x); documentación previa (PROJECT_CONTEXT.md, eliminado 2026-10-22) decía "Doctrine ORM 2.x" |
+| 2 | **Alpine.js** | Mencionado en documentación previa pero no registrado en `importmap.php` |
 | 3 | **compose.yaml** | Usa imagen **PostgreSQL 16** (scaffold Symfony por defecto), pero la base real es **MySQL 8.0** según `.env.example` (db `cmscomec_orbis`). El override solo expone puertos y añade Mailpit |
 | 4 | **DeviceCatalog** | Autoload PSR-4 declarado en composer.json pero el directorio `src/app/DeviceCatalog/` no existe |
 | 5 | **Mapping XML de Shared** | Configurado en `doctrine.yaml` pero el directorio está vacío (0 archivos) |
@@ -255,11 +255,36 @@ Fuente: `docs/adr/README.md` + archivos en `docs/adr/`.
 
 ---
 
+## 9. Setup rápido
+
+```bash
+composer install
+npm install
+php bin/console doctrine:migrations:migrate
+php bin/console app:permissions:seed
+php bin/console app:roles:seed
+php bin/console app:seed:admin
+symfony server:start
+```
+
+## 10. Limitaciones conocidas
+
+| Issue | Impacto | Resolución |
+|---|---|---|
+| Rate limiting en login | Sin límite de intentos a nivel aplicación | Pendiente |
+| Expiración de password | No implementada | Pendiente |
+| Cleanup de refresh tokens | Manual vía `identity:cleanup-refresh-tokens` | Programar cron |
+| Forgot-password | Solo logs (`LoggerForgotPasswordEmailSender`), `MAILER_DSN=null://null` | Provider real pendiente |
+| BD de test | `.env.test` sin `DATABASE_URL` | Crear `orbis_test` |
+
+---
+
 ## Fuentes de verdad
 
 - `AGENTS.md` (reglas, patrones, apéndices A/C/D/E, key decisions)
-- `CONTEXT.md` (estado real por BC, conteos, reportes, importers, nomenclatura)
-- `PROJECT_CONTEXT.md` (contexto AI-native — con discrepancias marcadas ⚠️)
+- `CONTEXT.md` (estado de sesión + estado real por BC)
+- `docs/ai-protocol.md` (protocolo de trabajo IA-humano)
+- `docs/history.md` (historial, deuda técnica e inventario de reportes/importers)
 - `composer.json` y `composer.lock` (dependencias exactas)
 - `config/packages/doctrine.yaml`, `config/packages/messenger.yaml` (persistencia + mensajería)
 - `config/services.yaml` (bindings interface→implementation)

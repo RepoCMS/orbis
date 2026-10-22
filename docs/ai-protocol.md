@@ -139,13 +139,49 @@ Cuando el humano lo pida explícitamente:
 - Explica el porqué de cada patrón y decisión.
 - Al final, el humano escribe el cambio y la IA lo revisa.
 
-## 11. Relación con otros documentos
+## 11. Higiene de archivos
+
+- Tests SOLO en `tests/` (`Unit`, `Integration`, `Functional`). Nunca en la raíz, `src/` o carpetas de código.
+- Prohibido crear archivos scratch, debug, prueba o temporales dentro del repo. Usar `var/tmp/` (ignorado) o el directorio temporal del sistema.
+- Todo archivo nuevo debe aparecer en el reporte de cierre con: ruta, propósito y caller real.
+- Scripts one-off no se commitean. Si el script es de uso recurrente, va en `bin/` con nombre claro y caller documentado.
+- Artefactos generados (cachés, logs, builds) no se trackean; deben estar en `.gitignore`.
+- Al cerrar: `git status --short` solo debe mostrar cambios intencionales y `git ls-files --others --exclude-standard` no debe listar basura.
+- Si la IA crea un archivo fuera del alcance aprobado, debe reportarlo y eliminarlo en la misma tarea.
+- Nombres prohibidos fuera de `tests/`: `tmp*`, `temp*`, `test*.php`, `debug*`, `prueba*`, `*.bak`, `*.orig`, `*.old`.
+- Regla de oro: si no sabes por qué existe un archivo, no lo borres por cuenta propia: repórtalo al humano.
+
+## 12. Relación con otros documentos
 
 | Documento | Rol |
 |---|---|
 | [`AGENTS.md`](../AGENTS.md) | Reglas y convenciones de código |
-| [`CONTEXT.md`](../CONTEXT.md) | Estado real del proyecto |
+| [`CONTEXT.md`](../CONTEXT.md) | Estado de sesión + estado por BC |
 | `specs/{num}-{bc}/spec.md` | Qué se construye y su Wiring |
 | [`docs/architecture.md`](./architecture.md) | Arquitectura del sistema |
 | [`docs/adr/README.md`](./adr/README.md) | Decisiones arquitectónicas |
 | [`docs/codegraph.md`](./codegraph.md) | Uso de CodeGraph para verificar wiring |
+
+## 13. Optimización de contexto y tokens
+
+### Arranque (máximo 4 lecturas)
+
+1. `git status -sb` + `git log -1 --oneline`.
+2. `CONTEXT.md` §0 (estado de sesión).
+3. `tasks/IN_PROGRESS.md`.
+4. `specs/{id}/spec.md` solo si hay tarea activa.
+
+### Reglas
+
+- CodeGraph primero para símbolos/estructura: `codegraph_context` (tarea), `codegraph_search` (símbolo), `codegraph_node` (firma).
+- `rg` para texto literal (mensajes, strings, configs); CodeGraph no indexa texto.
+- No leer archivos completos si basta una sección; no releer lo ya cargado.
+- Máximo 5 archivos nuevos por tarea salvo justificación aprobada.
+- `codegraph_explore` solo para áreas desconocidas (consume muchos tokens).
+- Wiring: `codegraph_callers` + `bin/wiring-check.php`; los handlers inyectados por DI pueden no aparecer en `callers`.
+- Al cerrar: actualizar `CONTEXT.md` §0 + `tasks/`, y dejar `git status` limpio.
+
+### Presupuesto
+
+- Arranque ideal: ≤8k tokens.
+- Si la tarea requiere >5 archivos, pedir aprobación antes de seguir.

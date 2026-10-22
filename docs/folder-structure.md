@@ -1,8 +1,8 @@
 # Estructura de Carpetas de Orbis
 
 > **Documento:** Árbol de directorios completo y verificado en disco
-> **Fecha:** 2026-08-06
-> **Método:** `Get-ChildItem` sobre el repositorio + `CONTEXT.md` §9 como base
+> **Fecha:** 2026-10-22
+> **Método:** `Get-ChildItem` sobre el repositorio + `CONTEXT.md` §2 como base
 
 ---
 
@@ -10,14 +10,10 @@
 
 ```
 orbis/
-├── .ai/                      # ⚠️ Directorio VACÍO (0 archivos) — reservado para tooling AI
-├── .claude/                  # Coordinación Claude Code (worktrees de agentes: .claude/worktrees/agent-*/)
 ├── .codegraph/               # Índice CodeGraph (tree-sitter knowledge graph)
-├── .github/                  # copilot-instructions.md + agents/prompts speckit (10 + 10)
-├── .opencode/                # opencode.jsonc (MCP codegraph) + agent/ (7 roles)
-├── .specify/                 # Speckit: templates/, scripts/powershell/, memory/, integrations/
+├── .github/                  # workflows/ (ci.yml, security.yml)
+├── .opencode/                # opencode.jsonc (MCP codegraph)
 ├── .vscode/                  # settings.json
-├── .phpunit.cache/           # Cache de PHPUnit
 ├── assets/                   # JS (Stimulus/Turbo), estilos, vendor
 ├── bin/                      # Console Symfony
 ├── config/                   # Configuración Symfony (packages, routes, services)
@@ -26,29 +22,22 @@ orbis/
 ├── public/                   # Document root (index.php, assets instalados)
 ├── specs/                    # 14 specs por BC (spec.md + tasks.md)
 ├── src/                      # Código: app/ (BCs) + legacy raíz
-├── tasks/                    # ⚠️ Directorio VACÍO (0 archivos)
+├── tasks/                    # Tablero: TODO.md, IN_PROGRESS.md, DONE.md
 ├── templates/                # 124 templates Twig
 ├── tests/                    # Unit / Integration / Functional
 ├── var/                      # Cache, logs, reports (app.reports_dir)
 ├── AGENTS.md                 # Reglas de código (SOLO reglas; estado vive en CONTEXT.md)
 ├── CHANGELOG.md
-├── CLAUDE.md                 # Protocolo de coordinación entre herramientas
 ├── CONTEXT.md                # ⚠️ ÚNICA fuente de verdad de estado
-├── HANDOFF.md                # Protocolo handoff entre agentes
-├── PROJECT_CONTEXT.md        # Contexto AI-native del repositorio
-├── TODOS.md                  # ⚠️ DEPRECADO → tablero en tasks/ (TODO.md, IN_PROGRESS.md, DONE.md)
 ├── composer.json / composer.lock
 ├── importmap.php             # Importmap frontend (Stimulus, Turbo, app)
 ├── package.json / package-lock.json   # Solo better-sqlite3 (dev)
 ├── phpunit.dist.xml / phpunit.xml
 ├── symfony.lock
-├── validate_project.ps1      # Validación general (reportes + importers + esenciales)
-├── validate_reports.ps1 / validate_reports.sh
-├── validate_importers.ps1 / validate_importers.sh
+├── validate_project.ps1      # Wrapper de bin/validate-project.php (cross-platform)
 ├── compose.yaml              # ⚠️ PostgreSQL 16 (scaffold default; DB real = MySQL 8)
 ├── compose.override.yaml     # Puertos DB + Mailpit (SMTP 1025 / UI 8025)
 ├── .env / .env.dev / .env.test / .env.example / .env.local
-├── constitution.md           # Principios del repositorio
 └── .editorconfig / .gitignore / .phpactor.json
 ```
 
@@ -457,27 +446,13 @@ docs/
 ## 10. Directorios AI y automatización
 
 ```
-.ai/                     # ⚠️ VACÍO (sin archivos) — TODO: definir propósito
-tasks/                   # ⚠️ VACÍO (sin archivos) — TODO: definir propósito
 .opencode/
-├── opencode.jsonc       # Configuración opencode (MCP codegraph local)
-└── agent/               # planner.md, qa-reviewer.md, developer.md, test-engineer.md,
-                         # frontend.md, security-reviewer.md, docs.md
+└── opencode.jsonc       # Configuración opencode (MCP codegraph local)
 .github/
-├── copilot-instructions.md
-├── agents/              # speckit.{analyze,checklist,clarify,constitution,implement,
-│                        #   plan,specify,tasks,taskstoissues}.agent.md (10)
-└── prompts/             # speckit.*.prompt.md (10)
-.specify/
-├── extensions.yml, integration.json
-├── integrations/        # copilot.manifest.json, speckit.manifest.json
-├── memory/constitution.md
-├── scripts/powershell/  # check-prerequisites, common, create-new-feature,
-│                        # setup-plan, setup-tasks
-└── templates/           # spec/plan/tasks/checklist/constitution templates
-.claude/
-└── worktrees/agent-*/   # Worktrees de agentes Claude Code (código espejo)
+└── workflows/           # ci.yml, security.yml
 ```
+
+> Los agentes y skills viven en `~/.agents/` (hub global). No se versionan en el repo.
 
 ---
 
@@ -488,17 +463,17 @@ tasks/                   # ⚠️ VACÍO (sin archivos) — TODO: definir propó
 | 1 | `src/Controller`, `src/Entity`, `src/Repository` son **legacy vacíos** (solo `.gitignore`) — el código vive en `src/app/{BC}/Presentation/Http/` |
 | 2 | `config/routes/` solo contiene framework + security — las rutas se definen **por atributos** `#[Route]` en los controllers |
 | 3 | `docs/api/`, `docs/bc/`, `docs/runbooks/` existen pero están **vacíos** |
-| 4 | `.ai/` y `tasks/` existen pero están **vacíos** |
+| 4 | `tasks/` contiene el tablero (`TODO.md`, `IN_PROGRESS.md`, `DONE.md`); `.ai/` fue eliminado (2026-10-22) |
 | 5 | `src/app/Shared/Infrastructure/Persistence/Doctrine/Mapping/` está configurado en doctrine.yaml pero **vacío** |
-| 6 | Total PHP en `src/`: **1863** (Get-ChildItem 2026-08-06); CONTEXT.md reporta 1411 (CodeGraph) — la diferencia incluye archivos no indexados |
+| 6 | CodeGraph indexa **2.382** archivos (2026-10-22); el conteo en disco incluye código legacy no indexado |
 
 ---
 
 ## Fuentes de verdad
 
-- Verificación en disco: `Get-ChildItem` sobre `src/`, `src/app/*`, `config/`, `templates/`, `assets/`, `migrations/`, `specs/`, `tests/`, `docs/`, `.ai/`, `tasks/`, `.opencode/`, `.github/`, `.specify/`, `.claude/`
-- `CONTEXT.md` §9 (plantilla de estructura por BC) y §8 (nomenclatura)
+- Verificación en disco: `Get-ChildItem` sobre `src/`, `src/app/*`, `config/`, `templates/`, `assets/`, `migrations/`, `specs/`, `tests/`, `docs/`, `tasks/`, `.opencode/`, `.github/`
+- `CONTEXT.md` §0 (estado de sesión) y §2 (estado por BC)
 - `AGENTS.md` (patrones de archivo, apéndices A/E)
 - `config/packages/doctrine.yaml` (mappings y tipos por BC)
 - `config/services.yaml` (recursos por BC y exclusiones de Domain/)
-- `PROJECT_CONTEXT.md` (estructura de capas 4+1)
+- `docs/architecture.md` (estructura de capas 4+1)
