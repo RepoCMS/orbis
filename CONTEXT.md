@@ -11,11 +11,11 @@
 | Campo | Valor |
 |---|---|
 | Rama | `main` (origin: `https://github.com/RepoCMS/orbis.git`) |
-| Último commit | `194f914` — WIP: checkpoint before project cleanup |
-| Working tree | Consolidación de contexto IA en curso (sin commit) |
-| Tarea activa | Un solo entry point + optimización de tokens |
-| Próximo paso | Validar gates y commitear la limpieza |
-| Blockers | BD de test sin configurar; `compose.yaml` PostgreSQL vs MySQL; URL del repo nuevo pendiente |
+| Último commit | `db7e854` — limpieza + purga de secretos (push OK) |
+| Working tree | Limpio |
+| Tarea activa | — (consolidación cerrada) |
+| Próximo paso | Configurar BD de test y correr `composer test` |
+| Blockers | BD de test sin configurar; `compose.yaml` PostgreSQL vs MySQL; rotar credenciales expuestas; #42 |
 | Última actualización | 2026-10-22 |
 
 **Al iniciar sesión:** leer solo esta sección + [`tasks/IN_PROGRESS.md`](./tasks/IN_PROGRESS.md). Usar CodeGraph antes de abrir archivos.
@@ -85,18 +85,18 @@
 |---|---|---|---|
 | 1 | `.env.test` sin `DATABASE_URL` | `composer test` usaría la BD de desarrollo | ⚠️ Crear `orbis_test` y configurar |
 | 2 | `compose.yaml` define PostgreSQL 16 | Confunde el setup; la app usa MySQL 8 | ⚠️ Corregir o eliminar |
-| 3 | URL del repo nuevo no confirmada | No se puede cambiar `origin` | ⚠️ Pendiente |
-| 4 | `#42` bcrypt vs argon2 | Password hashing | ❓ Pendiente |
+| 3 | `#42` bcrypt vs argon2 | Password hashing | ❓ Pendiente |
+| 4 | Credenciales en historial antiguo | `APP_SECRET`, DB y OpenRouter key | ✅ Purgado del historial; ⚠️ rotar credenciales |
 
 ---
 
 ## 5. Próximos pasos
 
-1. Configurar BD de test y correr `composer test`.
-2. Corregir `compose.yaml` (MySQL 8) o eliminarlo.
-3. Implementar gaps de Notification `G-01..G-05` (ver `docs/history.md`).
-4. Completar Identity Dashboard KPIs.
-5. Confirmar URL del repo nuevo y actualizar `origin`.
+1. Rotar credenciales expuestas (`APP_SECRET`, DB, OpenRouter).
+2. Configurar BD de test y correr `composer test`.
+3. Corregir `compose.yaml` (MySQL 8) o eliminarlo.
+4. Implementar gaps de Notification `G-01..G-05` (ver `docs/history.md`).
+5. Completar Identity Dashboard KPIs.
 
 ---
 

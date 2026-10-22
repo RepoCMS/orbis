@@ -14,10 +14,11 @@
 | 2 | CONTEXT.md con §0 estado de sesión | ✅ |
 | 3 | Eliminar `.ai/`, `.codex/`, `.specify/` y Spec Kit | ✅ |
 | 4 | Eliminar `CLAUDE.md` y `.claude/` (solo opencode) | ✅ |
-| 5 | Actualizar AGENTS.md, folder-structure, validator, .gitignore | 🔄 |
-| 6 | Validar gates y commitear | ⏳ |
+| 5 | Actualizar AGENTS.md, folder-structure, validator, .gitignore | ✅ |
+| 6 | Validar gates, commit y push | ✅ |
+| 7 | Purgar secretos del historial (`.env*`, OpenRouter key) | ✅ |
 
-**Próximo paso:** correr `composer validate:project`, `wiring`, `cs`, `stan`; revisar `git status`; commit.
+**Próximo paso:** rotar credenciales expuestas y configurar la BD de test.
 
 ---
 
