@@ -7,6 +7,7 @@ namespace App\Client\Application\Command\UpdateTerminalAssignment;
 use App\Client\Application\Exception\TerminalAssignmentNotFoundException;
 use App\Client\Domain\Events\TerminalAssignmentUpdated;
 use App\Client\Domain\Repositories\TerminalAssignmentRepositoryInterface;
+use App\Client\Domain\Repositories\TerminalRepositoryInterface;
 use App\Client\Domain\ValueObjects\SiteIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalAssignmentIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
@@ -15,6 +16,7 @@ final readonly class UpdateTerminalAssignmentHandler
 {
     public function __construct(
         private TerminalAssignmentRepositoryInterface $assignmentRepository,
+        private TerminalRepositoryInterface $terminalRepository,
         private DomainEventPublisherInterface $eventPublisher,
     ) {
     }
@@ -31,12 +33,15 @@ final readonly class UpdateTerminalAssignmentHandler
 
         $this->assignmentRepository->save($assignment);
 
+        $terminal = $this->terminalRepository->findById($assignment->terminalId());
+
         $this->eventPublisher->publish(new TerminalAssignmentUpdated(
             assignmentId:      (string) $assignment->id(),
             terminalId:        (string) $assignment->terminalId(),
             locationId:        (string) $assignment->siteId(),
             name:              (string) $assignment->name(),
             idAssignedByClient: (string) $assignment->idAssingedByClient(),
+            clientId:          (string) $terminal->clientId(),
         ));
     }
 }

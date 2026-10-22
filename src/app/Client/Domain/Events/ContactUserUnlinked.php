@@ -10,6 +10,7 @@ final class ContactUserUnlinked extends DomainEvent
 {
     public function __construct(
         public readonly string $contactId,
+        public readonly string $userId,
     ) {
         parent::__construct();
     }

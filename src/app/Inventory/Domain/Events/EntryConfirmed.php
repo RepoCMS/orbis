@@ -13,6 +13,7 @@ final class EntryConfirmed extends DomainEvent
 {
     public function __construct(
         public readonly string $entryId,
+        public readonly string $employeeId,
     ) {
         parent::__construct();
     }

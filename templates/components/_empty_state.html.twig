@@ -1,0 +1,38 @@
+{#
+ # Estado vacío reutilizable
+ # Parámetros esperados:
+ # - icon: string (nombre del icono: 'users', 'ticket', 'chart', 'box', 'lock', etc.)
+ # - title: string (título principal)
+ # - message: string (mensaje descriptivo)
+ # - action_url: string (opcional, URL para botón de acción)
+ # - action_label: string (opcional, etiqueta del botón de acción)
+ #}
+
+{% set iconPaths = {
+    'users': 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z',
+    'ticket': 'M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a3 3 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z',
+    'chart': 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z',
+    'box': 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4',
+    'lock': 'M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25h-10.5a2.25 2.25 0 00-2.25 2.25v11.25c0 .896.653 1.654 1.506 1.937a3.748 3.748 0 00-.027.563V21a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021 19.5v-1.063a3.75 3.75 0 00-.027-.563 2.245 2.245 0 001.506-1.937z',
+    'ticket_check': 'M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z',
+    'calendar': 'M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5',
+} %}
+
+<div class="flex flex-col items-center justify-center py-12 px-4 text-center">
+    <div class="w-14 h-14 rounded-full flex items-center justify-center mb-4"
+         style="background: rgba(30, 53, 133, 0.08);">
+        <svg class="w-7 h-7" style="color: #1e3585;" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="{{ iconPaths[icon] ?? iconPaths['chart'] }}"/>
+        </svg>
+    </div>
+    <h4 class="text-sm font-semibold text-gray-700 mb-1">{{ title }}</h4>
+    <p class="text-sm text-gray-500 mb-4 max-w-xs">{{ message }}</p>
+    {% if action_url is defined and action_url and action_label is defined and action_label %}
+    <a href="{{ action_url }}"
+       class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg transition-colors"
+       style="background: #1e3585; color: white;"
+       onmouseover="this.style.background='#162d6e'" onmouseout="this.style.background='#1e3585'">
+        {{ action_label }}
+    </a>
+    {% endif %}
+</div>

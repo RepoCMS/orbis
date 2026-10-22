@@ -8,6 +8,7 @@ use App\Identity\Application\Exception\UserNotFoundException;
 use App\Identity\Application\Query\FindUserByUsername\FindUserByUsernameHandler;
 use App\Identity\Application\Query\FindUserByUsername\FindUserByUsernameQuery;
 use App\Identity\Domain\Entities\User;
+use App\Identity\Domain\Repositories\UserMfaConfigRepositoryInterface;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;
 use App\Identity\Domain\ValueObjects\HashedPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
@@ -29,21 +30,27 @@ final class FindUserByUsernameHandlerTest extends TestCase
             new RoleIdValueObject(self::ROLE_ID),
         );
 
-        $repo = $this->createMock(UserRepositoryInterface::class);
-        $repo->method('findByUsername')->willReturn($user);
+        $userRepo = $this->createMock(UserRepositoryInterface::class);
+        $userRepo->method('findByUsername')->willReturn($user);
 
-        $handler = new FindUserByUsernameHandler($repo);
+        $mfaRepo = $this->createMock(UserMfaConfigRepositoryInterface::class);
+        $mfaRepo->method('findByUserId')->willReturn(null);
+
+        $handler = new FindUserByUsernameHandler($userRepo, $mfaRepo);
         $response = ($handler)(new FindUserByUsernameQuery('juan.perez'));
 
         self::assertSame('juan.perez', $response->username);
+        self::assertFalse($response->mfaEnabled);
     }
 
     public function testThrowsWhenNotFound(): void
     {
-        $repo = $this->createMock(UserRepositoryInterface::class);
-        $repo->method('findByUsername')->willReturn(null);
+        $userRepo = $this->createMock(UserRepositoryInterface::class);
+        $userRepo->method('findByUsername')->willReturn(null);
 
-        $handler = new FindUserByUsernameHandler($repo);
+        $mfaRepo = $this->createMock(UserMfaConfigRepositoryInterface::class);
+
+        $handler = new FindUserByUsernameHandler($userRepo, $mfaRepo);
         $this->expectException(UserNotFoundException::class);
         ($handler)(new FindUserByUsernameQuery('unknown'));
     }

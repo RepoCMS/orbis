@@ -6,6 +6,7 @@ namespace App\Identity\Application\Query\FindUserByUsername;
 
 use App\Identity\Application\Exception\UserNotFoundException;
 use App\Identity\Application\Query\Response\UserResponse;
+use App\Identity\Domain\Repositories\UserMfaConfigRepositoryInterface;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;
 use App\Identity\Domain\ValueObjects\UsernameValueObject;
 
@@ -13,6 +14,7 @@ final readonly class FindUserByUsernameHandler
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,
+        private UserMfaConfigRepositoryInterface $userMfaConfigRepository,
     ) {
     }
 
@@ -22,6 +24,8 @@ final readonly class FindUserByUsernameHandler
         $user = $this->userRepository->findByUsername($username)
             ?? throw UserNotFoundException::withId($query->username);
 
-        return UserResponse::fromEntity($user);
+        $mfaConfig = $this->userMfaConfigRepository->findByUserId($user->id());
+
+        return UserResponse::fromEntity($user, $mfaConfig);
     }
 }

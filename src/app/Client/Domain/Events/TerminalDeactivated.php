@@ -10,6 +10,7 @@ final class TerminalDeactivated extends DomainEvent
 {
     public function __construct(
         public readonly string $terminalId,
+        public readonly string $clientId,
     ) {
         parent::__construct();
     }

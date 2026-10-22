@@ -27,12 +27,14 @@ final readonly class UnlinkUserFromContactHandler
         $contact = $this->contactRepository->findById(new ContactIdValueObject($command->contactId));
 
         if ($contact !== null && $contact->userId() !== null) {
+            $userId = $contact->userId();
             $contact->unlinkUser();
             $this->contactRepository->save($contact);
-        }
 
-        $this->eventPublisher->publish(new ContactUserUnlinked(
-            contactId: $command->contactId,
-        ));
+            $this->eventPublisher->publish(new ContactUserUnlinked(
+                contactId: $command->contactId,
+                userId: (string) $userId,
+            ));
+        }
     }
 }

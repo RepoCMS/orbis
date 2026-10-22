@@ -85,6 +85,7 @@ final class SeedNotificationTemplatesCommand extends Command
 
         // ── Cash Advance Updated ──────────────────────────────────────────────
         [EventType::CASH_ADVANCE_UPDATED, NotificationChannel::IN_APP, 'Adelanto actualizado', 'El adelanto #{{cashAdvanceId}} ha sido actualizado de {{previousAmount}} a {{newAmount}}.'],
+        [EventType::CASH_ADVANCE_UPDATED, NotificationChannel::EMAIL, 'Adelanto actualizado', 'El adelanto #{{cashAdvanceId}} ha sido actualizado de {{previousAmount}} a {{newAmount}}.'],
 
         // ── Cash Advance Pending Payment ──────────────────────────────────────
         [EventType::CASH_ADVANCE_PENDING_PAYMENT, NotificationChannel::IN_APP, 'Adelanto pendiente de pago', 'Tiene un adelanto de {{amount}} pendiente de pago desde hace {{daysSinceGiven}} días.'],
@@ -120,6 +121,7 @@ final class SeedNotificationTemplatesCommand extends Command
 
         // ── Part Repaired ─────────────────────────────────────────────────────
         [EventType::PART_REPAIRED, NotificationChannel::IN_APP, 'Repuesto reparado', 'El repuesto ha sido reparado.'],
+        [EventType::PART_REPAIRED, NotificationChannel::EMAIL, 'Repuesto reparado', 'El repuesto con ID {{serializedStockId}} ha sido reparado y está disponible.'],
 
         // ── Employee Special Period Starting ───────────────────────────────────
         [EventType::EMPLOYEE_SPECIAL_PERIOD_STARTING, NotificationChannel::IN_APP, 'Periodo especial programado', 'Se ha programado un período especial de tipo {{type}} para el empleado.'],
@@ -195,7 +197,7 @@ final class SeedNotificationTemplatesCommand extends Command
 
         // ── Request Approved ───────────────────────────────────────────────────
         [EventType::REQUEST_APPROVED, NotificationChannel::IN_APP, 'Solicitud aprobada', 'La solicitud de repuesto ha sido aprobada.'],
-        [EventType::REQUEST_APPROVED, NotificationChannel::EMAIL, 'Solicitud aprobada', 'La solicitud {{requestId}} ha sido aprobada.'],
+        [EventType::REQUEST_APPROVED, NotificationChannel::EMAIL, 'Solicitud aprobada', 'La solicitud {{requestId}} ha sido aprobada. El técnico responsable ha sido notificado para proceder con el traslado.'],
 
         // ── Stock Moved ────────────────────────────────────────────────────────
         [EventType::STOCK_MOVED, NotificationChannel::IN_APP, 'Movimiento de stock completado', 'Se ha completado un movimiento de stock.'],
@@ -203,6 +205,7 @@ final class SeedNotificationTemplatesCommand extends Command
 
         // ── Serialized Stock Created ───────────────────────────────────────────
         [EventType::SERIALIZED_STOCK_CREATED, NotificationChannel::IN_APP, 'Stock serializado registrado', 'Se ha registrado un nuevo ítem de stock serializado.'],
+        [EventType::SERIALIZED_STOCK_CREATED, NotificationChannel::EMAIL, 'Stock serializado registrado', 'Se ha registrado un nuevo ítem de stock serializado con ID {{serializedStockId}}.'],
 
         // ── Entry Confirmed ────────────────────────────────────────────────────
         [EventType::ENTRY_CONFIRMED, NotificationChannel::IN_APP, 'Entrada confirmada', 'Se ha confirmado una entrada de inventario.'],
@@ -210,6 +213,7 @@ final class SeedNotificationTemplatesCommand extends Command
 
         // ── Product Created ────────────────────────────────────────────────────
         [EventType::PRODUCT_CREATED, NotificationChannel::IN_APP, 'Producto creado', 'Se ha creado un nuevo producto. Código: {{productCode}}.'],
+        [EventType::PRODUCT_CREATED, NotificationChannel::EMAIL, 'Producto creado', 'Se ha creado un nuevo producto en el catálogo. Código: {{productCode}}, ID: {{productId}}.'],
 
         // ── Employee Created ───────────────────────────────────────────────────
         [EventType::EMPLOYEE_CREATED, NotificationChannel::IN_APP, 'Empleado creado', 'Se ha creado el empleado {{firstName}} {{lastName}}.'],
@@ -217,6 +221,7 @@ final class SeedNotificationTemplatesCommand extends Command
 
         // ── Employee Deactivated ───────────────────────────────────────────────
         [EventType::EMPLOYEE_DEACTIVATED, NotificationChannel::IN_APP, 'Empleado desactivado', 'El empleado ha sido desactivado.'],
+        [EventType::EMPLOYEE_DEACTIVATED, NotificationChannel::EMAIL, 'Empleado desactivado', 'El empleado ha sido desactivado. Su acceso al sistema ha sido removido.'],
 
         // ── Vacation Requested ─────────────────────────────────────────────────
         [EventType::VACATION_REQUESTED, NotificationChannel::IN_APP, 'Vacaciones solicitadas', 'Se ha solicitado vacaciones del {{startDate}} al {{endDate}}.'],
@@ -228,18 +233,183 @@ final class SeedNotificationTemplatesCommand extends Command
 
         // ── Client Created ─────────────────────────────────────────────────────
         [EventType::CLIENT_CREATED, NotificationChannel::IN_APP, 'Cliente creado', 'Se ha creado el cliente {{clientName}}.'],
+        [EventType::CLIENT_CREATED, NotificationChannel::EMAIL, 'Cliente creado', 'Se ha creado un nuevo cliente: {{clientName}} (ID: {{clientId}}).'],
 
         // ── Contact Added ──────────────────────────────────────────────────────
         [EventType::CONTACT_ADDED, NotificationChannel::IN_APP, 'Contacto agregado', 'Se ha agregado un nuevo contacto al cliente.'],
+        [EventType::CONTACT_ADDED, NotificationChannel::EMAIL, 'Contacto agregado', 'Se ha agregado un nuevo contacto al cliente {{clientName}}.'],
+
+        // ── Contact Updated ───────────────────────────────────────────────────
+        [EventType::CONTACT_UPDATED, NotificationChannel::IN_APP, 'Contacto actualizado', 'El contacto ha sido actualizado.'],
+        [EventType::CONTACT_UPDATED, NotificationChannel::EMAIL, 'Contacto actualizado', 'El contacto {{contactName}} del cliente {{clientName}} ha sido actualizado.'],
+
+        // ── Contact Deactivated ───────────────────────────────────────────────
+        [EventType::CONTACT_DEACTIVATED, NotificationChannel::IN_APP, 'Contacto desactivado', 'El contacto ha sido desactivado.'],
+        [EventType::CONTACT_DEACTIVATED, NotificationChannel::EMAIL, 'Contacto desactivado', 'El contacto {{contactName}} del cliente {{clientName}} ha sido desactivado.'],
+
+        // ── Contact Reactivated ───────────────────────────────────────────────
+        [EventType::CONTACT_REACTIVATED, NotificationChannel::IN_APP, 'Contacto reactivado', 'El contacto ha sido reactivado.'],
+        [EventType::CONTACT_REACTIVATED, NotificationChannel::EMAIL, 'Contacto reactivado', 'El contacto {{contactName}} del cliente {{clientName}} ha sido reactivado.'],
+
+        // ── Contact User Unlinked ─────────────────────────────────────────────
+        [EventType::CONTACT_USER_UNLINKED, NotificationChannel::IN_APP, 'Contacto desvinculado', 'El contacto ha sido desvinculado del usuario.'],
+        [EventType::CONTACT_USER_UNLINKED, NotificationChannel::EMAIL, 'Contacto desvinculado', 'El contacto {{contactName}} ha sido desvinculado del usuario.'],
+
+        // ── Contact Access Provisioned ────────────────────────────────────────
+        [EventType::CONTACT_ACCESS_PROVISIONED, NotificationChannel::IN_APP, 'Acceso provisto', 'Se ha provisto acceso al contacto.'],
+        [EventType::CONTACT_ACCESS_PROVISIONED, NotificationChannel::EMAIL, 'Acceso provisto', 'Se ha provisto acceso al portal para el contacto {{contactName}}.'],
 
         // ── Client Deactivated ───────────────────────────────────────────────
         [EventType::CLIENT_DEACTIVATED, NotificationChannel::IN_APP, 'Cliente desactivado', 'El cliente ha sido desactivado.{{reason}}'],
+        [EventType::CLIENT_DEACTIVATED, NotificationChannel::EMAIL, 'Cliente desactivado', 'El cliente {{clientName}} ha sido desactivado.{{reason}}'],
 
         // ── Client Reactivated ───────────────────────────────────────────────
         [EventType::CLIENT_REACTIVATED, NotificationChannel::IN_APP, 'Cliente reactivado', 'El cliente ha sido reactivado.'],
+        [EventType::CLIENT_REACTIVATED, NotificationChannel::EMAIL, 'Cliente reactivado', 'El cliente {{clientName}} ha sido reactivado.'],
 
         // ── Client Deleted ────────────────────────────────────────────────────
         [EventType::CLIENT_DELETED, NotificationChannel::IN_APP, 'Cliente eliminado', 'El cliente ha sido eliminado.{{reason}}'],
+        [EventType::CLIENT_DELETED, NotificationChannel::EMAIL, 'Cliente eliminado', 'El cliente {{clientName}} ha sido eliminado.{{reason}}'],
+
+        // ── Terminal Registered ────────────────────────────────────────────────────
+        [EventType::TERMINAL_REGISTERED, NotificationChannel::IN_APP, 'Terminal registrada', 'Se ha registrado una nueva terminal.'],
+        [EventType::TERMINAL_REGISTERED, NotificationChannel::EMAIL, 'Terminal registrada', 'Se ha registrado una nueva terminal: {{terminalName}} ({{serialNumber}}).'],
+
+        // ── Terminal Updated ────────────────────────────────────────────────────
+        [EventType::TERMINAL_UPDATED, NotificationChannel::IN_APP, 'Terminal actualizada', 'La terminal ha sido actualizada.'],
+        [EventType::TERMINAL_UPDATED, NotificationChannel::EMAIL, 'Terminal actualizada', 'La terminal {{terminalName}} ({{serialNumber}}) ha sido actualizada.'],
+
+        // ── Terminal Deactivated ────────────────────────────────────────────────
+        [EventType::TERMINAL_DEACTIVATED, NotificationChannel::IN_APP, 'Terminal desactivada', 'La terminal ha sido desactivada.'],
+        [EventType::TERMINAL_DEACTIVATED, NotificationChannel::EMAIL, 'Terminal desactivada', 'La terminal {{terminalName}} ({{serialNumber}}) ha sido desactivada.'],
+
+        // ── Terminal Reactivated ────────────────────────────────────────────────
+        [EventType::TERMINAL_REACTIVATED, NotificationChannel::IN_APP, 'Terminal reactivada', 'La terminal ha sido reactivada.'],
+        [EventType::TERMINAL_REACTIVATED, NotificationChannel::EMAIL, 'Terminal reactivada', 'La terminal {{terminalName}} ({{serialNumber}}) ha sido reactivada.'],
+
+        // ── Terminal Assignment Registered ──────────────────────────────────────
+        [EventType::TERMINAL_ASSIGNMENT_REGISTERED, NotificationChannel::IN_APP, 'Asignación de terminal registrada', 'Se ha registrado una asignación de terminal.'],
+        [EventType::TERMINAL_ASSIGNMENT_REGISTERED, NotificationChannel::EMAIL, 'Asignación de terminal registrada', 'Se ha registrado una asignación de terminal para {{terminalName}}.'],
+
+        // ── Terminal Assignment Updated ─────────────────────────────────────────
+        [EventType::TERMINAL_ASSIGNMENT_UPDATED, NotificationChannel::IN_APP, 'Asignación de terminal actualizada', 'La asignación de terminal ha sido actualizada.'],
+        [EventType::TERMINAL_ASSIGNMENT_UPDATED, NotificationChannel::EMAIL, 'Asignación de terminal actualizada', 'La asignación de terminal para {{terminalName}} ha sido actualizada.'],
+
+        // ── Terminal Assignment Deactivated ─────────────────────────────────────
+        [EventType::TERMINAL_ASSIGNMENT_DEACTIVATED, NotificationChannel::IN_APP, 'Asignación de terminal desactivada', 'La asignación de terminal ha sido desactivada.'],
+        [EventType::TERMINAL_ASSIGNMENT_DEACTIVATED, NotificationChannel::EMAIL, 'Asignación de terminal desactivada', 'La asignación de terminal para {{terminalName}} ha sido desactivada.'],
+
+        // ── Terminal Assignment Reactivated ─────────────────────────────────────
+        [EventType::TERMINAL_ASSIGNMENT_REACTIVATED, NotificationChannel::IN_APP, 'Asignación de terminal reactivada', 'La asignación de terminal ha sido reactivada.'],
+        [EventType::TERMINAL_ASSIGNMENT_REACTIVATED, NotificationChannel::EMAIL, 'Asignación de terminal reactivada', 'La asignación de terminal para {{terminalName}} ha sido reactivada.'],
+
+        // ── Contract Created ───────────────────────────────────────────────────
+        [EventType::CONTRACT_CREATED, NotificationChannel::IN_APP, 'Contrato creado', 'Se ha creado un nuevo contrato.'],
+        [EventType::CONTRACT_CREATED, NotificationChannel::EMAIL, 'Contrato creado', 'Se ha creado un nuevo contrato: {{contractNumber}} para el cliente {{clientName}}.'],
+
+        // ── Contract Updated ────────────────────────────────────────────────────
+        [EventType::CONTRACT_UPDATED, NotificationChannel::IN_APP, 'Contrato actualizado', 'El contrato ha sido actualizado.'],
+        [EventType::CONTRACT_UPDATED, NotificationChannel::EMAIL, 'Contrato actualizado', 'El contrato {{contractNumber}} ha sido actualizado.'],
+
+        // ── Contract Cancelled ──────────────────────────────────────────────────
+        [EventType::CONTRACT_CANCELLED, NotificationChannel::IN_APP, 'Contrato cancelado', 'El contrato ha sido cancelado.'],
+        [EventType::CONTRACT_CANCELLED, NotificationChannel::EMAIL, 'Contrato cancelado', 'El contrato {{contractNumber}} ha sido cancelado. Motivo: {{reason}}.'],
+
+        // ── Warranty Registered ─────────────────────────────────────────────────
+        [EventType::WARRANTY_REGISTERED, NotificationChannel::IN_APP, 'Garantía registrada', 'Se ha registrado una nueva garantía.'],
+        [EventType::WARRANTY_REGISTERED, NotificationChannel::EMAIL, 'Garantía registrada', 'Se ha registrado una garantía para {{productName}} (ID: {{warrantyId}}).'],
+
+        // ── Warranty Updated ────────────────────────────────────────────────────
+        [EventType::WARRANTY_UPDATED, NotificationChannel::IN_APP, 'Garantía actualizada', 'La garantía ha sido actualizada.'],
+        [EventType::WARRANTY_UPDATED, NotificationChannel::EMAIL, 'Garantía actualizada', 'La garantía {{warrantyId}} ha sido actualizada.'],
+
+        // ── Warranty Expired ────────────────────────────────────────────────────
+        [EventType::WARRANTY_EXPIRED, NotificationChannel::IN_APP, 'Garantía vencida', 'La garantía ha vencido.'],
+        [EventType::WARRANTY_EXPIRED, NotificationChannel::EMAIL, 'Garantía vencida', 'La garantía {{warrantyId}} para {{productName}} ha vencido.'],
+
+        // ── SLA Policy Created ──────────────────────────────────────────────────
+        [EventType::SLA_POLICY_CREATED, NotificationChannel::IN_APP, 'Política de SLA creada', 'Se ha creado una nueva política de SLA.'],
+        [EventType::SLA_POLICY_CREATED, NotificationChannel::EMAIL, 'Política de SLA creada', 'Se ha creado una nueva política de SLA: {{policyName}}.'],
+
+        // ── Client Sale Order Completed ─────────────────────────────────────────
+        [EventType::CLIENT_SALE_ORDER_COMPLETED, NotificationChannel::IN_APP, 'Orden de venta completada', 'La orden de venta ha sido completada.'],
+        [EventType::CLIENT_SALE_ORDER_COMPLETED, NotificationChannel::EMAIL, 'Orden de venta completada', 'La orden de venta {{orderNumber}} ha sido completada.'],
+
+        // ── Identity Security Events ────────────────────────────────────────────
+        [EventType::USER_UNLOCKED, NotificationChannel::IN_APP, 'Usuario desbloqueado', 'Su cuenta ha sido desbloqueada.'],
+        [EventType::USER_UNLOCKED, NotificationChannel::EMAIL, 'Usuario desbloqueado', 'Su cuenta ha sido desbloqueada. Si no solicitó esto, contacte a soporte.'],
+        [EventType::PASSWORD_CHANGED, NotificationChannel::IN_APP, 'Contraseña cambiada', 'Su contraseña ha sido cambiada.'],
+        [EventType::PASSWORD_CHANGED, NotificationChannel::EMAIL, 'Contraseña cambiada', 'Su contraseña ha sido cambiada. Si no realizó esta acción, contacte a soporte.'],
+        [EventType::PASSWORD_RESET_REQUESTED, NotificationChannel::IN_APP, 'Restablecimiento solicitado', 'Se ha solicitado un restablecimiento de contraseña.'],
+        [EventType::PASSWORD_RESET_REQUESTED, NotificationChannel::EMAIL, 'Restablecimiento de contraseña', 'Se ha solicitado restablecer su contraseña. Use el enlace para continuar.'],
+        [EventType::MFA_SETUP_COMPLETED, NotificationChannel::IN_APP, 'MFA configurado', 'La autenticación de dos factores ha sido configurada.'],
+        [EventType::MFA_SETUP_COMPLETED, NotificationChannel::EMAIL, 'MFA configurado', 'La autenticación de dos factores ha sido configurada en su cuenta.'],
+        [EventType::MFA_DISABLED_BY_ADMIN, NotificationChannel::IN_APP, 'MFA deshabilitado', 'La autenticación de dos factores ha sido deshabilitada por un administrador.'],
+        [EventType::MFA_DISABLED_BY_ADMIN, NotificationChannel::EMAIL, 'MFA deshabilitado', 'La autenticación de dos factores ha sido deshabilitada por un administrador.'],
+        [EventType::EMPLOYEE_REGISTERED, NotificationChannel::IN_APP, 'Empleado registrado', 'El empleado ha sido registrado como usuario.'],
+        [EventType::EMPLOYEE_REGISTERED, NotificationChannel::EMAIL, 'Empleado registrado', 'El empleado {{employeeName}} ha sido registrado como usuario del sistema.'],
+        [EventType::CONTACT_LINKED, NotificationChannel::IN_APP, 'Contacto vinculado', 'El contacto ha sido vinculado a un usuario.'],
+        [EventType::CONTACT_LINKED, NotificationChannel::EMAIL, 'Contacto vinculado', 'El contacto {{contactName}} ha sido vinculado a un usuario del sistema.'],
+        [EventType::ADMIN_SEEDED, NotificationChannel::IN_APP, 'Administrador creado', 'Se ha creado el administrador inicial.'],
+        [EventType::ADMIN_SEEDED, NotificationChannel::EMAIL, 'Administrador inicial creado', 'Se ha creado la cuenta del administrador inicial: {{username}}.'],
+
+        // ── Organization - Employee lifecycle ─────────────────────────────────
+        [EventType::EMPLOYEE_REACTIVATED, NotificationChannel::IN_APP, 'Empleado reactivado', 'El empleado ha sido reactivado.'],
+        [EventType::EMPLOYEE_REACTIVATED, NotificationChannel::EMAIL, 'Empleado reactivado', 'El empleado {{firstName}} {{lastName}} ha sido reactivado.'],
+        [EventType::EMPLOYEE_DELETED, NotificationChannel::IN_APP, 'Empleado eliminado', 'El empleado ha sido eliminado.'],
+        [EventType::EMPLOYEE_DELETED, NotificationChannel::EMAIL, 'Empleado eliminado', 'El empleado {{firstName}} {{lastName}} ha sido eliminado.'],
+        [EventType::EMPLOYEE_USER_LINKED, NotificationChannel::IN_APP, 'Usuario vinculado', 'Se ha vinculado un usuario al empleado.'],
+        [EventType::EMPLOYEE_USER_LINKED, NotificationChannel::EMAIL, 'Usuario vinculado a empleado', 'Se ha vinculado el usuario {{username}} al empleado {{firstName}} {{lastName}}.'],
+        [EventType::EMPLOYEE_USER_UNLINKED, NotificationChannel::IN_APP, 'Usuario desvinculado', 'Se ha desvinculado el usuario del empleado.'],
+        [EventType::EMPLOYEE_USER_UNLINKED, NotificationChannel::EMAIL, 'Usuario desvinculado de empleado', 'Se ha desvinculado el usuario {{username}} del empleado {{firstName}} {{lastName}}.'],
+        [EventType::EMPLOYEE_ACCESS_PROVISIONED, NotificationChannel::IN_APP, 'Acceso provisionado', 'Se ha provisionado acceso al empleado.'],
+        [EventType::EMPLOYEE_ACCESS_PROVISIONED, NotificationChannel::EMAIL, 'Acceso de empleado provisionado', 'Se ha provisionado acceso al sistema para {{firstName}} {{lastName}} ({{email}}).'],
+
+        // ── Vacation Events ────────────────────────────────────────────────────
+        [EventType::VACATION_CANCELLED, NotificationChannel::IN_APP, 'Vacaciones canceladas', 'Las vacaciones han sido canceladas.'],
+        [EventType::VACATION_CANCELLED, NotificationChannel::EMAIL, 'Vacaciones canceladas', 'Las vacaciones del {{startDate}} al {{endDate}} han sido canceladas.'],
+        [EventType::VACATION_REJECTED, NotificationChannel::IN_APP, 'Vacaciones rechazadas', 'Las vacaciones han sido rechazadas.'],
+        [EventType::VACATION_REJECTED, NotificationChannel::EMAIL, 'Vacaciones rechazadas', 'Las vacaciones del {{startDate}} al {{endDate}} han sido rechazadas. Motivo: {{reason}}.'],
+
+        // ── Overtime Events ────────────────────────────────────────────────────
+        [EventType::OVERTIME_REGISTERED, NotificationChannel::IN_APP, 'Horas extra registradas', 'Se han registrado horas extra.'],
+        [EventType::OVERTIME_REGISTERED, NotificationChannel::EMAIL, 'Horas extra registradas', 'Se han registrado {{hours}} horas extra para el empleado {{employeeName}}.'],
+        [EventType::OVERTIME_APPROVED, NotificationChannel::IN_APP, 'Horas extra aprobadas', 'Las horas extra han sido aprobadas.'],
+        [EventType::OVERTIME_APPROVED, NotificationChannel::EMAIL, 'Horas extra aprobadas', 'Las {{hours}} horas extra del empleado {{employeeName}} han sido aprobadas.'],
+        [EventType::OVERTIME_CORRECTED, NotificationChannel::IN_APP, 'Horas extra corregidas', 'Las horas extra han sido corregidas.'],
+        [EventType::OVERTIME_CORRECTED, NotificationChannel::EMAIL, 'Horas extra corregidas', 'Las horas extra del empleado {{employeeName}} han sido corregidas a {{hours}} horas.'],
+        [EventType::OVERTIME_REJECTED, NotificationChannel::IN_APP, 'Horas extra rechazadas', 'Las horas extra han sido rechazadas.'],
+        [EventType::OVERTIME_REJECTED, NotificationChannel::EMAIL, 'Horas extra rechazadas', 'Las horas extra del empleado {{employeeName}} han sido rechazadas. Motivo: {{reason}}.'],
+        [EventType::OVERTIME_REVIEW_REQUESTED, NotificationChannel::IN_APP, 'Revisión de horas extra', 'Se ha solicitado revisión de horas extra.'],
+        [EventType::OVERTIME_REVIEW_REQUESTED, NotificationChannel::EMAIL, 'Revisión de horas extra solicitada', 'Se ha solicitado revisión de las horas extra del empleado {{employeeName}}.'],
+
+        // ── Service Zone Events ────────────────────────────────────────────────
+        [EventType::SERVICE_ZONE_CREATED, NotificationChannel::IN_APP, 'Zona de servicio creada', 'Se ha creado una nueva zona de servicio.'],
+        [EventType::SERVICE_ZONE_CREATED, NotificationChannel::EMAIL, 'Zona de servicio creada', 'Se ha creado la zona de servicio {{zoneName}}.'],
+        [EventType::SERVICE_ZONE_DEACTIVATED, NotificationChannel::IN_APP, 'Zona de servicio desactivada', 'La zona de servicio ha sido desactivada.'],
+        [EventType::SERVICE_ZONE_DEACTIVATED, NotificationChannel::EMAIL, 'Zona de servicio desactivada', 'La zona de servicio {{zoneName}} ha sido desactivada.'],
+        [EventType::SERVICE_ZONE_REACTIVATED, NotificationChannel::IN_APP, 'Zona de servicio reactivada', 'La zona de servicio ha sido reactivada.'],
+        [EventType::SERVICE_ZONE_REACTIVATED, NotificationChannel::EMAIL, 'Zona de servicio reactivada', 'La zona de servicio {{zoneName}} ha sido reactivada.'],
+
+        // ── Special Period Events ──────────────────────────────────────────────
+        [EventType::SPECIAL_PERIOD_CANCELLED, NotificationChannel::IN_APP, 'Período especial cancelado', 'El período especial ha sido cancelado.'],
+        [EventType::SPECIAL_PERIOD_CANCELLED, NotificationChannel::EMAIL, 'Período especial cancelado', 'El período especial {{periodName}} ha sido cancelado.'],
+        [EventType::SPECIAL_PERIOD_COMPLETED, NotificationChannel::IN_APP, 'Período especial completado', 'El período especial ha sido completado.'],
+        [EventType::SPECIAL_PERIOD_COMPLETED, NotificationChannel::EMAIL, 'Período especial completado', 'El período especial {{periodName}} ha sido completado.'],
+        [EventType::SPECIAL_PERIOD_EDITED, NotificationChannel::IN_APP, 'Período especial editado', 'El período especial ha sido editado.'],
+        [EventType::SPECIAL_PERIOD_EDITED, NotificationChannel::EMAIL, 'Período especial editado', 'El período especial {{periodName}} ha sido editado.'],
+
+        // ── City Transferred ───────────────────────────────────────────────────
+        [EventType::CITY_TRANSFERRED, NotificationChannel::IN_APP, 'Ciudad transferida', 'Se ha transferido una ciudad.'],
+        [EventType::CITY_TRANSFERRED, NotificationChannel::EMAIL, 'Ciudad transferida', 'La ciudad {{cityName}} ha sido transferida a {{newZoneName}}.'],
+
+        // ── Client Updated ─────────────────────────────────────────────────────
+        [EventType::CLIENT_UPDATED, NotificationChannel::IN_APP, 'Cliente actualizado', 'El cliente ha sido actualizado.'],
+        [EventType::CLIENT_UPDATED, NotificationChannel::EMAIL, 'Cliente actualizado', 'El cliente {{clientName}} ha sido actualizado.'],
+
+        // ── Contact User Linked ────────────────────────────────────────────────
+        [EventType::CONTACT_USER_LINKED, NotificationChannel::IN_APP, 'Contacto vinculado', 'El contacto ha sido vinculado a un usuario.'],
+        [EventType::CONTACT_USER_LINKED, NotificationChannel::EMAIL, 'Contacto vinculado a usuario', 'El contacto {{contactName}} ha sido vinculado al usuario {{username}}.'],
     ];
 
     public function __construct(

@@ -11,6 +11,7 @@ final class WarrantyExpired extends DomainEvent
     public function __construct(
         public readonly string $warrantyId,
         public readonly string $terminalId,
+        public readonly string $clientId,
     ) {
         parent::__construct();
     }

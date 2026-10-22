@@ -15,6 +15,7 @@ final class CityTransferred extends DomainEvent
         public readonly string $cityId,
         public readonly string $fromZoneId,
         public readonly string $toZoneId,
+        public readonly string $createdBy,
     ) {
         parent::__construct();
     }

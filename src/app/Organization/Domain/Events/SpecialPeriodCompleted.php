@@ -15,6 +15,7 @@ final class SpecialPeriodCompleted extends DomainEvent
     public function __construct(
         public readonly string $periodId,
         public readonly string $employeeId,
+        public readonly ?string $userId = null,
     ) {
         parent::__construct();
     }

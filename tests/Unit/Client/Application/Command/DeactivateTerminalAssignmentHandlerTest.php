@@ -7,10 +7,18 @@ namespace App\Tests\Unit\Client\Application\Command;
 use App\Client\Application\Command\DeactivateTerminalAssignment\DeactivateTerminalAssignmentCommand;
 use App\Client\Application\Command\DeactivateTerminalAssignment\DeactivateTerminalAssignmentHandler;
 use App\Client\Application\Exception\TerminalAssignmentNotFoundException;
+use App\Client\Domain\Entities\Terminal;
 use App\Client\Domain\Entities\TerminalAssignment;
 use App\Client\Domain\Enums\TerminalAssignmentStatus;
+use App\Client\Domain\Enums\TerminalFunctionality;
+use App\Client\Domain\Enums\TerminalStatus;
+use App\Client\Domain\Enums\TerminalType;
+use App\Client\Domain\Enums\TerminalVendor;
 use App\Client\Domain\Events\TerminalAssignmentDeactivated;
 use App\Client\Domain\Repositories\TerminalAssignmentRepositoryInterface;
+use App\Client\Domain\Repositories\TerminalRepositoryInterface;
+use App\Client\Domain\ValueObjects\ClientIdValueObject;
+use App\Client\Domain\ValueObjects\SerialNumberValueObject;
 use App\Client\Domain\ValueObjects\SiteIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalAssignmentIdValueObject;
 use App\Client\Domain\ValueObjects\TerminalIdAssignedByClientValueObject;
@@ -37,11 +45,24 @@ final class DeactivateTerminalAssignmentHandlerTest extends TestCase
         $repo->method('findById')->willReturn($assignment);
         $repo->expects($this->once())->method('save');
 
+        $terminal = Terminal::add(
+            id: new TerminalIdValueObject('01ARZ3NDEKTSV4RRFFQ69G5FAW'),
+            clientId: new ClientIdValueObject('01ARZ3NDEKTSV4RRFFQ69G5FAY'),
+            serial: new SerialNumberValueObject('ATM0000001'),
+            vendor: TerminalVendor::Hyosung,
+            funcionality: TerminalFunctionality::Dispenser,
+            type: TerminalType::Lobby,
+            status: TerminalStatus::ACTIVE,
+        );
+
+        $terminalRepo = $this->createMock(TerminalRepositoryInterface::class);
+        $terminalRepo->method('findById')->willReturn($terminal);
+
         $eventPublisher = $this->createMock(DomainEventPublisherInterface::class);
         $eventPublisher->expects($this->once())->method('publish')
             ->with($this->isInstanceOf(TerminalAssignmentDeactivated::class));
 
-        $handler = new DeactivateTerminalAssignmentHandler($repo, $eventPublisher);
+        $handler = new DeactivateTerminalAssignmentHandler($repo, $terminalRepo, $eventPublisher);
         ($handler)(new DeactivateTerminalAssignmentCommand(id: self::ASSIGNMENT_ID));
 
         self::assertSame(TerminalAssignmentStatus::INOPERATIVE, $assignment->status());
@@ -52,8 +73,11 @@ final class DeactivateTerminalAssignmentHandlerTest extends TestCase
         $repo = $this->createMock(TerminalAssignmentRepositoryInterface::class);
         $repo->method('findById')->willReturn(null);
 
+        $terminalRepo = $this->createMock(TerminalRepositoryInterface::class);
+
         $handler = new DeactivateTerminalAssignmentHandler(
             $repo,
+            $terminalRepo,
             $this->createMock(DomainEventPublisherInterface::class),
         );
 

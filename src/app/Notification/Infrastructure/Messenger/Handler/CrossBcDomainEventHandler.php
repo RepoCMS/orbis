@@ -682,9 +682,12 @@ final readonly class CrossBcDomainEventHandler
         /** @var ServiceZoneCreated $event */
         $event = $message->restoreEvent();
 
+        // Notify technicians in the new service zone
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::SERVICE_ZONE_CREATED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::EMPLOYEE, 'id' => $event->createdBy],
+            ],
             subject: 'Zona de servicio creada',
             bodyTemplate: 'Se ha creado la zona de servicio {{name}}.',
             templateVars: [
@@ -703,7 +706,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::SERVICE_ZONE_DEACTIVATED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::EMPLOYEE, 'id' => $event->createdBy],
+            ],
             subject: 'Zona de servicio desactivada',
             bodyTemplate: 'La zona de servicio ha sido desactivada.',
             templateVars: [
@@ -721,7 +726,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::SERVICE_ZONE_REACTIVATED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::EMPLOYEE, 'id' => $event->createdBy],
+            ],
             subject: 'Zona de servicio reactivada',
             bodyTemplate: 'La zona de servicio ha sido reactivada.',
             templateVars: [
@@ -737,11 +744,14 @@ final readonly class CrossBcDomainEventHandler
         /** @var SpecialPeriodCancelled $event */
         $event = $message->restoreEvent();
 
+        $recipients = [];
+        if ($event->userId !== null) {
+            $recipients[] = ['type' => RecipientType::USER, 'id' => $event->userId];
+        }
+
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::SPECIAL_PERIOD_CANCELLED,
-            recipients: [
-                ['type' => RecipientType::EMPLOYEE, 'id' => $event->employeeId],
-            ],
+            recipients: $recipients,
             subject: 'Período especial cancelado',
             bodyTemplate: 'El período especial ha sido cancelado.',
             templateVars: [
@@ -758,11 +768,14 @@ final readonly class CrossBcDomainEventHandler
         /** @var SpecialPeriodCompleted $event */
         $event = $message->restoreEvent();
 
+        $recipients = [];
+        if ($event->userId !== null) {
+            $recipients[] = ['type' => RecipientType::USER, 'id' => $event->userId];
+        }
+
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::SPECIAL_PERIOD_COMPLETED,
-            recipients: [
-                ['type' => RecipientType::EMPLOYEE, 'id' => $event->employeeId],
-            ],
+            recipients: $recipients,
             subject: 'Período especial completado',
             bodyTemplate: 'El período especial ha sido completado.',
             templateVars: [
@@ -779,9 +792,14 @@ final readonly class CrossBcDomainEventHandler
         /** @var SpecialPeriodEdited $event */
         $event = $message->restoreEvent();
 
+        $recipients = [];
+        if ($event->userId !== null) {
+            $recipients[] = ['type' => RecipientType::USER, 'id' => $event->userId];
+        }
+
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::SPECIAL_PERIOD_EDITED,
-            recipients: [],
+            recipients: $recipients,
             subject: 'Período especial editado',
             bodyTemplate: 'El período especial ha sido editado.',
             templateVars: [
@@ -799,7 +817,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::CITY_TRANSFERRED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::EMPLOYEE, 'id' => $event->createdBy],
+            ],
             subject: 'Ciudad transferida',
             bodyTemplate: 'La ciudad ha sido transferida de una zona de servicio a otra.',
             templateVars: [
@@ -865,7 +885,7 @@ final readonly class CrossBcDomainEventHandler
 
         // PartRepaired only contains serializedStockId, no recipient data (e.g., assignedToUserId, technicianId).
         // Need to extend the event or resolve recipient from serializedStock to notify responsible technician.
-        // For now, no notifications are dispatched.
+        // For now, no notifications are dispatched. Template is seeded for when recipients are available.
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::PART_REPAIRED,
             recipients: [],
@@ -906,7 +926,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::STOCK_MOVED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::EMPLOYEE, 'id' => $event->employeeId],
+            ],
             subject: 'Movimiento de stock',
             bodyTemplate: 'Se ha completado un movimiento de stock.',
             templateVars: [
@@ -924,7 +946,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::SERIALIZED_STOCK_CREATED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::EMPLOYEE, 'id' => $event->employeeId],
+            ],
             subject: 'Stock serializado registrado',
             bodyTemplate: 'Se ha registrado un nuevo ítem de stock serializado.',
             templateVars: [
@@ -942,7 +966,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::ENTRY_CONFIRMED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::EMPLOYEE, 'id' => $event->employeeId],
+            ],
             subject: 'Entrada confirmada',
             bodyTemplate: 'Se ha confirmado una entrada de inventario.',
             templateVars: [
@@ -960,7 +986,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::PRODUCT_CREATED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::EMPLOYEE, 'id' => $event->employeeId],
+            ],
             subject: 'Producto creado',
             bodyTemplate: 'Se ha creado un nuevo producto en el catálogo. Código: {{productCode}}.',
             templateVars: [
@@ -1741,7 +1769,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::CLIENT_CREATED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::CONTACT, 'id' => $event->clientId],
+            ],
             subject: 'Cliente creado',
             bodyTemplate: 'Se ha creado el cliente {{clientName}}.',
             templateVars: [
@@ -1760,7 +1790,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::CONTACT_ADDED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::CONTACT, 'id' => $event->clientId],
+            ],
             subject: 'Contacto agregado',
             bodyTemplate: 'Se ha agregado un nuevo contacto al cliente.',
             templateVars: [
@@ -1821,7 +1853,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::CLIENT_SALE_ORDER_COMPLETED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::CONTACT, 'id' => $event->clientId],
+            ],
             subject: 'Orden de venta completada',
             bodyTemplate: 'La orden de venta ha sido completada.',
             templateVars: [
@@ -1921,9 +1955,11 @@ final readonly class CrossBcDomainEventHandler
         /** @var ContactUserUnlinked $event */
         $event = $message->restoreEvent();
 
+        $recipients = [['type' => RecipientType::USER, 'id' => $event->userId]];
+
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::CONTACT_USER_UNLINKED,
-            recipients: [],
+            recipients: $recipients,
             subject: 'Contacto desvinculado de usuario',
             bodyTemplate: 'El contacto ha sido desvinculado de su cuenta de usuario.',
             templateVars: [
@@ -1963,7 +1999,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::TERMINAL_REGISTERED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::CONTACT, 'id' => $event->clientId],
+            ],
             subject: 'Terminal registrada',
             bodyTemplate: 'Se ha registrado una nueva terminal. Serial: {{serialNumber}}.',
             templateVars: [
@@ -1982,7 +2020,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::TERMINAL_UPDATED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::CONTACT, 'id' => $event->clientId],
+            ],
             subject: 'Terminal actualizada',
             bodyTemplate: 'La terminal {{serialNumber}} ha sido actualizada.',
             templateVars: [
@@ -2001,7 +2041,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::TERMINAL_DEACTIVATED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::CONTACT, 'id' => $event->clientId],
+            ],
             subject: 'Terminal desactivada',
             bodyTemplate: 'La terminal ha sido desactivada.',
             templateVars: [
@@ -2019,7 +2061,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::TERMINAL_REACTIVATED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::CONTACT, 'id' => $event->clientId],
+            ],
             subject: 'Terminal reactivada',
             bodyTemplate: 'La terminal ha sido reactivada.',
             templateVars: [
@@ -2037,7 +2081,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::TERMINAL_ASSIGNMENT_REGISTERED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::CONTACT, 'id' => $event->clientId],
+            ],
             subject: 'Asignación de terminal registrada',
             bodyTemplate: 'Se ha registrado una nueva asignación de terminal.',
             templateVars: [
@@ -2056,7 +2102,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::TERMINAL_ASSIGNMENT_UPDATED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::CONTACT, 'id' => $event->clientId],
+            ],
             subject: 'Asignación de terminal actualizada',
             bodyTemplate: 'La asignación de terminal ha sido actualizada.',
             templateVars: [
@@ -2075,7 +2123,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::TERMINAL_ASSIGNMENT_DEACTIVATED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::CONTACT, 'id' => $event->clientId],
+            ],
             subject: 'Asignación de terminal desactivada',
             bodyTemplate: 'La asignación de terminal ha sido desactivada.',
             templateVars: [
@@ -2094,7 +2144,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::TERMINAL_ASSIGNMENT_REACTIVATED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::CONTACT, 'id' => $event->clientId],
+            ],
             subject: 'Asignación de terminal reactivada',
             bodyTemplate: 'La asignación de terminal ha sido reactivada.',
             templateVars: [
@@ -2176,7 +2228,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::WARRANTY_REGISTERED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::CONTACT, 'id' => $event->clientId],
+            ],
             subject: 'Garantía registrada',
             bodyTemplate: 'Se ha registrado una garantía de tipo {{type}} para la terminal.',
             templateVars: [
@@ -2196,7 +2250,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::WARRANTY_UPDATED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::CONTACT, 'id' => $event->clientId],
+            ],
             subject: 'Garantía actualizada',
             bodyTemplate: 'La garantía de la terminal ha sido actualizada.',
             templateVars: [
@@ -2215,7 +2271,9 @@ final readonly class CrossBcDomainEventHandler
 
         $this->dispatcher->dispatchForEvent(
             eventType: EventType::WARRANTY_EXPIRED,
-            recipients: [],
+            recipients: [
+                ['type' => RecipientType::CONTACT, 'id' => $event->clientId],
+            ],
             subject: 'Garantía vencida',
             bodyTemplate: 'La garantía de la terminal ha vencido.',
             templateVars: [

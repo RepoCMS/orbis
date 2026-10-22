@@ -52,6 +52,7 @@ final class ApiIdentityRoleController extends AbstractController
         try {
             ($handler)(new CreateRoleCommand(
                 name: trim((string) ($payload['name'] ?? '')),
+                slug: isset($payload['slug']) ? trim((string) $payload['slug']) : null,
                 permissionIds: $payload['permissionIds'] ?? [],
             ));
 

@@ -102,9 +102,9 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "test": "@php vendor/bin/phpunit",
-        "test:unit": "@php vendor/bin/phpunit --testsuite Client,Expense,Identity,Inventory,Location,Notification,Organization,Support",
-        "test:integration": "@php vendor/bin/phpunit --testsuite Integration,Functional",
+        "test": "@php -d memory_limit=1G vendor/bin/phpunit",
+        "test:unit": "@php -d memory_limit=1G vendor/bin/phpunit --testsuite Client,Expense,Identity,Inventory,Location,Notification,Organization,Support",
+        "test:integration": "@php -d memory_limit=1G vendor/bin/phpunit --testsuite Integration,Functional",
         "stan": "@php -d memory_limit=1G vendor/bin/phpstan analyse --no-progress",
         "cs": "@php vendor/bin/php-cs-fixer fix --dry-run --diff --using-cache=no",
         "cs:fix": "@php vendor/bin/php-cs-fixer fix --using-cache=no",

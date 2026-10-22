@@ -2,10 +2,10 @@
 
 > **Propósito:** Este documento es la referencia que toda IA, agente o desarrollador debe consultar antes de actuar. Contiene el estado REAL del proyecto. AGENTS.md (reglas de código) ya no publica % de BCs — esta es la única tabla de estado.
 >
-> **Actualizado:** 2026-08-20
+> **Actualizado:** 2026-08-27
 > **Rama activa:** `main` (remote: `https://github.com/RepoCMS/orbis.git`)
 > **Último commit:** `67c4eec` — T28 + T36: Fix composer audit advisories + UserContactResolver tests — CI gates green (2026-08-20)
-> **Commits pendientes (working tree):** ninguno (working tree limpio)
+> **Commits pendientes (working tree):** Cambios en MFA dev bypass, templates dashboard, tests passing
 
 ---
 
@@ -21,7 +21,7 @@
 | Reportes implementados | 14 |
 | Importers implementados | 11 |
 | Comandos huérfagos conocidos | 0 (todos wireados — verificado por CI `wiring`) |
-| Tests verdes (baseline 2026-08-06) | 2033 tests / 5047 assertions |
+| Tests verdes (baseline 2026-08-06) | 2082 tests / 5601 assertions |
 | PHPStan nivel 5 (baseline) | 159 errores preexistentes permitidos; nuevos bloquean CI |
 | PHP-CS-Fixer | 2020/2360 archivos normalizados (commit del ciclo) |
 | Gates CI | 5 jobs en `.github/workflows/ci.yml` (test, stan, cs, wiring, validate) + security (audit) |

@@ -139,12 +139,6 @@ parameters:
 			path: src/app/Identity/Infrastructure/Console/DetectOrphanUsersCommand.php
 
 		-
-			message: '#^Unknown parameter \$slug in call to App\\Identity\\Application\\Command\\CreateRole\\CreateRoleCommand constructor\.$#'
-			identifier: argument.unknown
-			count: 1
-			path: src/app/Identity/Infrastructure/Console/SeedRolesCommand.php
-
-		-
 			message: '#^Constant App\\Identity\\Infrastructure\\Security\\LandingRouteResolver\:\:ROUTES_BY_PERMISSION is unused\.$#'
 			identifier: classConstant.unused
 			count: 1
@@ -601,32 +595,8 @@ parameters:
 			path: src/app/Organization/Domain/Entities/ServiceZoneAssignment.php
 
 		-
-			message: '#^Access to undefined constant App\\Organization\\Domain\\Enums\\EmployeeProfile\:\:SUPERVISOR_TECHNICIAN\.$#'
-			identifier: classConstant.notFound
-			count: 1
-			path: src/app/Organization/Infrastructure/Console/SeedDemoDataCommand.php
-
-		-
-			message: '#^Access to undefined constant App\\Organization\\Domain\\Enums\\EmployeeProfile\:\:TECHNICIAN_FIELD\.$#'
-			identifier: classConstant.notFound
-			count: 1
-			path: src/app/Organization/Infrastructure/Console/SeedDemoDataCommand.php
-
-		-
-			message: '#^Call to an undefined method App\\Organization\\Domain\\Entities\\Employee\:\:linkToUser\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/app/Organization/Infrastructure/Console/SeedDemoDataCommand.php
-
-		-
 			message: '#^Constant App\\Organization\\Infrastructure\\Console\\SeedDemoDataCommand\:\:TICKET_ULID is unused\.$#'
 			identifier: classConstant.unused
-			count: 1
-			path: src/app/Organization/Infrastructure/Console/SeedDemoDataCommand.php
-
-		-
-			message: '#^Unknown parameter \$slug in call to static method App\\Identity\\Domain\\Entities\\Role\:\:create\(\)\.$#'
-			identifier: argument.unknown
 			count: 1
 			path: src/app/Organization/Infrastructure/Console/SeedDemoDataCommand.php
 

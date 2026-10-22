@@ -17,6 +17,7 @@ use App\Identity\Domain\Service\UserEmailResolverInterface;
 use App\Identity\Domain\ValueObjects\HashedPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
+use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Identity\Domain\ValueObjects\UsernameValueObject;
 use App\Organization\Application\Command\LinkUserToEmployee\LinkUserToEmployeeHandler;
@@ -59,6 +60,7 @@ final class ProvisionEmployeeAccessHandlerTest extends TestCase
         $role = Role::create(
             new RoleIdValueObject(self::ROLE_ID),
             new RoleNameValueObject('Tecnico'),
+            new RoleSlugValueObject('tecnico'),
         );
         $roleRepo->method('findById')->willReturn($role);
 
@@ -210,6 +212,7 @@ final class ProvisionEmployeeAccessHandlerTest extends TestCase
         $role = Role::create(
             new RoleIdValueObject(self::ROLE_ID),
             new RoleNameValueObject('Tecnico'),
+            new RoleSlugValueObject('tecnico'),
         );
         $roleRepo->method('findById')->willReturn($role);
         $passwordHasher->method('hash')->willReturn(new HashedPasswordValueObject('$2y$12hashedpassword'));

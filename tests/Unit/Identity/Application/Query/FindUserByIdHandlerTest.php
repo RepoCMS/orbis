@@ -8,6 +8,7 @@ use App\Identity\Application\Exception\UserNotFoundException;
 use App\Identity\Application\Query\FindUserById\FindUserByIdHandler;
 use App\Identity\Application\Query\FindUserById\FindUserByIdQuery;
 use App\Identity\Domain\Entities\User;
+use App\Identity\Domain\Repositories\UserMfaConfigRepositoryInterface;
 use App\Identity\Domain\Repositories\UserRepositoryInterface;
 use App\Identity\Domain\ValueObjects\HashedPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
@@ -29,22 +30,28 @@ final class FindUserByIdHandlerTest extends TestCase
             new RoleIdValueObject(self::ROLE_ID),
         );
 
-        $repo = $this->createMock(UserRepositoryInterface::class);
-        $repo->method('findById')->willReturn($user);
+        $userRepo = $this->createMock(UserRepositoryInterface::class);
+        $userRepo->method('findById')->willReturn($user);
 
-        $handler = new FindUserByIdHandler($repo);
+        $mfaRepo = $this->createMock(UserMfaConfigRepositoryInterface::class);
+        $mfaRepo->method('findByUserId')->willReturn(null);
+
+        $handler = new FindUserByIdHandler($userRepo, $mfaRepo);
         $response = ($handler)(new FindUserByIdQuery(self::USER_ID));
 
         self::assertSame(self::USER_ID, $response->id);
         self::assertSame('juan.perez', $response->username);
+        self::assertFalse($response->mfaEnabled);
     }
 
     public function testThrowsWhenNotFound(): void
     {
-        $repo = $this->createMock(UserRepositoryInterface::class);
-        $repo->method('findById')->willReturn(null);
+        $userRepo = $this->createMock(UserRepositoryInterface::class);
+        $userRepo->method('findById')->willReturn(null);
 
-        $handler = new FindUserByIdHandler($repo);
+        $mfaRepo = $this->createMock(UserMfaConfigRepositoryInterface::class);
+
+        $handler = new FindUserByIdHandler($userRepo, $mfaRepo);
         $this->expectException(UserNotFoundException::class);
         ($handler)(new FindUserByIdQuery(self::USER_ID));
     }

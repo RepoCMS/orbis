@@ -27,7 +27,7 @@ final readonly class CreateRoleHandler
     public function __invoke(CreateRoleCommand $command): void
     {
         $name = new RoleNameValueObject($command->name);
-        $slug = new RoleSlugValueObject($command->slug);
+        $slug = $this->resolveSlug($command->slug, $command->name);
 
         $this->ensureNameIsUnique($name);
         $this->ensureSlugIsUnique($slug);
@@ -42,6 +42,15 @@ final readonly class CreateRoleHandler
         );
 
         $this->roleRepository->save($role);
+    }
+
+    private function resolveSlug(?string $slug, string $name): RoleSlugValueObject
+    {
+        $normalized = $slug !== null ? trim($slug) : '';
+
+        return $normalized === ''
+            ? RoleSlugValueObject::fromName($name)
+            : new RoleSlugValueObject($normalized);
     }
 
     private function ensureSlugIsUnique(RoleSlugValueObject $slug): void

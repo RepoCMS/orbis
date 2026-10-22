@@ -12,6 +12,7 @@ final class WarrantyRegistered extends DomainEvent
         public readonly string $warrantyId,
         public readonly string $terminalId,
         public readonly string $type,
+        public readonly string $clientId,
     ) {
         parent::__construct();
     }

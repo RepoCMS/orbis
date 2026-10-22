@@ -30,6 +30,7 @@ final readonly class ActivateTerminalHandler
 
         $this->eventPublisher->publish(new TerminalReactivated(
             terminalId: $command->terminalId,
+            clientId:   (string) $terminal->clientId(),
         ));
     }
 }

@@ -70,8 +70,32 @@ final class CreateRoleHandlerTest extends TestCase
         ($handler)(new CreateRoleCommand('Admin', 'admin', []));
     }
 
-    public function testThrowsWhenPermissionNotFound(): void
+    public function testDerivesSlugFromNameWhenNotProvided(): void
     {
+        $roleRepo = $this->createMock(RoleRepositoryInterface::class);
+        $roleRepo->method('findByName')->willReturn(null);
+        $roleRepo->method('findBySlug')->willReturn(null);
+
+        $savedRole = null;
+        $roleRepo->expects($this->once())
+            ->method('save')
+            ->willReturnCallback(static function (\App\Identity\Domain\Entities\Role $role) use (&$savedRole): void {
+                $savedRole = $role;
+            });
+
+        $handler = new CreateRoleHandler(
+            $roleRepo,
+            $this->createMock(PermissionRepositoryInterface::class),
+            $this->createMock(IdGeneratorInterface::class),
+        );
+
+        ($handler)(new CreateRoleCommand('Técnico de Campo'));
+
+        self::assertNotNull($savedRole);
+        self::assertSame('tecnico_de_campo', (string) $savedRole->slug());
+    }
+
+    public function testThrowsWhenPermissionNotFound(): void    {
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
         $roleRepo->method('findByName')->willReturn(null);
 

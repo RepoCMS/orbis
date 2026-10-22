@@ -14,6 +14,7 @@ final class TerminalAssignmentUpdated extends DomainEvent
         public readonly string $locationId,
         public readonly string $name,
         public readonly string $idAssignedByClient,
+        public readonly string $clientId,
     ) {
         parent::__construct();
     }

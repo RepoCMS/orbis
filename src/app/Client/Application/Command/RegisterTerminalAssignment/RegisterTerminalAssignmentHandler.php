@@ -49,6 +49,7 @@ final readonly class RegisterTerminalAssignmentHandler
             assignmentId: (string) $assignment->id(),
             terminalId:   $command->terminalId,
             locationId:   $command->locationId,
+            clientId:     (string) $terminal->clientId(),
         ));
 
         return (string) $assignment->id();

@@ -53,6 +53,7 @@ final readonly class UpdateTerminalHandler
         $this->eventPublisher->publish(new TerminalUpdated(
             terminalId:   $command->terminalId,
             serialNumber: $command->serial,
+            clientId:     (string) $terminal->clientId(),
         ));
     }
 }

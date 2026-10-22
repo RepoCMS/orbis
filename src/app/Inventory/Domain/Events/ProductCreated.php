@@ -14,6 +14,7 @@ final class ProductCreated extends DomainEvent
     public function __construct(
         public readonly string $productId,
         public readonly string $productCode,
+        public readonly ?string $employeeId = null,
     ) {
         parent::__construct();
     }

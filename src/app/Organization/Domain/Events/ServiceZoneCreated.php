@@ -14,6 +14,7 @@ final class ServiceZoneCreated extends DomainEvent
     public function __construct(
         public readonly string $zoneId,
         public readonly string $name,
+        public readonly string $createdBy,
     ) {
         parent::__construct();
     }

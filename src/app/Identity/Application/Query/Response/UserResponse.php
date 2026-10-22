@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Identity\Application\Query\Response;
 
 use App\Identity\Domain\Entities\User;
+use App\Identity\Domain\Entities\UserMfaConfig;
 use DateTimeImmutable;
 
 final readonly class UserResponse
@@ -19,10 +20,11 @@ final readonly class UserResponse
         public bool $isLocked,
         public ?DateTimeImmutable $deletedAt,
         public bool $isDeleted,
+        public bool $mfaEnabled,
     ) {
     }
 
-    public static function fromEntity(User $user): self
+    public static function fromEntity(User $user, ?UserMfaConfig $mfaConfig = null): self
     {
         return new self(
             id: (string) $user->id(),
@@ -34,6 +36,7 @@ final readonly class UserResponse
             isLocked: $user->isLocked(),
             deletedAt: $user->deletedAt(),
             isDeleted: $user->isDeleted(),
+            mfaEnabled: $mfaConfig !== null && $mfaConfig->isEnabled(),
         );
     }
 }

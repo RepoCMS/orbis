@@ -1,0 +1,37 @@
+{#
+ # Selector de rango de fechas reutilizable
+ # Parámetros esperados:
+ # - current_range: string (today, yesterday, this_week, last_week, this_month, last_month, custom)
+ # - date_from: string (formato Y-m-d para rango personalizado)
+ # - date_to: string (formato Y-m-d para rango personalizado)
+ #}
+
+<div class="flex flex-wrap items-center gap-3" data-controller="date-range">
+    <label class="text-xs font-medium text-gray-500" for="date-range-select">Rango:</label>
+    <select id="date-range-select"
+            class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            data-action="change->date-range#updateRange">
+        <option value="today" {% if current_range is defined and current_range == 'today' %}selected{% endif %}>Hoy</option>
+        <option value="yesterday" {% if current_range is defined and current_range == 'yesterday' %}selected{% endif %}>Ayer</option>
+        <option value="this_week" {% if current_range is defined and current_range == 'this_week' %}selected{% endif %}>Esta semana</option>
+        <option value="last_week" {% if current_range is defined and current_range == 'last_week' %}selected{% endif %}>Semana pasada</option>
+        <option value="this_month" {% if current_range is defined and current_range == 'this_month' %}selected{% endif %}>Este mes</option>
+        <option value="last_month" {% if current_range is defined and current_range == 'last_month' %}selected{% endif %}>Mes pasado</option>
+        <option value="custom" {% if current_range is defined and current_range == 'custom' %}selected{% endif %}>Personalizado...</option>
+    </select>
+
+    {# Inputs para rango personalizado #}
+    <div class="flex items-center gap-1 {% if current_range is not defined or current_range != 'custom' %}hidden{% endif %}" id="custom-range-inputs" data-date-range-target="customInputs">
+        <input type="date"
+               class="text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white w-36 focus:outline-none focus:ring-2 focus:ring-blue-500"
+               id="date-from"
+               data-date-range-target="dateFrom"
+               {% if date_from %}value="{{ date_from }}"{% endif %}>
+        <span class="text-gray-400">a</span>
+        <input type="date"
+               class="text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white w-36 focus:outline-none focus:ring-2 focus:ring-blue-500"
+               id="date-to"
+               data-date-range-target="dateTo"
+               {% if date_to %}value="{{ date_to }}"{% endif %}>
+    </div>
+</div>

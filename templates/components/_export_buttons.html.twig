@@ -1,0 +1,76 @@
+{#
+ # Botones de exportación reutilizables
+ # Parámetros esperados:
+ # - export_excel_url: string (URL para exportar Excel, '#' para deshabilitar)
+ # - export_pdf_url: string (URL para exportar PDF, '#' para deshabilitar)
+ # - label: string (etiqueta para el nombre del reporte)
+ # - show_date_range: bool (opcional, mostrar selector de rango)
+ #}
+
+<div class="flex flex-wrap items-center gap-3">
+
+    {# Selector de rango de fechas (opcional) #}
+    {% if show_date_range ?? false %}
+    <div class="flex items-center gap-2" data-controller="date-range">
+        <label class="text-xs font-medium text-gray-500" for="date-range-select">Rango:</label>
+        <select id="date-range-select"
+                class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                data-action="change->date-range#updateRange">
+            <option value="today" {% if current_range is defined and current_range == 'today' %}selected{% endif %}>Hoy</option>
+            <option value="yesterday" {% if current_range is defined and current_range == 'yesterday' %}selected{% endif %}>Ayer</option>
+            <option value="this_week" {% if current_range is defined and current_range == 'this_week' %}selected{% endif %}>Esta semana</option>
+            <option value="last_week" {% if current_range is defined and current_range == 'last_week' %}selected{% endif %}>Semana pasada</option>
+            <option value="this_month" {% if current_range is defined and current_range == 'this_month' %}selected{% endif %}>Este mes</option>
+            <option value="last_month" {% if current_range is defined and current_range == 'last_month' %}selected{% endif %}>Mes pasado</option>
+            <option value="custom" {% if current_range is defined and current_range == 'custom' %}selected{% endif %}>Personalizado...</option>
+        </select>
+
+        {# Inputs para rango personalizado #}
+        <div class="flex items-center gap-1 hidden" id="custom-range-inputs" data-date-range-target="customInputs">
+            <input type="date"
+                   class="text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white w-36 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                   id="date-from"
+                   data-date-range-target="dateFrom"
+                   {% if date_from %}value="{{ date_from }}"{% endif %}>
+            <span class="text-gray-400">a</span>
+            <input type="date"
+                   class="text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white w-36 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                   id="date-to"
+                   data-date-range-target="dateTo"
+                   {% if date_to %}value="{{ date_to }}"{% endif %}>
+        </div>
+    </div>
+    {% endif %}
+
+    {# Botón Exportar Excel #}
+    {% if export_excel_url and export_excel_url != '#' %}
+    <a href="{{ export_excel_url }}"
+       class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors"
+       style="background: #10b981; color: white;"
+       onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+        </svg>
+        Excel
+    </a>
+    {% endif %}
+
+    {# Botón Exportar PDF #}
+    {% if export_pdf_url and export_pdf_url != '#' %}
+    <a href="{{ export_pdf_url }}"
+       class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors"
+       style="background: #ef4444; color: white;"
+       onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+        </svg>
+        PDF
+    </a>
+    {% endif %}
+
+    {# Etiqueta del reporte #}
+    {% if label %}
+    <span class="text-sm font-medium text-gray-500">{{ label }}</span>
+    {% endif %}
+
+</div>

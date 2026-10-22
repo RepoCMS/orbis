@@ -13,6 +13,7 @@ final class ServiceZoneDeactivated extends DomainEvent
 {
     public function __construct(
         public readonly string $zoneId,
+        public readonly string $createdBy,
     ) {
         parent::__construct();
     }

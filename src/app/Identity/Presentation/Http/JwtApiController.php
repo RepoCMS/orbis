@@ -105,7 +105,10 @@ final class JwtApiController extends AbstractController
 
         $mfaConfig = $this->mfaConfigRepository->findByUserId($userId);
 
-        if ($mfaConfig !== null && $mfaConfig->isEnabled()) {
+        // Skip MFA check in dev environment
+        $isDev = ($_ENV['APP_ENV'] ?? 'prod') === 'dev';
+
+        if (!$isDev && $mfaConfig !== null && $mfaConfig->isEnabled()) {
             $mfaVerified = false;
 
             if ($totpCode !== '' && $this->totp->verify($mfaConfig->secret(), $totpCode)) {

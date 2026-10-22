@@ -27,6 +27,7 @@ use App\Identity\Domain\Service\UserEmailResolverInterface;
 use App\Identity\Domain\ValueObjects\HashedPasswordValueObject;
 use App\Identity\Domain\ValueObjects\RoleIdValueObject;
 use App\Identity\Domain\ValueObjects\RoleNameValueObject;
+use App\Identity\Domain\ValueObjects\RoleSlugValueObject;
 use App\Identity\Domain\ValueObjects\UserIdValueObject;
 use App\Identity\Domain\ValueObjects\UsernameValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
@@ -74,6 +75,7 @@ final class ProvisionContactAccessHandlerTest extends TestCase
             Role::create(
                 new RoleIdValueObject(self::ROLE_ID),
                 new RoleNameValueObject('Test Role'),
+                new RoleSlugValueObject('test-role'),
             ),
         );
 
@@ -172,6 +174,7 @@ final class ProvisionContactAccessHandlerTest extends TestCase
             Role::create(
                 new RoleIdValueObject(self::ROLE_ID),
                 new RoleNameValueObject('Test Role'),
+                new RoleSlugValueObject('test-role'),
             ),
         );
 

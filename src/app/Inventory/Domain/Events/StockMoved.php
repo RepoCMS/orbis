@@ -13,6 +13,7 @@ final class StockMoved extends DomainEvent
 {
     public function __construct(
         public readonly string $movementId,
+        public readonly string $employeeId,
     ) {
         parent::__construct();
     }

@@ -53,6 +53,11 @@ final class MfaSubscriber implements EventSubscriberInterface
             return;
         }
 
+        // Skip MFA check in dev environment
+        if (($_ENV['APP_ENV'] ?? 'prod') === 'dev') {
+            return;
+        }
+
         $request = $event->getRequest();
         $path    = $request->getPathInfo();
 

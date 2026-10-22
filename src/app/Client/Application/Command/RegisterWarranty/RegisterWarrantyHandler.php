@@ -50,6 +50,7 @@ final readonly class RegisterWarrantyHandler
             warrantyId: (string) $warranty->id(),
             terminalId: $command->terminalId,
             type: $command->type,
+            clientId: (string) $terminal->clientId(),
         ));
     }
 }

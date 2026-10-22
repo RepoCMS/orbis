@@ -58,7 +58,7 @@ final class UnlinkUserFromContactHandlerTest extends TestCase
         $repo->expects($this->never())->method('save');
 
         $eventPublisher = $this->createMock(DomainEventPublisherInterface::class);
-        $eventPublisher->expects($this->once())->method('publish');
+        $eventPublisher->expects($this->never())->method('publish');
 
         $handler = new UnlinkUserFromContactHandler($repo, $eventPublisher);
         ($handler)(new UnlinkUserFromContactCommand(contactId: self::CONTACT_ID));

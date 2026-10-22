@@ -12,14 +12,17 @@ Este repositorio es **AI-Native**: Git es la única fuente de verdad. Ningún ag
 
 ```
 1. cat AGENTS.md                # reglas y convenciones de código (este archivo)
-2. cat PROJECT_CONTEXT.md       # contexto general del proyecto
-3. cat docs/architecture.md     # arquitectura completa
-4. cat docs/coding-standards.md # reglas obligatorias de codificación
-5. cat docs/adr/README.md       # índice de decisiones arquitectónicas (ADRs)
-6. cat specs/{num}-{bc}/spec.md # spec correspondiente a tu tarea
-7. cat CONTEXT.md               # estado REAL del proyecto (única fuente de verdad de estado)
-8. cat tasks/IN_PROGRESS.md     # tareas en curso
+2. cat docs/ai-protocol.md      # protocolo de trabajo IA-humano (checkpoints de aprobación)
+3. cat PROJECT_CONTEXT.md       # contexto general del proyecto
+4. cat docs/architecture.md     # arquitectura completa
+5. cat docs/coding-standards.md # reglas obligatorias de codificación
+6. cat docs/adr/README.md       # índice de decisiones arquitectónicas (ADRs)
+7. cat specs/{num}-{bc}/spec.md # spec correspondiente a tu tarea
+8. cat CONTEXT.md               # estado REAL del proyecto (única fuente de verdad de estado)
+9. cat tasks/IN_PROGRESS.md     # tareas en curso
 ```
+
+**Arranque de tarea (obligatorio):** Antes de proponer plan o escribir código, la IA pregunta al humano: (1) tarea, (2) criterio de aceptación, (3) alcance permitido (BCs/archivos). Si falta alguno, no avanza. Detalle en [`docs/ai-protocol.md`](./docs/ai-protocol.md) §4.
 
 Referencia bajo demanda: `docs/analytics.md` (dashboards/reportes/importers), `docs/history.md` (issues y deuda técnica), `docs/glossary.md` (términos), `docs/dependencies.md` (stack), `docs/conventions.md` (convenciones), `.ai/` (prompts especializados por rol), `~/.agents/` (hub global de agentes y skills — fuente única compartida por opencode, Claude Code y Codex; ver README del directorio).
 

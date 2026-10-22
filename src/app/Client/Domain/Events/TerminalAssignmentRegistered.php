@@ -12,6 +12,7 @@ final class TerminalAssignmentRegistered extends DomainEvent
         public readonly string $assignmentId,
         public readonly string $terminalId,
         public readonly string $locationId,
+        public readonly string $clientId,
     ) {
         parent::__construct();
     }

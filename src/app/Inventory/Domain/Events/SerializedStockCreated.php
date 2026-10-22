@@ -13,6 +13,7 @@ final class SerializedStockCreated extends DomainEvent
 {
     public function __construct(
         public readonly string $serializedStockId,
+        public readonly string $employeeId,
     ) {
         parent::__construct();
     }

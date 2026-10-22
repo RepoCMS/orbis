@@ -7,6 +7,7 @@ namespace App\Client\Application\Command\UpdateWarranty;
 use App\Client\Application\Exception\TerminalWarrantyNotFoundException;
 use App\Client\Domain\Enums\WarrantyType;
 use App\Client\Domain\Events\WarrantyUpdated;
+use App\Client\Domain\Repositories\TerminalRepositoryInterface;
 use App\Client\Domain\Repositories\TerminalWarrantyRepositoryInterface;
 use App\Client\Domain\ValueObjects\TerminalWarrantyIdValueObject;
 use App\Shared\Domain\Event\DomainEventPublisherInterface;
@@ -16,6 +17,7 @@ final readonly class UpdateWarrantyHandler
 {
     public function __construct(
         private TerminalWarrantyRepositoryInterface $warrantyRepository,
+        private TerminalRepositoryInterface $terminalRepository,
         private DomainEventPublisherInterface $eventPublisher,
     ) {
     }
@@ -41,9 +43,12 @@ final readonly class UpdateWarrantyHandler
 
         $this->warrantyRepository->save($warranty);
 
+        $terminal = $this->terminalRepository->findById($warranty->terminalId());
+
         $this->eventPublisher->publish(new WarrantyUpdated(
             warrantyId: $command->warrantyId,
             terminalId: (string) $warranty->terminalId(),
+            clientId:   (string) $terminal->clientId(),
         ));
     }
 }
